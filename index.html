@@ -82,6 +82,16 @@
     .op-card{border:1px solid var(--border);border-radius:12px;padding:12px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:8px;}
     .op-meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:12px;}
     .op-actions{display:flex;gap:8px;flex-wrap:wrap;}
+    .screen-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+    .screen{display:none;flex-direction:column;gap:12px;}
+    .screen.active{display:flex;}
+    .spinner{width:18px;height:18px;border-radius:999px;border:2px solid rgba(255,255,255,0.2);border-top-color:var(--accent);animation:spin 0.8s linear infinite;}
+    .spin-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);}
+    .mission-card{display:flex;flex-direction:column;gap:10px;}
+    .mission-title{font-size:16px;font-weight:600;}
+    .mission-meta{font-size:13px;color:var(--muted);}
+    .mission-actions{display:flex;gap:8px;flex-wrap:wrap;}
+    @keyframes spin{to{transform:rotate(360deg);}}
     .item-grid{display:flex;flex-direction:column;gap:10px;}
     .item-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,0.02);}
     .item-name{font-weight:600;}
@@ -129,30 +139,69 @@
       </div>
       <div id="tab-hub" class="tab-content active">
         <div class="stack">
-          <section class="panel">
-            <h3>Zone Gates</h3>
-            <div id="doors"></div>
-            <div class="small" id="doorsHint">Loading expansions…</div>
-          </section>
-          <section class="panel">
-            <div class="inline" style="justify-content:space-between;align-items:center;">
-              <div>
-                <p class="scene-title" id="zoneTitle">Drift Yard</p>
-                <p class="scene-desc" id="zoneDesc">Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.</p>
+          <div class="screen-nav" id="screenNav">
+            <button data-screen="main" class="active">Main Hub</button>
+            <button data-screen="locations">Locations Hub</button>
+            <button data-screen="mission">In Mission</button>
+          </div>
+          <div id="screen-main" class="screen active">
+            <section class="panel">
+              <h3>Main Hub Deck</h3>
+              <div class="rows">
+                <div class="inline" style="justify-content:space-between;align-items:center;">
+                  <div>
+                    <p class="scene-title">Zero Lux Command Deck</p>
+                    <p class="scene-desc">Synchronize with the field grid, then step into the locations hub to launch a raid.</p>
+                  </div>
+                  <span class="badge">Hub secure</span>
+                </div>
+                <div id="hubLock" class="muted-box"></div>
+                <button id="enterLocations">Enter locations hub</button>
               </div>
-              <span class="badge" id="zoneBadge">Low risk</span>
-            </div>
-            <div id="raidActions"></div>
-          </section>
-          <section class="panel">
-            <h3>Incoming Haul</h3>
-            <div id="haul"></div>
-          </section>
-          <section class="panel">
-            <h3>Idle Operations</h3>
-            <div id="idleOps"></div>
-          </section>
-          <div class="muted-box" id="hubLock"></div>
+            </section>
+            <section class="panel">
+              <h3>Incoming Haul</h3>
+              <div id="haul"></div>
+            </section>
+            <section class="panel">
+              <h3>Idle Operations</h3>
+              <div id="idleOps"></div>
+            </section>
+          </div>
+          <div id="screen-locations" class="screen">
+            <section class="panel">
+              <h3>Transit Console</h3>
+              <div class="spin-row" id="travelStatus"></div>
+              <button class="btn-secondary" id="returnMain">Return to main hub</button>
+            </section>
+            <section class="panel">
+              <h3>Zone Gates</h3>
+              <div id="doors"></div>
+              <div class="small" id="doorsHint">Loading expansions…</div>
+            </section>
+            <section class="panel">
+              <div class="inline" style="justify-content:space-between;align-items:center;">
+                <div>
+                  <p class="scene-title" id="zoneTitle">Drift Yard</p>
+                  <p class="scene-desc" id="zoneDesc">Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.</p>
+                </div>
+                <span class="badge" id="zoneBadge">Low risk</span>
+              </div>
+              <div id="raidActions"></div>
+            </section>
+          </div>
+          <div id="screen-mission" class="screen">
+            <section class="panel">
+              <h3>Mission Feed</h3>
+              <div class="mission-card">
+                <div class="mission-title" id="missionTitle">No mission active.</div>
+                <div class="mission-meta" id="missionMeta"></div>
+                <div class="progress" id="missionProgress"><span style="width:0%;"></span></div>
+                <div class="small" id="missionLog"></div>
+                <div class="mission-actions" id="missionActions"></div>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
       <div id="tab-inventory" class="tab-content">
@@ -206,7 +255,10 @@
       idleOps:{active:false,id:null,startedAt:null,durationMs:0,etaMinutes:0},
       flags:new Set(),
       log:["Systems cold-started. Zones awaiting tether…"],
-      zone:{id:'drift-yard',name:'Drift Yard',risk:'low',desc:'Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.'}
+      zone:{id:'drift-yard',name:'Drift Yard',risk:'low',desc:'Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.'},
+      screen:'main',
+      travel:{active:false,endsAt:null,target:null},
+      mission:{active:false,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:''}
     };
 
     const ITEM_CATALOG={
@@ -268,6 +320,21 @@
       log:document.getElementById('log'),
       idleOps:document.getElementById('idleOps'),
       hubLock:document.getElementById('hubLock'),
+      screenNav:document.getElementById('screenNav'),
+      screens:{
+        main:document.getElementById('screen-main'),
+        locations:document.getElementById('screen-locations'),
+        mission:document.getElementById('screen-mission')
+      },
+      screenButtons:Array.from(document.querySelectorAll('#screenNav button')),
+      enterLocations:document.getElementById('enterLocations'),
+      returnMain:document.getElementById('returnMain'),
+      travelStatus:document.getElementById('travelStatus'),
+      missionTitle:document.getElementById('missionTitle'),
+      missionMeta:document.getElementById('missionMeta'),
+      missionProgress:document.getElementById('missionProgress'),
+      missionLog:document.getElementById('missionLog'),
+      missionActions:document.getElementById('missionActions'),
       stash:document.getElementById('stash'),
       stashActions:document.getElementById('stashActions'),
       tabs:document.querySelector('.tabs'),
@@ -637,6 +704,10 @@
         btn.classList.toggle('active',target===activeTab);
         btn.disabled=false;
       });
+      if(state.mission.active){
+        const stashBtn=dom.tabButtons.find(btn=>btn.dataset.tab==='field');
+        if(stashBtn) stashBtn.disabled=true;
+      }
       Object.entries(dom.tabContents).forEach(([id,el])=>{
         el.classList.toggle('active',id===activeTab);
       });
@@ -646,6 +717,46 @@
       btn.onclick=()=>{ activeTab=btn.dataset.tab; syncTabs(); };
     });
 
+    function setScreen(screen){
+      if(screen==='locations' && state.mission.active){
+        setCodex('Mission in progress. Locations hub locked.');
+        return;
+      }
+      if(screen==='main' && state.mission.active){
+        setCodex('Mission in progress. Stay on the raid feed.');
+        return;
+      }
+      if(screen==='mission' && !state.mission.active){
+        setCodex('No mission active.');
+        return;
+      }
+      state.screen=screen;
+      renderScreens();
+    }
+
+    function renderScreens(){
+      dom.screenButtons.forEach(btn=>{
+        const target=btn.dataset.screen;
+        const isLocked=target==='mission' && !state.mission.active;
+        const isLocationsLocked=target==='locations' && state.mission.active;
+        const isMainLocked=target==='main' && state.mission.active;
+        btn.classList.toggle('active',target===state.screen);
+        btn.disabled=isLocked || isLocationsLocked || isMainLocked;
+      });
+      if(dom.enterLocations){
+        dom.enterLocations.disabled=state.mission.active;
+      }
+      Object.entries(dom.screens).forEach(([id,el])=>{
+        el.classList.toggle('active',id===state.screen);
+      });
+    }
+
+    dom.screenButtons.forEach(btn=>{
+      btn.onclick=()=>setScreen(btn.dataset.screen);
+    });
+    dom.enterLocations.onclick=()=>setScreen('locations');
+    dom.returnMain.onclick=()=>setScreen('main');
+
     function renderExcursionStatus(){
       dom.excursionStatus.innerHTML=`<b>Loop status:</b> Energy ${state.energy}/${state.maxEnergy} · Backpack ${state.inventory.length}/${state.backpackLimit} · Haul ${state.lootQueue.length} · Stash ${state.stash.items.length}/${state.stashLimit}.`;
       dom.tempoHint.textContent=state.autoSalvage
@@ -654,7 +765,9 @@
     }
 
     function renderHubAccess(){
-      dom.hubLock.textContent='Ops bay is live. Pick a zone gate, run raids, and keep the haul moving.';
+      dom.hubLock.textContent=state.mission.active
+        ? 'Mission underway. Await extraction clearance before entering locations hub.'
+        : 'Ops bay is live. Step into the locations hub to pick a gate and launch a raid.';
     }
 
     function renderZone(){
@@ -671,23 +784,25 @@
         const costParts=[`${raid.energy} energy`];
         if(raid.key) costParts.push(`${raid.key} key`);
         btn.innerHTML=`<span>${raid.label}</span><span class="small">${raid.risk} · ${raid.time} min · ${costParts.join(' · ')}</span>`;
-        btn.onclick=()=>runRaid(raid);
-        if(!canAfford({energy:raid.energy,keys:raid.key||0})) btn.disabled=true;
+        btn.onclick=()=>startMission(raid);
+        if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})) btn.disabled=true;
         if(raid.risk==='high') btn.classList.add('danger');
         dom.raidActions.appendChild(btn);
       });
       const rest=document.createElement('button');
       rest.innerHTML=`<span>Make camp</span><span class="small">recover · ${ACTION_TIMES.camp} min</span>`;
       rest.onclick=runCamp;
+      if(state.mission.active || state.travel.active) rest.disabled=true;
       dom.raidActions.appendChild(rest);
       const trade=document.createElement('button');
       trade.innerHTML=`<span>Cash in signal</span><span class="small">trade · ${ACTION_TIMES.trade} min</span>`;
       trade.onclick=burnSignal;
+      if(state.mission.active || state.travel.active) trade.disabled=true;
       dom.raidActions.appendChild(trade);
       const fuel=document.createElement('button');
       fuel.innerHTML='<span>Burn fuel cell</span><span class="small">boost · instant</span>';
       fuel.onclick=burnFuel;
-      if(state.fuel<=0) fuel.disabled=true;
+      if(state.fuel<=0 || state.mission.active || state.travel.active) fuel.disabled=true;
       dom.raidActions.appendChild(fuel);
       const auto=document.createElement('button');
       auto.textContent=state.autoSalvage?'Disable auto-salvage':'Enable auto-salvage';
@@ -696,7 +811,52 @@
         logMsg(state.autoSalvage?'Auto-salvage engaged.':'Auto-salvage disabled.');
         renderAll();
       };
+      if(state.mission.active || state.travel.active) auto.disabled=true;
       dom.raidActions.appendChild(auto);
+    }
+
+    function renderTravelStatus(){
+      const doorButtons=dom.doors.querySelectorAll('button');
+      doorButtons.forEach(btn=>{
+        btn.disabled=state.mission.active || state.travel.active;
+      });
+      if(state.travel.active){
+        dom.travelStatus.innerHTML=`<span class="spinner"></span><span>Routing to ${state.travel.target.name}… hold tight.</span>`;
+      }else{
+        dom.travelStatus.textContent='Transit clear. Select a zone gate to jump.';
+      }
+    }
+
+    function renderMissionStatus(){
+      if(!state.mission.active){
+        dom.missionTitle.textContent='No mission active.';
+        dom.missionMeta.textContent='Launch a raid from the locations hub to enter the field.';
+        dom.missionProgress.querySelector('span').style.width='0%';
+        dom.missionLog.textContent='';
+        dom.missionActions.innerHTML='';
+        return;
+      }
+      const raid=state.mission.raid;
+      const remainingMs=Math.max(0,state.mission.endsAt-Date.now());
+      const totalMs=Math.max(1,state.mission.endsAt-state.mission.startedAt);
+      const percent=clamp(((totalMs-remainingMs)/totalMs)*100,0,100);
+      dom.missionProgress.querySelector('span').style.width=`${percent}%`;
+      const remainingSec=Math.ceil(remainingMs/1000);
+      dom.missionTitle.textContent=state.mission.completed
+        ? `Mission complete: ${raid.label}`
+        : `In raid: ${raid.label}`;
+      dom.missionMeta.textContent=`${raid.risk} risk · ${raid.time} min op · ${state.mission.location?.name || state.zone.name} · ${state.mission.completed ? 'Extraction window open' : `ETA ${remainingSec}s`}`;
+      dom.missionLog.textContent=state.mission.summary || 'Stay sharp. Watch the feed for extraction clearance.';
+      dom.missionActions.innerHTML='';
+      const exitBtn=document.createElement('button');
+      exitBtn.textContent='Return to locations hub';
+      exitBtn.onclick=()=>{
+        state.mission={active:false,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:''};
+        setScreen('locations');
+        renderAll();
+      };
+      exitBtn.disabled=!state.mission.completed;
+      dom.missionActions.appendChild(exitBtn);
     }
 
     function renderHaul(){
@@ -911,20 +1071,15 @@
         state.energy=clamp(state.energy-20,0,state.maxEnergy);
       }
     }
-    function runRaid(raid){
-      const cost={energy:raid.energy,keys:raid.key||0};
-      if(!canAfford(cost)){
-        setCodex('Not enough resources for that raid.');
-        return;
-      }
-      applyCost(cost);
+    function runRaidInstant(raid,location){
       tickTime(raid.time);
       const gearMods=getGearMods();
       state.hunger=clamp(state.hunger+2,0,state.maxHunger);
       state.thirst=clamp(state.thirst+2,0,state.maxThirst);
       state.stamina=clamp(state.stamina-6+(gearMods.staminaBonus||0),0,state.maxStamina);
 
-      const effectiveRisk=(riskRank[raid.risk] >= riskRank[state.zone.risk]) ? raid.risk : state.zone.risk;
+      const locationRisk=location?.risk || state.zone.risk;
+      const effectiveRisk=(riskRank[raid.risk] >= riskRank[locationRisk]) ? raid.risk : locationRisk;
       const failChance=computeFailChance(effectiveRisk);
       const roll=Math.random();
       const success=roll>failChance;
@@ -942,6 +1097,52 @@
         rollComplication('raid');
         logMsg(`✖ ${raid.label} failed. You limp back empty-handed.`);
       }
+      return success;
+    }
+
+    function startMission(raid){
+      const cost={energy:raid.energy,keys:raid.key||0};
+      if(state.mission.active){
+        setCodex('Mission already underway.');
+        return;
+      }
+      if(state.travel.active){
+        setCodex('Finish travel before launching a mission.');
+        return;
+      }
+      if(!canAfford(cost)){
+        setCodex('Not enough resources for that raid.');
+        return;
+      }
+      applyCost(cost);
+      const now=Date.now();
+      state.mission={
+        active:true,
+        raid,
+        startedAt:now,
+        endsAt:now+(raid.time*1000),
+        completed:false,
+        success:null,
+        summary:'',
+        location:{...state.zone}
+      };
+      setCodex(`Mission launched: ${raid.label}.`);
+      logMsg(`Mission launched: ${raid.label} (${raid.time} min op).`);
+      setActiveTab('hub');
+      setScreen('mission');
+      renderAll();
+    }
+
+    function completeMission(){
+      if(!state.mission.active || state.mission.completed) return;
+      const raid=state.mission.raid;
+      const success=runRaidInstant(raid,state.mission.location);
+      state.mission.completed=true;
+      state.mission.success=success;
+      state.mission.summary=success
+        ? 'Extraction secured. Haul loaded and signal buffers updated.'
+        : 'Extraction rough. Patch up before you re-deploy.';
+      setCodex('Extraction window open. Return to locations hub.');
       renderAll();
     }
 
@@ -1125,11 +1326,24 @@
       const btn=document.createElement('button');
       btn.innerHTML=`<span>${exp.door?.label||exp.meta.name}</span><span class="small">${exp.door?.hint||'Unknown signal'}</span>`;
       btn.onclick=()=>{
-        state.zone={
+        if(state.mission.active){
+          setCodex('Mission in progress. Cannot change locations.');
+          return;
+        }
+        if(state.travel.active){
+          setCodex('Already rerouting. Stand by.');
+          return;
+        }
+        const target={
           id:exp.meta.id,
           name:exp.meta.name,
           risk:exp.door?.risk || 'low',
           desc:exp.door?.desc || exp.door?.hint || 'Signal-streaked salvage zone.'
+        };
+        state.travel={
+          active:true,
+          endsAt:Date.now()+1000,
+          target
         };
         if(exp.door?.note) setCodex(exp.door.note);
         renderAll();
@@ -1192,17 +1406,39 @@
       renderLog();
       renderExcursionStatus();
       renderHubAccess();
+      renderTravelStatus();
+      renderMissionStatus();
       renderIdleOps();
       renderZone();
       renderRaidActions();
       renderHaul();
       renderStash();
+      renderScreens();
       syncTabs();
     }
 
     /* ================= INIT ================= */
     renderAll();
     loadGames();
+
+    function updateTimers(){
+      if(state.travel.active && Date.now()>=state.travel.endsAt){
+        state.zone=state.travel.target;
+        state.travel={active:false,endsAt:null,target:null};
+        setCodex(`Arrived at ${state.zone.name}.`);
+        logMsg(`Transit complete: ${state.zone.name}.`);
+        renderAll();
+      }
+      if(state.mission.active && !state.mission.completed && Date.now()>=state.mission.endsAt){
+        completeMission();
+      }
+      if(state.mission.active){
+        renderMissionStatus();
+      }
+      if(state.travel.active){
+        renderTravelStatus();
+      }
+    }
 
     function ambientTick(){
       tickTime(4);
@@ -1219,7 +1455,10 @@
       state.hunger=clamp(state.hunger+1,0,state.maxHunger);
       state.thirst=clamp(state.thirst+1,0,state.maxThirst);
       if(state.autoSalvage && state.energy>=12 && state.lootQueue.length<16){
-        runRaid(RAID_TEMPLATES[0]);
+        if(!state.mission.active && !state.travel.active){
+          applyCost({energy:RAID_TEMPLATES[0].energy,keys:0});
+          runRaidInstant(RAID_TEMPLATES[0],state.zone);
+        }
       }
       if(state.hunger>=90){
         applyEffects('hp-3,morale-2','fail');
@@ -1237,6 +1476,7 @@
     }
 
     setInterval(ambientTick,6500);
+    setInterval(updateTimers,250);
   </script>
 </body>
 </html>
