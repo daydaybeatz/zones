@@ -15,7 +15,7 @@ desc:Broken streetcars are welded into a plaza of scrap. A pop-up market rots be
 tags:Safe / Trade / Hub
 option:Browse the zine stall => zine-stall | risk:low | time:6 | success:note:Pamphlet details hidden tunnels under the bridge.,log:You trade stickers for intel. | fail:morale-2,log:The vendor rants until you want to flee.
 option:Check the ramen cart => ramen-cart | risk:low | time:5 | success:hunger-8,credits-10,log:Spicy broth clears your head.,note:Cart owner whispers about a missing streamer. | fail:credits-5,hunger-2,log:Soup tastes like battery acid.
-option:Talk to the bored ICE patrol => ice-van | risk:medium | time:7 | success:flag:ice-contact,log:You swap fake paperwork for a badge scan.,morale+3 | fail:heat+2,log:They tag your face for the watchlist.
+option:Talk to the bored ICE patrol => ice-van | risk:medium | time:7 | success:flag:ice-contact,log:You swap fake paperwork for a badge scan.,morale+3 | fail:temp-2,log:They tag your face for the watchlist.
 option:Hire the eboy courier => courier-run | risk:medium | time:8 | success:item:neon sneakers,credits-20,log:Courier gives you glam loot and gossip.,note:He mentions a protest leader under the bridge. | fail:credits-10,log:Courier vanishes mid-stream.
 
 @scene zine-stall
@@ -29,15 +29,15 @@ option:Buy a map => burnside-hub | risk:medium | time:4 | success:item:undergrou
 title:Ramen Cart Under the Bridge
 desc:A chef in LED goggles ladles broth while dodging scooter traffic. Steam mixes with tear gas residue and old smoke.
 tags:Rest / Intel
-option:Ask about the missing streamer => streamer-hunt | risk:medium | time:9 | success:flag:streamer-lead,log:You get a ping location near Riot Alley.,morale+2 | fail:heat+1,log:Chef dodges the question.
+option:Ask about the missing streamer => streamer-hunt | risk:medium | time:9 | success:flag:streamer-lead,log:You get a ping location near Riot Alley.,morale+2 | fail:temp-1,log:Chef dodges the question.
 option:Tip the chef => burnside-hub | risk:low | time:3 | success:credits-5,stamina+4,log:Warm noodles reset your nerves. | fail:credits-2,log:You drop chopsticks into a puddle.
 
 @scene ice-van
 title:Parked ICE Van
 desc:Agents scroll social media to track protest hotspots. One is livestreaming his own badge with a grin like a mask.
 tags:Intel / Risky
-option:Show forged papers => protest-camp | risk:medium | time:7 | success:heat-2,log:They wave you through to the protest camp. | fail:heat+3,log:They ask for backup ID.
-option:Plant a meme-drive bug => burnside-hub | risk:high | time:10 | success:item:meme-drive,flag:van-bugged,log:You slide a hacked USB under the dashboard.,heat+1 | fail:hp-8,log:An agent slams the door on your hand.
+option:Show forged papers => protest-camp | risk:medium | time:7 | success:temp+2,log:They wave you through to the protest camp. | fail:temp-3,log:They ask for backup ID.
+option:Plant a meme-drive bug => burnside-hub | risk:high | time:10 | success:item:meme-drive,flag:van-bugged,log:You slide a hacked USB under the dashboard.,temp-1 | fail:hp-8,log:An agent slams the door on your hand.
 
 @scene courier-run
 title:Eboy Courier Meetup
@@ -52,43 +52,43 @@ desc:Tents, art walls, and portable speakers form a chaotic maze. Slogans change
 tags:Quests / Combat
 option:Meet the protest leader => camp-briefing | risk:low | time:6 | success:flag:camp-ally,log:You hear a plan to hijack a supply drone. | fail:morale-3,log:They distrust outsiders.
 option:Break up a scuffle => protest-camp | risk:medium | time:8 | success:morale+5,log:Both sides cool down and respect you.,note:Camp mood improves. | fail:hp-6,log:A thrown placard hits you.
-option:Intercept agitators => alley-ambush | risk:high | time:12 | success:credits+30,item:riot shield,log:You deter masked vandals.,heat-1 | fail:hp-12,log:Pepper spray floods your eyes on stream.
+option:Intercept agitators => alley-ambush | risk:high | time:12 | success:credits+30,item:riot shield,log:You deter masked vandals.,temp+1 | fail:hp-12,log:Pepper spray floods your eyes on stream.
 
 @scene camp-briefing
 title:Camp Briefing
 desc:The leader paints a whiteboard flowchart connecting drones, dumpsters, and corporate logos like a conspiracy prayer.
 tags:Quest
 option:Accept drone hijack job => drone-yard | risk:medium | time:10 | success:flag:drone-job,log:You agree to reroute a delivery drone.,item:flare paint | fail:morale-2,log:You hesitate and lose face.
-option:Ask for payment up front => protest-camp | risk:medium | time:5 | success:credits+15,log:They pass a hat for you. | fail:heat+1,log:Someone films you asking.
+option:Ask for payment up front => protest-camp | risk:medium | time:5 | success:credits+15,log:They pass a hat for you. | fail:temp-1,log:Someone films you asking.
 
 @scene alley-ambush
 title:Alley Ambush
 desc:Graffiti glows under blacklight. Agitators toss fireworks while an IRL streamer narrates the chaos with a laugh that won't stop.
 tags:Combat / Hazard
 option:Charge the agitators => alley-ambush | risk:high | time:10 | success:hp-4,credits+25,item:flashbang,log:You scatter the crowd and grab dropped gear. | fail:hp-14,log:Firework shrapnel burns your arm.
-option:Use crowd control foam => protest-camp | risk:medium | time:8 | success:item:foam canister,heat-2,log:The foam calms things down. | fail:foam canister,log:Canister jams, making you a meme.
+option:Use crowd control foam => protest-camp | risk:medium | time:8 | success:item:foam canister,temp+2,log:The foam calms things down. | fail:foam canister,log:Canister jams, making you a meme.
 
 @scene streamer-hunt
 title:Streamer Hunt
 desc:A location pin pulses on your HUD. Emoji graffiti points the way into darker alleys like a trail of teeth.
 tags:Quest / Search
 option:Follow the emoji trail => streamer-studio | risk:medium | time:9 | success:flag:found-streamer,log:You locate a makeshift studio behind shutters.,morale+3 | fail:morale-3,log:Trail ends at a puddle of glow paint.
-option:Ask locals on camera => burnside-hub | risk:low | time:6 | success:note:Chat tips reveal a secret ladder near the bridge.,stamina+2 | fail:heat+1,log:Chat calls you cringe.
+option:Ask locals on camera => burnside-hub | risk:low | time:6 | success:note:Chat tips reveal a secret ladder near the bridge.,stamina+2 | fail:temp-1,log:Chat calls you cringe.
 
 @scene streamer-studio
 title:Hidden Streamer Studio
 desc:A neon-lit closet full of ring lights and questionable sponsorship banners, air thick with sweat and cheap ozone.
 tags:Combat / Loot
 option:Rescue the streamer => burnside-hub | risk:medium | time:7 | success:item:viral clip drive,credits+20,log:They pay you with sponsor credits.,flag:streamer-safe | fail:hp-8,log:A tripod smacks you during the brawl.
-option:Loot the merch wall => burnside-hub | risk:high | time:9 | success:item:limited hoodie,credits+15,log:Rare hoodie secured.,heat+1 | fail:heat+3,log:Security drone pings your face.
+option:Loot the merch wall => burnside-hub | risk:high | time:9 | success:item:limited hoodie,credits+15,log:Rare hoodie secured.,temp-1 | fail:temp-3,log:Security drone pings your face.
 
 @scene drone-yard
 title:Drone Yard Raid
 desc:Delivery drones idle on cracked asphalt. Corporate logos are spray-painted with slogans like "TAX THE AESTHETIC" and then smeared over with soot.
 tags:Quest / Combat / Loot
-option:Flash the stolen badge => drone-yard | risk:medium | time:8 | success:heat-3,log:Drones accept your spoofed credentials.,item:payload crate | fail:heat+3,log:Alarm sirens blare.
+option:Flash the stolen badge => drone-yard | risk:medium | time:8 | success:temp+3,log:Drones accept your spoofed credentials.,item:payload crate | fail:temp-3,log:Alarm sirens blare.
 option:Repaint a drone with flare paint => river-cache | risk:medium | time:10 | success:flag:drone-repainted,log:Drone peels off toward the river cache.,morale+2 | fail:hp-6,log:Paint fumes knock you woozy.
-option:Fight off security => drone-yard | risk:high | time:12 | success:item:stun baton,credits+35,log:You scrap a guard bot.,heat+1 | fail:hp-15,log:Stun darts light you up.
+option:Fight off security => drone-yard | risk:high | time:12 | success:item:stun baton,credits+35,log:You scrap a guard bot.,temp-1 | fail:hp-15,log:Stun darts light you up.
 
 @scene river-cache
 title:River Cache
@@ -103,4 +103,15 @@ title:Trolley Bridge Shortcut
 desc:A half-collapsed bridge with LED rope lights. IRL streamers perch on railings for dramatic shots, the river chewing below.
 tags:Traversal / Hazard
 option:Sprint across => burnside-hub | risk:medium | time:5 | success:stamina+6,log:You dash past dangling cameras. | fail:hp-8,log:You slip and scrape across rusted steel.
-option:Pose for the stream => burnside-hub | risk:low | time:4 | success:morale+3,credits+10,log:Chat rains bits on your profile. | fail:heat+1,log:Clip goes viral for the wrong reasons.
+option:Pose for the stream => burnside-hub | risk:low | time:4 | success:morale+3,credits+10,log:Chat rains bits on your profile. | fail:temp-1,log:Clip goes viral for the wrong reasons.
+
+@quest
+id:slums-broadcast
+title:Hijack the Riot Broadcast
+desc:Slip into the signal loft and broadcast the protest feed to the wider grid before ICE scrambles it.
+risk:high
+time:12
+success:item:neon riot jacket,credits+25,morale+5
+fail:hp-10,morale-5
+flag:slums-broadcast
+once:true

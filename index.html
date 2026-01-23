@@ -43,6 +43,7 @@
     .bar.rads span{background:linear-gradient(90deg,#80ffd3,#fffd8a);}    
     .bar.hunger span{background:linear-gradient(90deg,#ffc46a,#ff8c8c);}    
     .bar.thirst span{background:linear-gradient(90deg,#6ad8ff,#7f9cff);}    
+    .bar.temp span{background:linear-gradient(90deg,#8fffa3,#5bd1ff);}    
     .rows{display:flex;flex-direction:column;gap:8px;}
     .meta{color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:10px;}
     .meta b{color:#e8edf7;margin-right:4px;}
@@ -153,7 +154,7 @@
         <button data-tab="hub" class="active">Operations</button>
         <button data-tab="inventory">Backpack</button>
         <button data-tab="field">Stash</button>
-        <button data-tab="log">Signal Log</button>
+        <button data-tab="log">Ops Log</button>
       </div>
       <div id="tab-hub" class="tab-content active">
         <div class="stack">
@@ -213,6 +214,10 @@
                 <span class="badge" id="zoneBadge">Low risk</span>
               </div>
               <div id="raidActions"></div>
+            </section>
+            <section class="panel">
+              <h3>Special Contracts</h3>
+              <div id="questBoard" class="item-grid"></div>
             </section>
           </div>
           <div id="screen-mission" class="screen">
@@ -292,7 +297,7 @@
       </div>
       <div id="tab-log" class="tab-content">
         <section class="panel">
-          <h3>Signal Log</h3>
+          <h3>Ops Log</h3>
           <div id="log" class="log"></div>
         </section>
       </div>
@@ -308,8 +313,8 @@
       hunger:15,maxHunger:100,
       thirst:20,maxThirst:100,
       energy:72,maxEnergy:100,
-      rads:0,heat:0,
-      signal:12,maxSignal:120,
+      rads:0,
+      bodyTemp:98,maxBodyTemp:104,
       scrap:6,
       credits:50,
       fuel:4,
@@ -338,14 +343,14 @@
     };
 
     const ITEM_CATALOG={
-      'rusty flashlight':{type:'tool',rarity:'common',value:6,mods:{riskMod:-0.02,signalBonus:1}},
-      'cargo pants':{type:'armor',rarity:'common',value:7,mods:{carryBonus:2}},
-      'field backpack':{type:'armor',rarity:'uncommon',value:14,mods:{carryBonus:4}},
+      'rusty flashlight':{type:'tool',rarity:'common',value:6,mods:{riskMod:-0.02}},
+      'cargo pants':{type:'armor',rarity:'common',value:7,mods:{carryBonus:2,insulation:0.4}},
+      'field backpack':{type:'armor',rarity:'uncommon',value:14,mods:{carryBonus:4,insulation:0.2}},
       'flare':{type:'tool',rarity:'uncommon',value:10,mods:{lootBonus:0.04}},
       'patch kit':{type:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.04}},
-      'utility coat':{type:'armor',rarity:'uncommon',value:12,mods:{carryBonus:3,staminaBonus:1}},
+      'utility coat':{type:'armor',rarity:'uncommon',value:12,mods:{carryBonus:3,staminaBonus:1,insulation:0.8}},
       'microcell':{type:'tool',rarity:'rare',value:22,mods:{idleSpeed:0.15,energyRegen:1,staminaBonus:2}},
-      'rigged backpack':{type:'armor',rarity:'rare',value:24,mods:{carryBonus:6,signalBonus:1}},
+      'rigged backpack':{type:'armor',rarity:'rare',value:24,mods:{carryBonus:6,insulation:0.3}},
       'bandage':{type:'consumable',rarity:'common',value:4,effect:'hp+8'},
       'ration bar':{type:'consumable',rarity:'common',value:3,effect:'hunger-12,morale+2'},
       'water flask':{type:'consumable',rarity:'common',value:4,effect:'thirst-12'},
@@ -353,15 +358,19 @@
       'scrap wiring':{type:'junk',rarity:'common',value:2,salvage:2},
       'old coin':{type:'junk',rarity:'uncommon',value:6,salvage:1},
       'lockbox key':{type:'key',rarity:'rare',value:18},
-      'signal prism':{type:'junk',rarity:'rare',value:20,salvage:6},
+      'echo prism':{type:'junk',rarity:'rare',value:20,salvage:6},
       'drone core':{type:'tool',rarity:'epic',value:32,mods:{lootBonus:0.08,energyRegen:2}},
-      'relic shard':{type:'junk',rarity:'legendary',value:60,salvage:12}
+      'relic shard':{type:'junk',rarity:'legendary',value:60,salvage:12},
+      'rust town crown':{type:'armor',rarity:'legendary',value:85,mods:{moraleBonus:4,insulation:0.6}},
+      'safehouse warden coat':{type:'armor',rarity:'legendary',value:90,mods:{staminaBonus:4,insulation:1}},
+      'forest monolith sigil':{type:'tool',rarity:'legendary',value:95,mods:{lootBonus:0.12,energyRegen:2}},
+      'neon riot jacket':{type:'armor',rarity:'legendary',value:88,mods:{carryBonus:3,insulation:0.9,moraleBonus:2}}
     };
 
     const LOOT_BY_RARITY={
       common:['bandage','ration bar','water flask','scrap wiring','rusty flashlight','cargo pants'],
       uncommon:['flare','patch kit','old coin','spark tonic','utility coat','field backpack'],
-      rare:['microcell','lockbox key','signal prism','rigged backpack'],
+      rare:['microcell','lockbox key','echo prism','rigged backpack'],
       epic:['drone core'],
       legendary:['relic shard']
     };
@@ -373,13 +382,13 @@
       {id:'vault',label:'Lockbox Crack',desc:'Spend a key to crack sealed cache.',time:10,energy:10,loot:3,risk:'high',key:1}
     ];
 
-    const ACTION_TIMES={camp:10,trade:8};
+    const ACTION_TIMES={camp:10};
     const riskTable={low:0.08,medium:0.2,high:0.32,deadly:0.45};
     const riskRank={low:1,medium:2,high:3,deadly:4};
     const expansions={};
     const idleOperations=[
       {id:'salvage',label:'Drone salvage',desc:'Remote drones bring back scrap and junk.',duration:7,cost:{credits:8},reward:'scrap+3,item:scrap wiring'},
-      {id:'survey',label:'Signal sweep',desc:'Low-risk sweep for signals and maps.',duration:5,cost:{credits:5},reward:'signal+8,credits+2'},
+      {id:'survey',label:'Cartography sweep',desc:'Low-risk sweep for new routes and caches.',duration:5,cost:{credits:5},reward:'credits+4,item:old coin'},
       {id:'resupply',label:'Supply errand',desc:'Courier route for field medicine.',duration:9,cost:{credits:10,scrap:1},reward:'item:bandage,item:water flask'}
     ];
 
@@ -394,6 +403,7 @@
       zoneDesc:document.getElementById('zoneDesc'),
       zoneBadge:document.getElementById('zoneBadge'),
       raidActions:document.getElementById('raidActions'),
+      questBoard:document.getElementById('questBoard'),
       haul:document.getElementById('haul'),
       haulDetail:document.getElementById('haulDetail'),
       haulActions:document.getElementById('haulActions'),
@@ -454,6 +464,14 @@
     /* ================= UTILITIES ================= */
     const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
     const pct=(v,max)=>Math.round((v/max)*100);
+    const NORMAL_BODY_TEMP=98;
+    const BODY_TEMP_MIN=70;
+    const BODY_TEMP_MAX=104;
+    const moveToward=(value,target,amount)=>{
+      if(value<target) return Math.min(target,value+amount);
+      if(value>target) return Math.max(target,value-amount);
+      return value;
+    };
     const fmtTime=(mins)=>{
       const m=mins%60;const h=Math.floor(mins/60)%24;const suffix=h>=12?"PM":"AM";
       const hour=((h+11)%12+1);return `${hour}:${m.toString().padStart(2,'0')} ${suffix}`;
@@ -478,6 +496,7 @@
     };
     const formatEffects=(effect)=>{
       if(!effect) return [];
+      const labels={temp:'body temp'};
       return effect.split(',').map(token=>token.trim()).filter(Boolean).map(token=>{
         if(token.startsWith('item:')) return `Adds item: ${token.slice(5).trim()}`;
         if(token.startsWith('note:')) return token.slice(5).trim();
@@ -487,7 +506,8 @@
         if(match){
           const stat=match[1];
           const delta=match[2];
-          return `${stat} ${delta}`;
+          const label=labels[stat] || stat;
+          return `${label} ${delta}`;
         }
         return token;
       });
@@ -710,7 +730,8 @@
         ['Energy','energy','maxEnergy','stamina'],
         ['Hunger','hunger','maxHunger','hunger'],
         ['Hydration','thirst','maxThirst','thirst'],
-        ['Radiation','rads',100,'rads']
+        ['Radiation','rads',100,'rads'],
+        ['Body Temp','bodyTemp','maxBodyTemp','temp']
       ];
       dom.stats.innerHTML=rows.map(([label,key,maxKey,cls])=>{
         const val=state[key];const max=(typeof maxKey==='string')?state[maxKey]:maxKey;
@@ -721,9 +742,6 @@
         `<span class="pill-inline"><b>Scrap</b>${state.scrap}</span>`+
         `<span class="pill-inline"><b>Fuel</b>${state.fuel}</span>`+
         `<span class="pill-inline"><b>Keys</b>${state.keys}</span>`+
-        `<span class="pill-inline"><b>Heat</b>${state.heat}</span>`+
-        `<span class="pill-inline"><b>Pressure</b>${Math.round(calcPressure()*100)}%</span>`+
-        `<span class="pill-inline"><b>Signal</b>${state.signal}/${state.maxSignal}</span>`+
         `<span class="pill-inline"><b>Time</b>${fmtTime(state.timeMinutes)}</span>`+
         `<span class="pill-inline"><b>Day</b>${state.day}</span>`;
     }
@@ -1063,7 +1081,6 @@
 
     function renderRaidActions(){
       dom.raidActions.innerHTML='';
-      const gearMods=getGearMods();
       RAID_TEMPLATES.forEach(raid=>{
         const btn=document.createElement('button');
         const costParts=[`${raid.energy} energy`];
@@ -1079,11 +1096,6 @@
       rest.onclick=runCamp;
       if(state.mission.active || state.travel.active) rest.disabled=true;
       dom.raidActions.appendChild(rest);
-      const trade=document.createElement('button');
-      trade.innerHTML=`<span>Cash in signal</span><span class="small">trade · ${ACTION_TIMES.trade} min</span>`;
-      trade.onclick=burnSignal;
-      if(state.mission.active || state.travel.active) trade.disabled=true;
-      dom.raidActions.appendChild(trade);
       const fuel=document.createElement('button');
       fuel.innerHTML='<span>Burn fuel cell</span><span class="small">boost · instant</span>';
       fuel.onclick=burnFuel;
@@ -1098,6 +1110,43 @@
       };
       if(state.mission.active || state.travel.active) auto.disabled=true;
       dom.raidActions.appendChild(auto);
+    }
+
+    function renderQuestBoard(){
+      if(!dom.questBoard) return;
+      dom.questBoard.innerHTML='';
+      const exp=expansions[state.zone.id];
+      if(!exp || !exp.quests || !exp.quests.length){
+        dom.questBoard.innerHTML='<div class="muted-box">No special contracts in this zone.</div>';
+        return;
+      }
+      exp.quests.forEach(quest=>{
+        const card=document.createElement('div');
+        card.className='op-card';
+        const title=document.createElement('div');
+        title.className='mission-title';
+        title.textContent=quest.title || 'Special contract';
+        const meta=document.createElement('div');
+        meta.className='op-meta';
+        meta.textContent=`${quest.risk} risk · ${quest.time} min`;
+        const desc=document.createElement('div');
+        desc.className='small';
+        desc.textContent=quest.desc || 'A one-shot opportunity for a legendary reward.';
+        const actions=document.createElement('div');
+        actions.className='op-actions';
+        const btn=document.createElement('button');
+        const questFlag=quest.flag || quest.id;
+        const completed=quest.once && questFlag && state.flags.has(questFlag);
+        btn.textContent=completed ? 'Contract complete' : 'Deploy';
+        btn.onclick=()=>runQuest(quest);
+        btn.disabled=completed || state.mission.active || state.travel.active;
+        actions.appendChild(btn);
+        card.appendChild(title);
+        card.appendChild(meta);
+        card.appendChild(desc);
+        card.appendChild(actions);
+        dom.questBoard.appendChild(card);
+      });
     }
 
     function renderTravelStatus(){
@@ -1242,24 +1291,16 @@
     }
 
     /* ================= GAMEPLAY ================= */
-    function calcPressure(){
-      const hungerPressure=state.hunger>70?0.08:0;
-      const thirstPressure=state.thirst>70?0.08:0;
-      const fatiguePressure=state.stamina<30?0.06:0;
-      const energyPressure=state.energy<25?0.08:0;
-      const radiationPressure=state.rads*0.01;
-      const heatPressure=state.heat*0.012;
-      const base=0.06;
-      return clamp(base+hungerPressure+thirstPressure+fatiguePressure+energyPressure+radiationPressure+heatPressure,0,0.85);
-    }
-
     function computeFailChance(risk){
       const base=riskTable[risk] ?? 0.12;
-      const pressure=calcPressure();
       const gearMods=getGearMods();
-      const heatPenalty=Math.min(0.12,state.heat*0.002);
       const radsPenalty=Math.min(0.08,state.rads*0.004);
-      const total=base + pressure*0.25 + heatPenalty + radsPenalty - (gearMods.riskMod||0);
+      const hungerPenalty=state.hunger>70?0.05:0;
+      const thirstPenalty=state.thirst>70?0.05:0;
+      const fatiguePenalty=state.stamina<30?0.04:0;
+      const energyPenalty=state.energy<25?0.06:0;
+      const tempPenalty=state.bodyTemp<94?0.07:(state.bodyTemp>102?0.05:0);
+      const total=base + hungerPenalty + thirstPenalty + fatiguePenalty + energyPenalty + radsPenalty + tempPenalty - (gearMods.riskMod||0);
       return clamp(total,0.05,0.75);
     }
 
@@ -1279,13 +1320,13 @@
     }
 
     function rollComplication(source){
-      const pressure=calcPressure();
-      if(Math.random()>pressure) return;
+      const tension=computeFailChance(state.zone.risk) * 0.55;
+      if(Math.random()>tension) return;
       const complications=[
-        {desc:'A distant tracker pings your heat signature.',effects:'heat+2,morale-2'},
-        {desc:'An unseen stalker snatches some scrap.',effects:'scrap-2,heat+1'},
+        {desc:'A cold gust slips through your seals.',effects:'temp-2,stamina-2'},
+        {desc:'An unseen stalker snatches some scrap.',effects:'scrap-2,temp-1'},
         {desc:'Hunger cramps slow you down.',effects:'stamina-6,hp-3'},
-        {desc:'Static surge fries a component.',effects:'credits-6,heat+1'},
+        {desc:'Static surge fries a component.',effects:'credits-6,temp-1'},
         {desc:'Radiation spike makes your skin crawl.',effects:'rads+2,hp-4'}
       ];
       const hit=complications[Math.floor(Math.random()*complications.length)];
@@ -1315,13 +1356,12 @@
           else if(stat==='hunger') state.hunger=clamp(state.hunger+delta,0,state.maxHunger);
           else if(stat==='thirst') state.thirst=clamp(state.thirst+delta,0,state.maxThirst);
           else if(stat==='rads') state.rads=Math.max(0,state.rads+delta);
-          else if(stat==='heat') state.heat=Math.max(0,state.heat+delta);
           else if(stat==='credits') state.credits=Math.max(0,state.credits+delta);
           else if(stat==='scrap') state.scrap=Math.max(0,state.scrap+delta);
           else if(stat==='energy') state.energy=clamp(state.energy+delta,0,state.maxEnergy);
           else if(stat==='fuel') state.fuel=Math.max(0,state.fuel+delta);
           else if(stat==='keys') state.keys=Math.max(0,state.keys+delta);
-          else if(stat==='signal') state.signal=clamp(state.signal+delta,0,state.maxSignal);
+          else if(stat==='temp') state.bodyTemp=clamp(state.bodyTemp+delta,BODY_TEMP_MIN,BODY_TEMP_MAX);
         }
       });
       if(outcome==='fail' && state.hp<=0){
@@ -1343,21 +1383,45 @@
       const failChance=computeFailChance(effectiveRisk);
       const roll=Math.random();
       const success=roll>failChance;
+      state.bodyTemp=clamp(state.bodyTemp-1.1,BODY_TEMP_MIN,BODY_TEMP_MAX);
       if(success){
         const lootBonus=gearMods.lootBonus || 0;
         const pulls=Math.max(1,raid.loot+(Math.random()<0.35?1:0));
         for(let i=0;i<pulls;i++){
           state.lootQueue.push(rollLootItem(effectiveRisk,lootBonus));
         }
-        state.signal=clamp(state.signal+4+(gearMods.signalBonus||0),0,state.maxSignal);
-        state.heat=clamp(state.heat+1,0,999);
         logMsg(`✓ ${raid.label} succeeded. Haul inbound.`);
       }else{
-        applyEffects('hp-6,morale-4,heat+2','fail');
+        applyEffects('hp-6,morale-4,temp-2','fail');
         rollComplication('raid');
         logMsg(`✖ ${raid.label} failed. You limp back empty-handed.`);
       }
       return success;
+    }
+
+    function runQuest(quest){
+      if(state.mission.active || state.travel.active){
+        setCodex('Finish current operations before starting a contract.');
+        return;
+      }
+      const questFlag=quest.flag || quest.id;
+      if(quest.once && questFlag && state.flags.has(questFlag)){
+        setCodex('That contract has already been completed.');
+        return;
+      }
+      tickTime(quest.time);
+      const failChance=computeFailChance(quest.risk || state.zone.risk);
+      const success=Math.random()>failChance;
+      if(success){
+        applyEffects(quest.success,'success');
+        if(questFlag) state.flags.add(questFlag);
+        logMsg(`✓ Contract complete: ${quest.title}.`);
+        setCodex('Legendary cache secured. Return to hub.');
+      }else{
+        applyEffects(quest.fail,'fail');
+        logMsg(`✖ Contract failed: ${quest.title}.`);
+      }
+      renderAll();
     }
 
     function startMission(raid){
@@ -1400,7 +1464,7 @@
       state.mission.completed=true;
       state.mission.success=success;
       state.mission.summary=success
-        ? 'Extraction secured. Haul loaded and signal buffers updated.'
+        ? 'Extraction secured. Haul loaded and sealed.'
         : 'Extraction rough. Patch up before you re-deploy.';
       setCodex('Extraction window open. Return to locations hub.');
       renderAll();
@@ -1545,27 +1609,13 @@
       const gearMods=getGearMods();
       state.stamina=clamp(state.stamina+14,0,state.maxStamina);
       state.hp=clamp(state.hp+4,0,state.maxHp);
-      state.morale=clamp(state.morale+4,0,state.maxMorale);
+      state.morale=clamp(state.morale+4+(gearMods.moraleBonus||0),0,state.maxMorale);
       state.energy=clamp(state.energy+18+(gearMods.energyRegen||0),0,state.maxEnergy);
       state.hunger=clamp(state.hunger+3,0,state.maxHunger);
       state.thirst=clamp(state.thirst+3,0,state.maxThirst);
-      state.heat=Math.max(0,state.heat-3);
-      logMsg('You bunker down, reset power cells, and recover energy.');
+      state.bodyTemp=moveToward(state.bodyTemp,NORMAL_BODY_TEMP,4);
+      logMsg('You bunker down, warm up, and recover energy.');
       rollComplication('camp');
-      renderAll();
-    }
-
-    function burnSignal(){
-      if(state.signal<10){
-        logMsg('Not enough signal to trade.');
-        return;
-      }
-      tickTime(ACTION_TIMES.trade);
-      const payout=5+Math.floor(state.signal/12);
-      state.signal=Math.max(0,state.signal-10);
-      state.credits+=payout;
-      state.scrap=clamp(state.scrap+1,0,999);
-      logMsg(`Signal monetized for ${payout} credits and salvage.`);
       renderAll();
     }
 
@@ -1612,7 +1662,7 @@
 
     function addDoor(exp){
       const btn=document.createElement('button');
-      btn.innerHTML=`<span>${exp.door?.label||exp.meta.name}</span><span class="small">${exp.door?.hint||'Unknown signal'}</span>`;
+      btn.innerHTML=`<span>${exp.door?.label||exp.meta.name}</span><span class="small">${exp.door?.hint||'Unknown contact'}</span>`;
       btn.onclick=()=>{
         if(state.mission.active){
           setCodex('Mission in progress. Cannot change locations.');
@@ -1626,7 +1676,7 @@
           id:exp.meta.id,
           name:exp.meta.name,
           risk:exp.door?.risk || 'low',
-          desc:exp.door?.desc || exp.door?.hint || 'Signal-streaked salvage zone.'
+          desc:exp.door?.desc || exp.door?.hint || 'Salvage zone marked by strange chatter.'
         };
         state.travel={
           active:true,
@@ -1640,11 +1690,11 @@
     }
 
     function parseOption(str){
-      // Format: Label => target | risk:low | time:10 | success:hp+5,credits+10 | fail:hp-5 | rad:1 | heat:1
+      // Format: Label => target | risk:low | time:10 | success:hp+5,credits+10 | fail:hp-5 | rad:1 | temp:1
       const segments=str.split('|').map(s=>s.trim()).filter(Boolean);
       const [labelPart,...rest]=segments;
       const [label,target]=labelPart.split('=>').map(s=>s&&s.trim());
-      const opt={label:label||'Action',target:target||null,risk:'low',time:8,success:'',fail:'',rad:0,heat:0};
+      const opt={label:label||'Action',target:target||null,risk:'low',time:8,success:'',fail:'',rad:0,temp:0};
       rest.forEach(seg=>{
         const [k,vRaw]=seg.split(':');
         const v=vRaw?.trim();
@@ -1655,25 +1705,44 @@
         else if(key==='success') opt.success=v;
         else if(key==='fail') opt.fail=v;
         else if(key==='rad') opt.rad=Number(v||0);
-        else if(key==='heat') opt.heat=Number(v||0);
+        else if(key==='temp') opt.temp=Number(v||0);
       });
       return opt;
     }
 
     function parseExpansion(raw){
-      const exp={meta:{},door:{},scenes:{}};
+      const exp={meta:{},door:{},scenes:{},quests:[]};
       let scope='meta';
       let currentScene=null;
+      let currentQuest=null;
       raw.split(/\r?\n/).forEach(line=>{
         line=line.trim();
         if(!line || line.startsWith('#')) return;
-        if(line.startsWith('@expansion')){scope='meta';currentScene=null;return;}
-        if(line.startsWith('@door')){scope='door';currentScene=null;return;}
+        if(line.startsWith('@expansion')){scope='meta';currentScene=null;currentQuest=null;return;}
+        if(line.startsWith('@door')){scope='door';currentScene=null;currentQuest=null;return;}
         if(line.startsWith('@scene')){
           scope='scene';
+          currentQuest=null;
           const id=line.split(/\s+/)[1] || `scene-${Object.keys(exp.scenes).length+1}`;
           currentScene={id,title:'',desc:'',tags:'',options:[]};
           exp.scenes[id]=currentScene;return;
+        }
+        if(line.startsWith('@quest')){
+          scope='quest';
+          currentScene=null;
+          currentQuest={
+            id:`quest-${exp.quests.length+1}`,
+            title:'Special contract',
+            desc:'',
+            risk:'medium',
+            time:10,
+            success:'',
+            fail:'',
+            once:true,
+            flag:''
+          };
+          exp.quests.push(currentQuest);
+          return;
         }
         const [key,...rest]=line.split(':');
         const value=rest.join(':').trim();
@@ -1683,6 +1752,11 @@
           if(key==='option') currentScene.options.push(parseOption(value));
           else if(key==='desc') currentScene.desc += (currentScene.desc?' ':'') + value;
           else currentScene[key]=value;
+        }else if(scope==='quest' && currentQuest){
+          if(key==='desc') currentQuest.desc += (currentQuest.desc?' ':'') + value;
+          else if(key==='time') currentQuest.time=Number(value || 10);
+          else if(key==='once') currentQuest.once=value !== 'false';
+          else currentQuest[key]=value;
         }
       });
       return exp;
@@ -1699,6 +1773,7 @@
       renderIdleOps();
       renderZone();
       renderRaidActions();
+      renderQuestBoard();
       renderHaul();
       renderStash();
       renderItemDetails();
@@ -1741,10 +1816,17 @@
         }
       }
       const gearMods=getGearMods();
-      state.signal=clamp(state.signal+2+(gearMods.signalBonus||0),0,state.maxSignal);
       state.energy=clamp(state.energy+4+(gearMods.energyRegen||0),0,state.maxEnergy);
       state.hunger=clamp(state.hunger+1,0,state.maxHunger);
       state.thirst=clamp(state.thirst+1,0,state.maxThirst);
+      const inHub=state.screen==='main' || state.screen==='locations';
+      if(inHub){
+        state.bodyTemp=moveToward(state.bodyTemp,NORMAL_BODY_TEMP,1.6);
+      }else{
+        const insulation=gearMods.insulation || 0;
+        const loss=Math.max(0.4,1.3-insulation);
+        state.bodyTemp=clamp(state.bodyTemp-loss,BODY_TEMP_MIN,BODY_TEMP_MAX);
+      }
       if(state.autoSalvage && state.energy>=12 && state.lootQueue.length<16){
         if(!state.mission.active && !state.travel.active){
           applyCost({energy:RAID_TEMPLATES[0].energy,keys:0});
@@ -1759,10 +1841,19 @@
         applyEffects('hp-4,stamina-5','fail');
         logMsg('Dehydration blurs your vision.');
       }
-      rollComplication('idle time');
-      if(state.timeMinutes%60===0){
-        logMsg('The hub crackles. Passive signal trickles in.');
+      if(state.bodyTemp<=92){
+        applyEffects('hp-2,stamina-3','fail');
+        if(state.timeMinutes%60===0){
+          logMsg('Cold seeps into your limbs. Find shelter or warm up soon.');
+        }
       }
+      if(state.bodyTemp>=103){
+        applyEffects('hp-2,morale-2','fail');
+        if(state.timeMinutes%60===0){
+          logMsg('Heat haze clouds your focus. Cool down before it worsens.');
+        }
+      }
+      rollComplication('idle time');
       renderAll();
     }
 

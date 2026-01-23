@@ -22,7 +22,7 @@ title:Scrap Kiosk
 desc:Piles of stripped circuitry and empty ammo tins. A fan rattles overhead like loose bones.
 tags:Trade
 option:Sell copper wiring => market-square | risk:low | time:5 | success:credits+20,log:You sell scrap for quick cash. | fail:credits+5,log:Only partial payout.
-option:Browse exo-suit junk => market-square | risk:medium | time:7 | success:item:exo brace,heat+1,log:You find a working brace. | fail:morale-2,log:Everything is rusted through.
+option:Browse exo-suit junk => market-square | risk:medium | time:7 | success:item:exo brace,temp+1,log:You find a working brace. | fail:morale-2,log:Everything is rusted through.
 
 @scene medic
 title:Patchwork Clinic
@@ -37,3 +37,14 @@ desc:A wall of paper scraps, coordinates, and desperate promises. A faded poster
 tags:Intel
 option:Study a convoy map => market-square | risk:low | time:6 | success:note:Marked a supply convoy route near the canyons.,log:You memorize the pattern. | fail:morale-2
 option:Trade gossip for cash => market-square | risk:medium | time:5 | success:credits+12,morale+2 | fail:credits+2,morale-2,log:Nobody trusts your intel today.
+
+@quest
+id:rusttown-crown
+title:Secure the Rust Crown
+desc:Track down the crooked clock tower's hidden coffer and reclaim the ceremonial helm before it is fenced.
+risk:high
+time:12
+success:item:rust town crown,credits+20,morale+4
+fail:hp-8,morale-4
+flag:rusttown-crown
+once:true

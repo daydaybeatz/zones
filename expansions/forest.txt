@@ -21,7 +21,7 @@ option:Forage for herbs => trail-edge | risk:low | time:10 | success:item:glowin
 title:Shadowed Clearing
 desc:Broken stone pillars ring a shallow pool that mirrors your visor in a smear of static.
 tags:Staging
-option:Deploy a signal flare => clearing | risk:medium | time:8 | success:heat+2,flag:flare-up,log:Your flare stains the canopy red. | fail:heat+1,log:Flare sputters but still warms the dead air.
+option:Deploy a signal flare => clearing | risk:medium | time:8 | success:temp+2,flag:flare-up,log:Your flare stains the canopy red. | fail:temp+1,log:Flare sputters but still warms the dead air.
 option:Inspect old camp => cache | risk:low | time:7 | success:item:coil battery,log:You loot a forgotten cache.,morale+2 | fail:morale-2,log:Only gnawed bones and picked metal remain.
 option:Approach strange monolith => monolith | risk:high | time:14 | success:note:Monolith etched with coordinates to an underground hatch.,credits+10,log:You copy down the markings with shaking hands. | fail:morale-6,rads+3,log:A wave of nausea folds you to the ground.
 option:Circle back => trail-edge | risk:low | time:6 | success:stamina+4 | fail:stamina+2
@@ -39,7 +39,7 @@ option:Cut open the cab => cache | risk:medium | time:9 | success:credits+15,ite
 title:Forgotten Cache
 desc:Ripped duffels, empty syringes, and a half-drained lantern form a hollow campsite behind the wreck.
 tags:Salvage / Intel
-option:Patch your suit => clearing | risk:low | time:8 | success:stamina+10,heat-1,log:Suit seals tightened. | fail:stamina-4,log:You over-tighten straps.
+option:Patch your suit => clearing | risk:low | time:8 | success:stamina+10,temp+1,log:Suit seals tightened. | fail:stamina-4,log:You over-tighten straps.
 option:Disarm tripwire => trail-edge | risk:high | time:10 | success:item:copper wire,credits+8,log:You coil the wire without a sound. | fail:hp-10,log:Trap snaps and grazes you.
 option:Follow muddy tracks => monolith | risk:medium | time:11 | success:flag:forest-tracks,log:Tracks sink toward the monolith. | fail:morale-3,log:Tracks wash out in the rain.
 
@@ -48,5 +48,16 @@ title:Obsidian Monolith
 desc:A human-height stone hums under your palm. Fresh graffiti reads "IF YOU CAN READ THIS, RUN" and is already bleeding.
 tags:Weird / Lore
 option:Touch the glyphs => monolith | risk:high | time:9 | success:morale+4,flag:forest-glyph,log:Symbols burn into your memory. | fail:morale-6,hp-6,log:Your head pounds with echoes.
-option:Tune the beacon => clearing | risk:medium | time:8 | success:note:Beacon harmonics stored for later.,credits+12,log:You catch the pattern before it fades. | fail:heat+1,log:Feedback screams through your headset.
-option:Back away quietly => clearing | risk:low | time:4 | success:stamina+3,heat-1 | fail:stamina+1
+option:Tune the beacon => clearing | risk:medium | time:8 | success:note:Beacon harmonics stored for later.,credits+12,log:You catch the pattern before it fades. | fail:temp-1,log:Feedback screams through your headset.
+option:Back away quietly => clearing | risk:low | time:4 | success:stamina+3,temp+1 | fail:stamina+1
+
+@quest
+id:forest-heart
+title:Harvest the Monolith Heart
+desc:Trace the etched coordinates to a buried hatch and retrieve the humming core before the forest swallows it.
+risk:high
+time:14
+success:item:forest monolith sigil,credits+22,morale+4
+fail:hp-10,rads+3,morale-3
+flag:forest-heart
+once:true
