@@ -21,7 +21,7 @@ title:Supply Crates
 desc:Plastic crates are labeled with dates long past. Some are sealed with old mercenary logos that look more like curses now.
 tags:Storage
 option:Patch your armor => bunks | risk:low | time:10 | success:stamina+10,morale+2,log:Armor straps tightened. | fail:stamina+4
-option:Wire a motion sensor => bunks | risk:medium | time:15 | success:heat-1,flag:warded,log:You rig a sensor facing the hallway. | fail:stamina-6,morale-2,log:The soldering iron dies mid-job.
+option:Wire a motion sensor => bunks | risk:medium | time:15 | success:temp+1,flag:warded,log:You rig a sensor facing the hallway. | fail:stamina-6,morale-2,log:The soldering iron dies mid-job.
 
 @scene hallway
 title:Maintenance Hall
@@ -29,3 +29,14 @@ desc:A dripping hallway leads deeper into the safehouse. Faded graffiti reads "M
 tags:Transit
 option:Return to bunks => bunks | risk:low | time:4 | success:morale+1 | fail:morale-1
 option:Stretch legs => bunks | risk:low | time:6 | success:stamina+8,log:You loosen up with hallway laps. | fail:stamina+2
+
+@quest
+id:safehouse-vault
+title:Crack the Hidden Armory
+desc:Find the armory lockbox and pry out the warden's protective gear before scavengers return.
+risk:high
+time:13
+success:item:safehouse warden coat,credits+18,stamina+4
+fail:hp-9,morale-4
+flag:safehouse-vault
+once:true
