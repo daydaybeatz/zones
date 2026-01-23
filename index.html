@@ -317,6 +317,7 @@
       day:1,timeMinutes:6*60,
       backpackLimit:12,
       stashLimit:40,
+      stashUpgradeLevel:0,
       inventory:["rusty flashlight","ration bar","scrap wiring"],
       equipped:[],
       codex:["Hub online. Haul bays clear."],
@@ -338,9 +339,13 @@
 
     const ITEM_CATALOG={
       'rusty flashlight':{type:'tool',rarity:'common',value:6,mods:{riskMod:-0.02,signalBonus:1}},
+      'cargo pants':{type:'armor',rarity:'common',value:7,mods:{carryBonus:2}},
+      'field backpack':{type:'armor',rarity:'uncommon',value:14,mods:{carryBonus:4}},
       'flare':{type:'tool',rarity:'uncommon',value:10,mods:{lootBonus:0.04}},
       'patch kit':{type:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.04}},
+      'utility coat':{type:'armor',rarity:'uncommon',value:12,mods:{carryBonus:3,staminaBonus:1}},
       'microcell':{type:'tool',rarity:'rare',value:22,mods:{idleSpeed:0.15,energyRegen:1,staminaBonus:2}},
+      'rigged backpack':{type:'armor',rarity:'rare',value:24,mods:{carryBonus:6,signalBonus:1}},
       'bandage':{type:'consumable',rarity:'common',value:4,effect:'hp+8'},
       'ration bar':{type:'consumable',rarity:'common',value:3,effect:'hunger-12,morale+2'},
       'water flask':{type:'consumable',rarity:'common',value:4,effect:'thirst-12'},
@@ -354,9 +359,9 @@
     };
 
     const LOOT_BY_RARITY={
-      common:['bandage','ration bar','water flask','scrap wiring','rusty flashlight'],
-      uncommon:['flare','patch kit','old coin','spark tonic'],
-      rare:['microcell','lockbox key','signal prism'],
+      common:['bandage','ration bar','water flask','scrap wiring','rusty flashlight','cargo pants'],
+      uncommon:['flare','patch kit','old coin','spark tonic','utility coat','field backpack'],
+      rare:['microcell','lockbox key','signal prism','rigged backpack'],
       epic:['drone core'],
       legendary:['relic shard']
     };
@@ -527,8 +532,9 @@
       }
       return 'scrap wiring';
     };
-    const getGearMods=()=>{
+    const getGearMods=(excludeItem)=>{
       return state.equipped.reduce((acc,item)=>{
+        if(excludeItem && item===excludeItem) return acc;
         const mod=getItem(item).mods;
         if(!mod) return acc;
         Object.entries(mod).forEach(([key,val])=>{
@@ -536,6 +542,31 @@
         });
         return acc;
       },{});
+    };
+    const getBackpackLimit=(excludeItem)=>state.backpackLimit+(getGearMods(excludeItem).carryBonus||0);
+    const canUnequipItem=(item)=>state.inventory.length<getBackpackLimit(item);
+    const STASH_UPGRADE_STEP=6;
+    const STASH_UPGRADE_BASE_COST={credits:32,scrap:4};
+    const STASH_UPGRADE_GROWTH={credits:24,scrap:3};
+    const getStashUpgradeCost=()=>{
+      const level=state.stashUpgradeLevel;
+      return {
+        credits:STASH_UPGRADE_BASE_COST.credits+(STASH_UPGRADE_GROWTH.credits*level),
+        scrap:STASH_UPGRADE_BASE_COST.scrap+(STASH_UPGRADE_GROWTH.scrap*level)
+      };
+    };
+    const upgradeStash=()=>{
+      const cost=getStashUpgradeCost();
+      if(!canAfford(cost)){
+        setCodex('Not enough resources to expand the stash.');
+        return;
+      }
+      applyCost(cost);
+      state.stashLimit+=STASH_UPGRADE_STEP;
+      state.stashUpgradeLevel+=1;
+      setCodex(`Vault expanded by ${STASH_UPGRADE_STEP} slots.`);
+      logMsg(`Vault expansion complete. Capacity now ${state.stashLimit}.`);
+      renderAll();
     };
     const formatCost=(cost)=>Object.entries(cost).map(([k,v])=>`${v} ${k}`).join(' · ');
     const canAfford=(cost)=>Object.entries(cost).every(([k,v])=>state[k]>=v);
@@ -566,6 +597,10 @@
       renderAll();
     }
     function unequipItem(item){
+      if(!canUnequipItem(item)){
+        setCodex('Backpack full. Make space before unequipping.');
+        return;
+      }
       removeItem(state.equipped,item);
       state.inventory.push(item);
       state.selected={source:'inventory',item};
@@ -597,7 +632,7 @@
       renderAll();
     }
     function unstashItem(item){
-      if(state.inventory.length>=state.backpackLimit){
+      if(state.inventory.length>=getBackpackLimit()){
         setCodex('Backpack full.');
         return;
       }
@@ -777,13 +812,13 @@
         actionConfigs.push({label:'Break down for scrap',action:()=>dismantleItem(item)});
         actionConfigs.push({label:'Sell to market',action:()=>sellItem(item),disabled:!state.atShop,blockedHint:'Dock at market to sell.'});
       }else if(source==='equipped'){
-        actionConfigs.push({label:'Return to backpack',action:()=>unequipItem(item),disabled:state.inventory.length>=state.backpackLimit});
+        actionConfigs.push({label:'Return to backpack',action:()=>unequipItem(item),disabled:!canUnequipItem(item)});
       }else if(source==='stash'){
-        actionConfigs.push({label:'Withdraw to backpack',action:()=>unstashItem(item),disabled:state.inventory.length>=state.backpackLimit});
+        actionConfigs.push({label:'Withdraw to backpack',action:()=>unstashItem(item),disabled:state.inventory.length>=getBackpackLimit()});
         actionConfigs.push({label:'Break down for scrap',action:()=>scrapStashItem(item)});
         actionConfigs.push({label:'Sell to market',action:()=>sellStashItem(item),disabled:!state.atShop,blockedHint:'Dock at market to sell.'});
       }else if(source==='haul'){
-        actionConfigs.push({label:'Pack into backpack',action:()=>moveLootItem(item,'inventory'),disabled:state.inventory.length>=state.backpackLimit});
+        actionConfigs.push({label:'Pack into backpack',action:()=>moveLootItem(item,'inventory'),disabled:state.inventory.length>=getBackpackLimit()});
         actionConfigs.push({label:'Store in vault',action:()=>moveLootItem(item,'stash'),disabled:state.stash.items.length>=state.stashLimit});
         actionConfigs.push({label:'Break down for scrap',action:()=>scrapLootItem(item)});
         actionConfigs.push({label:'Sell to market',action:()=>sellLootItem(item),disabled:!state.atShop,blockedHint:'Dock at market to sell.'});
@@ -835,7 +870,7 @@
         });
       }
       if(dom.backpackCount){
-        dom.backpackCount.textContent=`(${state.inventory.length}/${state.backpackLimit})`;
+        dom.backpackCount.textContent=`(${state.inventory.length}/${getBackpackLimit()})`;
       }
       if(dom.loadoutCount){
         dom.loadoutCount.textContent=`(${state.equipped.length}/${equipmentLimit})`;
@@ -1008,7 +1043,7 @@
     dom.returnMain.onclick=()=>setScreen('main');
 
     function renderExcursionStatus(){
-      dom.excursionStatus.innerHTML=`<b>Loop status:</b> Energy ${state.energy}/${state.maxEnergy} · Backpack ${state.inventory.length}/${state.backpackLimit} · Haul ${state.lootQueue.length} · Stash ${state.stash.items.length}/${state.stashLimit}.`;
+      dom.excursionStatus.innerHTML=`<b>Loop status:</b> Energy ${state.energy}/${state.maxEnergy} · Backpack ${state.inventory.length}/${getBackpackLimit()} · Haul ${state.lootQueue.length} · Stash ${state.stash.items.length}/${state.stashLimit}.`;
       dom.tempoHint.textContent=state.autoSalvage
         ? 'Auto-salvage running. Energy drains into quick grabs every few ticks.'
         : 'Spend energy on raids, then sort the incoming haul into backpack or stash.';
@@ -1166,6 +1201,32 @@
         });
       }
       dom.stash.appendChild(wrap);
+      const upgradeCost=getStashUpgradeCost();
+      const upgradeCard=document.createElement('div');
+      upgradeCard.className='op-card';
+      const upgradeTitle=document.createElement('div');
+      upgradeTitle.innerHTML='<b>Vault expansion</b>';
+      const upgradeMeta=document.createElement('div');
+      upgradeMeta.className='op-meta';
+      upgradeMeta.textContent=`Increase vault capacity by ${STASH_UPGRADE_STEP} slots.`;
+      const upgradeCostLine=document.createElement('div');
+      upgradeCostLine.className='op-meta';
+      upgradeCostLine.textContent=`Cost: ${formatCost(upgradeCost)} · Current capacity ${state.stashLimit}.`;
+      const upgradeActions=document.createElement('div');
+      upgradeActions.className='op-actions';
+      const upgradeBtn=document.createElement('button');
+      upgradeBtn.textContent=`Upgrade stash (+${STASH_UPGRADE_STEP})`;
+      upgradeBtn.onclick=upgradeStash;
+      if(!canAfford(upgradeCost)){
+        upgradeBtn.disabled=true;
+        upgradeBtn.title='Need more credits or scrap.';
+      }
+      upgradeActions.appendChild(upgradeBtn);
+      upgradeCard.appendChild(upgradeTitle);
+      upgradeCard.appendChild(upgradeMeta);
+      upgradeCard.appendChild(upgradeCostLine);
+      upgradeCard.appendChild(upgradeActions);
+      dom.stashActions.appendChild(upgradeCard);
       const bulk=document.createElement('div');
       bulk.className='inventory inline-actions';
       const sellAll=document.createElement('button');
@@ -1238,7 +1299,7 @@
         token=token.trim(); if(!token) return;
         if(token.startsWith('item:')){
           const item=token.slice(5).trim();
-          if(state.inventory.length<state.backpackLimit) state.inventory.push(item);
+          if(state.inventory.length<getBackpackLimit()) state.inventory.push(item);
           else state.lootQueue.push(item);
           return;
         }
@@ -1348,7 +1409,7 @@
     function moveLootItem(item,target){
       removeItem(state.lootQueue,item);
       if(target==='inventory'){
-        if(state.inventory.length>=state.backpackLimit){
+        if(state.inventory.length>=getBackpackLimit()){
           setCodex('Backpack full. Make room first.');
           state.lootQueue.push(item);
           return;
@@ -1371,7 +1432,7 @@
       const items=[...state.lootQueue];
       state.lootQueue=[];
       items.forEach(item=>{
-        if(target==='inventory' && state.inventory.length<state.backpackLimit){
+        if(target==='inventory' && state.inventory.length<getBackpackLimit()){
           state.inventory.push(item);
           state.selected={source:'inventory',item};
         }else if(target==='stash' && state.stash.items.length<state.stashLimit){
