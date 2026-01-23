@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Zero Lux - Text Extraction Engine</title>
+  <title>Zero Lux - Salvage Loop</title>
   <style>
     :root{
       color-scheme: dark;
@@ -52,7 +52,7 @@
     button:active{transform:translateY(0);}
     .btn-secondary{background:#0f111a;}
     .danger{border-color:rgba(255,107,107,.6);color:#ffc2c2;}
-    #doors,#actions{display:flex;flex-direction:column;gap:8px;}
+    #doors,#raidActions{display:flex;flex-direction:column;gap:8px;}
     .log{white-space:pre-wrap;font-size:13px;color:#d8e1ff;line-height:1.35;max-height:320px;overflow:auto;padding:10px;background:#0f111a;border:1px solid var(--border);border-radius:12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.02);}
     .small{font-size:12px;color:var(--muted);}
     .scene-title{font-size:17px;margin:0;color:#e8f1ff;}
@@ -82,6 +82,17 @@
     .op-card{border:1px solid var(--border);border-radius:12px;padding:12px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:8px;}
     .op-meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:12px;}
     .op-actions{display:flex;gap:8px;flex-wrap:wrap;}
+    .item-grid{display:flex;flex-direction:column;gap:10px;}
+    .item-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,0.02);}
+    .item-name{font-weight:600;}
+    .item-meta{font-size:12px;color:var(--muted);}
+    .item-actions{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto;}
+    .chip{border:1px solid var(--border);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--muted);}
+    .chip.common{color:#cfd8ec;}
+    .chip.uncommon{color:#8fffa3;}
+    .chip.rare{color:#5bd1ff;}
+    .chip.epic{color:#c3a1ff;}
+    .chip.legendary{color:#ffcf6a;}
     @media(max-width:900px){header{position:static;} .two-col{grid-template-columns:1fr;} .tab-buttons button{flex:1 1 100%;}}
   </style>
 </head>
@@ -89,10 +100,10 @@
   <div id="app">
     <header>
       <div>
-        <div class="title">Zero Lux Engine <span class="pill">text roguelite / extraction / survival</span></div>
-        <div class="tagline">Modular expansions stitched together by a hub room. Carry stories, loot, and scars between doors.</div>
+        <div class="title">Zero Lux Salvage Loop <span class="pill">inventory / looter / idle</span></div>
+        <div class="tagline">Pick zones, run salvage loops, and sort haul into gear, stash, or scrap.</div>
       </div>
-      <div class="pill">Build #: 0.1a — mobile friendly / keyboard-free ready</div>
+      <div class="pill">Build #: 0.2b — inventory-focused loop</div>
     </header>
 
     <section class="panel">
@@ -111,17 +122,31 @@
 
     <div class="tabs">
       <div class="tab-buttons">
-        <button data-tab="hub" class="active">Hub</button>
-        <button data-tab="inventory">Inventory</button>
-        <button data-tab="field">Excursion</button>
+        <button data-tab="hub" class="active">Operations</button>
+        <button data-tab="inventory">Backpack</button>
+        <button data-tab="field">Stash</button>
         <button data-tab="log">Signal Log</button>
       </div>
       <div id="tab-hub" class="tab-content active">
         <div class="stack">
           <section class="panel">
-            <h3>Hub Doors</h3>
+            <h3>Zone Gates</h3>
             <div id="doors"></div>
             <div class="small" id="doorsHint">Loading expansions…</div>
+          </section>
+          <section class="panel">
+            <div class="inline" style="justify-content:space-between;align-items:center;">
+              <div>
+                <p class="scene-title" id="zoneTitle">Drift Yard</p>
+                <p class="scene-desc" id="zoneDesc">Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.</p>
+              </div>
+              <span class="badge" id="zoneBadge">Low risk</span>
+            </div>
+            <div id="raidActions"></div>
+          </section>
+          <section class="panel">
+            <h3>Incoming Haul</h3>
+            <div id="haul"></div>
           </section>
           <section class="panel">
             <h3>Idle Operations</h3>
@@ -132,22 +157,17 @@
       </div>
       <div id="tab-inventory" class="tab-content">
         <section class="panel">
-          <h3>Inventory & Codex</h3>
+          <h3>Backpack & Loadout</h3>
           <div class="inventory" id="inventory"></div>
           <div class="small" id="codex"></div>
         </section>
       </div>
       <div id="tab-field" class="tab-content">
         <section class="panel">
-          <div class="inline" style="justify-content:space-between;align-items:center;">
-            <div>
-              <p class="scene-title" id="sceneTitle">Hub: Signal Garage</p>
-              <p class="scene-desc" id="sceneDesc">An empty staging ground. Coil cables, radio static, and chalk markings on the floor wait for doors to be bolted on.</p>
-            </div>
-            <span class="badge" id="sceneBadge">Idle</span>
-          </div>
-          <div id="actions"></div>
-          <p class="small">Actions are context sensitive. Expansions can add new verbs (quests, scans, stealth crawls) and remix success/failure logic.</p>
+          <h3>Stash Vault</h3>
+          <div id="stash"></div>
+          <div id="stashActions"></div>
+          <p class="small">Move loot from the haul into long-term storage, or liquidate overflow for credits.</p>
         </section>
       </div>
       <div id="tab-log" class="tab-content">
@@ -163,50 +183,73 @@
     /* ================= STATE & CONSTANTS ================= */
     const state={
       hp:92,maxHp:100,
-      stamina:100,maxStamina:100,
-      morale:60,maxMorale:100,
-      hunger:18,maxHunger:100,
-      thirst:22,maxThirst:100,
+      stamina:90,maxStamina:100,
+      morale:62,maxMorale:100,
+      hunger:15,maxHunger:100,
+      thirst:20,maxThirst:100,
+      energy:72,maxEnergy:100,
       rads:0,heat:0,
       signal:12,maxSignal:120,
       scrap:6,
-      streak:0,
       credits:50,
-      day:1,dailyTasksUsed:0,timeMinutes:6*60,
-      inventory:["rusty flashlight"],
+      fuel:4,
+      keys:1,
+      day:1,timeMinutes:6*60,
+      backpackLimit:12,
+      stashLimit:40,
+      inventory:["rusty flashlight","ration bar","scrap wiring"],
       equipped:[],
-      codex:["Hub online. No operations active."],
-      storage:{name:'Hub Storage',items:[]},
-      lootContainer:{name:'Supply Cache',items:['flare','ration bar','old coin']},
-      storageMode:false,
+      codex:["Hub online. Haul bays clear."],
+      stash:{name:'Vault Stash',items:[]},
+      lootQueue:[],
+      autoSalvage:false,
       idleOps:{active:false,id:null,startedAt:null,durationMs:0,etaMinutes:0},
       flags:new Set(),
-      log:["Systems cold-started. Waiting for expansions…"],
-      location:{expansion:null,scene:null},
-      excursion:{active:false,steps:0,limit:12,startAt:null,extracting:false,reason:null,extractionDurationMs:EXTRACTION_DURATION_MS}
+      log:["Systems cold-started. Zones awaiting tether…"],
+      zone:{id:'drift-yard',name:'Drift Yard',risk:'low',desc:'Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.'}
     };
 
-    const lootPool=['flare','ration bar','old coin','bandage','microcell','water flask','scrap wiring','patch kit','lockbox key'];
-    const TASK_MINUTES=0; // legacy placeholder
-    const DAILY_TASK_LIMIT=12;
-    const EXTRACTION_DURATION_MS=10000;
-    const ACTION_TIMES={pulse:6,camp:12,trade:8};
+    const ITEM_CATALOG={
+      'rusty flashlight':{type:'tool',rarity:'common',value:6,mods:{riskMod:-0.02,signalBonus:1}},
+      'flare':{type:'tool',rarity:'uncommon',value:10,mods:{lootBonus:0.04}},
+      'patch kit':{type:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.04}},
+      'microcell':{type:'tool',rarity:'rare',value:22,mods:{idleSpeed:0.15,energyRegen:1,staminaBonus:2}},
+      'bandage':{type:'consumable',rarity:'common',value:4,effect:'hp+8'},
+      'ration bar':{type:'consumable',rarity:'common',value:3,effect:'hunger-12,morale+2'},
+      'water flask':{type:'consumable',rarity:'common',value:4,effect:'thirst-12'},
+      'spark tonic':{type:'consumable',rarity:'uncommon',value:8,effect:'energy+18,stamina+6'},
+      'scrap wiring':{type:'junk',rarity:'common',value:2,salvage:2},
+      'old coin':{type:'junk',rarity:'uncommon',value:6,salvage:1},
+      'lockbox key':{type:'key',rarity:'rare',value:18},
+      'signal prism':{type:'junk',rarity:'rare',value:20,salvage:6},
+      'drone core':{type:'tool',rarity:'epic',value:32,mods:{lootBonus:0.08,energyRegen:2}},
+      'relic shard':{type:'junk',rarity:'legendary',value:60,salvage:12}
+    };
 
-    const riskTable={low:0.07,medium:0.18,high:0.3,deadly:0.45};
+    const LOOT_BY_RARITY={
+      common:['bandage','ration bar','water flask','scrap wiring','rusty flashlight'],
+      uncommon:['flare','patch kit','old coin','spark tonic'],
+      rare:['microcell','lockbox key','signal prism'],
+      epic:['drone core'],
+      legendary:['relic shard']
+    };
+
+    const RAID_TEMPLATES=[
+      {id:'quick',label:'Quick Grab',desc:'Fast sweep for low-tier gear.',time:6,energy:8,loot:2,risk:'low'},
+      {id:'deep',label:'Deep Sweep',desc:'Longer push with higher-value crates.',time:12,energy:14,loot:3,risk:'medium'},
+      {id:'hazard',label:'Hazard Drift',desc:'Pressurized route for rare tech.',time:16,energy:18,loot:4,risk:'high'},
+      {id:'vault',label:'Lockbox Crack',desc:'Spend a key to crack sealed cache.',time:10,energy:10,loot:3,risk:'high',key:1}
+    ];
+
+    const ACTION_TIMES={camp:10,trade:8};
+    const riskTable={low:0.08,medium:0.2,high:0.32,deadly:0.45};
+    const riskRank={low:1,medium:2,high:3,deadly:4};
     const expansions={};
     const idleOperations=[
-      {id:'salvage',label:'Salvage run',desc:'Remote drone gathers loose scrap and coins.',duration:7,cost:{credits:8},reward:'scrap+3,credits+4,signal+4'},
-      {id:'survey',label:'Signal survey',desc:'Low-risk sweep for new signals and maps.',duration:5,cost:{credits:5},reward:'signal+8,credits+2'},
-      {id:'resupply',label:'Supply errand',desc:'Courier route that brings small medical supplies.',duration:9,cost:{credits:10,scrap:1},reward:'hp+6,morale+4,item:bandage'}
+      {id:'salvage',label:'Drone salvage',desc:'Remote drones bring back scrap and junk.',duration:7,cost:{credits:8},reward:'scrap+3,item:scrap wiring'},
+      {id:'survey',label:'Signal sweep',desc:'Low-risk sweep for signals and maps.',duration:5,cost:{credits:5},reward:'signal+8,credits+2'},
+      {id:'resupply',label:'Supply errand',desc:'Courier route for field medicine.',duration:9,cost:{credits:10,scrap:1},reward:'item:bandage,item:water flask'}
     ];
-    const gearTuning={
-      'rusty flashlight':{riskMod:-0.02,signalBonus:1},
-      'flare':{extractionSpeed:0.08},
-      'patch kit':{riskMod:-0.03},
-      'microcell':{idleSpeed:0.12,staminaBonus:2},
-      'bandage':{healBonus:2},
-      'water flask':{thirstRelief:3}
-    };
 
     const dom={
       stats:document.getElementById('stats'),
@@ -215,15 +258,18 @@
       tempoHint:document.getElementById('tempoHint'),
       doors:document.getElementById('doors'),
       doorsHint:document.getElementById('doorsHint'),
-      sceneTitle:document.getElementById('sceneTitle'),
-      sceneDesc:document.getElementById('sceneDesc'),
-      sceneBadge:document.getElementById('sceneBadge'),
-      actions:document.getElementById('actions'),
+      zoneTitle:document.getElementById('zoneTitle'),
+      zoneDesc:document.getElementById('zoneDesc'),
+      zoneBadge:document.getElementById('zoneBadge'),
+      raidActions:document.getElementById('raidActions'),
+      haul:document.getElementById('haul'),
       inventory:document.getElementById('inventory'),
       codex:document.getElementById('codex'),
       log:document.getElementById('log'),
       idleOps:document.getElementById('idleOps'),
       hubLock:document.getElementById('hubLock'),
+      stash:document.getElementById('stash'),
+      stashActions:document.getElementById('stashActions'),
       tabs:document.querySelector('.tabs'),
       tabButtons:Array.from(document.querySelectorAll('.tab-buttons button')),
       tabContents:{
@@ -252,10 +298,50 @@
     }
 
     const removeItem=(arr,item)=>{const idx=arr.indexOf(item); if(idx>=0) arr.splice(idx,1);};
-    const rollLoot=(count=3)=>Array.from({length:count},()=>lootPool[Math.floor(Math.random()*lootPool.length)]);
+    const getItem=(id)=>ITEM_CATALOG[id] || {type:'junk',rarity:'common',value:1};
+    const groupItems=(items)=>{
+      const tally=items.reduce((acc,item)=>{
+        acc[item]=(acc[item]||0)+1;
+        return acc;
+      },{});
+      return Object.entries(tally).map(([id,count])=>({id,count,data:getItem(id)}));
+    };
+    const rollLootItem=(risk,bonus=0)=>{
+      const roll=Math.random();
+      const bias={
+        low:{common:0.7,uncommon:0.22,rare:0.07,epic:0.009,legendary:0.001},
+        medium:{common:0.55,uncommon:0.28,rare:0.13,epic:0.035,legendary:0.005},
+        high:{common:0.4,uncommon:0.3,rare:0.18,epic:0.09,legendary:0.03},
+        deadly:{common:0.3,uncommon:0.28,rare:0.2,epic:0.14,legendary:0.08}
+      };
+      const dist=bias[risk] || bias.low;
+      const adjusted={
+        common:Math.max(0.05,dist.common-(bonus*0.5)),
+        uncommon:dist.uncommon+(bonus*0.2),
+        rare:dist.rare+(bonus*0.2),
+        epic:dist.epic+(bonus*0.08),
+        legendary:dist.legendary+(bonus*0.02)
+      };
+      const rollTable=[
+        ['common',adjusted.common],
+        ['uncommon',adjusted.uncommon],
+        ['rare',adjusted.rare],
+        ['epic',adjusted.epic],
+        ['legendary',adjusted.legendary]
+      ];
+      let cursor=0;
+      for(const [rarity,weight] of rollTable){
+        cursor+=weight;
+        if(roll<=cursor){
+          const pool=LOOT_BY_RARITY[rarity];
+          return pool[Math.floor(Math.random()*pool.length)];
+        }
+      }
+      return 'scrap wiring';
+    };
     const getGearMods=()=>{
       return state.equipped.reduce((acc,item)=>{
-        const mod=gearTuning[item];
+        const mod=getItem(item).mods;
         if(!mod) return acc;
         Object.entries(mod).forEach(([key,val])=>{
           acc[key]=(acc[key]||0)+val;
@@ -263,62 +349,86 @@
         return acc;
       },{});
     };
-    const formatCost=(cost)=>{
-      return Object.entries(cost).map(([k,v])=>`${v} ${k}`).join(' · ');
-    };
-    const canAfford=(cost)=>{
-      return Object.entries(cost).every(([k,v])=>state[k]>=v);
-    };
+    const formatCost=(cost)=>Object.entries(cost).map(([k,v])=>`${v} ${k}`).join(' · ');
+    const canAfford=(cost)=>Object.entries(cost).every(([k,v])=>state[k]>=v);
     const applyCost=(cost)=>{
       Object.entries(cost).forEach(([k,v])=>{
         state[k]=Math.max(0,state[k]-v);
       });
     };
+    const addToArray=(arr,item)=>{arr.push(item);};
+    const equipmentLimit=4;
+
     function equipItem(item){
       if(state.equipped.includes(item)) return;
+      if(state.equipped.length>=equipmentLimit){
+        setCodex('Loadout full. Unequip something first.');
+        return;
+      }
+      const data=getItem(item);
+      if(!['tool','armor'].includes(data.type)){
+        setCodex('Only tools or armor can be equipped.');
+        return;
+      }
       removeItem(state.inventory,item);
       state.equipped.push(item);
       setCodex(`${item} equipped.`);
       logMsg(`Equipped ${item}.`);
-      renderInventory();
+      renderAll();
     }
     function unequipItem(item){
       removeItem(state.equipped,item);
       state.inventory.push(item);
       setCodex(`${item} stowed.`);
       logMsg(`Unequipped ${item}.`);
-      renderInventory();
+      renderAll();
     }
-    function lootItem(item){
-      removeItem(state.lootContainer.items,item);
-      state.inventory.push(item);
-      setCodex(`${item} recovered from ${state.lootContainer.name}.`);
-      logMsg(`Looted ${item} from ${state.lootContainer.name}.`);
-      renderInventory();
-    }
-    function depositToStorage(item){
+    function consumeItem(item){
+      const data=getItem(item);
+      if(data.effect){
+        applyEffects(data.effect,'success');
+      }
       removeItem(state.inventory,item);
-      state.storage.items.push(item);
-      setCodex(`${item} stored in ${state.storage.name}.`);
-      logMsg(`Stored ${item} in ${state.storage.name}.`);
-      renderInventory();
+      logMsg(`Consumed ${item}.`);
+      setCodex(`${item} used.`);
+      renderAll();
     }
-    function withdrawFromStorage(item){
-      removeItem(state.storage.items,item);
+    function stashItem(item){
+      if(state.stash.items.length>=state.stashLimit){
+        setCodex('Stash is full.');
+        return;
+      }
+      removeItem(state.inventory,item);
+      state.stash.items.push(item);
+      setCodex(`${item} stored in ${state.stash.name}.`);
+      logMsg(`Stored ${item} in ${state.stash.name}.`);
+      renderAll();
+    }
+    function unstashItem(item){
+      if(state.inventory.length>=state.backpackLimit){
+        setCodex('Backpack full.');
+        return;
+      }
+      removeItem(state.stash.items,item);
       state.inventory.push(item);
-      setCodex(`${item} withdrawn from ${state.storage.name}.`);
-      logMsg(`Retrieved ${item} from ${state.storage.name}.`);
-      renderInventory();
+      setCodex(`${item} withdrawn from ${state.stash.name}.`);
+      logMsg(`Retrieved ${item} from ${state.stash.name}.`);
+      renderAll();
     }
-    function toggleStorageMode(){
-      state.storageMode=!state.storageMode;
-      renderInventory();
+    function sellItem(item){
+      const data=getItem(item);
+      removeItem(state.inventory,item);
+      state.credits+=data.value || 1;
+      logMsg(`Sold ${item} for ${data.value || 1} credits.`);
+      renderAll();
     }
-    function restockLootContainer(){
-      state.lootContainer={name:'Field Locker',items:rollLoot(3)};
-      setCodex('New lootable container located.');
-      logMsg('A fresh lootable container is within reach.');
-      renderInventory();
+    function dismantleItem(item){
+      const data=getItem(item);
+      removeItem(state.inventory,item);
+      const salvage=data.salvage || Math.max(1,Math.floor((data.value || 1)/2));
+      state.scrap+=salvage;
+      logMsg(`Dismantled ${item} for ${salvage} scrap.`);
+      renderAll();
     }
 
     function startIdleOp(opId){
@@ -363,9 +473,10 @@
         ['HP','hp','maxHp','hp'],
         ['Stamina','stamina','maxStamina','stamina'],
         ['Morale','morale','maxMorale','morale'],
+        ['Energy','energy','maxEnergy','stamina'],
         ['Hunger','hunger','maxHunger','hunger'],
         ['Hydration','thirst','maxThirst','thirst'],
-        ['Radiation','rads',100,'rads'],
+        ['Radiation','rads',100,'rads']
       ];
       dom.stats.innerHTML=rows.map(([label,key,maxKey,cls])=>{
         const val=state[key];const max=(typeof maxKey==='string')?state[maxKey]:maxKey;
@@ -373,20 +484,21 @@
         return `<div class="statline"><div>${label}</div><div class="bar ${cls}"><span style="width:${percent}%;"></span></div><div>${Math.round(val)}/${max}</div></div>`;
       }).join('');
       dom.meta.innerHTML=`<span class="pill-inline"><b>Credits</b>${state.credits}</span>`+
+        `<span class="pill-inline"><b>Scrap</b>${state.scrap}</span>`+
+        `<span class="pill-inline"><b>Fuel</b>${state.fuel}</span>`+
+        `<span class="pill-inline"><b>Keys</b>${state.keys}</span>`+
         `<span class="pill-inline"><b>Heat</b>${state.heat}</span>`+
         `<span class="pill-inline"><b>Pressure</b>${Math.round(calcPressure()*100)}%</span>`+
         `<span class="pill-inline"><b>Signal</b>${state.signal}/${state.maxSignal}</span>`+
-        `<span class="pill-inline"><b>Scrap</b>${state.scrap}</span>`+
-        `<span class="pill-inline"><b>Streak</b>${state.streak}x</span>`+
-        `<span class="pill-inline"><b>Tasks</b>${state.dailyTasksUsed}/${DAILY_TASK_LIMIT}</span>`+
+        `<span class="pill-inline"><b>Time</b>${fmtTime(state.timeMinutes)}</span>`+
         `<span class="pill-inline"><b>Day</b>${state.day}</span>`;
     }
 
     function renderInventory(){
       dom.inventory.innerHTML='';
-      const buildSection=(title,items,handler,emptyText)=>{
+      const buildSection=(title,items,emptyText,actionsBuilder)=>{
         const wrap=document.createElement('div');
-        wrap.className='inventory';
+        wrap.className='item-grid';
         const heading=document.createElement('h4');
         heading.textContent=title;
         wrap.appendChild(heading);
@@ -396,44 +508,64 @@
           span.textContent=emptyText;
           wrap.appendChild(span);
         }else{
-          items.forEach(item=>{
-            const btn=document.createElement('button');
-            btn.textContent=item;
-            btn.onclick=()=>handler(item);
-            wrap.appendChild(btn);
+          groupItems(items).forEach(({id,count,data})=>{
+            const row=document.createElement('div');
+            row.className='item-row';
+            const name=document.createElement('div');
+            name.className='item-name';
+            name.textContent=`${id} ×${count}`;
+            const meta=document.createElement('div');
+            meta.className='item-meta';
+            meta.textContent=`${data.type} · ${data.value || 1} cr`;
+            const chip=document.createElement('span');
+            chip.className=`chip ${data.rarity}`;
+            chip.textContent=data.rarity;
+            const actions=document.createElement('div');
+            actions.className='item-actions';
+            actionsBuilder(id,data,actions);
+            row.appendChild(name);
+            row.appendChild(chip);
+            row.appendChild(meta);
+            row.appendChild(actions);
+            wrap.appendChild(row);
           });
         }
         dom.inventory.appendChild(wrap);
       };
 
-      buildSection('Equipped',state.equipped,unequipItem,'Nothing equipped. Click gear below to equip.');
+      buildSection(`Equipped Loadout (${state.equipped.length}/${equipmentLimit})`,state.equipped,'Nothing equipped yet.',(id,data,actions)=>{
+        const btn=document.createElement('button');
+        btn.textContent='Unequip';
+        btn.onclick=()=>unequipItem(id);
+        actions.appendChild(btn);
+      });
 
-      const inventoryHint=state.storageMode?`${state.storage.name} intake mode — click to store`:'Equip mode — click to ready gear';
-      const inventoryHandler=state.storageMode?depositToStorage:equipItem;
-      buildSection('Carried Gear',state.inventory,inventoryHandler,state.storageMode?'No carried items to store.':'No gear collected.');
-      const hint=document.createElement('div');
-      hint.className='inventory inline-actions';
-      const toggle=document.createElement('button');
-      toggle.textContent=state.storageMode?'Switch to equip mode':'Switch to storage mode';
-      toggle.onclick=toggleStorageMode;
-      const pill=document.createElement('span');
-      pill.className='pill-inline';
-      pill.textContent=inventoryHint;
-      hint.appendChild(toggle);
-      hint.appendChild(pill);
-      dom.inventory.appendChild(hint);
-
-      const lootEmpty=`${state.lootContainer.name} is empty.`;
-      buildSection(state.lootContainer.name,state.lootContainer.items,lootItem,lootEmpty);
-      const lootActions=document.createElement('div');
-      lootActions.className='inventory inline-actions';
-      const restockBtn=document.createElement('button');
-      restockBtn.textContent='Scout new lootable container';
-      restockBtn.onclick=restockLootContainer;
-      lootActions.appendChild(restockBtn);
-      dom.inventory.appendChild(lootActions);
-
-      buildSection(state.storage.name,state.storage.items,withdrawFromStorage,`${state.storage.name} is empty.`);
+      buildSection(`Backpack (${state.inventory.length}/${state.backpackLimit})`,state.inventory,'No gear collected.',(id,data,actions)=>{
+        if(['tool','armor'].includes(data.type)){
+          const equip=document.createElement('button');
+          equip.textContent='Equip';
+          equip.onclick=()=>equipItem(id);
+          actions.appendChild(equip);
+        }
+        if(data.type==='consumable'){
+          const use=document.createElement('button');
+          use.textContent='Use';
+          use.onclick=()=>consumeItem(id);
+          actions.appendChild(use);
+        }
+        const stashBtn=document.createElement('button');
+        stashBtn.textContent='Stash';
+        stashBtn.onclick=()=>stashItem(id);
+        actions.appendChild(stashBtn);
+        const sell=document.createElement('button');
+        sell.textContent='Sell';
+        sell.onclick=()=>sellItem(id);
+        actions.appendChild(sell);
+        const dismantle=document.createElement('button');
+        dismantle.textContent='Scrap';
+        dismantle.onclick=()=>dismantleItem(id);
+        actions.appendChild(dismantle);
+      });
 
       dom.codex.textContent = state.codex[state.codex.length-1] || '';
     }
@@ -494,27 +626,16 @@
       });
     }
 
-    function isOnExcursion(){
-      return !!state.location.expansion && state.excursion.active;
-    }
-
-    function excursionSeconds(){
-      if(!state.excursion.startAt) return 0;
-      return Math.max(0,Math.floor((Date.now()-state.excursion.startAt)/1000));
-    }
-
     function setActiveTab(tab){
       activeTab=tab;
       syncTabs();
     }
 
     function syncTabs(){
-      const requested=state.excursion.active && activeTab==='hub' ? 'field' : activeTab;
-      activeTab=requested;
       dom.tabButtons.forEach(btn=>{
         const target=btn.dataset.tab;
         btn.classList.toggle('active',target===activeTab);
-        btn.disabled=state.excursion.active && target==='hub';
+        btn.disabled=false;
       });
       Object.entries(dom.tabContents).forEach(([id,el])=>{
         el.classList.toggle('active',id===activeTab);
@@ -526,130 +647,178 @@
     });
 
     function renderExcursionStatus(){
-      if(!state.excursion.active){
-        dom.excursionStatus.innerHTML=`<b>Hub status:</b> Ready · Tasks used today ${state.dailyTasksUsed}/${DAILY_TASK_LIMIT}.`;
-        dom.tempoHint.textContent='Excursions consume your 12 daily tasks. Extraction or collapse ends the run; tasks reset tomorrow.';
-        return;
-      }
-      const remaining=Math.max(0,DAILY_TASK_LIMIT-state.dailyTasksUsed);
-      const extraction=state.excursion.extracting
-        ? ` · Extraction ${Math.max(0,Math.ceil((state.excursion.extractionDurationMs/1000)-excursionSeconds()))}s`
-        : '';
-      dom.excursionStatus.innerHTML=`<b>Excursion tempo:</b> ${state.dailyTasksUsed}/${DAILY_TASK_LIMIT} tasks used today${remaining?` · ${remaining} remaining`:' · daily allotment spent'}${extraction}`;
-      const holdSeconds=Math.max(1,Math.round(state.excursion.extractionDurationMs/1000));
-      dom.tempoHint.textContent=state.excursion.extracting
-        ? `Extraction underway. Hold position for ${holdSeconds} seconds while the winch hauls you out.`
-        : remaining? 'Each action consumes a daily task. Call extraction to bank progress before you run out.'
-        : 'Daily tasks are exhausted. Extraction will haul you back automatically.';
+      dom.excursionStatus.innerHTML=`<b>Loop status:</b> Energy ${state.energy}/${state.maxEnergy} · Backpack ${state.inventory.length}/${state.backpackLimit} · Haul ${state.lootQueue.length} · Stash ${state.stash.items.length}/${state.stashLimit}.`;
+      dom.tempoHint.textContent=state.autoSalvage
+        ? 'Auto-salvage running. Energy drains into quick grabs every few ticks.'
+        : 'Spend energy on raids, then sort the incoming haul into backpack or stash.';
     }
 
     function renderHubAccess(){
-      dom.hubLock.textContent=state.excursion.active
-        ? 'Hub consoles are locked while you are on excursion. Finish tasks or extract to regain access.'
-        : 'Hub is open. Bolt onto a door or manage your kit before the next run.';
+      dom.hubLock.textContent='Ops bay is live. Pick a zone gate, run raids, and keep the haul moving.';
     }
 
-    function appendExtractionControls(){
-      if(!isOnExcursion()) return;
+    function renderZone(){
+      dom.zoneTitle.textContent=state.zone.name;
+      dom.zoneDesc.textContent=state.zone.desc;
+      dom.zoneBadge.textContent=`${state.zone.risk} risk`;
+    }
+
+    function renderRaidActions(){
+      dom.raidActions.innerHTML='';
       const gearMods=getGearMods();
-      const duration=Math.max(1,Math.round((EXTRACTION_DURATION_MS*(1-(gearMods.extractionSpeed||0)))/1000));
-      const progress=document.createElement('div');
-      progress.className='small';
-      progress.textContent=`Tasks consumed: ${state.dailyTasksUsed}/${DAILY_TASK_LIMIT} · Extraction available`;
-      const call=document.createElement('button');
-      call.innerHTML=`<span>Call extraction</span><span class="small">${duration}s hold</span>`;
-      call.onclick=()=>startExtraction(false,'manual');
-      dom.actions.appendChild(progress);
-      dom.actions.appendChild(call);
-    }
-
-    function incrementTaskUsage(){
-      if(!isOnExcursion() || state.excursion.extracting) return;
-      state.dailyTasksUsed=Math.min(state.dailyTasksUsed+1,DAILY_TASK_LIMIT);
-      state.excursion.steps=state.dailyTasksUsed;
-      renderExcursionStatus();
-      if(state.dailyTasksUsed>=DAILY_TASK_LIMIT){
-        logMsg('Daily task allotment exhausted. Extraction auto-triggered.');
-        startExtraction(true,'day-limit');
-      }
-    }
-
-    function startExtraction(autoTriggered=false,reason='manual'){
-      if(!isOnExcursion() || state.excursion.extracting) return;
-      const gearMods=getGearMods();
-      const duration=EXTRACTION_DURATION_MS*(1-(gearMods.extractionSpeed||0));
-      state.excursion.extracting=true;
-      state.excursion.reason=reason;
-      state.excursion.extractionDurationMs=duration;
-      const seconds=Math.max(1,Math.round(duration/1000));
-      logMsg(autoTriggered?`Auto-extraction initiated — daily tasks exhausted (${seconds}s).`:`Extraction requested — hold tight for ${seconds} seconds.`);
-      renderAll();
-      setTimeout(()=>completeExtraction(reason),duration);
-    }
-
-    function completeExtraction(reason){
-      resetToHub();
-      if(reason==='day-limit'){
-        advanceDay();
-        logMsg('Task cycle complete. A new day begins.');
-      }
-      logMsg('Extraction complete. Back in the hub.');
-      setCodex('Hel winch hauls you home. Hub systems unlocked.');
-      renderAll();
-    }
-
-    function renderScene(){
-      dom.actions.innerHTML='';
-      if(!state.location.expansion){
-        dom.sceneBadge.textContent='Idle';
-        const waiting=document.createElement('button');
-        waiting.classList.add('btn-secondary');
-        waiting.textContent='Awaiting expansion doors… idle scan ready';
-        waiting.onclick=runPulseScan;
-        dom.actions.appendChild(waiting);
-        appendCoreActions();
-        return;
-      }
-      const exp=expansions[state.location.expansion];
-      const scene=exp.scenes[state.location.scene];
-      dom.sceneTitle.textContent=`${exp.meta.name} — ${scene.title||scene.id}`;
-      dom.sceneDesc.textContent=scene.desc||"Unmarked space.";
-      dom.sceneBadge.textContent=state.excursion.extracting?'Extracting':(scene.tags?scene.tags:'Active');
-      if(state.excursion.extracting){
-        const hold=document.createElement('button');
-        hold.textContent='Hold position…';
-        hold.disabled=true;
-        dom.actions.appendChild(hold);
-        const progress=document.createElement('div');
-        progress.className='progress';
-        const duration=Math.max(1,state.excursion.extractionDurationMs/1000);
-        const pctDone=clamp((excursionSeconds()/duration)*100,0,100);
-        progress.innerHTML=`<span style="width:${pctDone}%;"></span>`;
-        dom.actions.appendChild(progress);
-        return;
-      }
-      if(!scene.options || !scene.options.length){
-        appendExtractionControls();
-        appendCoreActions();
-        return;
-      }
-      scene.options.forEach(opt=>{
+      RAID_TEMPLATES.forEach(raid=>{
         const btn=document.createElement('button');
-        const minutes=opt.time?`${opt.time} min`:'task';
-        btn.innerHTML=`<span>${opt.label}</span><span class="small">${opt.risk || 'steady'} · ${minutes}</span>`;
-        btn.onclick=()=>runOption(exp,scene,opt);
-        if(opt.risk==='deadly') btn.classList.add('danger');
-        dom.actions.appendChild(btn);
+        const costParts=[`${raid.energy} energy`];
+        if(raid.key) costParts.push(`${raid.key} key`);
+        btn.innerHTML=`<span>${raid.label}</span><span class="small">${raid.risk} · ${raid.time} min · ${costParts.join(' · ')}</span>`;
+        btn.onclick=()=>runRaid(raid);
+        if(!canAfford({energy:raid.energy,keys:raid.key||0})) btn.disabled=true;
+        if(raid.risk==='high') btn.classList.add('danger');
+        dom.raidActions.appendChild(btn);
       });
-      appendExtractionControls();
-      appendCoreActions();
+      const rest=document.createElement('button');
+      rest.innerHTML=`<span>Make camp</span><span class="small">recover · ${ACTION_TIMES.camp} min</span>`;
+      rest.onclick=runCamp;
+      dom.raidActions.appendChild(rest);
+      const trade=document.createElement('button');
+      trade.innerHTML=`<span>Cash in signal</span><span class="small">trade · ${ACTION_TIMES.trade} min</span>`;
+      trade.onclick=burnSignal;
+      dom.raidActions.appendChild(trade);
+      const fuel=document.createElement('button');
+      fuel.innerHTML='<span>Burn fuel cell</span><span class="small">boost · instant</span>';
+      fuel.onclick=burnFuel;
+      if(state.fuel<=0) fuel.disabled=true;
+      dom.raidActions.appendChild(fuel);
+      const auto=document.createElement('button');
+      auto.textContent=state.autoSalvage?'Disable auto-salvage':'Enable auto-salvage';
+      auto.onclick=()=>{
+        state.autoSalvage=!state.autoSalvage;
+        logMsg(state.autoSalvage?'Auto-salvage engaged.':'Auto-salvage disabled.');
+        renderAll();
+      };
+      dom.raidActions.appendChild(auto);
     }
 
-    function enterScene(expansionId,sceneId){
-      state.location={expansion:expansionId,scene:sceneId};
-      state.excursion={active:true,steps:state.dailyTasksUsed,limit:DAILY_TASK_LIMIT,startAt:Date.now(),extracting:false,reason:null,extractionDurationMs:EXTRACTION_DURATION_MS};
-      setActiveTab('field');
-      renderScene();
+    function renderHaul(){
+      dom.haul.innerHTML='';
+      if(!state.lootQueue.length){
+        dom.haul.innerHTML='<div class="muted-box">No loot waiting. Run a raid to generate a haul.</div>';
+        return;
+      }
+      const grid=document.createElement('div');
+      grid.className='item-grid';
+      groupItems(state.lootQueue).forEach(({id,count,data})=>{
+        const row=document.createElement('div');
+        row.className='item-row';
+        const name=document.createElement('div');
+        name.className='item-name';
+        name.textContent=`${id} ×${count}`;
+        const meta=document.createElement('div');
+        meta.className='item-meta';
+        meta.textContent=`${data.type} · ${data.value || 1} cr`;
+        const chip=document.createElement('span');
+        chip.className=`chip ${data.rarity}`;
+        chip.textContent=data.rarity;
+        const actions=document.createElement('div');
+        actions.className='item-actions';
+        const pack=document.createElement('button');
+        pack.textContent='Pack';
+        pack.onclick=()=>moveLootItem(id,'inventory');
+        const stash=document.createElement('button');
+        stash.textContent='Stash';
+        stash.onclick=()=>moveLootItem(id,'stash');
+        const sell=document.createElement('button');
+        sell.textContent='Sell';
+        sell.onclick=()=>sellLootItem(id);
+        const scrap=document.createElement('button');
+        scrap.textContent='Scrap';
+        scrap.onclick=()=>scrapLootItem(id);
+        actions.appendChild(pack);
+        actions.appendChild(stash);
+        actions.appendChild(sell);
+        actions.appendChild(scrap);
+        row.appendChild(name);
+        row.appendChild(chip);
+        row.appendChild(meta);
+        row.appendChild(actions);
+        grid.appendChild(row);
+      });
+      dom.haul.appendChild(grid);
+      const bulk=document.createElement('div');
+      bulk.className='inventory inline-actions';
+      const packAll=document.createElement('button');
+      packAll.textContent='Pack all';
+      packAll.onclick=()=>bulkMoveLoot('inventory');
+      const stashAll=document.createElement('button');
+      stashAll.textContent='Stash all';
+      stashAll.onclick=()=>bulkMoveLoot('stash');
+      const sellAll=document.createElement('button');
+      sellAll.textContent='Sell all';
+      sellAll.onclick=bulkSellLoot;
+      const scrapAll=document.createElement('button');
+      scrapAll.textContent='Scrap all';
+      scrapAll.onclick=bulkScrapLoot;
+      bulk.appendChild(packAll);
+      bulk.appendChild(stashAll);
+      bulk.appendChild(sellAll);
+      bulk.appendChild(scrapAll);
+      dom.haul.appendChild(bulk);
+    }
+
+    function renderStash(){
+      dom.stash.innerHTML='';
+      dom.stashActions.innerHTML='';
+      const wrap=document.createElement('div');
+      wrap.className='item-grid';
+      const items=state.stash.items;
+      if(!items.length){
+        wrap.innerHTML='<div class="muted-box">Stash is empty. Move loot here for long-term storage.</div>';
+      }else{
+        groupItems(items).forEach(({id,count,data})=>{
+          const row=document.createElement('div');
+          row.className='item-row';
+          const name=document.createElement('div');
+          name.className='item-name';
+          name.textContent=`${id} ×${count}`;
+          const meta=document.createElement('div');
+          meta.className='item-meta';
+          meta.textContent=`${data.type} · ${data.value || 1} cr`;
+          const chip=document.createElement('span');
+          chip.className=`chip ${data.rarity}`;
+          chip.textContent=data.rarity;
+          const actions=document.createElement('div');
+          actions.className='item-actions';
+          const pack=document.createElement('button');
+          pack.textContent='Pack';
+          pack.onclick=()=>unstashItem(id);
+          const sell=document.createElement('button');
+          sell.textContent='Sell';
+          sell.onclick=()=>sellStashItem(id);
+          const scrap=document.createElement('button');
+          scrap.textContent='Scrap';
+          scrap.onclick=()=>scrapStashItem(id);
+          actions.appendChild(pack);
+          actions.appendChild(sell);
+          actions.appendChild(scrap);
+          row.appendChild(name);
+          row.appendChild(chip);
+          row.appendChild(meta);
+          row.appendChild(actions);
+          wrap.appendChild(row);
+        });
+      }
+      dom.stash.appendChild(wrap);
+      const bulk=document.createElement('div');
+      bulk.className='inventory inline-actions';
+      const sellAll=document.createElement('button');
+      sellAll.textContent='Sell all stash';
+      sellAll.onclick=bulkSellStash;
+      const scrapAll=document.createElement('button');
+      scrapAll.textContent='Scrap all stash';
+      scrapAll.onclick=bulkScrapStash;
+      bulk.appendChild(sellAll);
+      bulk.appendChild(scrapAll);
+      dom.stashActions.appendChild(bulk);
     }
 
     /* ================= GAMEPLAY ================= */
@@ -657,10 +826,11 @@
       const hungerPressure=state.hunger>70?0.08:0;
       const thirstPressure=state.thirst>70?0.08:0;
       const fatiguePressure=state.stamina<30?0.06:0;
+      const energyPressure=state.energy<25?0.08:0;
       const radiationPressure=state.rads*0.01;
       const heatPressure=state.heat*0.012;
       const base=0.06;
-      return clamp(base+hungerPressure+thirstPressure+fatiguePressure+radiationPressure+heatPressure,0,0.85);
+      return clamp(base+hungerPressure+thirstPressure+fatiguePressure+energyPressure+radiationPressure+heatPressure,0,0.85);
     }
 
     function computeFailChance(risk){
@@ -674,15 +844,17 @@
     }
 
     function tickTime(minutes){
-      state.timeMinutes=(state.timeMinutes+minutes)%(24*60);
+      const total=state.timeMinutes+minutes;
+      if(total>=24*60){
+        state.timeMinutes=total%(24*60);
+        advanceDay();
+      }else{
+        state.timeMinutes=total;
+      }
     }
 
     function advanceDay(){
       state.day++;
-      state.dailyTasksUsed=0;
-      state.excursion.steps=0;
-      state.excursion.limit=DAILY_TASK_LIMIT;
-      state.excursion.reason=null;
       state.timeMinutes=6*60;
     }
 
@@ -705,7 +877,12 @@
       if(!effectStr) return;
       effectStr.split(',').forEach(token=>{
         token=token.trim(); if(!token) return;
-        if(token.startsWith('item:')){ state.inventory.push(token.slice(5)); return; }
+        if(token.startsWith('item:')){
+          const item=token.slice(5).trim();
+          if(state.inventory.length<state.backpackLimit) state.inventory.push(item);
+          else state.lootQueue.push(item);
+          return;
+        }
         if(token.startsWith('flag:')){ state.flags.add(token.slice(5)); return; }
         if(token.startsWith('note:')){ setCodex(token.slice(5)); return; }
         if(token.startsWith('log:')){ logMsg(token.slice(4)); return; }
@@ -721,111 +898,171 @@
           else if(stat==='heat') state.heat=Math.max(0,state.heat+delta);
           else if(stat==='credits') state.credits=Math.max(0,state.credits+delta);
           else if(stat==='scrap') state.scrap=Math.max(0,state.scrap+delta);
+          else if(stat==='energy') state.energy=clamp(state.energy+delta,0,state.maxEnergy);
+          else if(stat==='fuel') state.fuel=Math.max(0,state.fuel+delta);
+          else if(stat==='keys') state.keys=Math.max(0,state.keys+delta);
+          else if(stat==='signal') state.signal=clamp(state.signal+delta,0,state.maxSignal);
         }
       });
       if(outcome==='fail' && state.hp<=0){
-        logMsg('You black out and are dragged back to the hub.');
-        resetToHub();
-        state.hp=clamp(50,1,state.maxHp);
-        state.morale=clamp(state.morale-10,0,state.maxMorale);
+        logMsg('Emergency evac: you collapse and lose momentum.');
+        state.hp=clamp(40,1,state.maxHp);
+        state.morale=clamp(state.morale-12,0,state.maxMorale);
+        state.energy=clamp(state.energy-20,0,state.maxEnergy);
       }
     }
-
-    function runOption(exp,scene,opt){
-      if(state.excursion.extracting) return;
-      const effortMinutes=opt.time || 8;
-      tickTime(effortMinutes);
+    function runRaid(raid){
+      const cost={energy:raid.energy,keys:raid.key||0};
+      if(!canAfford(cost)){
+        setCodex('Not enough resources for that raid.');
+        return;
+      }
+      applyCost(cost);
+      tickTime(raid.time);
       const gearMods=getGearMods();
       state.hunger=clamp(state.hunger+2,0,state.maxHunger);
-      state.thirst=clamp(state.thirst+3-(gearMods.thirstRelief||0),0,state.maxThirst);
-      state.stamina=clamp(state.stamina-5+(gearMods.staminaBonus||0),0,state.maxStamina);
+      state.thirst=clamp(state.thirst+2,0,state.maxThirst);
+      state.stamina=clamp(state.stamina-6+(gearMods.staminaBonus||0),0,state.maxStamina);
 
-      const failChance=computeFailChance(opt.risk);
+      const effectiveRisk=(riskRank[raid.risk] >= riskRank[state.zone.risk]) ? raid.risk : state.zone.risk;
+      const failChance=computeFailChance(effectiveRisk);
       const roll=Math.random();
       const success=roll>failChance;
-      applyEffects(success?opt.success:opt.fail, success?'success':'fail');
-      if(opt.rad) state.rads+=Number(opt.rad);
-      if(opt.heat) state.heat+=Number(opt.heat);
-
       if(success){
-        state.streak++;
-        const momentumBonus=Math.min(4,Math.floor(state.streak/2));
-        const signalGain=3+momentumBonus+(gearMods.signalBonus||0);
-        state.signal=clamp(state.signal+signalGain,0,state.maxSignal);
-        if(gearMods.healBonus){
-          state.hp=clamp(state.hp+gearMods.healBonus,0,state.maxHp);
+        const lootBonus=gearMods.lootBonus || 0;
+        const pulls=Math.max(1,raid.loot+(Math.random()<0.35?1:0));
+        for(let i=0;i<pulls;i++){
+          state.lootQueue.push(rollLootItem(effectiveRisk,lootBonus));
         }
-        if(state.streak%3===0){
-          state.scrap=clamp(state.scrap+1,0,999);
-          logMsg(`Momentum ${state.streak}x — scavenged extra scrap.`);
-        }
+        state.signal=clamp(state.signal+4+(gearMods.signalBonus||0),0,state.maxSignal);
+        state.heat=clamp(state.heat+1,0,999);
+        logMsg(`✓ ${raid.label} succeeded. Haul inbound.`);
       }else{
-        state.streak=0;
-        state.heat=clamp(state.heat+2,0,999);
+        applyEffects('hp-6,morale-4,heat+2','fail');
+        rollComplication('raid');
+        logMsg(`✖ ${raid.label} failed. You limp back empty-handed.`);
       }
-
-      logMsg(`${success?'✓':'✖'} ${opt.label}${success?' succeeded':' failed'} (risk ${opt.risk||'steady'})`);
-
-      rollComplication('fieldwork');
-
-      const next=opt.target && opt.target.trim();
-      if(next && success){
-        enterScene(exp.meta.id,next);
-      }
-      incrementTaskUsage();
       renderAll();
     }
 
-    function resetToHub(){
-      state.location={expansion:null,scene:null};
-      state.excursion={active:false,steps:state.dailyTasksUsed,limit:DAILY_TASK_LIMIT,startAt:null,extracting:false,reason:null,extractionDurationMs:EXTRACTION_DURATION_MS};
-      dom.sceneTitle.textContent='Hub: Signal Garage';
-      dom.sceneDesc.textContent='An empty staging ground. Coil cables, radio static, and chalk markings on the floor wait for doors to be bolted on.';
-      dom.sceneBadge.textContent='Idle';
-      dom.actions.innerHTML='';
-      setActiveTab('hub');
+    function moveLootItem(item,target){
+      removeItem(state.lootQueue,item);
+      if(target==='inventory'){
+        if(state.inventory.length>=state.backpackLimit){
+          setCodex('Backpack full. Make room first.');
+          state.lootQueue.push(item);
+          return;
+        }
+        state.inventory.push(item);
+      }else if(target==='stash'){
+        if(state.stash.items.length>=state.stashLimit){
+          setCodex('Stash full. Sell or scrap to clear space.');
+          state.lootQueue.push(item);
+          return;
+        }
+        state.stash.items.push(item);
+      }
+      renderAll();
     }
 
-    function appendCoreActions(){
-      const idle=document.createElement('button');
-      idle.innerHTML=`<span>Pulse idle scan</span><span class="small">steady · ${ACTION_TIMES.pulse} min</span>`;
-      idle.onclick=runPulseScan;
-      const rest=document.createElement('button');
-      rest.innerHTML=`<span>Make camp</span><span class="small">low · ${ACTION_TIMES.camp} min</span>`;
-      rest.onclick=runCamp;
-      const convert=document.createElement('button');
-      convert.innerHTML=`<span>Cash in signal</span><span class="small">trade · ${ACTION_TIMES.trade} min</span>`;
-      convert.onclick=burnSignal;
-      dom.actions.appendChild(idle);
-      dom.actions.appendChild(rest);
-      dom.actions.appendChild(convert);
+    function bulkMoveLoot(target){
+      const items=[...state.lootQueue];
+      state.lootQueue=[];
+      items.forEach(item=>{
+        if(target==='inventory' && state.inventory.length<state.backpackLimit){
+          state.inventory.push(item);
+        }else if(target==='stash' && state.stash.items.length<state.stashLimit){
+          state.stash.items.push(item);
+        }else{
+          state.lootQueue.push(item);
+        }
+      });
+      if(state.lootQueue.length){
+        setCodex('Some loot could not be moved due to capacity.');
+      }
+      renderAll();
     }
 
-    function runPulseScan(){
-      tickTime(ACTION_TIMES.pulse);
-      const gearMods=getGearMods();
-      const pulse=4+Math.floor(state.streak/2)+(gearMods.signalBonus||0);
-      state.signal=clamp(state.signal+pulse,0,state.maxSignal);
-      state.heat=clamp(state.heat+1,0,999);
-      state.thirst=clamp(state.thirst+1,0,state.maxThirst);
-      logMsg(`Signal trickle captured (+${pulse}).`);
-      incrementTaskUsage();
+    function sellLootItem(item){
+      const data=getItem(item);
+      removeItem(state.lootQueue,item);
+      state.credits+=data.value || 1;
+      renderAll();
+    }
+
+    function scrapLootItem(item){
+      const data=getItem(item);
+      removeItem(state.lootQueue,item);
+      const salvage=data.salvage || Math.max(1,Math.floor((data.value || 1)/2));
+      state.scrap+=salvage;
+      renderAll();
+    }
+
+    function bulkSellLoot(){
+      state.lootQueue.forEach(item=>{
+        const data=getItem(item);
+        state.credits+=data.value || 1;
+      });
+      state.lootQueue=[];
+      renderAll();
+    }
+
+    function bulkScrapLoot(){
+      state.lootQueue.forEach(item=>{
+        const data=getItem(item);
+        const salvage=data.salvage || Math.max(1,Math.floor((data.value || 1)/2));
+        state.scrap+=salvage;
+      });
+      state.lootQueue=[];
+      renderAll();
+    }
+
+    function sellStashItem(item){
+      const data=getItem(item);
+      removeItem(state.stash.items,item);
+      state.credits+=data.value || 1;
+      renderAll();
+    }
+
+    function scrapStashItem(item){
+      const data=getItem(item);
+      removeItem(state.stash.items,item);
+      const salvage=data.salvage || Math.max(1,Math.floor((data.value || 1)/2));
+      state.scrap+=salvage;
+      renderAll();
+    }
+
+    function bulkSellStash(){
+      state.stash.items.forEach(item=>{
+        const data=getItem(item);
+        state.credits+=data.value || 1;
+      });
+      state.stash.items=[];
+      renderAll();
+    }
+
+    function bulkScrapStash(){
+      state.stash.items.forEach(item=>{
+        const data=getItem(item);
+        const salvage=data.salvage || Math.max(1,Math.floor((data.value || 1)/2));
+        state.scrap+=salvage;
+      });
+      state.stash.items=[];
       renderAll();
     }
 
     function runCamp(){
       tickTime(ACTION_TIMES.camp);
       const gearMods=getGearMods();
-      state.stamina=clamp(state.stamina+12,0,state.maxStamina);
+      state.stamina=clamp(state.stamina+14,0,state.maxStamina);
       state.hp=clamp(state.hp+4,0,state.maxHp);
-      state.morale=clamp(state.morale+2,0,state.maxMorale);
+      state.morale=clamp(state.morale+4,0,state.maxMorale);
+      state.energy=clamp(state.energy+18+(gearMods.energyRegen||0),0,state.maxEnergy);
       state.hunger=clamp(state.hunger+3,0,state.maxHunger);
-      state.thirst=clamp(state.thirst+3-(gearMods.thirstRelief||0),0,state.maxThirst);
+      state.thirst=clamp(state.thirst+3,0,state.maxThirst);
       state.heat=Math.max(0,state.heat-3);
-      state.streak=0;
-      logMsg('You bunker down, patch gear, and reset momentum.');
+      logMsg('You bunker down, reset power cells, and recover energy.');
       rollComplication('camp');
-      incrementTaskUsage();
       renderAll();
     }
 
@@ -835,12 +1072,23 @@
         return;
       }
       tickTime(ACTION_TIMES.trade);
-      const payout=4+Math.floor(state.signal/12)+Math.floor(state.streak/3);
+      const payout=5+Math.floor(state.signal/12);
       state.signal=Math.max(0,state.signal-10);
       state.credits+=payout;
       state.scrap=clamp(state.scrap+1,0,999);
       logMsg(`Signal monetized for ${payout} credits and salvage.`);
-      incrementTaskUsage();
+      renderAll();
+    }
+
+    function burnFuel(){
+      if(state.fuel<=0){
+        setCodex('No fuel cells left.');
+        return;
+      }
+      state.fuel=Math.max(0,state.fuel-1);
+      state.energy=clamp(state.energy+25,0,state.maxEnergy);
+      state.stamina=clamp(state.stamina+6,0,state.maxStamina);
+      logMsg('Fuel cell burned for a quick energy surge.');
       renderAll();
     }
 
@@ -877,14 +1125,14 @@
       const btn=document.createElement('button');
       btn.innerHTML=`<span>${exp.door?.label||exp.meta.name}</span><span class="small">${exp.door?.hint||'Unknown signal'}</span>`;
       btn.onclick=()=>{
-        if(state.excursion.active){
-          setCodex('Hub sealed during excursion. Extract before choosing another door.');
-          return;
-        }
-        const start=exp.door?.target||Object.keys(exp.scenes)[0];
-        enterScene(exp.meta.id,start);
+        state.zone={
+          id:exp.meta.id,
+          name:exp.meta.name,
+          risk:exp.door?.risk || 'low',
+          desc:exp.door?.desc || exp.door?.hint || 'Signal-streaked salvage zone.'
+        };
         if(exp.door?.note) setCodex(exp.door.note);
-        renderInventory();
+        renderAll();
       };
       dom.doors.appendChild(btn);
     }
@@ -941,11 +1189,14 @@
     function renderAll(){
       renderBars();
       renderInventory();
-      renderScene();
       renderLog();
       renderExcursionStatus();
       renderHubAccess();
       renderIdleOps();
+      renderZone();
+      renderRaidActions();
+      renderHaul();
+      renderStash();
       syncTabs();
     }
 
@@ -962,10 +1213,14 @@
           return;
         }
       }
-      const drip=1+Math.floor(state.streak/4);
-      state.signal=clamp(state.signal+drip,0,state.maxSignal);
+      const gearMods=getGearMods();
+      state.signal=clamp(state.signal+2+(gearMods.signalBonus||0),0,state.maxSignal);
+      state.energy=clamp(state.energy+4+(gearMods.energyRegen||0),0,state.maxEnergy);
       state.hunger=clamp(state.hunger+1,0,state.maxHunger);
       state.thirst=clamp(state.thirst+1,0,state.maxThirst);
+      if(state.autoSalvage && state.energy>=12 && state.lootQueue.length<16){
+        runRaid(RAID_TEMPLATES[0]);
+      }
       if(state.hunger>=90){
         applyEffects('hp-3,morale-2','fail');
         logMsg('Starvation gnaws at you while you hesitate.');
