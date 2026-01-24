@@ -15,14 +15,14 @@ desc:Fresh hazard tape flutters on old stakes while rusted lanterns stare blind.
 tags:Recon / Low Cover
 option:Scout the treeline => clearing | risk:medium | time:12 | success:credits+20,stamina-6,log:You flag a path through the rot.,note:Clearing marked on your map. | fail:hp-8,rads+1,log:Thorns tear through sleeves and skin.
 option:Follow the radio ping => rail-wreck | risk:high | time:16 | success:flag:train-signal,log:The ping steadies like a buried heartbeat.,stamina-8 | fail:hp-12,rads+2,log:Something massive shifts in the dark.
-option:Forage for herbs => trail-edge | risk:low | time:10 | success:item:glowing herbs,log:You harvest bioluminescent herbs from black water.,hunger-4 | fail:hp-4,log:A glass shard opens your palm.
+option:Forage for herbs => trail-edge | risk:low | time:10 | success:item:glowing herbs,item:rad moss poultice,log:You harvest bioluminescent herbs and pack moss into a poultice.,hunger-4 | fail:hp-4,log:A glass shard opens your palm.
 
 @scene clearing
 title:Shadowed Clearing
 desc:Broken stone pillars ring a shallow pool that mirrors your visor in bands of static. The air tastes metallic and wrong.
 tags:Staging
 option:Deploy a signal flare => clearing | risk:medium | time:8 | success:temp+2,flag:flare-up,log:The flare stains the canopy with emergency red. | fail:temp+1,log:The flare sputters but refuses to die.
-option:Inspect old camp => cache | risk:low | time:7 | success:item:coil battery,log:You recover a battery sealed against the damp.,morale+2 | fail:morale-2,log:Only gnawed bone and stripped metal remain.
+option:Inspect old camp => cache | risk:low | time:7 | success:item:coil battery,item:spore lantern,log:You recover a battery and a lantern humming with spores.,morale+2 | fail:morale-2,log:Only gnawed bone and stripped metal remain.
 option:Approach strange monolith => monolith | risk:high | time:14 | success:note:Coordinates etched into the stone point to a buried hatch.,credits+10,log:You copy the markings with shaking hands. | fail:morale-6,rads+3,log:Nausea drops you to your knees.
 option:Circle back => trail-edge | risk:low | time:6 | success:stamina+4 | fail:stamina+2
 
@@ -30,16 +30,16 @@ option:Circle back => trail-edge | risk:low | time:6 | success:stamina+4 | fail:
 title:Derailed Freight
 desc:An overturned freight car lies split open, its guts steaming into the rain. Warning sigils are stenciled over older, scratched-out names.
 tags:Loot / Hazard
-option:Extract reactor shard => rail-wreck | risk:deadly | time:18 | rad:3 | success:item:reactor shard,credits+35,log:You lift a hot shard with shaking tongs.,note:Shards hum louder near water. | fail:hp-18,rads+4,log:Heat bleeds through your gloves.
+option:Extract reactor shard => rail-wreck | risk:deadly | time:18 | rad:3 | success:item:reactor shard,item:feral talon,credits+35,log:You lift a hot shard and pry a talon from the wreckage.,note:Shards hum louder near water. | fail:hp-18,rads+4,log:Heat bleeds through your gloves.
 option:Search for rations => clearing | risk:medium | time:10 | success:item:military rations,hunger-6,log:You find sealed packs buried under ash. | fail:hunger+8,log:Rats got here first.
 option:Listen in the dark => clearing | risk:low | time:6 | success:note:A two-tone beacon repeats 07-19-07 through the static.,morale+3 | fail:morale-3,log:The wreck answers only with buzzing.
-option:Cut open the cab => cache | risk:medium | time:9 | success:credits+15,item:spare filter,log:Filters still sealed in foil fall into your hands. | fail:hp-6,log:A jagged seam slices deep.
+option:Cut open the cab => cache | risk:medium | time:9 | success:credits+15,item:spare filter,item:monsoon canteen,log:Filters and a monsoon canteen sealed in foil fall into your hands. | fail:hp-6,log:A jagged seam slices deep.
 
 @scene cache
 title:Forgotten Cache
 desc:Ripped duffels, empty syringes, and a half-drained lantern mark a campsite abandoned in a hurry. Footprints circle it like a warning.
 tags:Salvage / Intel
-option:Patch your suit => clearing | risk:low | time:8 | success:stamina+10,temp+1,log:Seals bite down tight against the rain. | fail:stamina-4,log:You overtighten and crack a clasp.
+option:Patch your suit => clearing | risk:low | time:8 | success:stamina+10,temp+1,item:hardened bark plate,log:Seals bite down tight and you lash on bark plating. | fail:stamina-4,log:You overtighten and crack a clasp.
 option:Disarm tripwire => trail-edge | risk:high | time:10 | success:item:copper wire,credits+8,log:You coil the wire without setting it off. | fail:hp-10,log:The trap snaps and blood runs hot.
 option:Follow muddy tracks => monolith | risk:medium | time:11 | success:flag:forest-tracks,log:The tracks sink toward the monolith. | fail:morale-3,log:The rain erases every sign.
 

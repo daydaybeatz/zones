@@ -16,7 +16,7 @@ tags:Safe / Trade / Hub
 option:Consult the route broker => route-broker | risk:low | time:6 | success:note:The broker marks a maintenance tunnel that bypasses a kill zone.,log:You buy directions scratched into tin. | fail:morale-2,log:The broker sells you nothing but smoke.
 option:Eat at the ration line => ration-line | risk:low | time:5 | success:hunger-8,credits-10,log:Thin stew settles your hands.,note:The cook mutters about a vanished patrol. | fail:credits-5,hunger-2,log:The pot runs dry halfway through.
 option:Parley with the federal patrol => patrol-van | risk:medium | time:7 | success:flag:patrol-contact,log:You trade scavenged intel for a temporary pass.,morale+2 | fail:temp-2,log:They record your face and send you away.
-option:Hire a tunnel runner => tunnel-runner | risk:medium | time:8 | success:item:sealed boots,credits-20,log:The runner outfits you for flooded routes.,note:She warns of a preacher rally under the bridge. | fail:credits-10,log:The runner ghosts you before the deal closes.
+option:Hire a tunnel runner => tunnel-runner | risk:medium | time:8 | success:item:sealed boots,item:bridge-runner pack,credits-20,log:The runner outfits you for flooded routes and straps on a bridge-runner pack.,note:She warns of a preacher rally under the bridge. | fail:credits-10,log:The runner ghosts you before the deal closes.
 
 @scene route-broker
 title:Route Broker
@@ -37,7 +37,7 @@ title:Federal Patrol Van
 desc:A black van idles beside a barricade of jersey walls. Officers monitor drone feeds and mark targets on laminated sheets.
 tags:Intel / Risky
 option:Present forged clearance => protest-camp | risk:medium | time:7 | success:temp+2,log:They wave you toward the bridge camp with a warning. | fail:temp-3,log:They hold you at gunpoint while they check the code.
-option:Plant a relay tap => burnside-hub | risk:high | time:10 | success:item:signal tap,flag:van-tapped,log:You splice into their relay before anyone looks up.,temp-1 | fail:hp-8,log:A baton cracks across your knuckles.
+option:Plant a relay tap => burnside-hub | risk:high | time:10 | success:item:signal tap,item:signal flare rack,flag:van-tapped,log:You splice into their relay and snap on a flare rack before anyone looks up.,temp-1 | fail:hp-8,log:A baton cracks across your knuckles.
 
 @scene tunnel-runner
 title:Tunnel Runner
@@ -66,7 +66,7 @@ title:Riot Alley
 desc:Charred walls narrow into a choke point littered with casings. Speakers blare old siren tones to keep everyone on edge.
 tags:Combat / Hazard
 option:Push through the choke point => alley-ambush | risk:high | time:10 | success:hp-4,credits+25,item:flashbang,log:You break the ambush and strip the fallen. | fail:hp-14,log:Rifle fire chews the concrete around you.
-option:Deploy suppression foam => protest-camp | risk:medium | time:8 | success:item:foam canister,temp+2,log:The foam blinds shooters long enough to retreat. | fail:item:foam canister,log:The nozzle clogs and you eat smoke.
+option:Deploy suppression foam => protest-camp | risk:medium | time:8 | success:item:foam canister,item:riot-line tape,temp+2,log:The foam blinds shooters long enough to retreat and you strip riot tape from the barricade. | fail:item:foam canister,log:The nozzle clogs and you eat smoke.
 
 @scene patrol-hunt
 title:Patrol Hunt
@@ -79,7 +79,7 @@ option:Question the sentries => burnside-hub | risk:low | time:6 | success:note:
 title:Signal Loft
 desc:A gutted office tower houses a relay rig pointed at the storm. Exhausted patrol members guard it like it is the last light in the city.
 tags:Combat / Loot
-option:Evacuate the survivors => burnside-hub | risk:medium | time:7 | success:item:relay codes,credits+20,log:They hand over access codes in exchange for escort.,flag:patrol-safe | fail:hp-8,log:Crossfire erupts as you move them out.
+option:Evacuate the survivors => burnside-hub | risk:medium | time:7 | success:item:relay codes,item:floodgate keycard,credits+20,log:They hand over access codes and a floodgate keycard in exchange for escort.,flag:patrol-safe | fail:hp-8,log:Crossfire erupts as you move them out.
 option:Strip the relay parts => burnside-hub | risk:high | time:9 | success:item:relay coil,credits+15,log:You salvage the rig before the storm hits.,temp-1 | fail:temp-3,log:A surge arcs through your suit.
 
 @scene drone-yard
@@ -88,7 +88,7 @@ desc:Delivery drones sit in ranks behind razor wire and floodlights. The yard sm
 tags:Quest / Combat / Loot
 option:Flash the stolen badge => drone-yard | risk:medium | time:8 | success:temp+3,log:The spoofed badge keeps the turrets asleep.,item:payload crate | fail:temp-3,log:Sirens howl and searchlights lock onto you.
 option:Mark a drone with flare paint => river-cache | risk:medium | time:10 | success:flag:drone-repainted,log:The marked drone reroutes toward the river cache.,morale+2 | fail:hp-6,log:Paint fumes and panic slow your hands.
-option:Hold the line against security => drone-yard | risk:high | time:12 | success:item:stun baton,credits+35,log:You scrap a guard bot and loot its core.,temp-1 | fail:hp-15,log:Shock rounds drop you to one knee.
+option:Hold the line against security => drone-yard | risk:high | time:12 | success:item:stun baton,item:arc pistol,credits+35,log:You scrap a guard bot, loot its core, and pry loose an arc pistol.,temp-1 | fail:hp-15,log:Shock rounds drop you to one knee.
 
 @scene river-cache
 title:River Cache

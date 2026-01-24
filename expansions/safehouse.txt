@@ -13,18 +13,18 @@ title:Lower Bunks
 desc:Metal bunks line the wall, mattresses thin but dry. A patched radio murmurs storm reports and casualty counts.
 tags:Safe / Rest
 option:Crash for a bit => bunks | risk:low | time:30 | success:hp+10,stamina+15,morale+6,hunger-8,thirst-10,log:You sleep in short, guarded bursts.,note:Rested at the hatch. | fail:hp+4,stamina+6
-option:Run maintenance checks => crates | risk:low | time:12 | success:stamina+8,temp+1,log:You tighten seals and clear grit from your filters. | fail:stamina+4,log:You only manage a partial inspection.
+option:Run maintenance checks => crates | risk:low | time:12 | success:stamina+8,temp+1,item:lantern oil,log:You tighten seals and bottle lantern oil from a forgotten crate. | fail:stamina+4,log:You only manage a partial inspection.
 
 @scene crates
 title:Maintenance Crates
 desc:Plastic crates are labeled with dates from before the collapse. Tools are arranged with the discipline of people who expect to move fast.
 tags:Storage / Upgrades
-option:Reinforce your kit => bunks | risk:low | time:10 | success:stamina+10,morale+2,log:Straps are re-stitched and plates sit true. | fail:stamina+5,log:The work is rushed but still buys you time.
-option:Plan the next route => hallway | risk:low | time:8 | success:morale+4,log:You chart a route with fewer blind corners. | fail:morale+1,log:Every path still looks like a gamble.
+option:Reinforce your kit => bunks | risk:low | time:10 | success:stamina+10,morale+2,item:thermal wrap,log:Straps are re-stitched and you wrap up in thermal mesh. | fail:stamina+5,log:The work is rushed but still buys you time.
+option:Plan the next route => hallway | risk:low | time:8 | success:morale+4,item:bunker schematics,log:You chart a route with schematics etched into plastic. | fail:morale+1,log:Every path still looks like a gamble.
 
 @scene hallway
 title:Maintenance Hall
 desc:A narrow corridor runs deeper into the shelter, pipes sweating against the concrete. Someone has carved "MAKE IT BACK" into the wall again and again.
 tags:Transit
-option:Return to bunks => bunks | risk:low | time:4 | success:morale+1 | fail:morale-1
-option:Stretch legs => bunks | risk:low | time:6 | success:stamina+8,log:You keep your muscles warm for the next sprint. | fail:stamina+2
+option:Return to bunks => bunks | risk:low | time:4 | success:morale+1,item:cache latch,log:You pocket a spare latch on the way back. | fail:morale-1
+option:Stretch legs => bunks | risk:low | time:6 | success:stamina+8,item:stabilizer brace,log:You keep your muscles warm and fit a stabilizer brace. | fail:stamina+2

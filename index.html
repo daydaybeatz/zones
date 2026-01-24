@@ -131,6 +131,15 @@
     .recipe-card{border:1px solid var(--border);border-radius:12px;padding:10px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:6px;}
     .recipe-card .title-row{display:flex;justify-content:space-between;align-items:center;gap:6px;}
     .recipe-card .reqs{font-size:12px;color:var(--muted);}
+    .pager{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-top:10px;}
+    .pager .page-info{font-size:12px;color:var(--muted);}
+    .pager button{min-height:36px;padding:6px 10px;justify-content:center;text-align:center;flex:0 0 auto;}
+    .market-section{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+    .market-section h4{margin:0;font-size:14px;color:#e8f1ff;}
+    .market-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;}
+    .market-card{border:1px solid var(--border);border-radius:12px;padding:10px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:6px;}
+    .market-card .title-row{display:flex;justify-content:space-between;align-items:center;gap:6px;}
+    .market-card .cost{font-size:12px;color:var(--accent-2);}
     @media(max-width:900px){header{position:static;} .two-col{grid-template-columns:1fr;} .tab-buttons button{flex:1 1 100%;}}
     @media(max-width:900px){.inventory-layout{grid-template-columns:1fr;}}
   </style>
@@ -304,6 +313,11 @@
                   </div>
                   <div class="command-hint">Docking grants sell access. Scrap processing is always available.</div>
                   <div id="stashActions"></div>
+                  <div class="market-section">
+                    <h4>Vendor stock</h4>
+                    <div class="command-hint">Vendors rotate survival gear, pack upgrades, and weapons.</div>
+                    <div id="marketInventory" class="market-grid"></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -339,6 +353,7 @@
       backpackLimit:12,
       stashLimit:40,
       stashUpgradeLevel:0,
+      craftingPage:0,
       inventory:["rusty flashlight","ration bar","scrap wiring"],
       equipped:[],
       codex:["Hub online. Haul bays clear."],
@@ -382,6 +397,7 @@
       'drone core':{type:'tool',rarity:'epic',value:32,mods:{lootBonus:0.08,energyRegen:2}},
       'relic shard':{type:'junk',rarity:'legendary',value:60,salvage:12},
       'rust town crown':{type:'armor',rarity:'legendary',value:85,mods:{moraleBonus:4,insulation:0.6}},
+      'iron crown':{type:'armor',rarity:'legendary',value:85,mods:{moraleBonus:4,insulation:0.6}},
       'safehouse warden coat':{type:'armor',rarity:'legendary',value:90,mods:{staminaBonus:4,insulation:1}},
       'forest monolith sigil':{type:'tool',rarity:'legendary',value:95,mods:{lootBonus:0.12,energyRegen:2}},
       'neon riot jacket':{type:'armor',rarity:'legendary',value:88,mods:{carryBonus:3,insulation:0.9,moraleBonus:2}},
@@ -415,15 +431,55 @@
       'scavenger harness':{type:'armor',rarity:'uncommon',value:17,mods:{carryBonus:5}},
       'hardened canteen':{type:'consumable',rarity:'uncommon',value:9,effect:'thirst-16,stamina+3'},
       'ember ration':{type:'consumable',rarity:'common',value:6,effect:'hunger-14,temp+2'},
-      'signal jammer':{type:'tool',rarity:'rare',value:33,mods:{riskMod:-0.07,combatBonus:2}}
+      'signal jammer':{type:'tool',rarity:'rare',value:33,mods:{riskMod:-0.07,combatBonus:2}},
+
+      /* base items */
+      'pocket pack':{type:'upgrade',rarity:'common',value:18,effect:'backpack+2'},
+      'scout daypack':{type:'upgrade',rarity:'uncommon',value:26,effect:'backpack+3'},
+      'salvage tote':{type:'upgrade',rarity:'uncommon',value:24,effect:'backpack+4'},
+      'expedition frame pack':{type:'upgrade',rarity:'rare',value:44,effect:'backpack+5'},
+      'jury-rigged blade':{type:'tool',rarity:'common',value:9,mods:{combatBonus:3}},
+      'scrap spear':{type:'tool',rarity:'uncommon',value:18,mods:{combatBonus:5,lootBonus:0.01}},
+      'pipe rifle':{type:'tool',rarity:'rare',value:32,mods:{combatBonus:7,riskMod:-0.01}},
+      'compact medkit':{type:'consumable',rarity:'uncommon',value:14,effect:'hp+18'},
+      'filtered water pack':{type:'consumable',rarity:'uncommon',value:13,effect:'thirst-20,rads-2'},
+      'morale patch':{type:'consumable',rarity:'common',value:7,effect:'morale+8,stamina+2'},
+
+      /* iron ward */
+      'ledger-etched compass':{type:'tool',rarity:'uncommon',value:19,mods:{riskMod:-0.04,lootBonus:0.02}},
+      'clocktower chime':{type:'junk',rarity:'uncommon',value:16,salvage:4},
+      'iron ward seals':{type:'junk',rarity:'common',value:3,salvage:2,stackable:true},
+      'market shock knife':{type:'tool',rarity:'rare',value:34,mods:{combatBonus:6,lootBonus:0.02}},
+      'tarpaulin roll':{type:'junk',rarity:'common',value:4,salvage:2,stackable:true},
+
+      /* cold shelter */
+      'thermal wrap':{type:'consumable',rarity:'common',value:6,effect:'temp+3,stamina+4'},
+      'bunker schematics':{type:'tool',rarity:'uncommon',value:21,mods:{carryBonus:2,riskMod:-0.02}},
+      'lantern oil':{type:'junk',rarity:'common',value:2,salvage:1,stackable:true},
+      'stabilizer brace':{type:'tool',rarity:'uncommon',value:20,mods:{staminaBonus:3,insulation:0.3}},
+      'cache latch':{type:'junk',rarity:'uncommon',value:10,salvage:3},
+
+      /* blackwood expanse */
+      'spore lantern':{type:'tool',rarity:'uncommon',value:22,mods:{riskMod:-0.03,lootBonus:0.03}},
+      'rad moss poultice':{type:'consumable',rarity:'uncommon',value:15,effect:'hp+10,rads-5,temp+1'},
+      'hardened bark plate':{type:'armor',rarity:'uncommon',value:18,mods:{insulation:0.7,riskMod:-0.02}},
+      'monsoon canteen':{type:'consumable',rarity:'rare',value:23,effect:'thirst-24,temp+1'},
+      'feral talon':{type:'junk',rarity:'rare',value:24,salvage:7},
+
+      /* downtown portland */
+      'floodgate keycard':{type:'key',rarity:'rare',value:22},
+      'signal flare rack':{type:'tool',rarity:'uncommon',value:20,mods:{lootBonus:0.05,moraleBonus:1}},
+      'riot-line tape':{type:'junk',rarity:'common',value:3,salvage:2,stackable:true},
+      'bridge-runner pack':{type:'upgrade',rarity:'uncommon',value:28,effect:'backpack+4'},
+      'arc pistol':{type:'tool',rarity:'rare',value:38,mods:{combatBonus:8,energyRegen:1}}
     };
 
     const LOOT_BY_RARITY={
-      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration'],
-      uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','neon sneakers','underground map','holo wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel'],
-      rare:['microcell','lockbox key','echo prism','rigged backpack','exo brace','reactor shard','meme-drive','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive'],
+      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','morale patch','pocket pack','jury-rigged blade','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape'],
+      uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','neon sneakers','underground map','holo wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack'],
+      rare:['microcell','lockbox key','echo prism','rigged backpack','exo brace','reactor shard','meme-drive','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol'],
       epic:['drone core'],
-      legendary:['relic shard','rust town crown','safehouse warden coat','forest monolith sigil','neon riot jacket']
+      legendary:['relic shard','rust town crown','iron crown','safehouse warden coat','forest monolith sigil','neon riot jacket']
     };
 
     const RAID_TEMPLATES=[
@@ -450,11 +506,38 @@
       return Math.max(3,base*(1-(gearMods.idleSpeed||0)));
     };
 
+    const CRAFTING_PAGE_SIZE=4;
     const CRAFTING_RECIPES=[
       {id:'bandage',label:'Bandage',desc:'Quick field wrap to stabilize wounds.',cost:{'cloth scraps':5}},
       {id:'water flask',label:'Water flask',desc:'Patch together a reusable hydration pouch.',cost:{'plastic shards':6,'cloth scraps':3}},
       {id:'ration bar',label:'Ration bar',desc:'Compress salvageable nutrients into a meal.',cost:{'scrap bundle':7,'plastic shards':2}},
-      {id:'patch kit',label:'Patch kit',desc:'Bundle wire and electronics into repair gear.',cost:{'wire spool':8,'electronics bits':4}}
+      {id:'patch kit',label:'Patch kit',desc:'Bundle wire and electronics into repair gear.',cost:{'wire spool':8,'electronics bits':4}},
+      {id:'morale patch',label:'Morale patch',desc:'Stitch a bright patch that steadies nerves.',cost:{'cloth scraps':4,'plastic shards':2}},
+      {id:'compact medkit',label:'Compact medkit',desc:'Upgrade basic wraps into a full trauma pack.',cost:{'bandage':2,'cloth scraps':6,'electronics bits':3}},
+      {id:'filtered water pack',label:'Filtered water pack',desc:'Pair a flask with a fresh filter for clean water.',cost:{'water flask':1,'spare filter':1,'plastic shards':4}},
+      {id:'jury-rigged blade',label:'Jury-rigged blade',desc:'Sharpen scrap into a brutal close-range tool.',cost:{'scrap wiring':4,'wire spool':3}},
+      {id:'scrap spear',label:'Scrap spear',desc:'Bind rods and scrap into a reach advantage.',cost:{'copper wire':3,'scrap bundle':6,'cloth scraps':5}},
+      {id:'pocket pack',label:'Pocket pack',desc:'Add extra compartments without adding weight.',cost:{'cloth scraps':6,'plastic shards':3}},
+      {id:'salvage tote',label:'Salvage tote',desc:'Reinforce a tote for hauling extra salvage.',cost:{'cloth scraps':8,'plastic shards':5,'wire spool':4}},
+      {id:'scout daypack',label:'Scout daypack',desc:'Build a balanced daypack for longer routes.',cost:{'salvage tote':1,'wire spool':4,'cloth scraps':6}},
+      {id:'bridge-runner pack',label:'Bridge-runner pack',desc:'Tethered pack tuned for wet transit lanes.',cost:{'salvage tote':1,'riot-line tape':4,'wire spool':4}},
+      {id:'ledger-etched compass',label:'Ledger-etched compass',desc:'Etch trade routes into a compass that never lies.',cost:{'old coin':2,'electronics bits':4,'wire spool':3}}
+    ];
+
+    const MARKET_STOCK=[
+      {id:'pocket pack',cost:26,tag:'Pack upgrade'},
+      {id:'scout daypack',cost:38,tag:'Pack upgrade'},
+      {id:'expedition frame pack',cost:68,tag:'Pack upgrade'},
+      {id:'jury-rigged blade',cost:18,tag:'Weapon'},
+      {id:'scrap spear',cost:32,tag:'Weapon'},
+      {id:'pipe rifle',cost:70,tag:'Weapon'},
+      {id:'arc pistol',cost:82,tag:'Weapon'},
+      {id:'compact medkit',cost:30,tag:'Medical'},
+      {id:'filtered water pack',cost:28,tag:'Hydration'},
+      {id:'morale patch',cost:16,tag:'Morale'},
+      {id:'spare filter',cost:24,tag:'Gear mod'},
+      {id:'coil battery',cost:26,tag:'Gear mod'},
+      {id:'bunker schematics',cost:44,tag:'Route intel'}
     ];
 
     const dom={
@@ -504,6 +587,7 @@
       stashDetail:document.getElementById('stashDetail'),
       stashItemActions:document.getElementById('stashItemActions'),
       stashCount:document.getElementById('stashCount'),
+      marketInventory:document.getElementById('marketInventory'),
       itemDetail:document.getElementById('itemDetail'),
       itemActions:document.getElementById('itemActions'),
       inventoryNav:Array.from(document.querySelectorAll('#inventoryNav button')),
@@ -609,7 +693,7 @@
     };
     const formatEffects=(effect)=>{
       if(!effect) return [];
-      const labels={temp:'body temp'};
+      const labels={temp:'body temp',backpack:'backpack slots'};
       return effect.split(',').map(token=>token.trim()).filter(Boolean).map(token=>{
         if(token.startsWith('item:')) return `Adds item: ${token.slice(5).trim()}`;
         if(token.startsWith('note:')) return token.slice(5).trim();
@@ -813,8 +897,13 @@
       }
       removeItem(state.inventory,item);
       state.selected={source:null,item:null};
-      logMsg(`Consumed ${item}.`);
-      setCodex(`${item} used.`);
+      if(data.type==='upgrade'){
+        logMsg(`Installed ${item}. Backpack capacity now ${getBackpackLimit()}.`);
+        setCodex(`${item} installed. Capacity ${getBackpackLimit()} slots.`);
+      }else{
+        logMsg(`Consumed ${item}.`);
+        setCodex(`${item} used.`);
+      }
       renderAll();
     }
     function stashItem(item){
@@ -959,7 +1048,8 @@
         `<span class="pill-inline"><b>Level</b>${state.level}</span>`+
         `<span class="pill-inline"><b>XP</b>${state.xp}/${state.nextLevelXp}</span>`+
         `<span class="pill-inline"><b>Time</b>${fmtTime(state.timeMinutes)}</span>`+
-        `<span class="pill-inline"><b>Day</b>${state.day}</span>`;
+        `<span class="pill-inline"><b>Day</b>${state.day}</span>`+
+        `<span class="pill-inline"><b>Backpack</b>${getBackpackUsage()}/${getBackpackLimit()}</span>`;
     }
 
     const rewardSources={
@@ -1093,6 +1183,31 @@
       renderAll();
     }
 
+    function buyMarketItem(itemId){
+      const stock=MARKET_STOCK.find(entry=>entry.id===itemId);
+      if(!stock) return;
+      if(!state.atShop){
+        setCodex('Dock at the market to buy items.');
+        return;
+      }
+      if(state.credits<stock.cost){
+        setCodex('Not enough credits for this purchase.');
+        return;
+      }
+      state.credits-=stock.cost;
+      if(hasCapacityFor(state.inventory,getBackpackLimit(),itemId,1)){
+        state.inventory.push(itemId);
+        state.selected={source:'inventory',item:itemId};
+        logMsg(`Purchased ${itemId} for ${stock.cost} credits.`);
+      }else{
+        state.lootQueue.push(itemId);
+        state.selected={source:'haul',item:itemId};
+        logMsg(`Purchased ${itemId} for ${stock.cost} credits. Routed to haul queue.`);
+        setCodex('Backpack full. Purchase routed to haul queue.');
+      }
+      renderAll();
+    }
+
     function buildItemRow({id,count,data,source}){
       const row=document.createElement('div');
       row.className='item-row selectable';
@@ -1152,6 +1267,7 @@
           const effects=formatEffects(data.effect);
           const uses=[];
           if(data.type==='consumable') uses.push('Consume for field boost.');
+          if(data.type==='upgrade') uses.push('Install to permanently expand backpack capacity.');
           if(['tool','armor'].includes(data.type)) uses.push('Equip to gain passive bonuses.');
           if(data.type==='junk') uses.push('Break down for scrap.');
           if(data.type==='key') uses.push('Unlocks lockbox raids.');
@@ -1177,8 +1293,9 @@
         if(['tool','armor'].includes(data.type)){
           actionConfigs.push({label:'Deploy to loadout',action:()=>equipItem(item),disabled:state.equipped.length>=getEquipmentLimit()});
         }
-        if(data.type==='consumable'){
-          actionConfigs.push({label:'Use item',action:()=>consumeItem(item)});
+        if(data.type==='consumable' || data.type==='upgrade'){
+          const label=data.type==='upgrade' ? 'Install upgrade' : 'Use item';
+          actionConfigs.push({label,action:()=>consumeItem(item)});
         }
         actionConfigs.push({
           label:'Route to vault',
@@ -1282,12 +1399,29 @@
       dom.codex.textContent = state.codex[state.codex.length-1] || '';
     }
 
+    function changeCraftingPage(delta){
+      const totalPages=Math.max(1,Math.ceil(CRAFTING_RECIPES.length/CRAFTING_PAGE_SIZE));
+      state.craftingPage=clamp(state.craftingPage+delta,0,totalPages-1);
+      renderCrafting();
+    }
+
     function renderCrafting(){
       if(!dom.crafting) return;
       dom.crafting.innerHTML='';
+      if(!CRAFTING_RECIPES.length){
+        const empty=document.createElement('div');
+        empty.className='muted-box';
+        empty.textContent='No recipes available yet.';
+        dom.crafting.appendChild(empty);
+        return;
+      }
+      const totalPages=Math.max(1,Math.ceil(CRAFTING_RECIPES.length/CRAFTING_PAGE_SIZE));
+      state.craftingPage=clamp(state.craftingPage,0,totalPages-1);
+      const start=state.craftingPage*CRAFTING_PAGE_SIZE;
+      const visibleRecipes=CRAFTING_RECIPES.slice(start,start+CRAFTING_PAGE_SIZE);
       const grid=document.createElement('div');
       grid.className='recipe-grid';
-      CRAFTING_RECIPES.forEach(recipe=>{
+      visibleRecipes.forEach(recipe=>{
         const card=document.createElement('div');
         card.className='recipe-card';
         const titleRow=document.createElement('div');
@@ -1317,14 +1451,58 @@
         card.appendChild(craftBtn);
         grid.appendChild(card);
       });
-      if(!CRAFTING_RECIPES.length){
-        const empty=document.createElement('div');
-        empty.className='muted-box';
-        empty.textContent='No recipes available yet.';
-        dom.crafting.appendChild(empty);
-        return;
-      }
       dom.crafting.appendChild(grid);
+      if(totalPages>1){
+        const pager=document.createElement('div');
+        pager.className='pager';
+        const prev=document.createElement('button');
+        prev.textContent='Previous recipes';
+        prev.disabled=state.craftingPage===0;
+        prev.onclick=()=>changeCraftingPage(-1);
+        const info=document.createElement('div');
+        info.className='page-info';
+        const end=Math.min(CRAFTING_RECIPES.length,start+visibleRecipes.length);
+        info.textContent=`Showing recipes ${start+1}-${end} of ${CRAFTING_RECIPES.length}`;
+        const next=document.createElement('button');
+        next.textContent='More recipes';
+        next.disabled=state.craftingPage>=totalPages-1;
+        next.onclick=()=>changeCraftingPage(1);
+        pager.appendChild(prev);
+        pager.appendChild(info);
+        pager.appendChild(next);
+        dom.crafting.appendChild(pager);
+      }
+    }
+
+    function renderMarketStock(){
+      if(!dom.marketInventory) return;
+      dom.marketInventory.innerHTML='';
+      MARKET_STOCK.forEach(stock=>{
+        const data=getItem(stock.id);
+        const card=document.createElement('div');
+        card.className='market-card';
+        const titleRow=document.createElement('div');
+        titleRow.className='title-row';
+        titleRow.innerHTML=`<span>${stock.id}</span><span class="small">${stock.tag}</span>`;
+        const desc=document.createElement('div');
+        desc.className='small';
+        desc.textContent=`${rarityLabel(data.rarity)} · ${data.type}`;
+        const cost=document.createElement('div');
+        cost.className='cost';
+        cost.textContent=`${stock.cost} credits`;
+        const btn=document.createElement('button');
+        btn.textContent=`Buy ${stock.id}`;
+        const canBuy=state.atShop && state.credits>=stock.cost;
+        btn.disabled=!canBuy;
+        if(!state.atShop) btn.title='Dock at the market to buy.';
+        else if(state.credits<stock.cost) btn.title='Not enough credits.';
+        btn.onclick=()=>buyMarketItem(stock.id);
+        card.appendChild(titleRow);
+        card.appendChild(desc);
+        card.appendChild(cost);
+        card.appendChild(btn);
+        dom.marketInventory.appendChild(card);
+      });
     }
 
     function renderIdleOps(){
@@ -1978,6 +2156,7 @@
       bulk.appendChild(sellAll);
       bulk.appendChild(scrapAll);
       dom.stashActions.appendChild(bulk);
+      renderMarketStock();
     }
 
     /* ================= GAMEPLAY ================= */
@@ -2054,6 +2233,7 @@
           else if(stat==='energy') state.energy=clamp(state.energy+delta,0,state.maxEnergy);
           else if(stat==='keys') state.keys=Math.max(0,state.keys+delta);
           else if(stat==='temp') state.bodyTemp=clamp(state.bodyTemp+delta,BODY_TEMP_MIN,BODY_TEMP_MAX);
+          else if(stat==='backpack') state.backpackLimit=Math.max(8,state.backpackLimit+delta);
         }
       });
       if(outcome==='fail' && state.hp<=0){

@@ -22,21 +22,21 @@ title:Scrap Kiosk
 desc:Circuit boards, shell casings, and stripped wiring are sorted into neat, desperate piles. A ceiling fan rattles like loose teeth.
 tags:Trade
 option:Sell copper wiring => market-square | risk:low | time:5 | success:credits+20,log:The kiosk pays in chipped credits. | fail:credits+5,log:They dock you for corrosion.
-option:Browse exo-suit junk => market-square | risk:medium | time:7 | success:item:exo brace,temp+1,log:A brace still holds tension. | fail:morale-2,log:Everything else has already failed someone.
+option:Browse exo-suit junk => market-square | risk:medium | time:7 | success:item:exo brace,item:tarpaulin roll,temp+1,log:A brace and bundled tarp still hold tension. | fail:morale-2,log:Everything else has already failed someone.
 
 @scene medic
 title:Patchwork Clinic
 desc:A canvas clinic reeks of antiseptic and ozone. Instruments are clean. The medic's hands are steadier than her eyes.
 tags:Healing
 option:Pay for a proper checkup => market-square | risk:low | time:8 | success:hp+15,morale+4,credits-25,log:Fresh bandages and a measured dose bring you back. | fail:credits-10,morale-2,log:You walk out lighter in wallet, not in pain.
-option:Buy painkillers => market-square | risk:medium | time:4 | success:item:painkillers,credits-12,log:The meds vanish into your pack. | fail:credits-5,log:The batch is cut and crumbles.
+option:Buy painkillers => market-square | risk:medium | time:4 | success:item:painkillers,item:iron ward seals,credits-12,log:The meds and stamped seals vanish into your pack. | fail:credits-5,log:The batch is cut and crumbles.
 
 @scene rumor-board
 title:Rumor Board
 desc:Paper scraps, maps, and last-known locations are pinned beneath knife blades. A faded stencil reads "NO ONE COMES BACK CLEAN."
 tags:Intel
-option:Study a convoy map => market-square | risk:low | time:6 | success:note:You mark a convoy route running the canyon edge.,log:You memorize the gaps in patrol coverage. | fail:morale-2
-option:Trade gossip for cash => market-square | risk:medium | time:5 | success:credits+12,morale+2 | fail:credits+2,morale-2,log:Your intel buys you pity, not profit.
+option:Study a convoy map => market-square | risk:low | time:6 | success:note:You mark a convoy route running the canyon edge.,item:ledger-etched compass,log:The broker scratches bearings into a compass face. | fail:morale-2
+option:Trade gossip for cash => market-square | risk:medium | time:5 | success:credits+12,morale+2,item:clocktower chime,log:A trader tosses you a chime from the old tower. | fail:credits+2,morale-2,log:Your intel buys you pity, not profit.
 
 @quest
 id:rusttown-crown
@@ -44,7 +44,7 @@ title:Recover the Iron Crown
 desc:Find the clock tower's sealed coffer and reclaim the ceremonial helm before it is melted down for scrap.
 risk:high
 time:12
-success:item:iron crown,credits+20,morale+4
+success:item:iron crown,item:market shock knife,credits+20,morale+4
 fail:hp-8,morale-4
 flag:rusttown-crown
 once:true
