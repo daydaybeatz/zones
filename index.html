@@ -121,6 +121,16 @@
     .command-hint{font-size:12px;color:var(--muted);}
     .status-toggle{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);}
     .status-toggle button{min-height:36px;padding:6px 10px;}
+    .combat-hud{border:1px solid var(--border);border-radius:12px;padding:10px;background:#0f111a;display:flex;flex-direction:column;gap:8px;}
+    .combat-hud .combat-title{font-weight:600;font-size:14px;}
+    .combat-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;font-size:13px;color:var(--muted);}
+    .combat-stats b{color:#e8edf7;}
+    .combat-consumables{display:flex;flex-direction:column;gap:6px;}
+    .combat-consumables .inline-actions{margin-top:4px;}
+    .recipe-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;}
+    .recipe-card{border:1px solid var(--border);border-radius:12px;padding:10px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:6px;}
+    .recipe-card .title-row{display:flex;justify-content:space-between;align-items:center;gap:6px;}
+    .recipe-card .reqs{font-size:12px;color:var(--muted);}
     @media(max-width:900px){header{position:static;} .two-col{grid-template-columns:1fr;} .tab-buttons button{flex:1 1 100%;}}
     @media(max-width:900px){.inventory-layout{grid-template-columns:1fr;}}
   </style>
@@ -245,6 +255,7 @@
           <div class="subtabs" id="inventoryNav">
             <button data-inv-screen="backpack" class="active">Backpack</button>
             <button data-inv-screen="loadout">Loadout</button>
+            <button data-inv-screen="crafting">Crafting</button>
           </div>
           <div class="inventory-layout">
             <div>
@@ -255,6 +266,11 @@
               <div id="inventoryLoadout" class="subscreen">
                 <h4>Equipped Loadout <span class="small" id="loadoutCount"></span></h4>
                 <div class="item-grid" id="equipment"></div>
+              </div>
+              <div id="inventoryCrafting" class="subscreen">
+                <h4>Field Crafting</h4>
+                <div class="command-hint">Combine junk stacks into quick survival tools.</div>
+                <div id="crafting"></div>
               </div>
             </div>
             <div class="command-card">
@@ -333,7 +349,7 @@
       zone:{id:'drift-yard',name:'Drift Yard',risk:'low',desc:'Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.'},
       screen:'main',
       travel:{active:false,endsAt:null,target:null},
-      mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null},
+      mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null},
       inventoryScreen:'backpack',
       stashScreen:'vault',
       selected:{source:null,item:null},
@@ -354,7 +370,12 @@
       'ration bar':{type:'consumable',rarity:'common',value:3,effect:'hunger-12,morale+2'},
       'water flask':{type:'consumable',rarity:'common',value:4,effect:'thirst-12'},
       'spark tonic':{type:'consumable',rarity:'uncommon',value:8,effect:'energy+18,stamina+6'},
-      'scrap wiring':{type:'junk',rarity:'common',value:2,salvage:2},
+      'scrap wiring':{type:'junk',rarity:'common',value:2,salvage:2,stackable:true},
+      'scrap bundle':{type:'junk',rarity:'common',value:1,salvage:1,stackable:true},
+      'wire spool':{type:'junk',rarity:'common',value:2,salvage:2,stackable:true},
+      'cloth scraps':{type:'junk',rarity:'common',value:1,salvage:1,stackable:true},
+      'plastic shards':{type:'junk',rarity:'common',value:1,salvage:1,stackable:true},
+      'electronics bits':{type:'junk',rarity:'common',value:3,salvage:2,stackable:true},
       'old coin':{type:'junk',rarity:'uncommon',value:6,salvage:1},
       'lockbox key':{type:'key',rarity:'rare',value:18},
       'echo prism':{type:'junk',rarity:'rare',value:20,salvage:6},
@@ -371,7 +392,7 @@
       'military rations':{type:'consumable',rarity:'uncommon',value:12,effect:'hunger-22,stamina+6'},
       'coil battery':{type:'tool',rarity:'uncommon',value:13,mods:{energyRegen:1}},
       'spare filter':{type:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.03}},
-      'copper wire':{type:'junk',rarity:'common',value:4,salvage:3},
+      'copper wire':{type:'junk',rarity:'common',value:4,salvage:3,stackable:true},
       'reactor shard':{type:'junk',rarity:'rare',value:34,salvage:10},
       'exo brace':{type:'armor',rarity:'rare',value:28,mods:{staminaBonus:4,insulation:0.4}},
       'neon sneakers':{type:'armor',rarity:'uncommon',value:16,mods:{staminaBonus:2}},
@@ -398,7 +419,7 @@
     };
 
     const LOOT_BY_RARITY={
-      common:['bandage','ration bar','water flask','scrap wiring','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration'],
+      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration'],
       uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','neon sneakers','underground map','holo wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel'],
       rare:['microcell','lockbox key','echo prism','rigged backpack','exo brace','reactor shard','meme-drive','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive'],
       epic:['drone core'],
@@ -422,6 +443,20 @@
       {id:'resupply',label:'Supply errand',desc:'Courier route for field medicine.',duration:9,cost:{credits:10,scrap:1},reward:'item:bandage,item:water flask'}
     ];
 
+    const IDLE_DURATION_MULTIPLIER=1.65;
+    const formatMinutesPrecise=(minutes)=>minutes>=1?`${minutes.toFixed(1)} min`:`${Math.max(5,Math.round(minutes*60))}s`;
+    const getIdleDurationMinutes=(op,gearMods=getGearMods())=>{
+      const base=Math.max(4,op.duration*IDLE_DURATION_MULTIPLIER);
+      return Math.max(3,base*(1-(gearMods.idleSpeed||0)));
+    };
+
+    const CRAFTING_RECIPES=[
+      {id:'bandage',label:'Bandage',desc:'Quick field wrap to stabilize wounds.',cost:{'cloth scraps':5}},
+      {id:'water flask',label:'Water flask',desc:'Patch together a reusable hydration pouch.',cost:{'plastic shards':6,'cloth scraps':3}},
+      {id:'ration bar',label:'Ration bar',desc:'Compress salvageable nutrients into a meal.',cost:{'scrap bundle':7,'plastic shards':2}},
+      {id:'patch kit',label:'Patch kit',desc:'Bundle wire and electronics into repair gear.',cost:{'wire spool':8,'electronics bits':4}}
+    ];
+
     const dom={
       stats:document.getElementById('stats'),
       meta:document.getElementById('meta'),
@@ -439,6 +474,7 @@
       haulActions:document.getElementById('haulActions'),
       inventory:document.getElementById('inventory'),
       equipment:document.getElementById('equipment'),
+      crafting:document.getElementById('crafting'),
       backpackCount:document.getElementById('backpackCount'),
       loadoutCount:document.getElementById('loadoutCount'),
       codex:document.getElementById('codex'),
@@ -473,7 +509,8 @@
       inventoryNav:Array.from(document.querySelectorAll('#inventoryNav button')),
       inventoryScreens:{
         backpack:document.getElementById('inventoryBackpack'),
-        loadout:document.getElementById('inventoryLoadout')
+        loadout:document.getElementById('inventoryLoadout'),
+        crafting:document.getElementById('inventoryCrafting')
       },
       stashNav:Array.from(document.querySelectorAll('#stashNav button')),
       stashScreens:{
@@ -510,6 +547,11 @@
     }
     const setCodex=(msg)=>{ state.codex=[msg]; };
     const canAccessVault=()=>state.screen==='main' && !state.mission.active && !state.travel.active;
+    const isHubZone=(zone=state.zone)=>{
+      if(!zone) return false;
+      const name=(zone.name||'').toLowerCase();
+      return zone.id==='safehouse' || name.includes('safehouse') || name.includes('hub');
+    };
     const vaultBlockedMessage='Return to the main hub vault to transfer stash items.';
     const logMsg=(msg)=>{
       const stamp=`[Day ${state.day} // ${fmtTime(state.timeMinutes)}] ${msg}`;
@@ -527,7 +569,35 @@
       setCodex(msg);
     }
 
+    const STACK_LIMIT=25;
+    const STACKABLE_CHUNK_RANGE={min:5,max:20};
+    const STACKABLE_ITEMS=new Set(['scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','scrap wiring','copper wire']);
+    const isStackable=(id)=>STACKABLE_ITEMS.has(id);
+    const getItemCount=(arr,id)=>arr.reduce((acc,item)=>acc+(item===id?1:0),0);
+    const slotUsageFor=(id,count)=>isStackable(id)?Math.ceil(count/STACK_LIMIT):count;
+    const getSlotUsage=(arr)=>{
+      const tally={};
+      arr.forEach(item=>{tally[item]=(tally[item]||0)+1;});
+      return Object.entries(tally).reduce((total,[id,count])=>total+slotUsageFor(id,count),0);
+    };
+    const hasCapacityFor=(arr,limit,id,count=1)=>{
+      const currentSlots=getSlotUsage(arr);
+      const existingCount=getItemCount(arr,id);
+      const currentItemSlots=slotUsageFor(id,existingCount);
+      const nextItemSlots=slotUsageFor(id,existingCount+count);
+      const projected=currentSlots-currentItemSlots+nextItemSlots;
+      return projected<=limit;
+    };
     const removeItem=(arr,item)=>{const idx=arr.indexOf(item); if(idx>=0) arr.splice(idx,1);};
+    const removeItems=(arr,item,count)=>{
+      for(let i=0;i<count;i++){
+        const idx=arr.indexOf(item);
+        if(idx<0) return i===count;
+        arr.splice(idx,1);
+      }
+      return true;
+    };
+    const addItemCopies=(arr,item,count=1)=>{for(let i=0;i<count;i++) arr.push(item);};
     const getItem=(id)=>ITEM_CATALOG[id] || {type:'junk',rarity:'common',value:1};
     const formatMods=(mods)=>{
       if(!mods) return [];
@@ -595,6 +665,12 @@
       }
       return 'scrap wiring';
     };
+    const rollStackableChunk=()=>STACKABLE_CHUNK_RANGE.min+Math.floor(Math.random()*(STACKABLE_CHUNK_RANGE.max-STACKABLE_CHUNK_RANGE.min+1));
+    const rollLootDrop=(risk,bonus=0)=>{
+      const id=rollLootItem(risk,bonus);
+      const count=isStackable(id)?rollStackableChunk():1;
+      return {id,count};
+    };
     const getGearMods=(excludeItem)=>{
       return state.equipped.reduce((acc,item)=>{
         if(excludeItem && item===excludeItem) return acc;
@@ -607,7 +683,9 @@
       },{});
     };
     const getBackpackLimit=(excludeItem)=>state.backpackLimit+(getGearMods(excludeItem).carryBonus||0);
-    const canUnequipItem=(item)=>state.inventory.length<getBackpackLimit(item);
+    const getBackpackUsage=()=>getSlotUsage(state.inventory);
+    const getStashUsage=()=>getSlotUsage(state.stash.items);
+    const canUnequipItem=(item)=>hasCapacityFor(state.inventory,getBackpackLimit(item),item,1);
     const XP_BASE=80;
     const XP_GROWTH=20;
     const xpToNextLevel=(level)=>XP_BASE+(XP_GROWTH*(level-1));
@@ -744,7 +822,7 @@
         setCodex(vaultBlockedMessage);
         return;
       }
-      if(state.stash.items.length>=state.stashLimit){
+      if(!hasCapacityFor(state.stash.items,state.stashLimit,item,1)){
         setCodex('Stash is full.');
         return;
       }
@@ -760,7 +838,7 @@
         setCodex(vaultBlockedMessage);
         return;
       }
-      if(state.inventory.length>=getBackpackLimit()){
+      if(!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)){
         setCodex('Backpack full.');
         return;
       }
@@ -823,8 +901,7 @@
       }
       applyCost(op.cost);
       const gearMods=getGearMods();
-      const speedMod=gearMods.idleSpeed || 0;
-      const duration=Math.max(3,op.duration*(1-speedMod));
+      const duration=getIdleDurationMinutes(op,gearMods);
       state.idleOps={
         active:true,
         id:opId,
@@ -835,7 +912,7 @@
         statusMessage:`Idle op launched: ${op.label}.`,
         rewards:[]
       };
-      logMsg(`Idle op launched: ${op.label}. ETA ${duration.toFixed(1)} mins.`);
+      logMsg(`Idle op launched: ${op.label}. ETA ${formatMinutesPrecise(duration)}.`);
       renderAll();
     }
 
@@ -916,8 +993,14 @@
       const data=getItem(item);
       return data.salvage || Math.max(1,Math.floor((data.value || 1)/2));
     };
+    const isMissionResolved=()=>state.mission.active && state.mission.completed && (state.mission.rewards?.length||0)===0;
+    function autoCloseMissionIfResolved(){
+      if(isMissionResolved()){
+        closeMission({auto:true});
+      }
+    }
     function claimRewardToInventory(source,item){
-      if(state.inventory.length>=getBackpackLimit()){
+      if(!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)){
         setCodex('Backpack full. Make room first.');
         return;
       }
@@ -925,14 +1008,19 @@
       state.inventory.push(item);
       state.selected={source:'inventory',item};
       setCodex(`${item} packed into your backpack.`);
+      autoCloseMissionIfResolved();
       renderAll();
     }
     function claimRewardToVault(source,item){
+      if(source==='missionReward'){
+        setCodex('Mission rewards can only be packed, equipped, scrapped, or left behind.');
+        return;
+      }
       if(!canAccessVault()){
         setCodex(vaultBlockedMessage);
         return;
       }
-      if(state.stash.items.length>=state.stashLimit){
+      if(!hasCapacityFor(state.stash.items,state.stashLimit,item,1)){
         setCodex('Stash full. Sell or scrap to clear space.');
         return;
       }
@@ -956,6 +1044,7 @@
       state.equipped.push(item);
       state.selected={source:'equipped',item};
       setCodex(`${item} equipped from rewards.`);
+      autoCloseMissionIfResolved();
       renderAll();
     }
     function scrapRewardItem(source,item){
@@ -964,12 +1053,14 @@
       state.scrap+=salvage;
       state.selected={source:null,item:null};
       setCodex(`${item} scrapped for ${salvage} scrap.`);
+      autoCloseMissionIfResolved();
       renderAll();
     }
     function leaveRewardItem(source,item){
       if(!removeRewardItem(source,item)) return;
       state.selected={source:null,item:null};
       setCodex(`${item} left behind.`);
+      autoCloseMissionIfResolved();
       renderAll();
     }
     function clearRewardSource(source){
@@ -978,6 +1069,27 @@
       cfg.clear();
       state.selected={source:null,item:null};
       setCodex(source==='missionReward' ? 'Mission rewards left behind.' : 'Idle rewards dismissed.');
+      autoCloseMissionIfResolved();
+      renderAll();
+    }
+
+    const hasCraftingMaterials=(recipe)=>Object.entries(recipe.cost).every(([id,count])=>getItemCount(state.inventory,id)>=count);
+    const craftingCostLabel=(recipe)=>Object.entries(recipe.cost).map(([id,count])=>`${count} ${id}`).join(' · ');
+    function craftRecipe(recipeId){
+      const recipe=CRAFTING_RECIPES.find(entry=>entry.id===recipeId);
+      if(!recipe) return;
+      if(!hasCraftingMaterials(recipe)) {
+        setCodex('Missing crafting materials.');
+        return;
+      }
+      if(!hasCapacityFor(state.inventory,getBackpackLimit(),recipe.id,1)){
+        setCodex('Backpack capacity reached. Crafting would overflow.');
+        return;
+      }
+      Object.entries(recipe.cost).forEach(([id,count])=>removeItems(state.inventory,id,count));
+      state.inventory.push(recipe.id);
+      state.selected={source:'inventory',item:recipe.id};
+      logMsg(`Crafted ${recipe.label} from salvage.`);
       renderAll();
     }
 
@@ -1023,7 +1135,7 @@
       const vaultAccess=canAccessVault();
       const missionRewardsReady=state.mission.active && state.mission.completed && (state.mission.rewards?.length||0)>0;
       const missionRewardDefault=missionRewardsReady
-        ? 'Select a mission reward to pack, equip, scrap, or leave it.'
+        ? 'Use the inline pack/equip buttons on each reward for faster routing.'
         : 'Complete a mission to review rewards.';
       const targets=[
         {detail:dom.itemDetail,actions:dom.itemActions,default:'Select gear to view stats, uses, and actions.'},
@@ -1071,7 +1183,7 @@
         actionConfigs.push({
           label:'Route to vault',
           action:()=>stashItem(item),
-          disabled:!vaultAccess || state.stash.items.length>=state.stashLimit,
+          disabled:!vaultAccess || !hasCapacityFor(state.stash.items,state.stashLimit,item,1),
           blockedHint:!vaultAccess ? vaultBlockedMessage : ''
         });
         actionConfigs.push({label:'Break down for scrap',action:()=>dismantleItem(item)});
@@ -1082,7 +1194,7 @@
         actionConfigs.push({
           label:'Withdraw to backpack',
           action:()=>unstashItem(item),
-          disabled:!vaultAccess || state.inventory.length>=getBackpackLimit(),
+          disabled:!vaultAccess || !hasCapacityFor(state.inventory,getBackpackLimit(),item,1),
           blockedHint:!vaultAccess ? vaultBlockedMessage : ''
         });
         actionConfigs.push({
@@ -1098,26 +1210,20 @@
           blockedHint:!vaultAccess ? vaultBlockedMessage : 'Dock at market to sell.'
         });
       }else if(source==='haul'){
-        actionConfigs.push({label:'Pack into backpack',action:()=>moveLootItem(item,'inventory'),disabled:state.inventory.length>=getBackpackLimit()});
+        actionConfigs.push({label:'Pack into backpack',action:()=>moveLootItem(item,'inventory'),disabled:!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)});
         actionConfigs.push({
           label:'Store in vault',
           action:()=>moveLootItem(item,'stash'),
-          disabled:!vaultAccess || state.stash.items.length>=state.stashLimit,
+          disabled:!vaultAccess || !hasCapacityFor(state.stash.items,state.stashLimit,item,1),
           blockedHint:!vaultAccess ? vaultBlockedMessage : ''
         });
         actionConfigs.push({label:'Break down for scrap',action:()=>scrapLootItem(item)});
         actionConfigs.push({label:'Sell to market',action:()=>sellLootItem(item),disabled:!state.atShop,blockedHint:'Dock at market to sell.'});
       }else if(source==='missionReward' && missionRewardsReady){
-        actionConfigs.push({label:'Pack into backpack',action:()=>claimRewardToInventory(source,item),disabled:state.inventory.length>=getBackpackLimit()});
+        actionConfigs.push({label:'Pack into backpack',action:()=>claimRewardToInventory(source,item),disabled:!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)});
         if(['tool','armor'].includes(data.type)){
           actionConfigs.push({label:'Equip now',action:()=>equipRewardItem(source,item),disabled:state.equipped.length>=getEquipmentLimit()});
         }
-        actionConfigs.push({
-          label:'Store in vault',
-          action:()=>claimRewardToVault(source,item),
-          disabled:!vaultAccess || state.stash.items.length>=state.stashLimit,
-          blockedHint:!vaultAccess ? vaultBlockedMessage : ''
-        });
         actionConfigs.push({label:`Scrap for ${salvageValue(item)}`,action:()=>scrapRewardItem(source,item)});
         actionConfigs.push({label:'Leave item',action:()=>leaveRewardItem(source,item)});
       }
@@ -1168,12 +1274,57 @@
         });
       }
       if(dom.backpackCount){
-        dom.backpackCount.textContent=`(${state.inventory.length}/${getBackpackLimit()})`;
+        dom.backpackCount.textContent=`(${getBackpackUsage()}/${getBackpackLimit()})`;
       }
       if(dom.loadoutCount){
         dom.loadoutCount.textContent=`(${state.equipped.length}/${getEquipmentLimit()})`;
       }
       dom.codex.textContent = state.codex[state.codex.length-1] || '';
+    }
+
+    function renderCrafting(){
+      if(!dom.crafting) return;
+      dom.crafting.innerHTML='';
+      const grid=document.createElement('div');
+      grid.className='recipe-grid';
+      CRAFTING_RECIPES.forEach(recipe=>{
+        const card=document.createElement('div');
+        card.className='recipe-card';
+        const titleRow=document.createElement('div');
+        titleRow.className='title-row';
+        titleRow.innerHTML=`<span>${recipe.label}</span><span class="small">craft</span>`;
+        const desc=document.createElement('div');
+        desc.className='small';
+        desc.textContent=recipe.desc;
+        const reqs=document.createElement('div');
+        reqs.className='reqs';
+        const reqParts=Object.entries(recipe.cost).map(([id,count])=>{
+          const have=getItemCount(state.inventory,id);
+          const status=have>=count?'✓':'•';
+          return `${status} ${id} ${have}/${count}`;
+        });
+        reqs.textContent=reqParts.join(' · ');
+        const craftBtn=document.createElement('button');
+        craftBtn.textContent=`Craft ${recipe.label}`;
+        const canCraft=hasCraftingMaterials(recipe) && hasCapacityFor(state.inventory,getBackpackLimit(),recipe.id,1);
+        craftBtn.disabled=!canCraft;
+        if(!hasCraftingMaterials(recipe)) craftBtn.title='Missing materials.';
+        else if(!hasCapacityFor(state.inventory,getBackpackLimit(),recipe.id,1)) craftBtn.title='Backpack capacity reached.';
+        craftBtn.onclick=()=>craftRecipe(recipe.id);
+        card.appendChild(titleRow);
+        card.appendChild(desc);
+        card.appendChild(reqs);
+        card.appendChild(craftBtn);
+        grid.appendChild(card);
+      });
+      if(!CRAFTING_RECIPES.length){
+        const empty=document.createElement('div');
+        empty.className='muted-box';
+        empty.textContent='No recipes available yet.';
+        dom.crafting.appendChild(empty);
+        return;
+      }
+      dom.crafting.appendChild(grid);
     }
 
     function renderIdleOps(){
@@ -1194,8 +1345,8 @@
         progress.innerHTML=`<span style="width:${pctDone}%;"></span>`;
         const meta=document.createElement('div');
         meta.className='op-meta';
-        const remaining=Math.max(0,Math.ceil((total-elapsed)/60));
-        meta.textContent=`ETA ${remaining} min · ${op.desc}`;
+        const remainingMinutes=Math.max(0,(total-elapsed)/60);
+        meta.textContent=`ETA ${formatMinutesPrecise(remainingMinutes)} · ${op.desc}`;
         const signal=document.createElement('div');
         signal.className='op-meta';
         signal.textContent=state.idleOps.statusMessage || 'Operation underway.';
@@ -1229,7 +1380,7 @@
             actions.className='inline-actions';
             const packBtn=document.createElement('button');
             packBtn.textContent='Pack';
-            packBtn.disabled=state.inventory.length>=getBackpackLimit();
+            packBtn.disabled=!hasCapacityFor(state.inventory,getBackpackLimit(),item,1);
             packBtn.onclick=()=>claimRewardToInventory('idleReward',item);
             actions.appendChild(packBtn);
             if(['tool','armor'].includes(data.type)){
@@ -1241,7 +1392,7 @@
             }
             const vaultBtn=document.createElement('button');
             vaultBtn.textContent='Vault';
-            vaultBtn.disabled=!vaultAccess || state.stash.items.length>=state.stashLimit;
+            vaultBtn.disabled=!vaultAccess || !hasCapacityFor(state.stash.items,state.stashLimit,item,1);
             vaultBtn.title=vaultAccess ? '' : vaultBlockedMessage;
             vaultBtn.onclick=()=>claimRewardToVault('idleReward',item);
             actions.appendChild(vaultBtn);
@@ -1286,8 +1437,8 @@
         title.innerHTML=`<b>${op.label}</b>`;
         const meta=document.createElement('div');
         meta.className='op-meta';
-        const duration=Math.max(3,op.duration*(1-(gearMods.idleSpeed||0)));
-        meta.textContent=`${op.desc} · ${duration.toFixed(1)} min`;
+        const duration=getIdleDurationMinutes(op,gearMods);
+        meta.textContent=`${op.desc} · ${formatMinutesPrecise(duration)}`;
         const cost=document.createElement('div');
         cost.className='op-meta';
         cost.textContent=`Cost: ${formatCost(op.cost)} · Reward: ${op.reward}`;
@@ -1425,7 +1576,7 @@
     dom.returnMain.onclick=()=>setScreen('main');
 
     function renderExcursionStatus(){
-      dom.excursionStatus.innerHTML=`<b>Loop status:</b> Energy ${state.energy}/${state.maxEnergy} · Backpack ${state.inventory.length}/${getBackpackLimit()} · Haul ${state.lootQueue.length} · Stash ${state.stash.items.length}/${state.stashLimit} · Loadout ${state.equipped.length}/${getEquipmentLimit()}.`;
+      dom.excursionStatus.innerHTML=`<b>Loop status:</b> Energy ${state.energy}/${state.maxEnergy} · Backpack ${getBackpackUsage()}/${getBackpackLimit()} · Haul ${state.lootQueue.length} · Stash ${getStashUsage()}/${state.stashLimit} · Loadout ${state.equipped.length}/${getEquipmentLimit()}.`;
       dom.tempoHint.textContent='Run missions to earn XP, then review rewards and upgrade the safehouse.';
     }
 
@@ -1443,6 +1594,13 @@
 
     function renderRaidActions(){
       dom.raidActions.innerHTML='';
+      if(isHubZone()){
+        const blocked=document.createElement('div');
+        blocked.className='muted-box';
+        blocked.textContent='Hub zone secure. Use contracts, crafting, and idle ops before heading back into the field.';
+        dom.raidActions.appendChild(blocked);
+        return;
+      }
       RAID_TEMPLATES.forEach(raid=>{
         const btn=document.createElement('button');
         const costParts=[`${raid.energy} energy`];
@@ -1548,24 +1706,98 @@
       dom.missionActions.innerHTML='';
       const rewards=state.mission.rewards || [];
       const rewardsReady=state.mission.completed && rewards.length>0;
+      if(state.mission.completed && rewards.length===0){
+        autoCloseMissionIfResolved();
+        if(!state.mission.active) return;
+      }
       if(dom.missionRewardsCard){
         dom.missionRewardsCard.style.display=state.mission.completed ? 'flex' : 'none';
       }
       if(dom.missionRewardList){
         dom.missionRewardList.innerHTML='';
         if(rewardsReady){
-          rewards.forEach(item=>{
-            const data=getItem(item);
-            dom.missionRewardList.appendChild(buildItemRow({id:item,count:1,data,source:'missionReward'}));
+          groupItems(rewards).forEach(({id,count,data})=>{
+            const wrap=document.createElement('div');
+            wrap.appendChild(buildItemRow({id,count,data,source:'missionReward'}));
+            const actions=document.createElement('div');
+            actions.className='inline-actions';
+            const packBtn=document.createElement('button');
+            packBtn.textContent=`Backpack (${count})`;
+            packBtn.disabled=!hasCapacityFor(state.inventory,getBackpackLimit(),id,count);
+            packBtn.onclick=()=>{
+              const moveCount=Math.min(count,rewards.filter(entry=>entry===id).length);
+              for(let i=0;i<moveCount;i++) claimRewardToInventory('missionReward',id);
+            };
+            actions.appendChild(packBtn);
+            if(['tool','armor'].includes(data.type)){
+              const equipBtn=document.createElement('button');
+              equipBtn.textContent='Equip';
+              equipBtn.disabled=state.equipped.length>=getEquipmentLimit();
+              equipBtn.onclick=()=>equipRewardItem('missionReward',id);
+              actions.appendChild(equipBtn);
+            }
+            const scrapBtn=document.createElement('button');
+            scrapBtn.textContent=`Scrap ${salvageValue(id)}`;
+            scrapBtn.onclick=()=>scrapRewardItem('missionReward',id);
+            actions.appendChild(scrapBtn);
+            const leaveBtn=document.createElement('button');
+            leaveBtn.textContent='Leave';
+            leaveBtn.onclick=()=>leaveRewardItem('missionReward',id);
+            actions.appendChild(leaveBtn);
+            wrap.appendChild(actions);
+            dom.missionRewardList.appendChild(wrap);
           });
         }else if(state.mission.completed){
           const empty=document.createElement('div');
           empty.className='muted-box';
-          empty.textContent=state.mission.success ? 'No rewards remaining. Close the mission to return to the deck.' : 'Mission failed. Close the mission to regroup.';
+          empty.textContent=state.mission.success ? 'No rewards remaining. Mission will close automatically.' : 'Mission failed. Mission will close automatically.';
           dom.missionRewardList.appendChild(empty);
         }
       }
       if(!state.mission.completed && state.mission.type==='combat'){
+        const combat=state.mission.combat;
+        if(combat){
+          const hud=document.createElement('div');
+          hud.className='combat-hud';
+          const title=document.createElement('div');
+          title.className='combat-title';
+          title.textContent=`Signal log: ${raid.enemyName}`;
+          const stats=document.createElement('div');
+          stats.className='combat-stats';
+          const consumeState=combat.consumable
+            ? `Applying ${combat.consumable.item} (${Math.max(0,Math.ceil((combat.consumable.readyAt-Date.now())/1000))}s)`
+            : 'No consumable in use';
+          stats.innerHTML=`<div><b>Enemy HP</b> ${Math.max(0,Math.round(combat.enemyHp))}/${Math.round(combat.enemyMaxHp)}</div>`+
+            `<div><b>Enemies left</b> ${combat.enemiesRemaining}/${combat.totalEnemies}</div>`+
+            `<div><b>You dealt</b> ${Math.round(combat.totalDamageDealt)}</div>`+
+            `<div><b>You took</b> ${Math.round(combat.totalDamageTaken)}</div>`+
+            `<div><b>Consumable</b> ${consumeState}</div>`;
+          hud.appendChild(title);
+          hud.appendChild(stats);
+          const consumables=document.createElement('div');
+          consumables.className='combat-consumables';
+          const consumableItems=groupItems(state.inventory.filter(item=>getItem(item).type==='consumable'));
+          if(consumableItems.length){
+            const hint=document.createElement('div');
+            hint.className='small';
+            hint.textContent='Backpack consumables (3s channel, one at a time):';
+            consumables.appendChild(hint);
+            consumableItems.forEach(({id,count})=>{
+              const btn=document.createElement('button');
+              btn.textContent=`Use ${id} ×${count}`;
+              btn.disabled=Boolean(combat.consumable);
+              btn.onclick=()=>applyCombatConsumable(id);
+              consumables.appendChild(btn);
+            });
+          }else{
+            const empty=document.createElement('div');
+            empty.className='small';
+            empty.textContent='No consumables in backpack.';
+            consumables.appendChild(empty);
+          }
+          hud.appendChild(consumables);
+          dom.missionActions.appendChild(hud);
+        }
         const fleeBtn=document.createElement('button');
         fleeBtn.textContent=state.mission.fleeing ? 'Fleeing…' : 'Flee (5s)';
         fleeBtn.disabled=state.mission.fleeing;
@@ -1644,7 +1876,7 @@
       wrap.className='item-grid';
       const items=state.stash.items;
       if(dom.stashCount){
-        dom.stashCount.textContent=`(${items.length}/${state.stashLimit})`;
+        dom.stashCount.textContent=`(${getStashUsage()}/${state.stashLimit})`;
       }
       if(!items.length){
         wrap.innerHTML='<div class="muted-box">Stash is empty. Move loot here for long-term storage.</div>';
@@ -1801,7 +2033,7 @@
           const item=token.slice(5).trim();
           if(deferItemsTo){
             deferItemsTo.push(item);
-          }else if(state.inventory.length<getBackpackLimit()) state.inventory.push(item);
+          }else if(hasCapacityFor(state.inventory,getBackpackLimit(),item,1)) state.inventory.push(item);
           else state.lootQueue.push(item);
           return;
         }
@@ -1850,7 +2082,8 @@
         const lootBonus=gearMods.lootBonus || 0;
         const pulls=Math.max(1,raid.loot+(Math.random()<0.35?1:0));
         for(let i=0;i<pulls;i++){
-          rewards.push(rollLootItem(effectiveRisk,lootBonus));
+          const drop=rollLootDrop(effectiveRisk,lootBonus);
+          addItemCopies(rewards,drop.id,drop.count);
         }
         if(deferItemsTo) deferItemsTo.push(...rewards);
         else state.lootQueue.push(...rewards);
@@ -1893,25 +2126,29 @@
     }
     function launchCombatFromPending(pending){
       const combatProfile=getCombatProfile(pending.risk);
+      const combatState=initCombatState(combatProfile);
       const now=Date.now();
+      const estimatedMs=combatState.expectedRounds*COMBAT_ROUND_MS;
+      combatProfile.time=Math.max(6,Math.round((estimatedMs/60000)*10)/10);
       state.mission={
         ...state.mission,
         type:'combat',
         raid:combatProfile,
         startedAt:now,
-        endsAt:now+(combatProfile.time*1000),
+        endsAt:now+estimatedMs,
         completed:false,
         success:null,
-        summary:`Combat engaged: ${combatProfile.enemyName}.`,
+        summary:`Combat engaged: ${combatProfile.enemyName}. ${describeCombatState(combatState)}`,
         rewards:[],
-        statusMessage:`Combat engaged: ${combatProfile.enemyName}.`,
+        statusMessage:`Combat engaged: ${combatProfile.enemyName}. ${describeCombatState(combatState)}`,
         fleeing:false,
         fleeEndsAt:null,
         xpReward:computeMissionXp(combatProfile.risk,combatProfile.time),
-        rewardEffects:{success:'',fail:''}
+        rewardEffects:{success:'',fail:''},
+        combat:combatState
       };
       setCodex('Hostile contact! Hold out or flee.');
-      logMsg(`Combat encounter triggered by ${pending.label}.`);
+      logMsg(`Combat encounter triggered by ${pending.label}. ${describeCombatState(combatState)}`);
       setScreen('mission');
       renderAll();
     }
@@ -1945,44 +2182,145 @@
       state.selected={source:null,item:null};
       renderAll();
     }
-    function runCombatEncounter(profile,{fleeing=false}={}){
+    const COMBAT_ROUND_MS=2000;
+    const COMBAT_CONSUME_MS=3000;
+    const combatVariance=(base,spread)=>Math.max(1,Math.round(base*(1-spread)+(Math.random()*base*spread*2)));
+    const describeCombatState=(combat)=>`Enemy HP ${Math.max(0,Math.round(combat.enemyHp))}/${Math.round(combat.enemyMaxHp)} · Enemies left ${combat.enemiesRemaining}/${combat.totalEnemies}`;
+    function initCombatState(profile){
       const gearMods=getGearMods();
-      const offense=(gearMods.combatBonus||0)+(gearMods.staminaBonus||0)*0.7+(state.level*2);
-      const defense=(gearMods.riskMod||0)*40+(gearMods.insulation||0)*6;
-      const enemyPower=(18*profile.difficulty)+(Math.random()*14);
-      const damageRaw=enemyPower-(offense*0.35)-(defense*0.25);
-      const variance=6+Math.random()*8;
-      const damage=Math.max(4,Math.round(damageRaw+variance));
-      const staminaHit=Math.max(3,Math.round(damage*0.45));
-      state.hp=clamp(state.hp-damage,0,state.maxHp);
-      state.stamina=clamp(state.stamina-staminaHit,0,state.maxStamina);
-      state.morale=clamp(state.morale-Math.max(2,Math.round(damage*0.22)),0,state.maxMorale);
-      const victoryScore=offense+(Math.random()*26);
-      const threshold=(profile.difficulty*28)+(fleeing?12:0);
-      const success=!fleeing && state.hp>0 && victoryScore>=threshold;
+      const riskIdx=getRiskIndex(profile.risk);
+      const totalEnemies=Math.max(1,1+Math.max(0,riskIdx-1));
+      const playerDamage=Math.max(6,Math.round(8+(state.level*1.8)+((gearMods.combatBonus||0)*1.4)+((gearMods.staminaBonus||0)*0.6)));
+      const enemyDamage=Math.max(2,Math.round((3+(riskIdx*2.6))-(playerDamage*0.12)-((gearMods.riskMod||0)*18)));
+      const enemyMaxHp=Math.max(28,Math.round(26+(riskIdx*12)+(profile.difficulty*8)));
+      const totalEnemyHp=enemyMaxHp*totalEnemies;
+      const expectedRounds=Math.max(4,Math.ceil(totalEnemyHp/Math.max(8,playerDamage*0.9)));
+      return {
+        riskIdx,
+        enemyMaxHp,
+        enemyHp:enemyMaxHp,
+        totalEnemies,
+        enemiesRemaining:totalEnemies,
+        playerDamage,
+        enemyDamage,
+        round:0,
+        totalDamageTaken:0,
+        totalDamageDealt:0,
+        nextTickAt:Date.now()+COMBAT_ROUND_MS,
+        consumable:null,
+        expectedRounds
+      };
+    }
+    function runCombatEncounter(profile,{success,fleeing=false}={}){
+      const gearMods=getGearMods();
+      const combat=state.mission.combat || initCombatState(profile);
       const rewards=[];
       const lootPulls=success ? 2+Math.floor(profile.difficulty) : 1;
       for(let i=0;i<lootPulls;i++){
-        rewards.push(rollLootItem(profile.risk,gearMods.lootBonus||0));
+        const drop=rollLootDrop(profile.risk,gearMods.lootBonus||0);
+        addItemCopies(rewards,drop.id,drop.count);
       }
       const creditReward=Math.max(6,Math.round((profile.difficulty*12)+(Math.random()*10)));
-      state.credits+=success ? creditReward : Math.round(creditReward*0.5);
-      const xpReward=success ? computeMissionXp(profile.risk,profile.time) : Math.round(computeMissionXp(profile.risk,profile.time)*0.6);
+      const credited=success ? creditReward : Math.round(creditReward*(fleeing?0.6:0.5));
+      state.credits+=credited;
+      const xpBase=computeMissionXp(profile.risk,profile.time);
+      const xpReward=success ? xpBase : Math.round(xpBase*(fleeing?0.7:0.6));
       awardXp(xpReward,profile.enemyName);
       const summary=success
-        ? `Hostiles down. You take ${damage} damage and secure ${creditReward} credits.`
+        ? `Hostiles down. You dealt ${Math.round(combat.totalDamageDealt)} and took ${Math.round(combat.totalDamageTaken)} damage. ${credited} credits recovered.`
         : fleeing
-          ? `You flee under fire, taking ${damage} damage. Partial rewards recovered.`
-          : `You lose the fight, taking ${damage} damage and scraping together a retreat.`;
+          ? `You flee under fire after taking ${Math.round(combat.totalDamageTaken)} damage. Partial rewards recovered.`
+          : `You are overrun after taking ${Math.round(combat.totalDamageTaken)} damage and pull back to survive.`;
       return {success,rewards,summary};
     }
+    function applyCombatConsumable(item){
+      if(!state.mission.active || state.mission.type!=='combat' || state.mission.completed) return;
+      const combat=state.mission.combat;
+      if(!combat) return;
+      if(combat.consumable){
+        setCodex(`Already applying ${combat.consumable.item}.`);
+        return;
+      }
+      if(!state.inventory.includes(item)){
+        setCodex('Consumable not found in backpack.');
+        return;
+      }
+      const data=getItem(item);
+      if(data.type!=='consumable'){
+        setCodex('Only consumables can be used mid-combat.');
+        return;
+      }
+      combat.consumable={item,readyAt:Date.now()+COMBAT_CONSUME_MS};
+      state.mission.statusMessage=`Applying ${item}… 3s channel.`;
+      renderMissionStatus();
+    }
+    function resolveCombatRound(){
+      const combat=state.mission.combat;
+      if(!combat) return;
+      combat.round+=1;
+      let roundLog='';
+      if(!state.mission.fleeing){
+        const dealt=combatVariance(combat.playerDamage,0.22);
+        combat.enemyHp-=dealt;
+        combat.totalDamageDealt+=dealt;
+        roundLog=`You hit for ${dealt}.`;
+        if(combat.enemyHp<=0){
+          combat.enemiesRemaining-=1;
+          roundLog+=` Target down.`;
+          if(combat.enemiesRemaining>0){
+            const nextHp=Math.round(combat.enemyMaxHp*(1+combat.riskIdx*0.04));
+            combat.enemyMaxHp=nextHp;
+            combat.enemyHp=nextHp;
+            roundLog+=` ${combat.enemiesRemaining} hostiles remain.`;
+          }
+        }
+      }else{
+        roundLog='You focus on disengaging.';
+      }
+      const incoming=combatVariance(combat.enemyDamage,0.18);
+      combat.totalDamageTaken+=incoming;
+      state.hp=clamp(state.hp-incoming,0,state.maxHp);
+      const staminaHit=Math.max(2,Math.round(incoming*0.6));
+      state.stamina=clamp(state.stamina-staminaHit,0,state.maxStamina);
+      roundLog+=` Incoming fire deals ${incoming}.`;
+      const moraleHit=Math.max(1,Math.round(incoming*0.18));
+      state.morale=clamp(state.morale-moraleHit,0,state.maxMorale);
+      state.mission.statusMessage=`${roundLog} ${describeCombatState(combat)}`;
+      logMsg(state.mission.statusMessage);
+    }
+    function combatTick(now){
+      if(!state.mission.active || state.mission.type!=='combat' || state.mission.completed) return;
+      const combat=state.mission.combat;
+      if(!combat) return;
+      if(combat.consumable && now>=combat.consumable.readyAt){
+        const {item}=combat.consumable;
+        const data=getItem(item);
+        if(data.effect) applyEffects(data.effect,'success');
+        removeItem(state.inventory,item);
+        combat.consumable=null;
+        state.selected={source:null,item:null};
+        state.mission.statusMessage=`${item} applied. ${describeCombatState(combat)}`;
+        logMsg(state.mission.statusMessage);
+      }
+      if(now<combat.nextTickAt) return;
+      combat.nextTickAt=now+COMBAT_ROUND_MS;
+      resolveCombatRound();
+      if(combat.enemiesRemaining<=0){
+        state.mission.endsAt=now;
+        completeMission({combatResolved:true});
+      }else if(state.hp<=0){
+        state.mission.endsAt=now;
+        completeMission({combatResolved:true,forcedFail:true});
+      }
+    }
+
     function attemptFlee(){
       if(!state.mission.active || state.mission.type!=='combat' || state.mission.completed) return;
       if(state.mission.fleeing) return;
       state.mission.fleeing=true;
       state.mission.fleeEndsAt=Date.now()+5000;
       state.mission.endsAt=state.mission.fleeEndsAt;
-      state.mission.statusMessage='Attempting to flee… hold for 5 seconds.';
+      state.mission.statusMessage=`Attempting to flee… hold for 5 seconds. ${describeCombatState(state.mission.combat)}`;
       logMsg('Escape attempt initiated. Incoming fire continues during the retreat.');
       renderMissionStatus();
     }
@@ -1995,6 +2333,10 @@
         setCodex('Finish travel before engaging hostiles.');
         return;
       }
+      if(isHubZone(state.zone)){
+        setCodex('Hub zones are secure. Travel to a field site to engage hostiles.');
+        return;
+      }
       const profile=getCombatProfile(state.zone.risk);
       const cost={energy:10};
       if(!canAfford(cost)){
@@ -2002,28 +2344,32 @@
         return;
       }
       applyCost(cost);
+      const combatState=initCombatState(profile);
       const now=Date.now();
+      const estimatedMs=combatState.expectedRounds*COMBAT_ROUND_MS;
+      profile.time=Math.max(6,Math.round((estimatedMs/60000)*10)/10);
       state.mission={
         active:true,
         type:'combat',
         raid:profile,
         startedAt:now,
-        endsAt:now+(profile.time*1000),
+        endsAt:now+estimatedMs,
         completed:false,
         success:null,
-        summary:`Combat engaged: ${profile.enemyName}.`,
+        summary:`Combat engaged: ${profile.enemyName}. ${describeCombatState(combatState)}`,
         rewards:[],
-        statusMessage:`Combat engaged: ${profile.enemyName}.`,
+        statusMessage:`Combat engaged: ${profile.enemyName}. ${describeCombatState(combatState)}`,
         location:{...state.zone},
         fleeing:false,
         fleeEndsAt:null,
         pendingResolution:null,
         xpReward:computeMissionXp(profile.risk,profile.time),
         rewardEffects:{success:'',fail:''},
-        questMeta:null
+        questMeta:null,
+        combat:combatState
       };
       setCodex('You move to engage hostile contacts.');
-      logMsg(`Combat sortie launched against ${profile.enemyName}.`);
+      logMsg(`Combat sortie launched against ${profile.enemyName}. ${describeCombatState(combatState)}`);
       setActiveTab('hub');
       setScreen('mission');
       renderAll();
@@ -2073,7 +2419,8 @@
         pendingResolution:null,
         xpReward:computeMissionXp(raidLike.risk,raidLike.time),
         rewardEffects:{success:quest.success||'',fail:quest.fail||''},
-        questMeta:{flag:questFlag,once:quest.once}
+        questMeta:{flag:questFlag,once:quest.once},
+        combat:null
       };
       setCodex(`Contract launched: ${raidLike.label}.`);
       logMsg(`Contract deployed: ${raidLike.label} (${raidLike.time} min op).`);
@@ -2083,13 +2430,13 @@
     }
 
     function resetMissionState(){
-      state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null};
+      state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null};
     }
-    function closeMission(){
+    function closeMission({auto=false}={}){
       resetMissionState();
       state.selected={source:null,item:null};
       state.screen='main';
-      setCodex('Mission closed. Back on the command deck.');
+      setCodex(auto ? 'All rewards routed. Mission auto-closed.' : 'Mission closed. Back on the command deck.');
       renderAll();
     }
 
@@ -2101,6 +2448,10 @@
       }
       if(state.travel.active){
         setCodex('Finish travel before launching a mission.');
+        return;
+      }
+      if(isHubZone(state.zone)){
+        setCodex('Cannot launch raids from a hub zone. Travel to a field site.');
         return;
       }
       if(!canAfford(cost)){
@@ -2126,7 +2477,8 @@
         pendingResolution:null,
         xpReward:computeMissionXp(raid.risk,raid.time),
         rewardEffects:{success:'',fail:''},
-        questMeta:null
+        questMeta:null,
+        combat:null
       };
       setCodex(`Mission launched: ${raid.label}.`);
       logMsg(`Mission launched: ${raid.label} (${raid.time} min op).`);
@@ -2135,12 +2487,19 @@
       renderAll();
     }
 
-    function completeMission(){
+    function completeMission({combatResolved=false,forcedFail=false}={}){
       if(!state.mission.active || state.mission.completed) return;
       const missionType=state.mission.type;
       const raid=state.mission.raid;
       if(missionType==='combat'){
-        const result=runCombatEncounter(raid,{fleeing:state.mission.fleeing});
+        const combat=state.mission.combat;
+        if(combat && !combatResolved && !state.mission.fleeing && state.hp>0 && combat.enemiesRemaining>0){
+          combat.nextTickAt=Date.now();
+          combatTick(Date.now());
+          if(!state.mission.completed) return;
+        }
+        const success=forcedFail ? false : (!state.mission.fleeing && state.hp>0 && (combat?.enemiesRemaining||0)<=0);
+        const result=runCombatEncounter(raid,{success,fleeing:state.mission.fleeing});
         state.mission.completed=true;
         state.mission.success=result.success;
         state.mission.rewards=result.rewards;
@@ -2190,7 +2549,7 @@
     function moveLootItem(item,target){
       removeItem(state.lootQueue,item);
       if(target==='inventory'){
-        if(state.inventory.length>=getBackpackLimit()){
+        if(!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)){
           setCodex('Backpack full. Make room first.');
           state.lootQueue.push(item);
           return;
@@ -2203,7 +2562,7 @@
           state.lootQueue.push(item);
           return;
         }
-        if(state.stash.items.length>=state.stashLimit){
+        if(!hasCapacityFor(state.stash.items,state.stashLimit,item,1)){
           setCodex('Stash full. Sell or scrap to clear space.');
           state.lootQueue.push(item);
           return;
@@ -2218,10 +2577,10 @@
       const items=[...state.lootQueue];
       state.lootQueue=[];
       items.forEach(item=>{
-        if(target==='inventory' && state.inventory.length<getBackpackLimit()){
+        if(target==='inventory' && hasCapacityFor(state.inventory,getBackpackLimit(),item,1)){
           state.inventory.push(item);
           state.selected={source:'inventory',item};
-        }else if(target==='stash' && state.stash.items.length<state.stashLimit){
+        }else if(target==='stash' && hasCapacityFor(state.stash.items,state.stashLimit,item,1)){
           if(!canAccessVault()){
             state.lootQueue.push(item);
             return;
@@ -2497,6 +2856,7 @@
     function renderAll(){
       renderBars();
       renderInventory();
+      renderCrafting();
       renderExcursionStatus();
       renderHubAccess();
       renderTravelStatus();
@@ -2526,8 +2886,16 @@
         logMsg(`Transit complete: ${state.zone.name}.`);
         renderAll();
       }
-      if(state.mission.active && !state.mission.completed && Date.now()>=state.mission.endsAt){
-        completeMission();
+      if(state.mission.active && !state.mission.completed){
+        const now=Date.now();
+        if(state.mission.type==='combat'){
+          combatTick(now);
+          if(state.mission.fleeing && now>=state.mission.endsAt){
+            completeMission({combatResolved:true});
+          }
+        }else if(now>=state.mission.endsAt){
+          completeMission();
+        }
       }
       if(state.mission.active){
         renderMissionStatus();
