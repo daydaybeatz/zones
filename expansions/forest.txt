@@ -1,63 +1,63 @@
 @expansion
 id:forest
-name:Dark Forest
-summary:Sodden canopy smothers sound while broken exo-suits rot in place. A derailed supply train is said to still bleed haunted tech into the soil.
+name:Blackwood Expanse
+summary:A drowned canopy smothers sound while broken exo-suits rot where they fell. A derailed supply train still leaks reactor heat into the mud.
 
 @door
-label:Dark Forest Trailhead
+label:Blackwood Trailhead
 hint:scouting, salvage, high radiation pockets
-note:Static whispers tighten into a chorus as you cross the treeline.
+note:Static gathers into a low chant as you cross the treeline.
 target:trail-edge
 
 @scene trail-edge
 title:Trail Edge
-desc:Fresh hazard tape flutters on old stakes while rusted lanterns stare blind. Something watches from behind wet bark.
+desc:Fresh hazard tape flutters on old stakes while rusted lanterns stare blind. Shapes move between wet trunks and never step into the light.
 tags:Recon / Low Cover
-option:Scout the treeline => clearing | risk:medium | time:12 | success:credits+20,stamina-6,log:You mark a safe path through the rot.,note:Clearing marked on your map. | fail:hp-8,rads+1,log:Thorns peel your sleeves and skin.
-option:Follow the radio ping => rail-wreck | risk:high | time:16 | success:flag:train-signal,log:The ping steadies like a heartbeat.,stamina-8 | fail:hp-12,rads+2,log:Something heavy shifts in the dark.
-option:Forage for herbs => trail-edge | risk:low | time:10 | success:item:glowing herbs,log:You pluck bioluminescent herbs from black mud.,hunger-4 | fail:hp-4,log:You cut yourself on a shard of glass.
+option:Scout the treeline => clearing | risk:medium | time:12 | success:credits+20,stamina-6,log:You flag a path through the rot.,note:Clearing marked on your map. | fail:hp-8,rads+1,log:Thorns tear through sleeves and skin.
+option:Follow the radio ping => rail-wreck | risk:high | time:16 | success:flag:train-signal,log:The ping steadies like a buried heartbeat.,stamina-8 | fail:hp-12,rads+2,log:Something massive shifts in the dark.
+option:Forage for herbs => trail-edge | risk:low | time:10 | success:item:glowing herbs,log:You harvest bioluminescent herbs from black water.,hunger-4 | fail:hp-4,log:A glass shard opens your palm.
 
 @scene clearing
 title:Shadowed Clearing
-desc:Broken stone pillars ring a shallow pool that mirrors your visor in a smear of static.
+desc:Broken stone pillars ring a shallow pool that mirrors your visor in bands of static. The air tastes metallic and wrong.
 tags:Staging
-option:Deploy a signal flare => clearing | risk:medium | time:8 | success:temp+2,flag:flare-up,log:Your flare stains the canopy red. | fail:temp+1,log:Flare sputters but still warms the dead air.
-option:Inspect old camp => cache | risk:low | time:7 | success:item:coil battery,log:You loot a forgotten cache.,morale+2 | fail:morale-2,log:Only gnawed bones and picked metal remain.
-option:Approach strange monolith => monolith | risk:high | time:14 | success:note:Monolith etched with coordinates to an underground hatch.,credits+10,log:You copy down the markings with shaking hands. | fail:morale-6,rads+3,log:A wave of nausea folds you to the ground.
+option:Deploy a signal flare => clearing | risk:medium | time:8 | success:temp+2,flag:flare-up,log:The flare stains the canopy with emergency red. | fail:temp+1,log:The flare sputters but refuses to die.
+option:Inspect old camp => cache | risk:low | time:7 | success:item:coil battery,log:You recover a battery sealed against the damp.,morale+2 | fail:morale-2,log:Only gnawed bone and stripped metal remain.
+option:Approach strange monolith => monolith | risk:high | time:14 | success:note:Coordinates etched into the stone point to a buried hatch.,credits+10,log:You copy the markings with shaking hands. | fail:morale-6,rads+3,log:Nausea drops you to your knees.
 option:Circle back => trail-edge | risk:low | time:6 | success:stamina+4 | fail:stamina+2
 
 @scene rail-wreck
 title:Derailed Freight
-desc:An overturned freight car lies split open, its guts steaming. Loose wires spark near containers stamped with warning sigils.
+desc:An overturned freight car lies split open, its guts steaming into the rain. Warning sigils are stenciled over older, scratched-out names.
 tags:Loot / Hazard
-option:Extract reactor shard => rail-wreck | risk:deadly | time:18 | rad:3 | success:item:reactor shard,credits+35,log:You snag a hot shard with tongs.,note:Shards hum louder near water. | fail:hp-18,rads+4,log:Your gloves sag and blister.
-option:Search for rations => clearing | risk:medium | time:10 | success:item:military rations,hunger-6,log:You find sealed food packs under ash. | fail:hunger+8,log:Rats scatter with crumbs.
-option:Listen in the dark => clearing | risk:low | time:6 | success:note:Heard a two-tone beacon repeating 07-19-07.,morale+3 | fail:morale-3,log:Only buzzing static answers.
-option:Cut open the cab => cache | risk:medium | time:9 | success:credits+15,item:spare filter,log:Filters still sealed in foil. | fail:hp-6,log:A jagged edge slices your palm.
+option:Extract reactor shard => rail-wreck | risk:deadly | time:18 | rad:3 | success:item:reactor shard,credits+35,log:You lift a hot shard with shaking tongs.,note:Shards hum louder near water. | fail:hp-18,rads+4,log:Heat bleeds through your gloves.
+option:Search for rations => clearing | risk:medium | time:10 | success:item:military rations,hunger-6,log:You find sealed packs buried under ash. | fail:hunger+8,log:Rats got here first.
+option:Listen in the dark => clearing | risk:low | time:6 | success:note:A two-tone beacon repeats 07-19-07 through the static.,morale+3 | fail:morale-3,log:The wreck answers only with buzzing.
+option:Cut open the cab => cache | risk:medium | time:9 | success:credits+15,item:spare filter,log:Filters still sealed in foil fall into your hands. | fail:hp-6,log:A jagged seam slices deep.
 
 @scene cache
 title:Forgotten Cache
-desc:Ripped duffels, empty syringes, and a half-drained lantern form a hollow campsite behind the wreck.
+desc:Ripped duffels, empty syringes, and a half-drained lantern mark a campsite abandoned in a hurry. Footprints circle it like a warning.
 tags:Salvage / Intel
-option:Patch your suit => clearing | risk:low | time:8 | success:stamina+10,temp+1,log:Suit seals tightened. | fail:stamina-4,log:You over-tighten straps.
-option:Disarm tripwire => trail-edge | risk:high | time:10 | success:item:copper wire,credits+8,log:You coil the wire without a sound. | fail:hp-10,log:Trap snaps and grazes you.
-option:Follow muddy tracks => monolith | risk:medium | time:11 | success:flag:forest-tracks,log:Tracks sink toward the monolith. | fail:morale-3,log:Tracks wash out in the rain.
+option:Patch your suit => clearing | risk:low | time:8 | success:stamina+10,temp+1,log:Seals bite down tight against the rain. | fail:stamina-4,log:You overtighten and crack a clasp.
+option:Disarm tripwire => trail-edge | risk:high | time:10 | success:item:copper wire,credits+8,log:You coil the wire without setting it off. | fail:hp-10,log:The trap snaps and blood runs hot.
+option:Follow muddy tracks => monolith | risk:medium | time:11 | success:flag:forest-tracks,log:The tracks sink toward the monolith. | fail:morale-3,log:The rain erases every sign.
 
 @scene monolith
 title:Obsidian Monolith
-desc:A human-height stone hums under your palm. Fresh graffiti reads "IF YOU CAN READ THIS, RUN" and is already bleeding.
+desc:A human-height stone hums beneath your palm. Fresh paint across it reads "RUN" but the letters have already started to drip.
 tags:Weird / Lore
-option:Touch the glyphs => monolith | risk:high | time:9 | success:morale+4,flag:forest-glyph,log:Symbols burn into your memory. | fail:morale-6,hp-6,log:Your head pounds with echoes.
-option:Tune the beacon => clearing | risk:medium | time:8 | success:note:Beacon harmonics stored for later.,credits+12,log:You catch the pattern before it fades. | fail:temp-1,log:Feedback screams through your headset.
+option:Touch the glyphs => monolith | risk:high | time:9 | success:morale+4,flag:forest-glyph,log:The symbols burn into memory like a brand. | fail:morale-6,hp-6,log:Pressure spikes behind your eyes.
+option:Tune the beacon => clearing | risk:medium | time:8 | success:note:Beacon harmonics stored for later.,credits+12,log:You capture the pattern before it slips away. | fail:temp-1,log:Feedback screams through your headset.
 option:Back away quietly => clearing | risk:low | time:4 | success:stamina+3,temp+1 | fail:stamina+1
 
 @quest
 id:forest-heart
 title:Harvest the Monolith Heart
-desc:Trace the etched coordinates to a buried hatch and retrieve the humming core before the forest swallows it.
+desc:Trace the etched coordinates to a buried hatch and recover the humming core before the forest seals over it forever.
 risk:high
 time:14
-success:item:forest monolith sigil,credits+22,morale+4
+success:item:monolith sigil,credits+22,morale+4
 fail:hp-10,rads+3,morale-3
 flag:forest-heart
 once:true

@@ -1,117 +1,117 @@
 @expansion
 id:portland_slums
-name:Portland Slums
-summary:A neon parody of a city that never healed. Street preachers howl at IRL streamers while food carts sell rancid fusion out of smoking pans.
+name:Downtown Portland
+summary:A drowned district of cracked towers and barricaded streets. Factions fight over filtration rigs, signal relays, and the last workable routes through the ruins.
 
 @door
-label:Blue Tent Welcome Mat
-hint:trade, quests, unpredictable fights
-note:A scavenger waves you in beneath a hand-painted sign that reads "CONTENT THIS WAY" like a warning.
+label:Downtown Checkpoint
+hint:trade, factions, lethal streets
+note:A militia guard scans your pack, then marks your wrist with ash. "Don't get lost," he says. It sounds like a sentence.
 target:burnside-hub
 
 @scene burnside-hub
 title:Burnside Hub
-desc:Broken streetcars are welded into a plaza of scrap. A pop-up market rots beside protest camps and a generator-powered disco ball that flickers like a dying eye.
+desc:Welded streetcars form a hard perimeter around a barter yard lit by burn barrels. Names of the dead are carved into every panel.
 tags:Safe / Trade / Hub
-option:Browse the zine stall => zine-stall | risk:low | time:6 | success:note:Pamphlet details hidden tunnels under the bridge.,log:You trade stickers for intel. | fail:morale-2,log:The vendor rants until you want to flee.
-option:Check the ramen cart => ramen-cart | risk:low | time:5 | success:hunger-8,credits-10,log:Spicy broth clears your head.,note:Cart owner whispers about a missing streamer. | fail:credits-5,hunger-2,log:Soup tastes like battery acid.
-option:Talk to the bored ICE patrol => ice-van | risk:medium | time:7 | success:flag:ice-contact,log:You swap fake paperwork for a badge scan.,morale+3 | fail:temp-2,log:They tag your face for the watchlist.
-option:Hire the eboy courier => courier-run | risk:medium | time:8 | success:item:neon sneakers,credits-20,log:Courier gives you glam loot and gossip.,note:He mentions a protest leader under the bridge. | fail:credits-10,log:Courier vanishes mid-stream.
+option:Consult the route broker => route-broker | risk:low | time:6 | success:note:The broker marks a maintenance tunnel that bypasses a kill zone.,log:You buy directions scratched into tin. | fail:morale-2,log:The broker sells you nothing but smoke.
+option:Eat at the ration line => ration-line | risk:low | time:5 | success:hunger-8,credits-10,log:Thin stew settles your hands.,note:The cook mutters about a vanished patrol. | fail:credits-5,hunger-2,log:The pot runs dry halfway through.
+option:Parley with the federal patrol => patrol-van | risk:medium | time:7 | success:flag:patrol-contact,log:You trade scavenged intel for a temporary pass.,morale+2 | fail:temp-2,log:They record your face and send you away.
+option:Hire a tunnel runner => tunnel-runner | risk:medium | time:8 | success:item:sealed boots,credits-20,log:The runner outfits you for flooded routes.,note:She warns of a preacher rally under the bridge. | fail:credits-10,log:The runner ghosts you before the deal closes.
 
-@scene zine-stall
-title:Tin-foil Zine Stall
-desc:Stacks of hand-stapled manifestos cover a folding table. Headlines hiss about crypto-cults and pigeon spies.
-tags:Lore
-option:Trade stories => burnside-hub | risk:low | time:6 | success:morale+4,log:You trade grim rumors in low voices. | fail:morale-2,log:The stall owner accuses you of being "too mainstream".
-option:Buy a map => burnside-hub | risk:medium | time:4 | success:item:underground map,credits-15,log:Map marks a loot cache near the river. | fail:credits-7,log:Pages are water-damaged.
+@scene route-broker
+title:Route Broker
+desc:A scarred cartographer works beneath a tarp of stitched hazard suits. Maps are etched into metal sheets so the rain cannot erase them.
+tags:Intel
+option:Trade salvage for a grid map => burnside-hub | risk:low | time:6 | success:item:underground map,credits-15,log:The map shows storm drains and sealed doors.,note:A maintenance shaft near the river is circled twice. | fail:credits-7,log:The sheet is outdated and missing half its marks.
+option:Swap rumors for leverage => burnside-hub | risk:medium | time:5 | success:morale+3,log:Your story buys you a cleaner route. | fail:morale-3,log:Your rumor is already old news.
 
-@scene ramen-cart
-title:Ramen Cart Under the Bridge
-desc:A chef in LED goggles ladles broth while dodging scooter traffic. Steam mixes with tear gas residue and old smoke.
+@scene ration-line
+title:Ration Line
+desc:Citizens queue in silence while a filtration rig coughs behind sandbags. Armed volunteers watch for cutters with the patience of snipers.
 tags:Rest / Intel
-option:Ask about the missing streamer => streamer-hunt | risk:medium | time:9 | success:flag:streamer-lead,log:You get a ping location near Riot Alley.,morale+2 | fail:temp-1,log:Chef dodges the question.
-option:Tip the chef => burnside-hub | risk:low | time:3 | success:credits-5,stamina+4,log:Warm noodles reset your nerves. | fail:credits-2,log:You drop chopsticks into a puddle.
+option:Ask about the vanished patrol => patrol-hunt | risk:medium | time:9 | success:flag:patrol-lead,log:A veteran points you toward Riot Alley.,morale+2 | fail:temp-1,log:No one wants to speak on record.
+option:Donate a can to the pot => burnside-hub | risk:low | time:3 | success:credits-5,stamina+4,log:The cook nods once and fills your bowl. | fail:credits-2,log:The can slips from your hands into the mud.
 
-@scene ice-van
-title:Parked ICE Van
-desc:Agents scroll social media to track protest hotspots. One is livestreaming his own badge with a grin like a mask.
+@scene patrol-van
+title:Federal Patrol Van
+desc:A black van idles beside a barricade of jersey walls. Officers monitor drone feeds and mark targets on laminated sheets.
 tags:Intel / Risky
-option:Show forged papers => protest-camp | risk:medium | time:7 | success:temp+2,log:They wave you through to the protest camp. | fail:temp-3,log:They ask for backup ID.
-option:Plant a meme-drive bug => burnside-hub | risk:high | time:10 | success:item:meme-drive,flag:van-bugged,log:You slide a hacked USB under the dashboard.,temp-1 | fail:hp-8,log:An agent slams the door on your hand.
+option:Present forged clearance => protest-camp | risk:medium | time:7 | success:temp+2,log:They wave you toward the bridge camp with a warning. | fail:temp-3,log:They hold you at gunpoint while they check the code.
+option:Plant a relay tap => burnside-hub | risk:high | time:10 | success:item:signal tap,flag:van-tapped,log:You splice into their relay before anyone looks up.,temp-1 | fail:hp-8,log:A baton cracks across your knuckles.
 
-@scene courier-run
-title:Eboy Courier Meetup
-desc:A glitter-jacket courier films everything. He trades packages for hype and rare loot codes, eyes hollow behind the lens.
+@scene tunnel-runner
+title:Tunnel Runner
+desc:A courier in patched waders studies the storm drains like scripture. Her crew measures risk in bodies, not minutes.
 tags:Trade / Lore
-option:Request fast travel tip => trolley-bridge | risk:medium | time:5 | success:note:Shortcut across the trolley bridge saves time.,log:Courier pins the route to your feed. | fail:morale-2,log:He edits you out of the clip.
-option:Buy a hype crate => burnside-hub | risk:medium | time:6 | success:item:holo wristband,credits-18,log:You unbox a glowing wristband.,morale+2 | fail:credits-9,log:Box contains stickers and regret.
+option:Buy a flood route => trolley-bridge | risk:medium | time:5 | success:note:A submerged rail line leads to the trolley bridge span.,log:She traces the path on your glove with chalk. | fail:morale-2,log:She refuses the job after seeing your gear.
+option:Commission a supply pull => burnside-hub | risk:medium | time:6 | success:item:water filters,credits-18,log:Her crew brings back filters sealed in wax.,morale+1 | fail:credits-9,log:The crew returns empty and angry.
 
 @scene protest-camp
-title:Riot Alley Camp
-desc:Tents, art walls, and portable speakers form a chaotic maze. Slogans change daily, but the fear stays.
+title:Bridge Camp
+desc:Tents cluster beneath the overpass, shielded by murals and sheet metal. The camp is organized like an army that ran out of uniforms.
 tags:Quests / Combat
-option:Meet the protest leader => camp-briefing | risk:low | time:6 | success:flag:camp-ally,log:You hear a plan to hijack a supply drone. | fail:morale-3,log:They distrust outsiders.
-option:Break up a scuffle => protest-camp | risk:medium | time:8 | success:morale+5,log:Both sides cool down and respect you.,note:Camp mood improves. | fail:hp-6,log:A thrown placard hits you.
-option:Intercept agitators => alley-ambush | risk:high | time:12 | success:credits+30,item:riot shield,log:You deter masked vandals.,temp+1 | fail:hp-12,log:Pepper spray floods your eyes on stream.
+option:Meet the camp marshal => camp-briefing | risk:low | time:6 | success:flag:camp-ally,log:The marshal outlines a plan to seize a drone yard. | fail:morale-3,log:They search you twice and send you away.
+option:Separate a knife fight => protest-camp | risk:medium | time:8 | success:morale+5,log:You end it fast and earn wary respect.,note:The camp owes you a favor. | fail:hp-6,log:A blade scores your ribs before order returns.
+option:Intercept infiltrators => alley-ambush | risk:high | time:12 | success:credits+30,item:riot shield,log:You catch saboteurs planting charges.,temp+1 | fail:hp-12,log:The blast throws you into a wall.
 
 @scene camp-briefing
 title:Camp Briefing
-desc:The leader paints a whiteboard flowchart connecting drones, dumpsters, and corporate logos like a conspiracy prayer.
+desc:The marshal sketches drone routes across a scavenged steel door. Every arrow ends at the same word: SURVIVE.
 tags:Quest
-option:Accept drone hijack job => drone-yard | risk:medium | time:10 | success:flag:drone-job,log:You agree to reroute a delivery drone.,item:flare paint | fail:morale-2,log:You hesitate and lose face.
-option:Ask for payment up front => protest-camp | risk:medium | time:5 | success:credits+15,log:They pass a hat for you. | fail:temp-1,log:Someone films you asking.
+option:Accept the drone yard raid => drone-yard | risk:medium | time:10 | success:flag:drone-job,log:You join the strike team at dusk.,item:flare paint | fail:morale-2,log:Hesitation costs you their trust.
+option:Demand payment up front => protest-camp | risk:medium | time:5 | success:credits+15,log:The camp scrapes together a down payment. | fail:temp-1,log:The marshal remembers your greed.
 
 @scene alley-ambush
-title:Alley Ambush
-desc:Graffiti glows under blacklight. Agitators toss fireworks while an IRL streamer narrates the chaos with a laugh that won't stop.
+title:Riot Alley
+desc:Charred walls narrow into a choke point littered with casings. Speakers blare old siren tones to keep everyone on edge.
 tags:Combat / Hazard
-option:Charge the agitators => alley-ambush | risk:high | time:10 | success:hp-4,credits+25,item:flashbang,log:You scatter the crowd and grab dropped gear. | fail:hp-14,log:Firework shrapnel burns your arm.
-option:Use crowd control foam => protest-camp | risk:medium | time:8 | success:item:foam canister,temp+2,log:The foam calms things down. | fail:foam canister,log:Canister jams, making you a meme.
+option:Push through the choke point => alley-ambush | risk:high | time:10 | success:hp-4,credits+25,item:flashbang,log:You break the ambush and strip the fallen. | fail:hp-14,log:Rifle fire chews the concrete around you.
+option:Deploy suppression foam => protest-camp | risk:medium | time:8 | success:item:foam canister,temp+2,log:The foam blinds shooters long enough to retreat. | fail:item:foam canister,log:The nozzle clogs and you eat smoke.
 
-@scene streamer-hunt
-title:Streamer Hunt
-desc:A location pin pulses on your HUD. Emoji graffiti points the way into darker alleys like a trail of teeth.
+@scene patrol-hunt
+title:Patrol Hunt
+desc:A cracked HUD beacon pulses from a shuttered storefront. The street is too quiet, like the city is holding its breath.
 tags:Quest / Search
-option:Follow the emoji trail => streamer-studio | risk:medium | time:9 | success:flag:found-streamer,log:You locate a makeshift studio behind shutters.,morale+3 | fail:morale-3,log:Trail ends at a puddle of glow paint.
-option:Ask locals on camera => burnside-hub | risk:low | time:6 | success:note:Chat tips reveal a secret ladder near the bridge.,stamina+2 | fail:temp-1,log:Chat calls you cringe.
+option:Track the beacon => patrol-safehouse | risk:medium | time:9 | success:flag:found-patrol,log:You locate survivors barricaded in a signal loft.,morale+3 | fail:morale-3,log:The beacon was a lure wired to nothing.
+option:Question the sentries => burnside-hub | risk:low | time:6 | success:note:A sentry mentions a ladder up the rail supports.,stamina+2 | fail:temp-1,log:They give you false directions on purpose.
 
-@scene streamer-studio
-title:Hidden Streamer Studio
-desc:A neon-lit closet full of ring lights and questionable sponsorship banners, air thick with sweat and cheap ozone.
+@scene patrol-safehouse
+title:Signal Loft
+desc:A gutted office tower houses a relay rig pointed at the storm. Exhausted patrol members guard it like it is the last light in the city.
 tags:Combat / Loot
-option:Rescue the streamer => burnside-hub | risk:medium | time:7 | success:item:viral clip drive,credits+20,log:They pay you with sponsor credits.,flag:streamer-safe | fail:hp-8,log:A tripod smacks you during the brawl.
-option:Loot the merch wall => burnside-hub | risk:high | time:9 | success:item:limited hoodie,credits+15,log:Rare hoodie secured.,temp-1 | fail:temp-3,log:Security drone pings your face.
+option:Evacuate the survivors => burnside-hub | risk:medium | time:7 | success:item:relay codes,credits+20,log:They hand over access codes in exchange for escort.,flag:patrol-safe | fail:hp-8,log:Crossfire erupts as you move them out.
+option:Strip the relay parts => burnside-hub | risk:high | time:9 | success:item:relay coil,credits+15,log:You salvage the rig before the storm hits.,temp-1 | fail:temp-3,log:A surge arcs through your suit.
 
 @scene drone-yard
 title:Drone Yard Raid
-desc:Delivery drones idle on cracked asphalt. Corporate logos are spray-painted with slogans like "TAX THE AESTHETIC" and then smeared over with soot.
+desc:Delivery drones sit in ranks behind razor wire and floodlights. The yard smells of ozone and burned insulation.
 tags:Quest / Combat / Loot
-option:Flash the stolen badge => drone-yard | risk:medium | time:8 | success:temp+3,log:Drones accept your spoofed credentials.,item:payload crate | fail:temp-3,log:Alarm sirens blare.
-option:Repaint a drone with flare paint => river-cache | risk:medium | time:10 | success:flag:drone-repainted,log:Drone peels off toward the river cache.,morale+2 | fail:hp-6,log:Paint fumes knock you woozy.
-option:Fight off security => drone-yard | risk:high | time:12 | success:item:stun baton,credits+35,log:You scrap a guard bot.,temp-1 | fail:hp-15,log:Stun darts light you up.
+option:Flash the stolen badge => drone-yard | risk:medium | time:8 | success:temp+3,log:The spoofed badge keeps the turrets asleep.,item:payload crate | fail:temp-3,log:Sirens howl and searchlights lock onto you.
+option:Mark a drone with flare paint => river-cache | risk:medium | time:10 | success:flag:drone-repainted,log:The marked drone reroutes toward the river cache.,morale+2 | fail:hp-6,log:Paint fumes and panic slow your hands.
+option:Hold the line against security => drone-yard | risk:high | time:12 | success:item:stun baton,credits+35,log:You scrap a guard bot and loot its core.,temp-1 | fail:hp-15,log:Shock rounds drop you to one knee.
 
 @scene river-cache
 title:River Cache
-desc:Floating pallets form a secret dock. Homeless vendors guard stashes of scavenged goods and swap stories in a hush.
+desc:Floating pallets are chained into a hidden dock beneath the bridge. Traders speak in code while lookouts track every silhouette on the water.
 tags:Loot / Lore / Trade
-option:Buy rerouted payload => burnside-hub | risk:medium | time:7 | success:item:mystery supply,credits-20,log:You secure a box stamped with emojis. | fail:credits-8,log:Only damp cardboard remains.
-option:Share campfire stories => burnside-hub | risk:low | time:6 | success:morale+6,log:You trade grim stories and earn quiet respect. | fail:morale-2,log:Your tale falls flat.
-option:Defend the cache => river-cache | risk:high | time:11 | success:credits+30,item:salvaged tech,log:You fend off raiders and earn a cut. | fail:hp-12,log:Raiders rush you while cameras roll.
+option:Buy the rerouted payload => burnside-hub | risk:medium | time:7 | success:item:mystery supply,credits-20,log:You secure a sealed crate stamped with hazard tape. | fail:credits-8,log:The crate is already stripped clean.
+option:Share names of the fallen => burnside-hub | risk:low | time:6 | success:morale+6,log:Your list is added to the dock ledger with respect. | fail:morale-2,log:No one recognizes the names you carry.
+option:Defend the dock from raiders => river-cache | risk:high | time:11 | success:credits+30,item:salvaged tech,log:You repel the raid and earn a hard cut. | fail:hp-12,log:Raiders breach the chain line and cut you down.
 
 @scene trolley-bridge
-title:Trolley Bridge Shortcut
-desc:A half-collapsed bridge with LED rope lights. IRL streamers perch on railings for dramatic shots, the river chewing below.
+title:Trolley Bridge Span
+desc:A half-collapsed bridge crosses a black river choked with debris. Wind claws at the cables hard enough to sing.
 tags:Traversal / Hazard
-option:Sprint across => burnside-hub | risk:medium | time:5 | success:stamina+6,log:You dash past dangling cameras. | fail:hp-8,log:You slip and scrape across rusted steel.
-option:Pose for the stream => burnside-hub | risk:low | time:4 | success:morale+3,credits+10,log:Chat rains bits on your profile. | fail:temp-1,log:Clip goes viral for the wrong reasons.
+option:Sprint the exposed span => burnside-hub | risk:medium | time:5 | success:stamina+6,log:You clear the gap before the gusts shift. | fail:hp-8,log:A slip sends you skidding across rust and glass.
+option:Cross slow with a tether => burnside-hub | risk:low | time:6 | success:temp+1,stamina+3,log:The tether holds and your breathing steadies. | fail:stamina+1,log:The line snags and costs you precious time.
 
 @quest
 id:slums-broadcast
-title:Hijack the Riot Broadcast
-desc:Slip into the signal loft and broadcast the protest feed to the wider grid before ICE scrambles it.
+title:Seize the Riot Broadcast
+desc:Infiltrate the signal loft and push the camp's warning across the grid before federal jammers silence it.
 risk:high
 time:12
-success:item:neon riot jacket,credits+25,morale+5
+success:item:riot marshal jacket,credits+25,morale+5
 fail:hp-10,morale-5
 flag:slums-broadcast
 once:true

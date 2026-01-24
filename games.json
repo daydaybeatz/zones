@@ -2,22 +2,22 @@
   "expansions": [
     {
       "id": "town",
-      "name": "Rust Town",
+      "name": "Iron Ward",
       "file": "expansions/town.txt"
     },
     {
       "id": "safehouse",
-      "name": "Abandoned Safehouse",
+      "name": "Cold Shelter",
       "file": "expansions/safehouse.txt"
     },
     {
       "id": "forest",
-      "name": "Dark Forest",
+      "name": "Blackwood Expanse",
       "file": "expansions/forest.txt"
     },
     {
       "id": "portland_slums",
-      "name": "Portland Slums",
+      "name": "Downtown Portland",
       "file": "expansions/portland_slums.txt"
     }
   ]

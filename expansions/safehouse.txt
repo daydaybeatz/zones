@@ -1,30 +1,30 @@
 @expansion
 id:safehouse
-name:Abandoned Safehouse
-summary:A silent bunker with sagging hammocks, rain barrels, and a flickering lantern. A place to stabilize vitals and manage upgrades before heading back out.
+name:Cold Shelter
+summary:A sealed bunker kept alive by rain barrels and a failing lantern. Survivors come here to stabilize wounds, ration supplies, and plan routes that might keep them breathing.
 
 @door
-label:Safehouse Hatch
+label:Cold Shelter Hatch
 hint:rest, regroup, upgrade
 target:bunks
 
 @scene bunks
 title:Lower Bunks
-desc:Metal bunks line the wall, mattresses thin but dry. A patched-up radio hums against the storm outside like a warning.
+desc:Metal bunks line the wall, mattresses thin but dry. A patched radio murmurs storm reports and casualty counts.
 tags:Safe / Rest
-option:Crash for a bit => bunks | risk:low | time:30 | success:hp+10,stamina+15,morale+6,hunger-8,thirst-10,log:You sleep in short bursts.,note:Rested at the hatch. | fail:hp+4,stamina+6
-option:Run maintenance checks => crates | risk:low | time:12 | success:stamina+8,temp+1,log:You tighten straps and patch seals. | fail:stamina+4,log:You only manage a quick tune-up.
+option:Crash for a bit => bunks | risk:low | time:30 | success:hp+10,stamina+15,morale+6,hunger-8,thirst-10,log:You sleep in short, guarded bursts.,note:Rested at the hatch. | fail:hp+4,stamina+6
+option:Run maintenance checks => crates | risk:low | time:12 | success:stamina+8,temp+1,log:You tighten seals and clear grit from your filters. | fail:stamina+4,log:You only manage a partial inspection.
 
 @scene crates
 title:Maintenance Crates
-desc:Plastic crates are labeled with dates long past. Tools are scattered in neat rows, waiting for someone careful enough to use them.
+desc:Plastic crates are labeled with dates from before the collapse. Tools are arranged with the discipline of people who expect to move fast.
 tags:Storage / Upgrades
-option:Reinforce your kit => bunks | risk:low | time:10 | success:stamina+10,morale+2,log:Your kit feels more reliable already. | fail:stamina+5,log:You rush the job but it still helps.
-option:Plan the next route => hallway | risk:low | time:8 | success:morale+4,log:You map out a safer approach. | fail:morale+1,log:You second-guess every choice.
+option:Reinforce your kit => bunks | risk:low | time:10 | success:stamina+10,morale+2,log:Straps are re-stitched and plates sit true. | fail:stamina+5,log:The work is rushed but still buys you time.
+option:Plan the next route => hallway | risk:low | time:8 | success:morale+4,log:You chart a route with fewer blind corners. | fail:morale+1,log:Every path still looks like a gamble.
 
 @scene hallway
 title:Maintenance Hall
-desc:A dripping hallway leads deeper into the safehouse. Faded graffiti reads "MAKE IT BACK" like a plea.
+desc:A narrow corridor runs deeper into the shelter, pipes sweating against the concrete. Someone has carved "MAKE IT BACK" into the wall again and again.
 tags:Transit
 option:Return to bunks => bunks | risk:low | time:4 | success:morale+1 | fail:morale-1
-option:Stretch legs => bunks | risk:low | time:6 | success:stamina+8,log:You loosen up with hallway laps. | fail:stamina+2
+option:Stretch legs => bunks | risk:low | time:6 | success:stamina+8,log:You keep your muscles warm for the next sprint. | fail:stamina+2

@@ -1,50 +1,50 @@
 @expansion
 id:town
-name:Rust Town
-summary:A market of welded sheet metal and neon tarps. Traders deal in favors, ammo, and coordinates whispered like prayers.
+name:Iron Ward
+summary:A fortified market built from welded plate and blackout tarps. Traders exchange ammunition, medical scraps, and coordinates spoken like confessions.
 
 @door
-label:Rust Town Gate
+label:Iron Ward Gate
 hint:trade, rumors, quick morale fixes
-note:You sign the logbook. The gate guard barely looks up, eyes hollow.
+note:The guard logs your name without looking up. The ledger is thicker than the walls.
 target:market-square
 
 @scene market-square
 title:Market Square
-desc:Vendors call out over the crackle of patched generators. A crooked clock tower keeps the wrong time on purpose, like a curse.
+desc:Generators cough under strings of dead bulbs. A crooked clock tower keeps the wrong time to confuse snipers and thieves.
 tags:Safe / Trade
-option:Check the scrap kiosk => kiosk | risk:low | time:8 | success:credits+15,item:patch-kit,log:You score salvage under a dead lamp. | fail:morale-4,log:Merchants haggle you down.
-option:Visit the medic => medic | risk:low | time:6 | success:hp+8,credits-10,log:The medic patches you up without a word. | fail:credits-5,log:Triages are pricey today.
-option:Listen for rumors => rumor-board | risk:medium | time:10 | success:note:Rumor: supply convoy stalled near old subway.,flag:convoy-hook,log:You overhear a smuggler whisper. | fail:morale-3,log:Nothing but recycled gossip.
+option:Check the scrap kiosk => kiosk | risk:low | time:8 | success:credits+15,item:patch-kit,log:You pull usable salvage from a dead shelf. | fail:morale-4,log:The broker bleeds you on price.
+option:Visit the medic => medic | risk:low | time:6 | success:hp+8,credits-10,log:The medic patches you in silence. | fail:credits-5,log:Triage costs more than promised.
+option:Listen for rumors => rumor-board | risk:medium | time:10 | success:note:Rumor: a supply convoy stalled near the old subway cut.,flag:convoy-hook,log:A smuggler sells you a whisper. | fail:morale-3,log:All you hear are recycled lies.
 
 @scene kiosk
 title:Scrap Kiosk
-desc:Piles of stripped circuitry and empty ammo tins. A fan rattles overhead like loose bones.
+desc:Circuit boards, shell casings, and stripped wiring are sorted into neat, desperate piles. A ceiling fan rattles like loose teeth.
 tags:Trade
-option:Sell copper wiring => market-square | risk:low | time:5 | success:credits+20,log:You sell scrap for quick cash. | fail:credits+5,log:Only partial payout.
-option:Browse exo-suit junk => market-square | risk:medium | time:7 | success:item:exo brace,temp+1,log:You find a working brace. | fail:morale-2,log:Everything is rusted through.
+option:Sell copper wiring => market-square | risk:low | time:5 | success:credits+20,log:The kiosk pays in chipped credits. | fail:credits+5,log:They dock you for corrosion.
+option:Browse exo-suit junk => market-square | risk:medium | time:7 | success:item:exo brace,temp+1,log:A brace still holds tension. | fail:morale-2,log:Everything else has already failed someone.
 
 @scene medic
 title:Patchwork Clinic
-desc:An improvised clinic under a tarp. Clean instruments, dirty needles, and a medic who never smiles.
+desc:A canvas clinic reeks of antiseptic and ozone. Instruments are clean. The medic's hands are steadier than her eyes.
 tags:Healing
-option:Pay for a proper checkup => market-square | risk:low | time:8 | success:hp+15,morale+4,credits-25,log:Fresh bandages and stimmed nerves. | fail:credits-10,morale-2,log:You still feel woozy.
-option:Buy painkillers => market-square | risk:medium | time:4 | success:item:painkillers,credits-12,log:You stash the meds. | fail:credits-5,log:The pills crumble in the pack.
+option:Pay for a proper checkup => market-square | risk:low | time:8 | success:hp+15,morale+4,credits-25,log:Fresh bandages and a measured dose bring you back. | fail:credits-10,morale-2,log:You walk out lighter in wallet, not in pain.
+option:Buy painkillers => market-square | risk:medium | time:4 | success:item:painkillers,credits-12,log:The meds vanish into your pack. | fail:credits-5,log:The batch is cut and crumbles.
 
 @scene rumor-board
 title:Rumor Board
-desc:A wall of paper scraps, coordinates, and desperate promises. A faded poster says "NOTHING LEAVES WITHOUT YOU" like a threat.
+desc:Paper scraps, maps, and last-known locations are pinned beneath knife blades. A faded stencil reads "NO ONE COMES BACK CLEAN."
 tags:Intel
-option:Study a convoy map => market-square | risk:low | time:6 | success:note:Marked a supply convoy route near the canyons.,log:You memorize the pattern. | fail:morale-2
-option:Trade gossip for cash => market-square | risk:medium | time:5 | success:credits+12,morale+2 | fail:credits+2,morale-2,log:Nobody trusts your intel today.
+option:Study a convoy map => market-square | risk:low | time:6 | success:note:You mark a convoy route running the canyon edge.,log:You memorize the gaps in patrol coverage. | fail:morale-2
+option:Trade gossip for cash => market-square | risk:medium | time:5 | success:credits+12,morale+2 | fail:credits+2,morale-2,log:Your intel buys you pity, not profit.
 
 @quest
 id:rusttown-crown
-title:Secure the Rust Crown
-desc:Track down the crooked clock tower's hidden coffer and reclaim the ceremonial helm before it is fenced.
+title:Recover the Iron Crown
+desc:Find the clock tower's sealed coffer and reclaim the ceremonial helm before it is melted down for scrap.
 risk:high
 time:12
-success:item:rust town crown,credits+20,morale+4
+success:item:iron crown,credits+20,morale+4
 fail:hp-8,morale-4
 flag:rusttown-crown
 once:true
