@@ -170,7 +170,7 @@
     <header>
       <div>
         <div class="title">Zones - fight, loot, survive. <span class="pill">inventory / looter / idle</span></div>
-        <div class="tagline">Pick zones, run salvage loops, and sort haul into gear, stash, or scrap.</div>
+        <div class="tagline">Pick zones, run salvage loops, and sort rewards into gear, stash, or scrap.</div>
       </div>
       <div class="pill">Build #: 0.2b — inventory-focused loop</div>
     </header>
@@ -215,17 +215,6 @@
                 </div>
                 <div id="hubLock" class="muted-box"></div>
                 <button id="enterLocations">Enter locations hub</button>
-              </div>
-            </section>
-            <section class="panel">
-              <h3>Incoming Haul</h3>
-              <div class="inventory-layout">
-                <div id="haul"></div>
-                <div class="command-card">
-                  <div class="command-title">Haul Command Card</div>
-                  <div id="haulDetail" class="command-hint">Select loot to route it into your rig.</div>
-                  <div class="action-grid" id="haulActions"></div>
-                </div>
               </div>
             </section>
             <section class="panel">
@@ -321,7 +310,7 @@
                 <div id="stash"></div>
                 <div class="market-section">
                   <h4>Vendor stock</h4>
-                  <div class="command-hint" id="marketHint">Travel to Iron Ward to access market vendors.</div>
+                  <div class="command-hint" id="marketHint">Visit a shop in your current location to access vendors.</div>
                   <div id="marketInventory" class="market-grid"></div>
                 </div>
               </div>
@@ -332,7 +321,7 @@
               <div class="action-grid" id="stashItemActions"></div>
             </div>
           </div>
-          <p class="small">Move loot from the haul into long-term storage, or liquidate overflow for credits.</p>
+          <p class="small">Move rewards into long-term storage, or liquidate overflow for credits.</p>
         </section>
       </div>
     </div>
@@ -365,15 +354,15 @@
       loadoutPage:0,
       inventory:["rusty flashlight","ration bar","scrap wiring"],
       equipped:['basic backpack'],
-      codex:["Hub online. Haul bays clear."],
+      codex:["Hub online. Reward bays clear."],
       stash:{name:'Vault Stash',items:[]},
-      lootQueue:[],
+      marketAccess:{active:false,zoneId:null},
       idleOps:{active:false,id:null,startedAt:null,durationMs:0,etaMinutes:0,completed:false,statusMessage:'',rewards:[]},
       flags:new Set(),
-      zone:{id:'drift-yard',name:'Drift Yard',risk:'low',desc:'Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.'},
+      zone:{id:'drift-yard',name:'Drift Yard',risk:'low',desc:'Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.',sceneId:null},
       screen:'main',
       travel:{active:false,endsAt:null,target:null},
-      mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null},
+      mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null},
       inventoryScreen:'backpack',
       stashScreen:'vault',
       selected:{source:null,item:null}
@@ -384,6 +373,7 @@
       const merged={...base,...saved};
       merged.flags=new Set(saved.flags || []);
       merged.stash={...base.stash,...(saved.stash||{})};
+      merged.marketAccess={...base.marketAccess,...(saved.marketAccess||{})};
       merged.idleOps={...base.idleOps,...(saved.idleOps||{})};
       merged.zone={...base.zone,...(saved.zone||{})};
       merged.travel={...base.travel,...(saved.travel||{})};
@@ -631,9 +621,6 @@
       zoneDesc:document.getElementById('zoneDesc'),
       zoneBadge:document.getElementById('zoneBadge'),
       raidActions:document.getElementById('raidActions'),
-      haul:document.getElementById('haul'),
-      haulDetail:document.getElementById('haulDetail'),
-      haulActions:document.getElementById('haulActions'),
       inventory:document.getElementById('inventory'),
       equipment:document.getElementById('equipment'),
       crafting:document.getElementById('crafting'),
@@ -707,7 +694,8 @@
       const hour=((h+11)%12+1);return `${hour}:${m.toString().padStart(2,'0')} ${suffix}`;
     }
     const setCodex=(msg)=>{ state.codex=[msg]; };
-    const canAccessVault=()=>state.screen==='main' && !state.mission.active && !state.travel.active;
+    const canAccessVault=()=>state.zone.id==='safehouse' && !state.mission.active && !state.travel.active;
+    const canAccessMarket=()=>state.marketAccess.active && state.marketAccess.zoneId===state.zone.id && !state.mission.active && !state.travel.active;
     const isHubZone=(zone=state.zone)=>{
       if(!zone) return false;
       const name=(zone.name||'').toLowerCase();
@@ -717,7 +705,23 @@
       if(!zone) return false;
       return zone.id==='town' || (zone.name||'').toLowerCase().includes('market');
     };
-    const vaultBlockedMessage='Return to the main hub vault to transfer stash items.';
+    const ensureZoneScene=(zone=state.zone)=>{
+      const exp=expansions[zone.id];
+      if(!exp) return null;
+      const availableSceneId=zone.sceneId || exp.door?.target || Object.keys(exp.scenes || {})[0];
+      if(availableSceneId && zone.sceneId!==availableSceneId){
+        zone.sceneId=availableSceneId;
+      }
+      if(!availableSceneId) return null;
+      const scene=exp.scenes?.[availableSceneId];
+      return scene ? {id:availableSceneId,...scene} : null;
+    };
+    const clearMarketAccess=()=>{
+      if(state.marketAccess.active){
+        state.marketAccess={active:false,zoneId:null};
+      }
+    };
+    const vaultBlockedMessage='Return to the Cold Shelter hatch to access the vault.';
     const logMsg=(msg)=>{
       const stamp=`[Day ${state.day} // ${fmtTime(state.timeMinutes)}] ${msg}`;
       if(state.mission.active && !state.mission.completed){
@@ -780,6 +784,17 @@
       return true;
     };
     const addItemCopies=(arr,item,count=1)=>{for(let i=0;i<count;i++) arr.push(item);};
+    const routeItemGain=(item)=>{
+      if(hasCapacityFor(state.inventory,getBackpackLimit(),item,1)){
+        state.inventory.push(item);
+        return 'inventory';
+      }
+      if(canAccessVault() && hasCapacityFor(state.stash.items,state.stashLimit,item,1)){
+        state.stash.items.push(item);
+        return 'vault';
+      }
+      return 'lost';
+    };
     const getItem=(id)=>ITEM_CATALOG[id] || {type:'junk',rarity:'common',value:1};
     const formatMods=(mods)=>{
       if(!mods) return [];
@@ -1052,8 +1067,8 @@
       renderAll();
     }
     function sellItem(item){
-      if(!isMarketZone()){
-        setCodex('Visit the market to sell items.');
+      if(!canAccessMarket()){
+        setCodex('Visit a shop to sell items.');
         return;
       }
       const data=getItem(item);
@@ -1296,25 +1311,22 @@
     function buyMarketItem(itemId){
       const stock=MARKET_STOCK.find(entry=>entry.id===itemId);
       if(!stock) return;
-      if(!isMarketZone()){
-        setCodex('Visit the market to buy items.');
+      if(!canAccessMarket()){
+        setCodex('Visit a shop to buy items.');
         return;
       }
       if(state.credits<stock.cost){
         setCodex('Not enough credits for this purchase.');
         return;
       }
-      state.credits-=stock.cost;
-      if(hasCapacityFor(state.inventory,getBackpackLimit(),itemId,1)){
-        state.inventory.push(itemId);
-        state.selected={source:'inventory',item:itemId};
-        logMsg(`Purchased ${itemId} for ${stock.cost} credits.`);
-      }else{
-        state.lootQueue.push(itemId);
-        state.selected={source:'haul',item:itemId};
-        logMsg(`Purchased ${itemId} for ${stock.cost} credits. Routed to haul queue.`);
-        setCodex('Backpack full. Purchase routed to haul queue.');
+      if(!hasCapacityFor(state.inventory,getBackpackLimit(),itemId,1)){
+        setCodex('Backpack full. Make room before purchasing.');
+        return;
       }
+      state.credits-=stock.cost;
+      state.inventory.push(itemId);
+      state.selected={source:'inventory',item:itemId};
+      logMsg(`Purchased ${itemId} for ${stock.cost} credits.`);
       renderAll();
     }
 
@@ -1420,7 +1432,6 @@
         if(source==='inventory') return state.inventory.includes(item);
         if(source==='equipped') return state.equipped.includes(item);
         if(source==='stash') return state.stash.items.includes(item);
-        if(source==='haul') return state.lootQueue.includes(item);
         if(source==='missionReward' || source==='idleReward') return rewardHasItem(source,item);
         return false;
       };
@@ -1438,7 +1449,6 @@
       const targets=[
         {detail:dom.itemDetail,actions:dom.itemActions,default:'Select gear to view stats, uses, and actions.'},
         {detail:dom.stashDetail,actions:dom.stashItemActions,default:'Select stash items to transfer, scrap, or sell.'},
-        {detail:dom.haulDetail,actions:dom.haulActions,default:'Select loot to route it into your rig.'},
         {detail:dom.missionRewardDetail,actions:dom.missionRewardActions,default:missionRewardDefault}
       ];
       targets.forEach(target=>{
@@ -1492,7 +1502,7 @@
           blockedHint:!vaultAccess ? vaultBlockedMessage : ''
         });
         actionConfigs.push({label:'Break down for scrap',action:()=>dismantleItem(item)});
-        actionConfigs.push({label:'Sell to market',action:()=>sellItem(item),disabled:!isMarketZone(),blockedHint:'Visit the market to sell.'});
+        actionConfigs.push({label:'Sell to market',action:()=>sellItem(item),disabled:!canAccessMarket(),blockedHint:'Visit a shop to sell.'});
       }else if(source==='equipped'){
         actionConfigs.push({label:'Return to backpack',action:()=>unequipItem(item),disabled:!canUnequipItem(item)});
       }else if(source==='stash'){
@@ -1511,19 +1521,9 @@
         actionConfigs.push({
           label:'Sell to market',
           action:()=>sellStashItem(item),
-          disabled:!vaultAccess || !isMarketZone(),
-          blockedHint:!vaultAccess ? vaultBlockedMessage : 'Visit the market to sell.'
+          disabled:!vaultAccess || !canAccessMarket(),
+          blockedHint:!vaultAccess ? vaultBlockedMessage : 'Visit a shop to sell.'
         });
-      }else if(source==='haul'){
-        actionConfigs.push({label:'Pack into backpack',action:()=>moveLootItem(item,'inventory'),disabled:!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)});
-        actionConfigs.push({
-          label:'Store in vault',
-          action:()=>moveLootItem(item,'stash'),
-          disabled:!vaultAccess || !hasCapacityFor(state.stash.items,state.stashLimit,item,1),
-          blockedHint:!vaultAccess ? vaultBlockedMessage : ''
-        });
-        actionConfigs.push({label:'Break down for scrap',action:()=>scrapLootItem(item)});
-        actionConfigs.push({label:'Sell to market',action:()=>sellLootItem(item),disabled:!isMarketZone(),blockedHint:'Visit the market to sell.'});
       }else if(source==='missionReward' && missionRewardsReady){
         actionConfigs.push({label:'Pack into backpack',action:()=>claimRewardToInventory(source,item),disabled:!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)});
         if(data.slot){
@@ -1689,11 +1689,11 @@
     function renderMarketStock(){
       if(!dom.marketInventory) return;
       dom.marketInventory.innerHTML='';
-      const marketActive=isMarketZone();
+      const marketActive=canAccessMarket();
       if(dom.marketHint){
         dom.marketHint.textContent=marketActive
-          ? 'Market vendors are online in Iron Ward.'
-          : 'Travel to Iron Ward to access market vendors.';
+          ? 'Market vendors are online. Trade while the shop is open.'
+          : 'Visit a shop in your current location to access vendors.';
       }
       MARKET_STOCK.forEach(stock=>{
         const data=getItem(stock.id);
@@ -1710,9 +1710,10 @@
         cost.textContent=`${stock.cost} credits`;
         const btn=document.createElement('button');
         btn.textContent=`Buy ${stock.id}`;
-        const canBuy=marketActive && state.credits>=stock.cost;
+        const canBuy=marketActive && state.credits>=stock.cost && hasCapacityFor(state.inventory,getBackpackLimit(),stock.id,1);
         btn.disabled=!canBuy;
-        if(!marketActive) btn.title='Visit the market to buy.';
+        if(!marketActive) btn.title='Visit a shop to buy.';
+        else if(!hasCapacityFor(state.inventory,getBackpackLimit(),stock.id,1)) btn.title='Backpack full.';
         else if(state.credits<stock.cost) btn.title='Not enough credits.';
         btn.onclick=()=>buyMarketItem(stock.id);
         card.appendChild(titleRow);
@@ -1918,7 +1919,6 @@
       renderItemDetails();
       renderInventory();
       renderStash();
-      renderHaul();
       renderMissionStatus();
       renderIdleOps();
     }
@@ -1928,7 +1928,6 @@
       renderItemDetails();
       renderInventory();
       renderStash();
-      renderHaul();
       renderMissionStatus();
       renderIdleOps();
     }
@@ -1977,7 +1976,9 @@
     dom.returnMain.onclick=()=>setScreen('main');
 
     function renderExcursionStatus(){
-      dom.excursionStatus.innerHTML=`<b>Loop status:</b> Energy ${state.energy}/${state.maxEnergy} · Backpack ${getBackpackUsage()}/${getBackpackLimit()} · Haul ${state.lootQueue.length} · Stash ${getStashUsage()}/${state.stashLimit} · Loadout ${getEquipmentUsageCount()}/${getEquipmentSlotTotal()}.`;
+      const scene=ensureZoneScene(state.zone);
+      const locationLabel=scene?.title ? `${state.zone.name} · ${scene.title}` : state.zone.name;
+      dom.excursionStatus.innerHTML=`<b>Loop status:</b> Location ${locationLabel} · Energy ${state.energy}/${state.maxEnergy} · Backpack ${getBackpackUsage()}/${getBackpackLimit()} · Stash ${getStashUsage()}/${state.stashLimit} · Loadout ${getEquipmentUsageCount()}/${getEquipmentSlotTotal()}.`;
       dom.tempoHint.textContent='Run missions to earn XP, then review rewards and swap in better gear.';
     }
 
@@ -1988,69 +1989,157 @@
     }
 
     function renderZone(){
-      dom.zoneTitle.textContent=state.zone.name;
-      dom.zoneDesc.textContent=state.zone.desc;
+      const scene=ensureZoneScene(state.zone);
+      dom.zoneTitle.textContent=scene?.title ? `${state.zone.name} · ${scene.title}` : state.zone.name;
+      dom.zoneDesc.textContent=scene?.desc || state.zone.desc;
       dom.zoneBadge.textContent=`${state.zone.risk} risk`;
     }
 
     function renderRaidActions(){
       dom.raidActions.innerHTML='';
-      if(isHubZone()){
+      const exp=expansions[state.zone.id];
+      const scene=ensureZoneScene(state.zone);
+      if(scene && scene.options && scene.options.length){
+        scene.options.forEach(option=>{
+          const btn=document.createElement('button');
+          const label=option.label || 'Local action';
+          btn.innerHTML=`<span>${label}</span><span class="small">${option.risk} · ${option.time} min</span>`;
+          btn.onclick=()=>startSceneAction(option);
+          if(state.mission.active || state.travel.active) btn.disabled=true;
+          if(option.risk==='high') btn.classList.add('danger');
+          dom.raidActions.appendChild(btn);
+        });
+      }
+      const vendorEligible=isMarketZone() || state.zone.id==='safehouse';
+      if(vendorEligible){
+        const shopBtn=document.createElement('button');
+        shopBtn.innerHTML=`<span>Visit shop</span><span class="small">trade · vendors</span>`;
+        shopBtn.onclick=()=>openMarketAccess();
+        if(state.mission.active || state.travel.active) shopBtn.disabled=true;
+        dom.raidActions.appendChild(shopBtn);
+      }
+      if(isHubZone() && !dom.raidActions.children.length){
         const blocked=document.createElement('div');
         blocked.className='muted-box';
         blocked.textContent='Hub zone secure. Use the transit console to select a field site.';
         dom.raidActions.appendChild(blocked);
         return;
       }
-      const exp=expansions[state.zone.id];
-      RAID_TEMPLATES.forEach(raid=>{
-        const btn=document.createElement('button');
-        const costParts=[`${raid.energy} energy`];
-        if(raid.key) costParts.push(`${raid.key} key`);
-        btn.innerHTML=`<span>${raid.label}</span><span class="small">${raid.risk} · ${raid.time} min · ${costParts.join(' · ')}</span>`;
-        btn.onclick=()=>startMission(raid);
-        if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})) btn.disabled=true;
-        if(raid.risk==='high') btn.classList.add('danger');
-        dom.raidActions.appendChild(btn);
-      });
-      if(exp && exp.quests && exp.quests.length){
-        exp.quests.forEach(quest=>{
+      if(!isHubZone()){
+        RAID_TEMPLATES.forEach(raid=>{
           const btn=document.createElement('button');
-          const questFlag=quest.flag || quest.id;
-          const completed=quest.once && questFlag && state.flags.has(questFlag);
-          const label=quest.title || 'Local contract';
-          const time=quest.time || 10;
-          const risk=quest.risk || state.zone.risk;
-          const energy=quest.energy ?? 12;
-          const keyCost=quest.key || 0;
-          const costParts=[`${energy} energy`];
-          if(keyCost) costParts.push(`${keyCost} key`);
-          btn.innerHTML=`<span>${label}</span><span class="small">${risk} · ${time} min · ${costParts.join(' · ')}</span>`;
-          btn.onclick=()=>runQuest(quest);
-          if(completed){
-            btn.disabled=true;
-            btn.title='Contract complete.';
-          }else if(state.mission.active || state.travel.active || !canAfford({energy,keys:keyCost})){
-            btn.disabled=true;
-          }
-          if(risk==='high') btn.classList.add('danger');
+          const costParts=[`${raid.energy} energy`];
+          if(raid.key) costParts.push(`${raid.key} key`);
+          btn.innerHTML=`<span>${raid.label}</span><span class="small">${raid.risk} · ${raid.time} min · ${costParts.join(' · ')}</span>`;
+          btn.onclick=()=>startMission(raid);
+          if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})) btn.disabled=true;
+          if(raid.risk==='high') btn.classList.add('danger');
           dom.raidActions.appendChild(btn);
         });
+        if(exp && exp.quests && exp.quests.length){
+          exp.quests.forEach(quest=>{
+            const btn=document.createElement('button');
+            const questFlag=quest.flag || quest.id;
+            const completed=quest.once && questFlag && state.flags.has(questFlag);
+            const label=quest.title || 'Local contract';
+            const time=quest.time || 10;
+            const risk=quest.risk || state.zone.risk;
+            const energy=quest.energy ?? 12;
+            const keyCost=quest.key || 0;
+            const costParts=[`${energy} energy`];
+            if(keyCost) costParts.push(`${keyCost} key`);
+            btn.innerHTML=`<span>${label}</span><span class="small">${risk} · ${time} min · ${costParts.join(' · ')}</span>`;
+            btn.onclick=()=>runQuest(quest);
+            if(completed){
+              btn.disabled=true;
+              btn.title='Contract complete.';
+            }else if(state.mission.active || state.travel.active || !canAfford({energy,keys:keyCost})){
+              btn.disabled=true;
+            }
+            if(risk==='high') btn.classList.add('danger');
+            dom.raidActions.appendChild(btn);
+          });
+        }
+        const combatBtn=document.createElement('button');
+        combatBtn.innerHTML=`<span>Engage hostiles</span><span class="small">${state.zone.risk} · ${getCombatProfile(state.zone.risk).time} min · 10 energy</span>`;
+        combatBtn.onclick=startCombatMission;
+        if(state.mission.active || state.travel.active || !canAfford({energy:10})) combatBtn.disabled=true;
+        combatBtn.classList.add('danger');
+        dom.raidActions.appendChild(combatBtn);
+        const canCamp=state.screen==='locations' && state.zone.id!=='safehouse';
+        if(canCamp){
+          const rest=document.createElement('button');
+          rest.innerHTML=`<span>Make camp</span><span class="small">recover · ${ACTION_TIMES.camp} min</span>`;
+          rest.onclick=runCamp;
+          if(state.mission.active || state.travel.active) rest.disabled=true;
+          dom.raidActions.appendChild(rest);
+        }
       }
-      const combatBtn=document.createElement('button');
-      combatBtn.innerHTML=`<span>Engage hostiles</span><span class="small">${state.zone.risk} · ${getCombatProfile(state.zone.risk).time} min · 10 energy</span>`;
-      combatBtn.onclick=startCombatMission;
-      if(state.mission.active || state.travel.active || !canAfford({energy:10})) combatBtn.disabled=true;
-      combatBtn.classList.add('danger');
-      dom.raidActions.appendChild(combatBtn);
-      const canCamp=state.screen==='locations' && state.zone.id!=='safehouse';
-      if(canCamp){
-        const rest=document.createElement('button');
-        rest.innerHTML=`<span>Make camp</span><span class="small">recover · ${ACTION_TIMES.camp} min</span>`;
-        rest.onclick=runCamp;
-        if(state.mission.active || state.travel.active) rest.disabled=true;
-        dom.raidActions.appendChild(rest);
+    }
+
+    function openMarketAccess(){
+      if(state.mission.active || state.travel.active){
+        setCodex('Finish current operations before visiting vendors.');
+        return;
       }
+      if(!(isMarketZone() || state.zone.id==='safehouse')){
+        setCodex('No vendors are set up here.');
+        return;
+      }
+      state.marketAccess={active:true,zoneId:state.zone.id};
+      setCodex('Vendor bay open. Access the stash tab to trade.');
+      setActiveTab('field');
+      renderAll();
+    }
+
+    function startSceneAction(option){
+      if(state.mission.active){
+        setCodex('Mission already underway.');
+        return;
+      }
+      if(state.travel.active){
+        setCodex('Finish travel before taking local action.');
+        return;
+      }
+      const label=option.label || 'Local action';
+      const risk=option.risk || state.zone.risk;
+      const time=option.time || 8;
+      const raidLike={
+        id:`scene-${Date.now()}`,
+        label,
+        desc:'',
+        time,
+        energy:0,
+        loot:0,
+        risk
+      };
+      const now=Date.now();
+      state.mission={
+        active:true,
+        type:'scene',
+        raid:raidLike,
+        startedAt:now,
+        endsAt:now+(time*1000),
+        completed:false,
+        success:null,
+        summary:'',
+        rewards:[],
+        statusMessage:`Action underway: ${label}.`,
+        location:{...state.zone},
+        fleeing:false,
+        fleeEndsAt:null,
+        pendingResolution:null,
+        xpReward:computeMissionXp(risk,time),
+        rewardEffects:{success:option.success||'',fail:option.fail||''},
+        questMeta:null,
+        combat:null,
+        sceneTarget:option.target || null
+      };
+      setCodex(`Action launched: ${label}.`);
+      logMsg(`Local action: ${label} (${time} min).`);
+      setActiveTab('hub');
+      setScreen('mission');
+      renderAll();
     }
 
     function resolveTravelIfComplete(){
@@ -2067,6 +2156,7 @@
       }
       if(Date.now()<state.travel.endsAt) return false;
       state.zone=state.travel.target;
+      clearMarketAccess();
       state.travel={active:false,endsAt:null,target:null};
       setCodex(`Arrived at ${state.zone.name}.`);
       logMsg(`Transit complete: ${state.zone.name}.`);
@@ -2114,7 +2204,11 @@
       const percent=clamp(((totalMs-remainingMs)/totalMs)*100,0,100);
       dom.missionProgress.querySelector('span').style.width=`${state.mission.completed ? 100 : percent}%`;
       const remainingSec=Math.ceil(remainingMs/1000);
-      const labelPrefix=state.mission.type==='combat' ? 'In combat' : (state.mission.type==='contract' ? 'In contract' : 'In raid');
+      const labelPrefix=state.mission.type==='combat'
+        ? 'In combat'
+        : (state.mission.type==='contract'
+          ? 'In contract'
+          : (state.mission.type==='scene' ? 'In action' : 'In raid'));
       dom.missionTitle.textContent=state.mission.completed
         ? `Mission complete: ${raid.label}`
         : `${labelPrefix}: ${raid.label}`;
@@ -2238,47 +2332,6 @@
       }
     }
 
-    function renderHaul(){
-      dom.haul.innerHTML='';
-      if(!state.lootQueue.length){
-        dom.haul.innerHTML='<div class="muted-box">No loot waiting. Run a raid to generate a haul.</div>';
-        return;
-      }
-      const grid=document.createElement('div');
-      grid.className='item-grid';
-      groupItems(state.lootQueue).forEach(({id,count,data})=>{
-        grid.appendChild(buildItemRow({id,count,data,source:'haul'}));
-      });
-      dom.haul.appendChild(grid);
-      const bulk=document.createElement('div');
-      bulk.className='inventory inline-actions';
-      const packAll=document.createElement('button');
-      packAll.textContent='Pack all';
-      packAll.onclick=()=>bulkMoveLoot('inventory');
-      const stashAll=document.createElement('button');
-      stashAll.textContent='Stash all';
-      stashAll.onclick=()=>bulkMoveLoot('stash');
-      if(!canAccessVault()){
-        stashAll.disabled=true;
-        stashAll.title=vaultBlockedMessage;
-      }
-      const sellAll=document.createElement('button');
-      sellAll.textContent='Sell all';
-      sellAll.onclick=bulkSellLoot;
-      if(!isMarketZone()){
-        sellAll.disabled=true;
-        sellAll.title='Visit the market to sell.';
-      }
-      const scrapAll=document.createElement('button');
-      scrapAll.textContent='Scrap all';
-      scrapAll.onclick=bulkScrapLoot;
-      bulk.appendChild(packAll);
-      bulk.appendChild(stashAll);
-      bulk.appendChild(sellAll);
-      bulk.appendChild(scrapAll);
-      dom.haul.appendChild(bulk);
-    }
-
     function renderStash(){
       dom.stash.innerHTML='';
       dom.stashActions.innerHTML='';
@@ -2361,9 +2414,9 @@
       if(!vaultAccess){
         sellAll.disabled=true;
         sellAll.title=vaultBlockedMessage;
-      }else if(!isMarketZone()){
+      }else if(!canAccessMarket()){
         sellAll.disabled=true;
-        sellAll.title='Visit the market to sell.';
+        sellAll.title='Visit a shop to sell.';
       }
       const scrapAll=document.createElement('button');
       scrapAll.textContent='Scrap all stash';
@@ -2431,8 +2484,12 @@
           const item=token.slice(5).trim();
           if(deferItemsTo){
             deferItemsTo.push(item);
-          }else if(hasCapacityFor(state.inventory,getBackpackLimit(),item,1)) state.inventory.push(item);
-          else state.lootQueue.push(item);
+          }else{
+            const routed=routeItemGain(item);
+            if(routed==='lost'){
+              logMsg(`${item} lost: no storage space available.`);
+            }
+          }
           return;
         }
         if(token.startsWith('flag:')){ state.flags.add(token.slice(5)); return; }
@@ -2484,9 +2541,17 @@
           const drop=rollLootDrop(effectiveRisk,lootBonus);
           addItemCopies(rewards,drop.id,drop.count);
         }
-        if(deferItemsTo) deferItemsTo.push(...rewards);
-        else state.lootQueue.push(...rewards);
-        logMsg(`✓ ${raid.label} succeeded. Haul inbound.`);
+        if(deferItemsTo){
+          deferItemsTo.push(...rewards);
+        }else{
+          rewards.forEach(item=>{
+            const routed=routeItemGain(item);
+            if(routed==='lost'){
+              logMsg(`${item} lost: no storage space available.`);
+            }
+          });
+        }
+        logMsg(`✓ ${raid.label} succeeded. Rewards secured.`);
       }else{
         applyEffects('hp-6,morale-4,temp-2','fail');
         rollComplication('raid');
@@ -2544,7 +2609,8 @@
         fleeEndsAt:null,
         xpReward:computeMissionXp(combatProfile.risk,combatProfile.time),
         rewardEffects:{success:'',fail:''},
-        combat:combatState
+        combat:combatState,
+        sceneTarget:null
       };
       setCodex('Hostile contact! Hold out or flee.');
       logMsg(`Combat encounter triggered by ${pending.label}. ${describeCombatState(combatState)}`);
@@ -2765,7 +2831,8 @@
         xpReward:computeMissionXp(profile.risk,profile.time),
         rewardEffects:{success:'',fail:''},
         questMeta:null,
-        combat:combatState
+        combat:combatState,
+        sceneTarget:null
       };
       setCodex('You move to engage hostile contacts.');
       logMsg(`Combat sortie launched against ${profile.enemyName}. ${describeCombatState(combatState)}`);
@@ -2819,7 +2886,8 @@
         xpReward:computeMissionXp(raidLike.risk,raidLike.time),
         rewardEffects:{success:quest.success||'',fail:quest.fail||''},
         questMeta:{flag:questFlag,once:quest.once},
-        combat:null
+        combat:null,
+        sceneTarget:null
       };
       setCodex(`Contract launched: ${raidLike.label}.`);
       logMsg(`Contract deployed: ${raidLike.label} (${raidLike.time} min op).`);
@@ -2829,7 +2897,7 @@
     }
 
     function resetMissionState(){
-      state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null};
+      state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null};
     }
     function closeMission({auto=false}={}){
       resetMissionState();
@@ -2877,7 +2945,8 @@
         xpReward:computeMissionXp(raid.risk,raid.time),
         rewardEffects:{success:'',fail:''},
         questMeta:null,
-        combat:null
+        combat:null,
+        sceneTarget:null
       };
       setCodex(`Mission launched: ${raid.label}.`);
       logMsg(`Mission launched: ${raid.label} (${raid.time} min op).`);
@@ -2923,6 +2992,29 @@
         return;
       }
 
+      if(missionType==='scene'){
+        const rewards=[];
+        const effectiveRisk=raid.risk || state.zone.risk;
+        const failChance=computeFailChance(effectiveRisk);
+        const success=Math.random()>failChance;
+        const pending={
+          label:raid.label,
+          success,
+          risk:effectiveRisk,
+          xpReward:state.mission.xpReward,
+          successEffects:state.mission.rewardEffects.success,
+          failEffects:state.mission.rewardEffects.fail,
+          flag:null,
+          once:false
+        };
+        preparePendingResolution(pending,rewards);
+        if(state.mission.sceneTarget){
+          state.zone.sceneId=state.mission.sceneTarget;
+        }
+        resolvePendingMission(success ? 'success' : 'fail');
+        return;
+      }
+
       const rewards=[];
       const raidResult=runRaidInstant(raid,state.mission.location,{deferItemsTo:rewards});
       const success=raidResult.success;
@@ -2945,112 +3037,13 @@
       resolvePendingMission(success ? 'success' : 'fail');
     }
 
-    function moveLootItem(item,target){
-      removeItem(state.lootQueue,item);
-      if(target==='inventory'){
-        if(!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)){
-          setCodex('Backpack full. Make room first.');
-          state.lootQueue.push(item);
-          return;
-        }
-        state.inventory.push(item);
-        state.selected={source:'inventory',item};
-      }else if(target==='stash'){
-        if(!canAccessVault()){
-          setCodex(vaultBlockedMessage);
-          state.lootQueue.push(item);
-          return;
-        }
-        if(!hasCapacityFor(state.stash.items,state.stashLimit,item,1)){
-          setCodex('Stash full. Sell or scrap to clear space.');
-          state.lootQueue.push(item);
-          return;
-        }
-        state.stash.items.push(item);
-        state.selected={source:'stash',item};
-      }
-      renderAll();
-    }
-
-    function bulkMoveLoot(target){
-      const items=[...state.lootQueue];
-      state.lootQueue=[];
-      items.forEach(item=>{
-        if(target==='inventory' && hasCapacityFor(state.inventory,getBackpackLimit(),item,1)){
-          state.inventory.push(item);
-          state.selected={source:'inventory',item};
-        }else if(target==='stash' && hasCapacityFor(state.stash.items,state.stashLimit,item,1)){
-          if(!canAccessVault()){
-            state.lootQueue.push(item);
-            return;
-          }
-          state.stash.items.push(item);
-          state.selected={source:'stash',item};
-        }else{
-          state.lootQueue.push(item);
-        }
-      });
-      if(target==='stash' && !canAccessVault()){
-        setCodex(vaultBlockedMessage);
-      }else if(state.lootQueue.length){
-        setCodex('Some loot could not be moved due to capacity.');
-      }
-      renderAll();
-    }
-
-    function sellLootItem(item){
-      if(!isMarketZone()){
-        setCodex('Visit the market to sell items.');
-        return;
-      }
-      const data=getItem(item);
-      removeItem(state.lootQueue,item);
-      state.credits+=data.value || 1;
-      state.selected={source:null,item:null};
-      renderAll();
-    }
-
-    function scrapLootItem(item){
-      const data=getItem(item);
-      removeItem(state.lootQueue,item);
-      const salvage=data.salvage || Math.max(1,Math.floor((data.value || 1)/2));
-      state.scrap+=salvage;
-      state.selected={source:null,item:null};
-      renderAll();
-    }
-
-    function bulkSellLoot(){
-      if(!isMarketZone()){
-        setCodex('Visit the market to sell items.');
-        return;
-      }
-      state.lootQueue.forEach(item=>{
-        const data=getItem(item);
-        state.credits+=data.value || 1;
-      });
-      state.lootQueue=[];
-      state.selected={source:null,item:null};
-      renderAll();
-    }
-
-    function bulkScrapLoot(){
-      state.lootQueue.forEach(item=>{
-        const data=getItem(item);
-        const salvage=data.salvage || Math.max(1,Math.floor((data.value || 1)/2));
-        state.scrap+=salvage;
-      });
-      state.lootQueue=[];
-      state.selected={source:null,item:null};
-      renderAll();
-    }
-
     function sellStashItem(item){
       if(!canAccessVault()){
         setCodex(vaultBlockedMessage);
         return;
       }
-      if(!isMarketZone()){
-        setCodex('Visit the market to sell items.');
+      if(!canAccessMarket()){
+        setCodex('Visit a shop to sell items.');
         return;
       }
       const data=getItem(item);
@@ -3078,8 +3071,8 @@
         setCodex(vaultBlockedMessage);
         return;
       }
-      if(!isMarketZone()){
-        setCodex('Visit the market to sell items.');
+      if(!canAccessMarket()){
+        setCodex('Visit a shop to sell items.');
         return;
       }
       state.stash.items.forEach(item=>{
@@ -3188,15 +3181,17 @@
           setCodex('Already rerouting. Stand by.');
           return;
         }
+        const targetScene=exp.door?.target || Object.keys(exp.scenes || {})[0] || null;
         const target={
           id:exp.meta.id,
           name:exp.meta.name,
           risk:exp.door?.risk || 'low',
-          desc:exp.door?.desc || exp.door?.hint || 'Salvage zone marked by strange chatter.'
+          desc:exp.door?.desc || exp.door?.hint || 'Salvage zone marked by strange chatter.',
+          sceneId:targetScene
         };
         state.travel={
           active:true,
-          endsAt:Date.now()+1000,
+          endsAt:Date.now(),
           target
         };
         if(exp.door?.note) setCodex(exp.door.note);
@@ -3289,7 +3284,6 @@
       renderIdleOps();
       renderZone();
       renderRaidActions();
-      renderHaul();
       renderStash();
       renderItemDetails();
       setInventoryScreen(state.inventoryScreen);
