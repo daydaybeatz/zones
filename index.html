@@ -233,10 +233,6 @@
               </div>
               <div id="raidActions"></div>
             </section>
-            <section class="panel">
-              <h3>Special Contracts</h3>
-              <div id="questBoard" class="item-grid"></div>
-            </section>
           </div>
           <div id="screen-mission" class="screen">
             <section class="panel">
@@ -296,28 +292,16 @@
           <h3>Stash Vault</h3>
           <div class="subtabs" id="stashNav">
             <button data-stash-screen="vault" class="active">Vault</button>
-            <button data-stash-screen="market">Market Dock</button>
           </div>
           <div class="inventory-layout">
             <div>
               <div id="stashVault" class="subscreen active">
                 <h4>Vault Inventory <span class="small" id="stashCount"></span></h4>
                 <div id="stash"></div>
-              </div>
-              <div id="stashMarket" class="subscreen">
-                <div class="command-card">
-                  <div class="command-title">Market Dock Status</div>
-                  <div class="status-toggle">
-                    <span id="shopStatus">Docked: No</span>
-                    <button id="toggleShop" class="btn-secondary">Request docking clearance</button>
-                  </div>
-                  <div class="command-hint">Docking grants sell access. Scrap processing is always available.</div>
-                  <div id="stashActions"></div>
-                  <div class="market-section">
-                    <h4>Vendor stock</h4>
-                    <div class="command-hint">Vendors rotate survival gear, pack upgrades, and weapons.</div>
-                    <div id="marketInventory" class="market-grid"></div>
-                  </div>
+                <div class="market-section">
+                  <h4>Vendor stock</h4>
+                  <div class="command-hint" id="marketHint">Travel to Iron Ward to access market vendors.</div>
+                  <div id="marketInventory" class="market-grid"></div>
                 </div>
               </div>
             </div>
@@ -348,14 +332,13 @@
       credits:50,
       keys:1,
       level:1,xp:0,nextLevelXp:80,
-      loadoutUpgradeLevel:0,
       day:1,timeMinutes:6*60,
-      backpackLimit:12,
+      backpackLimit:0,
       stashLimit:40,
       stashUpgradeLevel:0,
       craftingPage:0,
       inventory:["rusty flashlight","ration bar","scrap wiring"],
-      equipped:[],
+      equipped:['basic backpack'],
       codex:["Hub online. Haul bays clear."],
       stash:{name:'Vault Stash',items:[]},
       lootQueue:[],
@@ -367,20 +350,20 @@
       mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null},
       inventoryScreen:'backpack',
       stashScreen:'vault',
-      selected:{source:null,item:null},
-      atShop:false
+      selected:{source:null,item:null}
     };
 
     const ITEM_CATALOG={
-      'rusty flashlight':{type:'tool',rarity:'common',value:6,mods:{riskMod:-0.02}},
-      'cargo pants':{type:'armor',rarity:'common',value:7,mods:{carryBonus:2,insulation:0.4}},
-      'field backpack':{type:'armor',rarity:'uncommon',value:14,mods:{carryBonus:4,insulation:0.2}},
-      'flare':{type:'tool',rarity:'uncommon',value:10,mods:{lootBonus:0.04}},
-      'patch kit':{type:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.04}},
-      'patch-kit':{type:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.04}},
-      'utility coat':{type:'armor',rarity:'uncommon',value:12,mods:{carryBonus:3,staminaBonus:1,insulation:0.8}},
-      'microcell':{type:'tool',rarity:'rare',value:22,mods:{idleSpeed:0.15,energyRegen:1,staminaBonus:2}},
-      'rigged backpack':{type:'armor',rarity:'rare',value:24,mods:{carryBonus:6,insulation:0.3}},
+      'basic backpack':{type:'armor',slot:'backpack',rarity:'common',value:6,mods:{carryBonus:6,insulation:0.1}},
+      'rusty flashlight':{type:'tool',slot:'tool',rarity:'common',value:6,mods:{riskMod:-0.02}},
+      'cargo pants':{type:'armor',slot:'pants',rarity:'common',value:7,mods:{insulation:0.4}},
+      'field backpack':{type:'armor',slot:'backpack',rarity:'uncommon',value:14,mods:{carryBonus:9,insulation:0.2}},
+      'flare':{type:'tool',slot:'tool',rarity:'uncommon',value:10,mods:{lootBonus:0.04}},
+      'patch kit':{type:'tool',slot:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.04}},
+      'patch-kit':{type:'tool',slot:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.04}},
+      'utility coat':{type:'armor',slot:'chest',rarity:'uncommon',value:12,mods:{staminaBonus:1,insulation:0.8}},
+      'microcell':{type:'tool',slot:'tool',rarity:'rare',value:22,mods:{idleSpeed:0.15,energyRegen:1,staminaBonus:2}},
+      'rigged backpack':{type:'armor',slot:'backpack',rarity:'rare',value:24,mods:{carryBonus:12,insulation:0.3}},
       'bandage':{type:'consumable',rarity:'common',value:4,effect:'hp+8'},
       'ration bar':{type:'consumable',rarity:'common',value:3,effect:'hunger-12,morale+2'},
       'water flask':{type:'consumable',rarity:'common',value:4,effect:'thirst-12'},
@@ -394,84 +377,84 @@
       'old coin':{type:'junk',rarity:'uncommon',value:6,salvage:1},
       'lockbox key':{type:'key',rarity:'rare',value:18},
       'echo prism':{type:'junk',rarity:'rare',value:20,salvage:6},
-      'drone core':{type:'tool',rarity:'epic',value:32,mods:{lootBonus:0.08,energyRegen:2}},
+      'drone core':{type:'tool',slot:'tool',rarity:'epic',value:32,mods:{lootBonus:0.08,energyRegen:2}},
       'relic shard':{type:'junk',rarity:'legendary',value:60,salvage:12},
-      'rust town crown':{type:'armor',rarity:'legendary',value:85,mods:{moraleBonus:4,insulation:0.6}},
-      'iron crown':{type:'armor',rarity:'legendary',value:85,mods:{moraleBonus:4,insulation:0.6}},
-      'safehouse warden coat':{type:'armor',rarity:'legendary',value:90,mods:{staminaBonus:4,insulation:1}},
-      'forest monolith sigil':{type:'tool',rarity:'legendary',value:95,mods:{lootBonus:0.12,energyRegen:2}},
-      'neon riot jacket':{type:'armor',rarity:'legendary',value:88,mods:{carryBonus:3,insulation:0.9,moraleBonus:2}},
+      'rust town crown':{type:'armor',slot:'helmet',rarity:'legendary',value:85,mods:{moraleBonus:4,insulation:0.6}},
+      'iron crown':{type:'armor',slot:'helmet',rarity:'legendary',value:85,mods:{moraleBonus:4,insulation:0.6}},
+      'safehouse warden coat':{type:'armor',slot:'chest',rarity:'legendary',value:90,mods:{staminaBonus:4,insulation:1}},
+      'forest monolith sigil':{type:'tool',slot:'tool',rarity:'legendary',value:95,mods:{lootBonus:0.12,energyRegen:2}},
+      'neon riot jacket':{type:'armor',slot:'chest',rarity:'legendary',value:88,mods:{insulation:0.9,moraleBonus:2}},
       'field rations':{type:'consumable',rarity:'common',value:5,effect:'hunger-16,stamina+4'},
       'water canister':{type:'consumable',rarity:'common',value:5,effect:'thirst-18,temp-1'},
       'painkillers':{type:'consumable',rarity:'uncommon',value:11,effect:'hp+12,morale+2'},
       'glowing herbs':{type:'consumable',rarity:'uncommon',value:10,effect:'rads-4,temp+1'},
       'military rations':{type:'consumable',rarity:'uncommon',value:12,effect:'hunger-22,stamina+6'},
-      'coil battery':{type:'tool',rarity:'uncommon',value:13,mods:{energyRegen:1}},
-      'spare filter':{type:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.03}},
+      'coil battery':{type:'tool',slot:'tool',rarity:'uncommon',value:13,mods:{energyRegen:1}},
+      'spare filter':{type:'tool',slot:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.03}},
       'copper wire':{type:'junk',rarity:'common',value:4,salvage:3,stackable:true},
       'reactor shard':{type:'junk',rarity:'rare',value:34,salvage:10},
-      'exo brace':{type:'armor',rarity:'rare',value:28,mods:{staminaBonus:4,insulation:0.4}},
-      'neon sneakers':{type:'armor',rarity:'uncommon',value:16,mods:{staminaBonus:2}},
-      'underground map':{type:'tool',rarity:'uncommon',value:15,mods:{riskMod:-0.05,lootBonus:0.03}},
-      'meme-drive':{type:'tool',rarity:'rare',value:26,mods:{lootBonus:0.06}},
-      'holo wristband':{type:'tool',rarity:'uncommon',value:14,mods:{moraleBonus:2}},
-      'riot shield':{type:'armor',rarity:'rare',value:30,mods:{riskMod:-0.06,insulation:0.5}},
-      'flare paint':{type:'tool',rarity:'uncommon',value:13,mods:{lootBonus:0.05}},
-      'flashbang':{type:'tool',rarity:'rare',value:24,mods:{combatBonus:5}},
-      'foam canister':{type:'tool',rarity:'uncommon',value:15,mods:{combatBonus:3,riskMod:-0.02}},
+      'exo brace':{type:'armor',slot:'gloves',rarity:'rare',value:28,mods:{staminaBonus:4,insulation:0.4}},
+      'neon sneakers':{type:'armor',slot:'shoes',rarity:'uncommon',value:16,mods:{staminaBonus:2}},
+      'underground map':{type:'tool',slot:'tool',rarity:'uncommon',value:15,mods:{riskMod:-0.05,lootBonus:0.03}},
+      'meme-drive':{type:'tool',slot:'tool',rarity:'rare',value:26,mods:{lootBonus:0.06}},
+      'holo wristband':{type:'tool',slot:'tool',rarity:'uncommon',value:14,mods:{moraleBonus:2}},
+      'riot shield':{type:'weapon',slot:'weapon',rarity:'rare',value:30,mods:{riskMod:-0.06,insulation:0.5}},
+      'flare paint':{type:'tool',slot:'tool',rarity:'uncommon',value:13,mods:{lootBonus:0.05}},
+      'flashbang':{type:'tool',slot:'tool',rarity:'rare',value:24,mods:{combatBonus:5}},
+      'foam canister':{type:'tool',slot:'tool',rarity:'uncommon',value:15,mods:{combatBonus:3,riskMod:-0.02}},
       'viral clip drive':{type:'junk',rarity:'rare',value:28,salvage:7},
-      'limited hoodie':{type:'armor',rarity:'rare',value:27,mods:{moraleBonus:3,insulation:0.6}},
+      'limited hoodie':{type:'armor',slot:'chest',rarity:'rare',value:27,mods:{moraleBonus:3,insulation:0.6}},
       'payload crate':{type:'junk',rarity:'uncommon',value:18,salvage:5},
-      'stun baton':{type:'tool',rarity:'rare',value:29,mods:{combatBonus:6}},
+      'stun baton':{type:'weapon',slot:'weapon',rarity:'rare',value:29,mods:{combatBonus:6}},
       'mystery supply':{type:'junk',rarity:'rare',value:25,salvage:6},
       'salvaged tech':{type:'junk',rarity:'rare',value:27,salvage:8},
       'shock gel':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+10,temp+1'},
-      'overclock chip':{type:'tool',rarity:'rare',value:31,mods:{energyRegen:2,combatBonus:4}},
-      'insulated cloak':{type:'armor',rarity:'rare',value:26,mods:{insulation:1.1,riskMod:-0.02}},
-      'scavenger harness':{type:'armor',rarity:'uncommon',value:17,mods:{carryBonus:5}},
+      'overclock chip':{type:'tool',slot:'tool',rarity:'rare',value:31,mods:{energyRegen:2,combatBonus:4}},
+      'insulated cloak':{type:'armor',slot:'chest',rarity:'rare',value:26,mods:{insulation:1.1,riskMod:-0.02}},
+      'scavenger harness':{type:'armor',slot:'chest',rarity:'uncommon',value:17,mods:{staminaBonus:2}},
       'hardened canteen':{type:'consumable',rarity:'uncommon',value:9,effect:'thirst-16,stamina+3'},
       'ember ration':{type:'consumable',rarity:'common',value:6,effect:'hunger-14,temp+2'},
-      'signal jammer':{type:'tool',rarity:'rare',value:33,mods:{riskMod:-0.07,combatBonus:2}},
+      'signal jammer':{type:'tool',slot:'tool',rarity:'rare',value:33,mods:{riskMod:-0.07,combatBonus:2}},
 
       /* base items */
-      'pocket pack':{type:'upgrade',rarity:'common',value:18,effect:'backpack+2'},
-      'scout daypack':{type:'upgrade',rarity:'uncommon',value:26,effect:'backpack+3'},
-      'salvage tote':{type:'upgrade',rarity:'uncommon',value:24,effect:'backpack+4'},
-      'expedition frame pack':{type:'upgrade',rarity:'rare',value:44,effect:'backpack+5'},
-      'jury-rigged blade':{type:'tool',rarity:'common',value:9,mods:{combatBonus:3}},
-      'scrap spear':{type:'tool',rarity:'uncommon',value:18,mods:{combatBonus:5,lootBonus:0.01}},
-      'pipe rifle':{type:'tool',rarity:'rare',value:32,mods:{combatBonus:7,riskMod:-0.01}},
+      'pocket pack':{type:'armor',slot:'backpack',rarity:'common',value:18,mods:{carryBonus:7}},
+      'scout daypack':{type:'armor',slot:'backpack',rarity:'uncommon',value:26,mods:{carryBonus:8}},
+      'salvage tote':{type:'armor',slot:'backpack',rarity:'uncommon',value:24,mods:{carryBonus:9}},
+      'expedition frame pack':{type:'armor',slot:'backpack',rarity:'rare',value:44,mods:{carryBonus:14}},
+      'jury-rigged blade':{type:'weapon',slot:'weapon',rarity:'common',value:9,mods:{combatBonus:3}},
+      'scrap spear':{type:'weapon',slot:'weapon',rarity:'uncommon',value:18,mods:{combatBonus:5,lootBonus:0.01}},
+      'pipe rifle':{type:'weapon',slot:'weapon',rarity:'rare',value:32,mods:{combatBonus:7,riskMod:-0.01}},
       'compact medkit':{type:'consumable',rarity:'uncommon',value:14,effect:'hp+18'},
       'filtered water pack':{type:'consumable',rarity:'uncommon',value:13,effect:'thirst-20,rads-2'},
       'morale patch':{type:'consumable',rarity:'common',value:7,effect:'morale+8,stamina+2'},
 
       /* iron ward */
-      'ledger-etched compass':{type:'tool',rarity:'uncommon',value:19,mods:{riskMod:-0.04,lootBonus:0.02}},
+      'ledger-etched compass':{type:'tool',slot:'tool',rarity:'uncommon',value:19,mods:{riskMod:-0.04,lootBonus:0.02}},
       'clocktower chime':{type:'junk',rarity:'uncommon',value:16,salvage:4},
       'iron ward seals':{type:'junk',rarity:'common',value:3,salvage:2,stackable:true},
-      'market shock knife':{type:'tool',rarity:'rare',value:34,mods:{combatBonus:6,lootBonus:0.02}},
+      'market shock knife':{type:'weapon',slot:'weapon',rarity:'rare',value:34,mods:{combatBonus:6,lootBonus:0.02}},
       'tarpaulin roll':{type:'junk',rarity:'common',value:4,salvage:2,stackable:true},
 
       /* cold shelter */
       'thermal wrap':{type:'consumable',rarity:'common',value:6,effect:'temp+3,stamina+4'},
-      'bunker schematics':{type:'tool',rarity:'uncommon',value:21,mods:{carryBonus:2,riskMod:-0.02}},
+      'bunker schematics':{type:'tool',slot:'tool',rarity:'uncommon',value:21,mods:{riskMod:-0.02}},
       'lantern oil':{type:'junk',rarity:'common',value:2,salvage:1,stackable:true},
-      'stabilizer brace':{type:'tool',rarity:'uncommon',value:20,mods:{staminaBonus:3,insulation:0.3}},
+      'stabilizer brace':{type:'armor',slot:'gloves',rarity:'uncommon',value:20,mods:{staminaBonus:3,insulation:0.3}},
       'cache latch':{type:'junk',rarity:'uncommon',value:10,salvage:3},
 
       /* blackwood expanse */
-      'spore lantern':{type:'tool',rarity:'uncommon',value:22,mods:{riskMod:-0.03,lootBonus:0.03}},
+      'spore lantern':{type:'tool',slot:'tool',rarity:'uncommon',value:22,mods:{riskMod:-0.03,lootBonus:0.03}},
       'rad moss poultice':{type:'consumable',rarity:'uncommon',value:15,effect:'hp+10,rads-5,temp+1'},
-      'hardened bark plate':{type:'armor',rarity:'uncommon',value:18,mods:{insulation:0.7,riskMod:-0.02}},
+      'hardened bark plate':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{insulation:0.7,riskMod:-0.02}},
       'monsoon canteen':{type:'consumable',rarity:'rare',value:23,effect:'thirst-24,temp+1'},
       'feral talon':{type:'junk',rarity:'rare',value:24,salvage:7},
 
       /* downtown portland */
       'floodgate keycard':{type:'key',rarity:'rare',value:22},
-      'signal flare rack':{type:'tool',rarity:'uncommon',value:20,mods:{lootBonus:0.05,moraleBonus:1}},
+      'signal flare rack':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{lootBonus:0.05,moraleBonus:1}},
       'riot-line tape':{type:'junk',rarity:'common',value:3,salvage:2,stackable:true},
-      'bridge-runner pack':{type:'upgrade',rarity:'uncommon',value:28,effect:'backpack+4'},
-      'arc pistol':{type:'tool',rarity:'rare',value:38,mods:{combatBonus:8,energyRegen:1}}
+      'bridge-runner pack':{type:'armor',slot:'backpack',rarity:'uncommon',value:28,mods:{carryBonus:10}},
+      'arc pistol':{type:'weapon',slot:'weapon',rarity:'rare',value:38,mods:{combatBonus:8,energyRegen:1}}
     };
 
     const LOOT_BY_RARITY={
@@ -493,6 +476,15 @@
     const riskTable={low:0.08,medium:0.2,high:0.32,deadly:0.45};
     const riskRank={low:1,medium:2,high:3,deadly:4};
     const expansions={};
+    const EXPANSION_MANIFEST=[
+      {id:'town',name:'Iron Ward',file:'expansions/town.txt'},
+      {id:'safehouse',name:'Cold Shelter',file:'expansions/safehouse.txt'},
+      {id:'forest',name:'Blackwood Expanse',file:'expansions/forest.txt'},
+      {id:'portland_slums',name:'Downtown Portland',file:'expansions/portland_slums.txt'}
+    ];
+    let expansionsExpected=0;
+    let expansionsLoaded=0;
+    let expansionsAttempted=0;
     const idleOperations=[
       {id:'salvage',label:'Drone salvage',desc:'Remote drones bring back scrap and junk.',duration:7,cost:{credits:8},reward:'scrap+3,item:scrap wiring'},
       {id:'survey',label:'Cartography sweep',desc:'Low-risk sweep for new routes and caches.',duration:5,cost:{credits:5},reward:'credits+4,item:old coin'},
@@ -525,9 +517,9 @@
     ];
 
     const MARKET_STOCK=[
-      {id:'pocket pack',cost:26,tag:'Pack upgrade'},
-      {id:'scout daypack',cost:38,tag:'Pack upgrade'},
-      {id:'expedition frame pack',cost:68,tag:'Pack upgrade'},
+      {id:'pocket pack',cost:26,tag:'Backpack'},
+      {id:'scout daypack',cost:38,tag:'Backpack'},
+      {id:'expedition frame pack',cost:68,tag:'Backpack'},
       {id:'jury-rigged blade',cost:18,tag:'Weapon'},
       {id:'scrap spear',cost:32,tag:'Weapon'},
       {id:'pipe rifle',cost:70,tag:'Weapon'},
@@ -551,7 +543,6 @@
       zoneDesc:document.getElementById('zoneDesc'),
       zoneBadge:document.getElementById('zoneBadge'),
       raidActions:document.getElementById('raidActions'),
-      questBoard:document.getElementById('questBoard'),
       haul:document.getElementById('haul'),
       haulDetail:document.getElementById('haulDetail'),
       haulActions:document.getElementById('haulActions'),
@@ -588,6 +579,7 @@
       stashItemActions:document.getElementById('stashItemActions'),
       stashCount:document.getElementById('stashCount'),
       marketInventory:document.getElementById('marketInventory'),
+      marketHint:document.getElementById('marketHint'),
       itemDetail:document.getElementById('itemDetail'),
       itemActions:document.getElementById('itemActions'),
       inventoryNav:Array.from(document.querySelectorAll('#inventoryNav button')),
@@ -598,11 +590,8 @@
       },
       stashNav:Array.from(document.querySelectorAll('#stashNav button')),
       stashScreens:{
-        vault:document.getElementById('stashVault'),
-        market:document.getElementById('stashMarket')
+        vault:document.getElementById('stashVault')
       },
-      shopStatus:document.getElementById('shopStatus'),
-      toggleShop:document.getElementById('toggleShop'),
       tabs:document.querySelector('.tabs'),
       tabButtons:Array.from(document.querySelectorAll('.tab-buttons button')),
       tabContents:{
@@ -634,7 +623,11 @@
     const isHubZone=(zone=state.zone)=>{
       if(!zone) return false;
       const name=(zone.name||'').toLowerCase();
-      return zone.id==='safehouse' || name.includes('safehouse') || name.includes('hub');
+      return zone.id==='safehouse' || zone.id==='drift-yard' || name.includes('safehouse') || name.includes('hub') || name.includes('drift yard');
+    };
+    const isMarketZone=(zone=state.zone)=>{
+      if(!zone) return false;
+      return zone.id==='town' || (zone.name||'').toLowerCase().includes('market');
     };
     const vaultBlockedMessage='Return to the main hub vault to transfer stash items.';
     const logMsg=(msg)=>{
@@ -691,6 +684,7 @@
         return `${label} ${sign}${val}`;
       });
     };
+    const rarityLabel=(rarity)=>rarity ? `${rarity[0].toUpperCase()}${rarity.slice(1)}` : '';
     const formatEffects=(effect)=>{
       if(!effect) return [];
       const labels={temp:'body temp',backpack:'backpack slots'};
@@ -773,18 +767,53 @@
     const XP_BASE=80;
     const XP_GROWTH=20;
     const xpToNextLevel=(level)=>XP_BASE+(XP_GROWTH*(level-1));
-    const LOADOUT_BASE_SLOTS=3;
-    const LOADOUT_LEVEL_STEP=2;
-    const LOADOUT_UPGRADE_BASE_COST={credits:28,scrap:6};
-    const LOADOUT_UPGRADE_GROWTH={credits:22,scrap:4};
-    const getLevelLoadoutBonus=(level)=>Math.floor((level-1)/LOADOUT_LEVEL_STEP);
-    const getEquipmentLimit=()=>LOADOUT_BASE_SLOTS+getLevelLoadoutBonus(state.level)+state.loadoutUpgradeLevel;
-    const getLoadoutUpgradeCost=()=>{
-      const level=state.loadoutUpgradeLevel;
-      return {
-        credits:LOADOUT_UPGRADE_BASE_COST.credits+(LOADOUT_UPGRADE_GROWTH.credits*level),
-        scrap:LOADOUT_UPGRADE_BASE_COST.scrap+(LOADOUT_UPGRADE_GROWTH.scrap*level)
-      };
+    const EQUIPMENT_SLOTS={
+      backpack:1,
+      gloves:1,
+      helmet:1,
+      eyewear:1,
+      pants:1,
+      shoes:1,
+      chest:1,
+      weapon:2,
+      tool:3
+    };
+    const EQUIPMENT_SLOT_LABELS={
+      backpack:'Backpack',
+      gloves:'Gloves',
+      helmet:'Helmet',
+      eyewear:'Eyewear',
+      pants:'Pants',
+      shoes:'Shoes',
+      chest:'Chest',
+      weapon:'Weapon',
+      tool:'Tool'
+    };
+    const getEquipmentSlotUsage=()=>{
+      const usage=Object.keys(EQUIPMENT_SLOTS).reduce((acc,key)=>{acc[key]=0;return acc;},{});
+      state.equipped.forEach(item=>{
+        const slot=getItem(item).slot;
+        if(slot && usage.hasOwnProperty(slot)){
+          usage[slot]+=1;
+        }
+      });
+      return usage;
+    };
+    const getEquipmentUsageCount=()=>{
+      const usage=getEquipmentSlotUsage();
+      return Object.values(usage).reduce((sum,val)=>sum+val,0);
+    };
+    const getEquipmentSlotTotal=()=>Object.values(EQUIPMENT_SLOTS).reduce((sum,val)=>sum+val,0);
+    const slotLabel=(slot)=>EQUIPMENT_SLOT_LABELS[slot] || slot;
+    const canEquipItem=(item)=>{
+      const data=getItem(item);
+      if(!data.slot) return {ok:false,reason:'This item cannot be equipped.'};
+      const usage=getEquipmentSlotUsage();
+      const limit=EQUIPMENT_SLOTS[data.slot] || 0;
+      if((usage[data.slot]||0) >= limit){
+        return {ok:false,reason:`${slotLabel(data.slot)} slot full.`};
+      }
+      return {ok:true,reason:''};
     };
     function awardXp(amount,sourceLabel){
       if(amount<=0) return;
@@ -803,7 +832,7 @@
         leveled=true;
       }
       if(leveled){
-        logMsg(`Level up! You are now level ${state.level}. Loadout capacity is now ${getEquipmentLimit()} slots.`);
+        logMsg(`Level up! You are now level ${state.level}.`);
       }else if(sourceLabel){
         logMsg(`+${amount} XP from ${sourceLabel}.`);
       }
@@ -843,32 +872,12 @@
       });
     };
     const addToArray=(arr,item)=>{arr.push(item);};
-    const upgradeLoadoutSlots=()=>{
-      if(!canAccessVault()){
-        setCodex(vaultBlockedMessage);
-        return;
-      }
-      const cost=getLoadoutUpgradeCost();
-      if(!canAfford(cost)){
-        setCodex('Not enough resources to expand the loadout.');
-        return;
-      }
-      applyCost(cost);
-      state.loadoutUpgradeLevel+=1;
-      setCodex(`Loadout capacity increased to ${getEquipmentLimit()} slots.`);
-      logMsg(`Safehouse upgrade complete. Loadout slots now ${getEquipmentLimit()}.`);
-      renderAll();
-    };
-
     function equipItem(item){
       if(state.equipped.includes(item)) return;
-      if(state.equipped.length>=getEquipmentLimit()){
-        setCodex('Loadout full. Unequip something first.');
-        return;
-      }
       const data=getItem(item);
-      if(!['tool','armor'].includes(data.type)){
-        setCodex('Only tools or armor can be equipped.');
+      const check=canEquipItem(item);
+      if(!check.ok){
+        setCodex(check.reason || 'No open slots for that item.');
         return;
       }
       removeItem(state.inventory,item);
@@ -892,18 +901,17 @@
     }
     function consumeItem(item){
       const data=getItem(item);
+      if(data.type!=='consumable'){
+        setCodex('That item cannot be used like a consumable.');
+        return;
+      }
       if(data.effect){
         applyEffects(data.effect,'success');
       }
       removeItem(state.inventory,item);
       state.selected={source:null,item:null};
-      if(data.type==='upgrade'){
-        logMsg(`Installed ${item}. Backpack capacity now ${getBackpackLimit()}.`);
-        setCodex(`${item} installed. Capacity ${getBackpackLimit()} slots.`);
-      }else{
-        logMsg(`Consumed ${item}.`);
-        setCodex(`${item} used.`);
-      }
+      logMsg(`Consumed ${item}.`);
+      setCodex(`${item} used.`);
       renderAll();
     }
     function stashItem(item){
@@ -939,8 +947,8 @@
       renderAll();
     }
     function sellItem(item){
-      if(!state.atShop){
-        setCodex('Dock at the market to sell items.');
+      if(!isMarketZone()){
+        setCodex('Visit the market to sell items.');
         return;
       }
       const data=getItem(item);
@@ -1121,13 +1129,10 @@
       renderAll();
     }
     function equipRewardItem(source,item){
-      if(state.equipped.length>=getEquipmentLimit()){
-        setCodex('Loadout full. Unequip something first.');
-        return;
-      }
       const data=getItem(item);
-      if(!['tool','armor'].includes(data.type)){
-        setCodex('Only tools or armor can be equipped.');
+      const check=canEquipItem(item);
+      if(!check.ok){
+        setCodex(check.reason || 'No open slots for that item.');
         return;
       }
       if(!removeRewardItem(source,item)) return;
@@ -1186,8 +1191,8 @@
     function buyMarketItem(itemId){
       const stock=MARKET_STOCK.find(entry=>entry.id===itemId);
       if(!stock) return;
-      if(!state.atShop){
-        setCodex('Dock at the market to buy items.');
+      if(!isMarketZone()){
+        setCodex('Visit the market to buy items.');
         return;
       }
       if(state.credits<stock.cost){
@@ -1220,7 +1225,8 @@
       name.textContent=`${id} ×${count}`;
       const meta=document.createElement('div');
       meta.className='item-meta';
-      meta.textContent=`${data.type} · ${data.value || 1} cr`;
+      const slotTag=data.slot ? `${slotLabel(data.slot)} · ` : '';
+      meta.textContent=`${data.type} · ${slotTag}${data.value || 1} cr`;
       const chip=document.createElement('span');
       chip.className=`chip ${data.rarity}`;
       chip.textContent=data.rarity;
@@ -1267,8 +1273,7 @@
           const effects=formatEffects(data.effect);
           const uses=[];
           if(data.type==='consumable') uses.push('Consume for field boost.');
-          if(data.type==='upgrade') uses.push('Install to permanently expand backpack capacity.');
-          if(['tool','armor'].includes(data.type)) uses.push('Equip to gain passive bonuses.');
+          if(data.slot) uses.push('Equip to gain passive bonuses.');
           if(data.type==='junk') uses.push('Break down for scrap.');
           if(data.type==='key') uses.push('Unlocks lockbox raids.');
           target.detail.innerHTML=`
@@ -1277,6 +1282,7 @@
               <div>Type</div><span>${data.type}</span>
               <div>Rarity</div><span>${data.rarity}</span>
               <div>Value</div><span>${data.value || 1} credits</span>
+              ${data.slot ? `<div>Slot</div><span>${slotLabel(data.slot)}</span>` : ''}
               ${data.salvage ? `<div>Salvage</div><span>${data.salvage} scrap</span>` : ''}
             </div>
             ${uses.length ? `<div class="small">${uses.join(' ')}</div>` : ''}
@@ -1290,12 +1296,17 @@
 
       const actionConfigs=[];
       if(source==='inventory'){
-        if(['tool','armor'].includes(data.type)){
-          actionConfigs.push({label:'Deploy to loadout',action:()=>equipItem(item),disabled:state.equipped.length>=getEquipmentLimit()});
+        if(data.slot){
+          const check=canEquipItem(item);
+          actionConfigs.push({
+            label:'Deploy to loadout',
+            action:()=>equipItem(item),
+            disabled:!check.ok,
+            blockedHint:check.ok ? '' : check.reason
+          });
         }
-        if(data.type==='consumable' || data.type==='upgrade'){
-          const label=data.type==='upgrade' ? 'Install upgrade' : 'Use item';
-          actionConfigs.push({label,action:()=>consumeItem(item)});
+        if(data.type==='consumable'){
+          actionConfigs.push({label:'Use item',action:()=>consumeItem(item)});
         }
         actionConfigs.push({
           label:'Route to vault',
@@ -1304,7 +1315,7 @@
           blockedHint:!vaultAccess ? vaultBlockedMessage : ''
         });
         actionConfigs.push({label:'Break down for scrap',action:()=>dismantleItem(item)});
-        actionConfigs.push({label:'Sell to market',action:()=>sellItem(item),disabled:!state.atShop,blockedHint:'Dock at market to sell.'});
+        actionConfigs.push({label:'Sell to market',action:()=>sellItem(item),disabled:!isMarketZone(),blockedHint:'Visit the market to sell.'});
       }else if(source==='equipped'){
         actionConfigs.push({label:'Return to backpack',action:()=>unequipItem(item),disabled:!canUnequipItem(item)});
       }else if(source==='stash'){
@@ -1323,8 +1334,8 @@
         actionConfigs.push({
           label:'Sell to market',
           action:()=>sellStashItem(item),
-          disabled:!vaultAccess || !state.atShop,
-          blockedHint:!vaultAccess ? vaultBlockedMessage : 'Dock at market to sell.'
+          disabled:!vaultAccess || !isMarketZone(),
+          blockedHint:!vaultAccess ? vaultBlockedMessage : 'Visit the market to sell.'
         });
       }else if(source==='haul'){
         actionConfigs.push({label:'Pack into backpack',action:()=>moveLootItem(item,'inventory'),disabled:!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)});
@@ -1335,11 +1346,12 @@
           blockedHint:!vaultAccess ? vaultBlockedMessage : ''
         });
         actionConfigs.push({label:'Break down for scrap',action:()=>scrapLootItem(item)});
-        actionConfigs.push({label:'Sell to market',action:()=>sellLootItem(item),disabled:!state.atShop,blockedHint:'Dock at market to sell.'});
+        actionConfigs.push({label:'Sell to market',action:()=>sellLootItem(item),disabled:!isMarketZone(),blockedHint:'Visit the market to sell.'});
       }else if(source==='missionReward' && missionRewardsReady){
         actionConfigs.push({label:'Pack into backpack',action:()=>claimRewardToInventory(source,item),disabled:!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)});
-        if(['tool','armor'].includes(data.type)){
-          actionConfigs.push({label:'Equip now',action:()=>equipRewardItem(source,item),disabled:state.equipped.length>=getEquipmentLimit()});
+        if(data.slot){
+          const check=canEquipItem(item);
+          actionConfigs.push({label:'Equip now',action:()=>equipRewardItem(source,item),disabled:!check.ok,blockedHint:check.reason});
         }
         actionConfigs.push({label:`Scrap for ${salvageValue(item)}`,action:()=>scrapRewardItem(source,item)});
         actionConfigs.push({label:'Leave item',action:()=>leaveRewardItem(source,item)});
@@ -1383,7 +1395,7 @@
       if(!state.equipped.length){
         const empty=document.createElement('div');
         empty.className='muted-box';
-        empty.textContent='Loadout slots open. Equip tools or armor.';
+        empty.textContent='Loadout slots open. Equip gear into available slots.';
         dom.equipment.appendChild(empty);
       }else{
         groupItems(state.equipped).forEach(({id,count,data})=>{
@@ -1394,7 +1406,7 @@
         dom.backpackCount.textContent=`(${getBackpackUsage()}/${getBackpackLimit()})`;
       }
       if(dom.loadoutCount){
-        dom.loadoutCount.textContent=`(${state.equipped.length}/${getEquipmentLimit()})`;
+        dom.loadoutCount.textContent=`(${getEquipmentUsageCount()}/${getEquipmentSlotTotal()})`;
       }
       dom.codex.textContent = state.codex[state.codex.length-1] || '';
     }
@@ -1477,6 +1489,12 @@
     function renderMarketStock(){
       if(!dom.marketInventory) return;
       dom.marketInventory.innerHTML='';
+      const marketActive=isMarketZone();
+      if(dom.marketHint){
+        dom.marketHint.textContent=marketActive
+          ? 'Market vendors are online in Iron Ward.'
+          : 'Travel to Iron Ward to access market vendors.';
+      }
       MARKET_STOCK.forEach(stock=>{
         const data=getItem(stock.id);
         const card=document.createElement('div');
@@ -1492,9 +1510,9 @@
         cost.textContent=`${stock.cost} credits`;
         const btn=document.createElement('button');
         btn.textContent=`Buy ${stock.id}`;
-        const canBuy=state.atShop && state.credits>=stock.cost;
+        const canBuy=marketActive && state.credits>=stock.cost;
         btn.disabled=!canBuy;
-        if(!state.atShop) btn.title='Dock at the market to buy.';
+        if(!marketActive) btn.title='Visit the market to buy.';
         else if(state.credits<stock.cost) btn.title='Not enough credits.';
         btn.onclick=()=>buyMarketItem(stock.id);
         card.appendChild(titleRow);
@@ -1561,10 +1579,10 @@
             packBtn.disabled=!hasCapacityFor(state.inventory,getBackpackLimit(),item,1);
             packBtn.onclick=()=>claimRewardToInventory('idleReward',item);
             actions.appendChild(packBtn);
-            if(['tool','armor'].includes(data.type)){
+            if(data.slot){
               const equipBtn=document.createElement('button');
               equipBtn.textContent='Equip';
-              equipBtn.disabled=state.equipped.length>=getEquipmentLimit();
+              equipBtn.disabled=!canEquipItem(item).ok;
               equipBtn.onclick=()=>equipRewardItem('idleReward',item);
               actions.appendChild(equipBtn);
             }
@@ -1690,19 +1708,6 @@
       btn.onclick=()=>setStashScreen(btn.dataset.stashScreen);
     });
 
-    if(dom.toggleShop){
-      dom.toggleShop.onclick=()=>{
-        if(!canAccessVault()){
-          setCodex(vaultBlockedMessage);
-          renderStash();
-          return;
-        }
-        state.atShop=!state.atShop;
-        logMsg(state.atShop ? 'Docked at the market. Vendors ready.' : 'Undocked from the market. Vendors offline.');
-        renderAll();
-      };
-    }
-
     function selectItem(source,item){
       state.selected={source,item};
       renderItemDetails();
@@ -1754,8 +1759,8 @@
     dom.returnMain.onclick=()=>setScreen('main');
 
     function renderExcursionStatus(){
-      dom.excursionStatus.innerHTML=`<b>Loop status:</b> Energy ${state.energy}/${state.maxEnergy} · Backpack ${getBackpackUsage()}/${getBackpackLimit()} · Haul ${state.lootQueue.length} · Stash ${getStashUsage()}/${state.stashLimit} · Loadout ${state.equipped.length}/${getEquipmentLimit()}.`;
-      dom.tempoHint.textContent='Run missions to earn XP, then review rewards and upgrade the safehouse.';
+      dom.excursionStatus.innerHTML=`<b>Loop status:</b> Energy ${state.energy}/${state.maxEnergy} · Backpack ${getBackpackUsage()}/${getBackpackLimit()} · Haul ${state.lootQueue.length} · Stash ${getStashUsage()}/${state.stashLimit} · Loadout ${getEquipmentUsageCount()}/${getEquipmentSlotTotal()}.`;
+      dom.tempoHint.textContent='Run missions to earn XP, then review rewards and swap in better gear.';
     }
 
     function renderHubAccess(){
@@ -1775,10 +1780,11 @@
       if(isHubZone()){
         const blocked=document.createElement('div');
         blocked.className='muted-box';
-        blocked.textContent='Hub zone secure. Use contracts, crafting, and idle ops before heading back into the field.';
+        blocked.textContent='Hub zone secure. Use the transit console to select a field site.';
         dom.raidActions.appendChild(blocked);
         return;
       }
+      const exp=expansions[state.zone.id];
       RAID_TEMPLATES.forEach(raid=>{
         const btn=document.createElement('button');
         const costParts=[`${raid.energy} energy`];
@@ -1789,6 +1795,30 @@
         if(raid.risk==='high') btn.classList.add('danger');
         dom.raidActions.appendChild(btn);
       });
+      if(exp && exp.quests && exp.quests.length){
+        exp.quests.forEach(quest=>{
+          const btn=document.createElement('button');
+          const questFlag=quest.flag || quest.id;
+          const completed=quest.once && questFlag && state.flags.has(questFlag);
+          const label=quest.title || 'Local contract';
+          const time=quest.time || 10;
+          const risk=quest.risk || state.zone.risk;
+          const energy=quest.energy ?? 12;
+          const keyCost=quest.key || 0;
+          const costParts=[`${energy} energy`];
+          if(keyCost) costParts.push(`${keyCost} key`);
+          btn.innerHTML=`<span>${label}</span><span class="small">${risk} · ${time} min · ${costParts.join(' · ')}</span>`;
+          btn.onclick=()=>runQuest(quest);
+          if(completed){
+            btn.disabled=true;
+            btn.title='Contract complete.';
+          }else if(state.mission.active || state.travel.active || !canAfford({energy,keys:keyCost})){
+            btn.disabled=true;
+          }
+          if(risk==='high') btn.classList.add('danger');
+          dom.raidActions.appendChild(btn);
+        });
+      }
       const combatBtn=document.createElement('button');
       combatBtn.innerHTML=`<span>Engage hostiles</span><span class="small">${state.zone.risk} · ${getCombatProfile(state.zone.risk).time} min · 10 energy</span>`;
       combatBtn.onclick=startCombatMission;
@@ -1803,43 +1833,6 @@
         if(state.mission.active || state.travel.active) rest.disabled=true;
         dom.raidActions.appendChild(rest);
       }
-    }
-
-    function renderQuestBoard(){
-      if(!dom.questBoard) return;
-      dom.questBoard.innerHTML='';
-      const exp=expansions[state.zone.id];
-      if(!exp || !exp.quests || !exp.quests.length){
-        dom.questBoard.innerHTML='<div class="muted-box">No special contracts in this zone.</div>';
-        return;
-      }
-      exp.quests.forEach(quest=>{
-        const card=document.createElement('div');
-        card.className='op-card';
-        const title=document.createElement('div');
-        title.className='mission-title';
-        title.textContent=quest.title || 'Special contract';
-        const meta=document.createElement('div');
-        meta.className='op-meta';
-        meta.textContent=`${quest.risk} risk · ${quest.time} min`;
-        const desc=document.createElement('div');
-        desc.className='small';
-        desc.textContent=quest.desc || 'A one-shot opportunity for a legendary reward.';
-        const actions=document.createElement('div');
-        actions.className='op-actions';
-        const btn=document.createElement('button');
-        const questFlag=quest.flag || quest.id;
-        const completed=quest.once && questFlag && state.flags.has(questFlag);
-        btn.textContent=completed ? 'Contract complete' : 'Deploy';
-        btn.onclick=()=>runQuest(quest);
-        btn.disabled=completed || state.mission.active || state.travel.active;
-        actions.appendChild(btn);
-        card.appendChild(title);
-        card.appendChild(meta);
-        card.appendChild(desc);
-        card.appendChild(actions);
-        dom.questBoard.appendChild(card);
-      });
     }
 
     function renderTravelStatus(){
@@ -1907,10 +1900,10 @@
               for(let i=0;i<moveCount;i++) claimRewardToInventory('missionReward',id);
             };
             actions.appendChild(packBtn);
-            if(['tool','armor'].includes(data.type)){
+            if(data.slot){
               const equipBtn=document.createElement('button');
               equipBtn.textContent='Equip';
-              equipBtn.disabled=state.equipped.length>=getEquipmentLimit();
+              equipBtn.disabled=!canEquipItem(id).ok;
               equipBtn.onclick=()=>equipRewardItem('missionReward',id);
               actions.appendChild(equipBtn);
             }
@@ -2024,7 +2017,10 @@
       const sellAll=document.createElement('button');
       sellAll.textContent='Sell all';
       sellAll.onclick=bulkSellLoot;
-      if(!state.atShop) sellAll.disabled=true;
+      if(!isMarketZone()){
+        sellAll.disabled=true;
+        sellAll.title='Visit the market to sell.';
+      }
       const scrapAll=document.createElement('button');
       scrapAll.textContent='Scrap all';
       scrapAll.onclick=bulkScrapLoot;
@@ -2039,17 +2035,6 @@
       dom.stash.innerHTML='';
       dom.stashActions.innerHTML='';
       const vaultAccess=canAccessVault();
-      if(!vaultAccess && state.atShop){
-        state.atShop=false;
-      }
-      if(dom.shopStatus){
-        dom.shopStatus.textContent=`Docked: ${state.atShop ? 'Yes' : 'No'}`;
-      }
-      if(dom.toggleShop){
-        dom.toggleShop.textContent=state.atShop ? 'Undock from market' : 'Request docking clearance';
-        dom.toggleShop.disabled=!vaultAccess;
-        dom.toggleShop.title=vaultAccess ? '' : vaultBlockedMessage;
-      }
       const wrap=document.createElement('div');
       wrap.className='item-grid';
       const items=state.stash.items;
@@ -2076,7 +2061,7 @@
       dom.stashActions.appendChild(upgradesHeading);
       const upgradesHint=document.createElement('div');
       upgradesHint.className='small';
-      upgradesHint.textContent='Invest scrap and credits to expand storage and loadout capacity.';
+      upgradesHint.textContent='Invest scrap and credits to expand storage capacity.';
       dom.stashActions.appendChild(upgradesHint);
       const upgradeCost=getStashUpgradeCost();
       const upgradeCard=document.createElement('div');
@@ -2107,36 +2092,6 @@
       upgradeCard.appendChild(upgradeCostLine);
       upgradeCard.appendChild(upgradeActions);
       dom.stashActions.appendChild(upgradeCard);
-      const loadoutCost=getLoadoutUpgradeCost();
-      const loadoutCard=document.createElement('div');
-      loadoutCard.className='op-card';
-      const loadoutTitle=document.createElement('div');
-      loadoutTitle.innerHTML='<b>Loadout racks</b>';
-      const loadoutMeta=document.createElement('div');
-      loadoutMeta.className='op-meta';
-      loadoutMeta.textContent=`Base slots ${LOADOUT_BASE_SLOTS} · Level bonus ${getLevelLoadoutBonus(state.level)} · Upgrades ${state.loadoutUpgradeLevel}.`;
-      const loadoutCostLine=document.createElement('div');
-      loadoutCostLine.className='op-meta';
-      loadoutCostLine.textContent=`Cost: ${formatCost(loadoutCost)} · Current capacity ${getEquipmentLimit()} slots.`;
-      const loadoutActions=document.createElement('div');
-      loadoutActions.className='op-actions';
-      const loadoutBtn=document.createElement('button');
-      loadoutBtn.textContent='Upgrade loadout (+1 slot)';
-      loadoutBtn.onclick=upgradeLoadoutSlots;
-      if(!vaultAccess){
-        loadoutBtn.disabled=true;
-        loadoutBtn.title=vaultBlockedMessage;
-      }else if(!canAfford(loadoutCost)){
-        loadoutBtn.disabled=true;
-        loadoutBtn.title='Need more credits or scrap.';
-      }
-      loadoutActions.appendChild(loadoutBtn);
-      loadoutCard.appendChild(loadoutTitle);
-      loadoutCard.appendChild(loadoutMeta);
-      loadoutCard.appendChild(loadoutCostLine);
-      loadoutCard.appendChild(loadoutActions);
-      dom.stashActions.appendChild(loadoutCard);
-
       const bulk=document.createElement('div');
       bulk.className='inventory inline-actions';
       const sellAll=document.createElement('button');
@@ -2145,7 +2100,10 @@
       if(!vaultAccess){
         sellAll.disabled=true;
         sellAll.title=vaultBlockedMessage;
-      }else if(!state.atShop) sellAll.disabled=true;
+      }else if(!isMarketZone()){
+        sellAll.disabled=true;
+        sellAll.title='Visit the market to sell.';
+      }
       const scrapAll=document.createElement('button');
       scrapAll.textContent='Scrap all stash';
       scrapAll.onclick=bulkScrapStash;
@@ -2233,7 +2191,7 @@
           else if(stat==='energy') state.energy=clamp(state.energy+delta,0,state.maxEnergy);
           else if(stat==='keys') state.keys=Math.max(0,state.keys+delta);
           else if(stat==='temp') state.bodyTemp=clamp(state.bodyTemp+delta,BODY_TEMP_MIN,BODY_TEMP_MAX);
-          else if(stat==='backpack') state.backpackLimit=Math.max(8,state.backpackLimit+delta);
+          else if(stat==='backpack') state.backpackLimit=Math.max(0,state.backpackLimit+delta);
         }
       });
       if(outcome==='fail' && state.hp<=0){
@@ -2780,8 +2738,8 @@
     }
 
     function sellLootItem(item){
-      if(!state.atShop){
-        setCodex('Dock at the market to sell items.');
+      if(!isMarketZone()){
+        setCodex('Visit the market to sell items.');
         return;
       }
       const data=getItem(item);
@@ -2801,8 +2759,8 @@
     }
 
     function bulkSellLoot(){
-      if(!state.atShop){
-        setCodex('Dock at the market to sell items.');
+      if(!isMarketZone()){
+        setCodex('Visit the market to sell items.');
         return;
       }
       state.lootQueue.forEach(item=>{
@@ -2830,8 +2788,8 @@
         setCodex(vaultBlockedMessage);
         return;
       }
-      if(!state.atShop){
-        setCodex('Dock at the market to sell items.');
+      if(!isMarketZone()){
+        setCodex('Visit the market to sell items.');
         return;
       }
       const data=getItem(item);
@@ -2859,8 +2817,8 @@
         setCodex(vaultBlockedMessage);
         return;
       }
-      if(!state.atShop){
-        setCodex('Dock at the market to sell items.');
+      if(!isMarketZone()){
+        setCodex('Visit the market to sell items.');
         return;
       }
       state.stash.items.forEach(item=>{
@@ -2904,15 +2862,23 @@
 
     /* ================= EXPANSION LOADING ================= */
     async function loadGames(){
+      let manifest=EXPANSION_MANIFEST;
       try{
         const res=await fetch('games.json');
-        const data=await res.json();
-        dom.doorsHint.textContent='';
-        data.expansions.forEach(meta=>loadExpansion(meta));
+        if(res.ok){
+          const data=await res.json();
+          if(Array.isArray(data.expansions) && data.expansions.length){
+            manifest=data.expansions;
+          }
+        }
       }catch(err){
-        dom.doorsHint.textContent='Unable to load games.json';
-        console.error(err);
+        console.warn('games.json unavailable, falling back to embedded manifest.',err);
       }
+      expansionsExpected=manifest.length;
+      expansionsLoaded=0;
+      expansionsAttempted=0;
+      dom.doorsHint.textContent=manifest.length ? 'Loading expansions…' : 'No expansions configured.';
+      manifest.forEach(meta=>loadExpansion(meta));
     }
 
     async function loadExpansion(meta){
@@ -2924,10 +2890,17 @@
         expansion.meta.name=meta.name || expansion.meta.name || meta.id;
         expansions[expansion.meta.id]=expansion;
         addDoor(expansion);
+        expansionsLoaded+=1;
+        dom.doorsHint.textContent='';
         logMsg(`Door bolted on: ${expansion.meta.name}`);
       }catch(err){
         logMsg(`Failed to load ${meta.id}`);
         console.error(err);
+      }finally{
+        expansionsAttempted+=1;
+        if(expansionsLoaded===0 && expansionsAttempted>=expansionsExpected){
+          dom.doorsHint.textContent='Unable to load expansions.';
+        }
       }
     }
 
@@ -3044,7 +3017,6 @@
       renderIdleOps();
       renderZone();
       renderRaidActions();
-      renderQuestBoard();
       renderHaul();
       renderStash();
       renderItemDetails();
