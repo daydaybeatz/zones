@@ -401,16 +401,41 @@
         return null;
       }
     };
+    let pendingSave=null;
+    let lastSaveAt=0;
     const saveGame=()=>{
       try{
         const payload={...state,flags:Array.from(state.flags||[]),saveVersion:SAVE_VERSION};
         localStorage.setItem(SAVE_KEY,JSON.stringify(payload));
+        lastSaveAt=Date.now();
       }catch(err){
         console.warn('Save failed.',err);
       }
     };
     const savedState=loadSavedState();
     let state=savedState || createDefaultState();
+    let allowAutosave=Boolean(savedState);
+    const SAVE_DEBOUNCE_MS=1500;
+    const SAVE_MIN_INTERVAL_MS=8000;
+    const queueSave=({force=false}={})=>{
+      if(!allowAutosave) return;
+      if(force){
+        if(pendingSave){
+          clearTimeout(pendingSave);
+          pendingSave=null;
+        }
+        saveGame();
+        return;
+      }
+      if(pendingSave) return;
+      const now=Date.now();
+      const elapsed=now-lastSaveAt;
+      const delay=Math.max(0,elapsed>=SAVE_MIN_INTERVAL_MS ? SAVE_DEBOUNCE_MS : SAVE_MIN_INTERVAL_MS-elapsed);
+      pendingSave=setTimeout(()=>{
+        pendingSave=null;
+        saveGame();
+      },delay);
+    };
 
     const ITEM_CATALOG={
       'basic backpack':{type:'armor',slot:'backpack',rarity:'common',value:6,mods:{carryBonus:6,insulation:0.1}},
@@ -708,6 +733,22 @@
       }
       setCodex(msg);
     }
+    let travelResolveTimer=null;
+    const scheduleTravelResolution=()=>{
+      if(travelResolveTimer){
+        clearTimeout(travelResolveTimer);
+        travelResolveTimer=null;
+      }
+      if(!state.travel.active) return;
+      const endsAt=Number(state.travel.endsAt);
+      if(!Number.isFinite(endsAt)) return;
+      const delay=Math.max(0,endsAt-Date.now())+60;
+      travelResolveTimer=setTimeout(()=>{
+        if(state.travel.active){
+          renderTravelStatus();
+        }
+      },delay);
+    };
 
     const GRID_PAGE_SIZE=18;
     const STACK_LIMIT=25;
@@ -2018,6 +2059,10 @@
         state.travel={active:false,endsAt:null,target:null};
         setCodex('Transit data lost. Select a zone gate to reroute.');
         logMsg('Transit data lost. Zone selection reset.');
+        if(travelResolveTimer){
+          clearTimeout(travelResolveTimer);
+          travelResolveTimer=null;
+        }
         return true;
       }
       if(Date.now()<state.travel.endsAt) return false;
@@ -2026,6 +2071,10 @@
       setCodex(`Arrived at ${state.zone.name}.`);
       logMsg(`Transit complete: ${state.zone.name}.`);
       saveGame();
+      if(travelResolveTimer){
+        clearTimeout(travelResolveTimer);
+        travelResolveTimer=null;
+      }
       return true;
     }
 
@@ -2038,7 +2087,9 @@
         btn.disabled=state.mission.active || state.travel.active;
       });
       if(state.travel.active){
-        dom.travelStatus.innerHTML=`<span class="spinner"></span><span>Routing to ${state.travel.target.name}… hold tight.</span>`;
+        scheduleTravelResolution();
+        const targetName=state.travel.target?.name || 'unknown gate';
+        dom.travelStatus.innerHTML=`<span class="spinner"></span><span>Routing to ${targetName}… hold tight.</span>`;
       }else{
         dom.travelStatus.textContent='Transit clear. Select a zone gate to jump.';
       }
@@ -3245,6 +3296,7 @@
       setStashScreen(state.stashScreen);
       renderScreens();
       syncTabs();
+      queueSave();
     }
 
     function hideIntroModal(){
@@ -3261,8 +3313,12 @@
         const continueBtn=document.createElement('button');
         continueBtn.textContent='Continue';
         continueBtn.onclick=()=>{
+          const latestState=loadSavedState();
+          if(latestState) state=latestState;
+          allowAutosave=true;
           hideIntroModal();
           renderAll();
+          queueSave({force:true});
         };
         const restartBtn=document.createElement('button');
         restartBtn.textContent='Restart';
@@ -3270,8 +3326,9 @@
         restartBtn.onclick=()=>{
           localStorage.removeItem(SAVE_KEY);
           state=createDefaultState();
+          allowAutosave=true;
           renderAll();
-          saveGame();
+          queueSave({force:true});
           hideIntroModal();
         };
         dom.introActions.appendChild(continueBtn);
@@ -3282,7 +3339,8 @@
         const startBtn=document.createElement('button');
         startBtn.textContent='Begin';
         startBtn.onclick=()=>{
-          saveGame();
+          allowAutosave=true;
+          queueSave({force:true});
           hideIntroModal();
         };
         dom.introActions.appendChild(startBtn);
