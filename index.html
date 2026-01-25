@@ -402,8 +402,9 @@
       }
     };
     const savedState=loadSavedState();
-    let state=savedState || createDefaultState();
-    let allowAutosave=true;
+    let state=createDefaultState();
+    let allowAutosave=!savedState;
+    const MISSION_OVERRUN_MULTIPLIER=2;
     const SAVE_DEBOUNCE_MS=1500;
     const SAVE_MIN_INTERVAL_MS=8000;
     const queueSave=({force=false}={})=>{
@@ -2587,13 +2588,13 @@
     }
 
     const getRiskIndex=(risk)=>riskRank[risk] || riskRank.low;
-    const MIN_MISSION_SECONDS=5;
-    const MAX_MISSION_SECONDS=60;
+    const MIN_MISSION_SECONDS=4;
+    const MAX_MISSION_SECONDS=30;
     const computeMissionDurationSeconds=({risk='low',time=8,loot=0}={})=>{
       const riskIdx=getRiskIndex(risk);
-      const timeWeight=Math.max(1,time*0.8);
-      const lootWeight=loot ? loot*2 : 0;
-      const base=5+((riskIdx-1)*8)+timeWeight+lootWeight;
+      const timeWeight=Math.max(1,time*0.45);
+      const lootWeight=loot ? loot*1.4 : 0;
+      const base=4+((riskIdx-1)*4)+timeWeight+lootWeight;
       return clamp(Math.round(base),MIN_MISSION_SECONDS,MAX_MISSION_SECONDS);
     };
     const computeMissionDurationMs=(params)=>computeMissionDurationSeconds(params)*1000;
@@ -3339,9 +3340,9 @@
       dom.introActions.innerHTML='';
       if(returning){
         dom.introTitle.textContent='Welcome back, runner';
-        dom.introMessage.textContent='Your last loop is ready. Continue where you left off or restart from day zero.';
+        dom.introMessage.textContent='Your autosave is ready. Continue from your last loop or start fresh.';
         const continueBtn=document.createElement('button');
-        continueBtn.textContent='Continue';
+        continueBtn.textContent='Continue autosave';
         continueBtn.onclick=()=>{
           const latestState=loadSavedState();
           if(latestState) state=latestState;
@@ -3351,7 +3352,7 @@
           queueSave({force:true});
         };
         const restartBtn=document.createElement('button');
-        restartBtn.textContent='Restart';
+        restartBtn.textContent='Start fresh';
         restartBtn.classList.add('danger');
         restartBtn.onclick=()=>{
           localStorage.removeItem(SAVE_KEY);
@@ -3395,16 +3396,32 @@
     loadGames();
     showIntroModal({returning:Boolean(savedState)});
 
+    function normalizeMissionTiming(now){
+      if(!state.mission.active || state.mission.completed) return;
+      const startedAt=Number.isFinite(state.mission.startedAt) ? state.mission.startedAt : now;
+      if(!Number.isFinite(state.mission.endsAt)){
+        state.mission.startedAt=startedAt;
+        state.mission.endsAt=now+(MIN_MISSION_SECONDS*1000);
+      }
+      const maxDuration=MAX_MISSION_SECONDS*1000*MISSION_OVERRUN_MULTIPLIER;
+      if(now-startedAt>maxDuration){
+        state.mission.endsAt=now;
+      }
+    }
+
     function updateTimers(){
       if(resolveTravelIfComplete()){
         renderAll();
       }
       if(state.mission.active && !state.mission.completed){
         const now=Date.now();
+        normalizeMissionTiming(now);
         if(state.mission.type==='combat'){
           combatTick(now);
           if(state.mission.fleeing && now>=state.mission.endsAt){
             completeMission({combatResolved:true});
+          }else if(!state.mission.completed && !state.mission.fleeing && now>=state.mission.endsAt){
+            completeMission({combatResolved:true,forcedFail:true});
           }
         }else if(now>=state.mission.endsAt){
           completeMission();
