@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Zero Lux - Salvage Loop</title>
+  <title>Zones - fight, loot, survive.</title>
   <style>
     :root{
       color-scheme: dark;
@@ -169,7 +169,7 @@
   <div id="app">
     <header>
       <div>
-        <div class="title">Zero Lux Salvage Loop <span class="pill">inventory / looter / idle</span></div>
+        <div class="title">Zones - fight, loot, survive. <span class="pill">inventory / looter / idle</span></div>
         <div class="tagline">Pick zones, run salvage loops, and sort haul into gear, stash, or scrap.</div>
       </div>
       <div class="pill">Build #: 0.2b — inventory-focused loop</div>
@@ -2012,7 +2012,27 @@
       }
     }
 
+    function resolveTravelIfComplete(){
+      if(!state.travel.active) return false;
+      if(!state.travel.target || !state.travel.endsAt){
+        state.travel={active:false,endsAt:null,target:null};
+        setCodex('Transit data lost. Select a zone gate to reroute.');
+        logMsg('Transit data lost. Zone selection reset.');
+        return true;
+      }
+      if(Date.now()<state.travel.endsAt) return false;
+      state.zone=state.travel.target;
+      state.travel={active:false,endsAt:null,target:null};
+      setCodex(`Arrived at ${state.zone.name}.`);
+      logMsg(`Transit complete: ${state.zone.name}.`);
+      saveGame();
+      return true;
+    }
+
     function renderTravelStatus(){
+      if(resolveTravelIfComplete()){
+        return renderTravelStatus();
+      }
       const doorButtons=dom.doors.querySelectorAll('button');
       doorButtons.forEach(btn=>{
         btn.disabled=state.mission.active || state.travel.active;
@@ -3276,11 +3296,7 @@
     showIntroModal({returning:Boolean(savedState)});
 
     function updateTimers(){
-      if(state.travel.active && Date.now()>=state.travel.endsAt){
-        state.zone=state.travel.target;
-        state.travel={active:false,endsAt:null,target:null};
-        setCodex(`Arrived at ${state.zone.name}.`);
-        logMsg(`Transit complete: ${state.zone.name}.`);
+      if(resolveTravelIfComplete()){
         renderAll();
       }
       if(state.mission.active && !state.mission.completed){
