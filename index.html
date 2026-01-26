@@ -2108,6 +2108,7 @@
         setCodex('Finish travel before taking local action.');
         return;
       }
+      startLoops();
       const label=option.label || 'Local action';
       const risk=option.risk || state.zone.risk;
       const time=option.time || 8;
@@ -2840,6 +2841,7 @@
         setCodex('Hub zones are secure. Travel to a field site to engage hostiles.');
         return;
       }
+      startLoops();
       const profile=getCombatProfile(state.zone.risk);
       const cost={energy:10};
       if(!canAfford(cost)){
@@ -2904,6 +2906,7 @@
         setCodex('Not enough resources for that contract.');
         return;
       }
+      startLoops();
       applyCost(cost);
       const now=Date.now();
       const durationMs=computeMissionDurationMs({risk:raidLike.risk,time:raidLike.time,loot:raidLike.loot});
@@ -2965,6 +2968,7 @@
         setCodex('Not enough resources for that raid.');
         return;
       }
+      startLoops();
       applyCost(cost);
       const now=Date.now();
       const durationMs=computeMissionDurationMs({risk:raid.risk,time:raid.time,loot:raid.loot});
