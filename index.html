@@ -2147,6 +2147,7 @@
       logMsg(`Local action: ${label} (${time} min).`);
       setActiveTab('hub');
       setScreen('mission');
+      normalizeMissionTiming(Date.now());
       renderAll();
     }
 
@@ -2651,6 +2652,7 @@
       setCodex('Hostile contact! Hold out or flee.');
       logMsg(`Combat encounter triggered by ${pending.label}. ${describeCombatState(combatState)}`);
       setScreen('mission');
+      normalizeMissionTiming(Date.now());
       renderAll();
     }
     function resolvePendingMission(outcomeOverride){
@@ -2873,6 +2875,7 @@
       logMsg(`Combat sortie launched against ${profile.enemyName}. ${describeCombatState(combatState)}`);
       setActiveTab('hub');
       setScreen('mission');
+      normalizeMissionTiming(Date.now());
       renderAll();
     }
     function runQuest(quest){
@@ -2929,6 +2932,7 @@
       logMsg(`Contract deployed: ${raidLike.label} (${raidLike.time} min op).`);
       setActiveTab('hub');
       setScreen('mission');
+      normalizeMissionTiming(Date.now());
       renderAll();
     }
 
@@ -2989,6 +2993,7 @@
       logMsg(`Mission launched: ${raid.label} (${raid.time} min op).`);
       setActiveTab('hub');
       setScreen('mission');
+      normalizeMissionTiming(Date.now());
       renderAll();
     }
 
@@ -3392,9 +3397,28 @@
     }
 
     /* ================= INIT ================= */
-    renderAll();
-    loadGames();
-    showIntroModal({returning:Boolean(savedState)});
+    let loopsStarted=false;
+    function startLoops(){
+      if(loopsStarted) return;
+      loopsStarted=true;
+      setInterval(ambientTick,6500);
+      setInterval(updateTimers,250);
+      setInterval(saveGame,60000);
+      window.addEventListener('beforeunload',saveGame);
+    }
+
+    function initGame(){
+      renderAll();
+      loadGames();
+      showIntroModal({returning:Boolean(savedState)});
+      startLoops();
+    }
+
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded',initGame);
+    }else{
+      initGame();
+    }
 
     function normalizeMissionTiming(now){
       if(!state.mission.active || state.mission.completed) return;
@@ -3480,10 +3504,6 @@
       renderAll();
     }
 
-    setInterval(ambientTick,6500);
-    setInterval(updateTimers,250);
-    setInterval(saveGame,60000);
-    window.addEventListener('beforeunload',saveGame);
   </script>
 </body>
 </html>
