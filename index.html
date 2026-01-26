@@ -2024,12 +2024,16 @@
       renderIdleOps();
     }
 
+    function isMissionBlockingTravel(){
+      return state.mission.active && !state.mission.completed;
+    }
+
     function setScreen(screen){
-      if(screen==='locations' && state.mission.active){
+      if(screen==='locations' && isMissionBlockingTravel()){
         setCodex('Mission in progress. Locations hub locked.');
         return;
       }
-      if(screen==='main' && state.mission.active){
+      if(screen==='main' && isMissionBlockingTravel()){
         setCodex('Mission in progress. Stay on the raid feed.');
         return;
       }
@@ -2048,13 +2052,13 @@
       dom.screenButtons.forEach(btn=>{
         const target=btn.dataset.screen;
         const isLocked=target==='mission' && !state.mission.active;
-        const isLocationsLocked=target==='locations' && state.mission.active;
-        const isMainLocked=target==='main' && state.mission.active;
+        const isLocationsLocked=target==='locations' && isMissionBlockingTravel();
+        const isMainLocked=target==='main' && isMissionBlockingTravel();
         btn.classList.toggle('active',target===state.screen);
         btn.disabled=isLocked || isLocationsLocked || isMainLocked;
       });
       if(dom.enterLocations){
-        dom.enterLocations.disabled=state.mission.active;
+        dom.enterLocations.disabled=isMissionBlockingTravel();
       }
       Object.entries(dom.screens).forEach(([id,el])=>{
         el.classList.toggle('active',id===state.screen);
@@ -2075,9 +2079,11 @@
     }
 
     function renderHubAccess(){
-      dom.hubLock.textContent=state.mission.active
+      dom.hubLock.textContent=isMissionBlockingTravel()
         ? 'Mission underway. Await extraction clearance before entering locations hub.'
-        : 'Ops bay is live. Step into the locations hub to pick a gate and launch a raid.';
+        : state.mission.active
+          ? 'Mission resolved. Review rewards, then redeploy from the locations hub.'
+          : 'Ops bay is live. Step into the locations hub to pick a gate and launch a raid.';
     }
 
     function renderZone(){
@@ -3321,7 +3327,7 @@
       const btn=document.createElement('button');
       btn.innerHTML=`<span>${exp.door?.label||exp.meta.name}</span><span class="small">${exp.door?.hint||'Unknown contact'}</span>`;
       btn.onclick=()=>{
-        if(state.mission.active){
+        if(isMissionBlockingTravel()){
           setCodex('Mission in progress. Cannot change locations.');
           return;
         }
