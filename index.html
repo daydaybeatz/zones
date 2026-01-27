@@ -2028,7 +2028,27 @@
       return state.mission.active && !state.mission.completed;
     }
 
+    function syncMissionCompletion(){
+      if(!state.mission.active || state.mission.completed) return;
+      const now=Date.now();
+      normalizeMissionTiming(now);
+      if(state.mission.type==='combat'){
+        combatTick(now);
+        if(state.mission.completed) return;
+        if(state.mission.fleeing && now>=state.mission.endsAt){
+          completeMission({combatResolved:true});
+        }else if(now>=state.mission.endsAt){
+          completeMission({combatResolved:true,forcedFail:true});
+        }
+        return;
+      }
+      if(now>=state.mission.endsAt){
+        completeMission();
+      }
+    }
+
     function setScreen(screen){
+      syncMissionCompletion();
       if(screen==='locations' && isMissionBlockingTravel()){
         setCodex('Mission in progress. Locations hub locked.');
         return;
@@ -2049,6 +2069,7 @@
     }
 
     function renderScreens(){
+      syncMissionCompletion();
       dom.screenButtons.forEach(btn=>{
         const target=btn.dataset.screen;
         const isLocked=target==='mission' && !state.mission.active;
