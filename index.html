@@ -2413,6 +2413,10 @@ once:true`
       return state.mission.active && !state.mission.completed;
     }
 
+    function isRewardBlockingTravel(){
+      return state.mission.active && state.mission.completed && (state.mission.rewards?.length||0)>0;
+    }
+
     function syncMissionCompletion(){
       if(!state.mission.active || state.mission.completed) return;
       const now=Date.now();
@@ -2743,7 +2747,7 @@ once:true`
       }
       const doorButtons=dom.doors.querySelectorAll('button');
       doorButtons.forEach(btn=>{
-        btn.disabled=state.mission.active || state.travel.active;
+        btn.disabled=state.mission.active || state.travel.active || isRewardBlockingTravel();
       });
       if(state.travel.active){
         scheduleTravelResolution();
@@ -3819,6 +3823,10 @@ once:true`
       btn.onclick=()=>{
         if(isMissionBlockingTravel()){
           setCodex('Mission in progress. Cannot change locations.');
+          return;
+        }
+        if(isRewardBlockingTravel()){
+          setCodex('Resolve mission rewards before changing locations.');
           return;
         }
         if(state.travel.active){
