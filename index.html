@@ -3319,11 +3319,21 @@ once:true`
       state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null};
     }
     function closeMission({auto=false}={}){
+      const lastLocation=state.mission.location ? {...state.mission.location} : null;
+      const shouldRestoreLocation=lastLocation && lastLocation.id !== state.zone.id;
       resetMissionState();
       state.selected={source:null,item:null};
-      state.screen='main';
-      setCodex(auto ? 'All rewards routed. Mission auto-closed.' : 'Mission closed. Back on the command deck.');
-      renderAll();
+      if(shouldRestoreLocation){
+        state.zone=lastLocation;
+        clearMarketAccess();
+      }
+      setCodex(auto ? 'All rewards routed. Returning to the locations hub.' : 'Mission closed. Returning to the locations hub.');
+      setActiveTab('hub');
+      if(lastLocation){
+        setScreen('locations');
+      }else{
+        setScreen('main');
+      }
     }
 
     function startMission(raid){
