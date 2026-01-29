@@ -1010,13 +1010,13 @@ once:true`
       const hour=((h+11)%12+1);return `${hour}:${m.toString().padStart(2,'0')} ${suffix}`;
     }
     const setCodex=(msg)=>{ state.codex=[msg]; };
-    const canAccessVault=()=>state.zone.id==='safehouse' && !state.mission.active && !state.travel.active;
-    const canAccessMarket=()=>state.marketAccess.active && state.marketAccess.zoneId===state.zone.id && !state.mission.active && !state.travel.active;
     const isHubZone=(zone=state.zone)=>{
       if(!zone) return false;
       const name=(zone.name||'').toLowerCase();
       return zone.id==='safehouse' || zone.id==='drift-yard' || name.includes('safehouse') || name.includes('hub') || name.includes('drift yard');
     };
+    const canAccessVault=()=>isHubZone(state.zone) && !state.mission.active && !state.travel.active;
+    const canAccessMarket=()=>state.marketAccess.active && state.marketAccess.zoneId===state.zone.id && !state.mission.active && !state.travel.active;
     const isMarketZone=(zone=state.zone)=>{
       if(!zone) return false;
       const exp=expansions[zone.id];
@@ -1047,7 +1047,7 @@ once:true`
         }
       }
     };
-    const vaultBlockedMessage='Return to the Cold Shelter hatch to access the vault.';
+    const vaultBlockedMessage='Return to a hub location to access the vault.';
     const logMsg=(msg)=>{
       const stamp=`[Day ${state.day} // ${fmtTime(state.timeMinutes)}] ${msg}`;
       if(state.mission.active && !state.mission.completed){
@@ -1251,6 +1251,21 @@ once:true`
     };
     const getEquipmentSlotTotal=()=>Object.values(EQUIPMENT_SLOTS).reduce((sum,val)=>sum+val,0);
     const slotLabel=(slot)=>EQUIPMENT_SLOT_LABELS[slot] || slot;
+    const getEquippedItemBySlot=(slot)=>state.equipped.find(item=>getItem(item).slot===slot);
+    const getBackpackLimitAfterSwap=(currentBackpack,newBackpack)=>{
+      const currentMods=getGearMods(currentBackpack);
+      const newMods=getItem(newBackpack).mods || {};
+      const carryBonus=(currentMods.carryBonus||0)+(newMods.carryBonus||0);
+      return state.backpackLimit+carryBonus;
+    };
+    const canSwapBackpack=(currentBackpack,newBackpack,removeFromInventory)=>{
+      const tempInventory=[...state.inventory];
+      if(removeFromInventory){
+        removeItem(tempInventory,newBackpack);
+      }
+      const limit=getBackpackLimitAfterSwap(currentBackpack,newBackpack);
+      return hasCapacityFor(tempInventory,limit,currentBackpack,1);
+    };
     const canEquipItem=(item)=>{
       const data=getItem(item);
       if(!data.slot) return {ok:false,reason:'This item cannot be equipped.'};
@@ -1323,6 +1338,24 @@ once:true`
       const data=getItem(item);
       const check=canEquipItem(item);
       if(!check.ok){
+        if(data.slot==='backpack'){
+          const equippedBackpack=getEquippedItemBySlot('backpack');
+          if(equippedBackpack){
+            if(!canSwapBackpack(equippedBackpack,item,true)){
+              setCodex('Backpack too full to swap.');
+              return;
+            }
+            removeItem(state.inventory,item);
+            removeItem(state.equipped,equippedBackpack);
+            state.inventory.push(equippedBackpack);
+            state.equipped.push(item);
+            state.selected={source:'equipped',item};
+            setCodex(`${item} equipped.`);
+            logMsg(`Swapped to ${item}.`);
+            renderAll();
+            return;
+          }
+        }
         setCodex(check.reason || 'No open slots for that item.');
         return;
       }
@@ -1634,6 +1667,24 @@ once:true`
       const data=getItem(item);
       const check=canEquipItem(item);
       if(!check.ok){
+        if(data.slot==='backpack'){
+          const equippedBackpack=getEquippedItemBySlot('backpack');
+          if(equippedBackpack){
+            if(!canSwapBackpack(equippedBackpack,item,false)){
+              setCodex('Backpack too full to swap.');
+              return;
+            }
+            if(!removeRewardItem(source,item)) return;
+            removeItem(state.equipped,equippedBackpack);
+            state.inventory.push(equippedBackpack);
+            state.equipped.push(item);
+            state.selected={source:'equipped',item};
+            setCodex(`${item} equipped from rewards.`);
+            autoCloseMissionIfResolved();
+            renderAll();
+            return;
+          }
+        }
         setCodex(check.reason || 'No open slots for that item.');
         return;
       }
