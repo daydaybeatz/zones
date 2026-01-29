@@ -1,63 +1,68 @@
 @expansion
 id:forest
-name:Blackwood Expanse
-summary:A drowned canopy smothers sound while broken exo-suits rot where they fell. A derailed supply train still leaks reactor heat into the mud.
+name:Glimmerwell Clinic
+summary:A collapsed metro clinic lit by emergency red. Cabinets are sealed with bio-tags and the air tastes of antiseptic.
+shop:true
 
 @door
-label:Blackwood Trailhead
-hint:scouting, salvage, high radiation pockets
-note:Static gathers into a low chant as you cross the treeline.
-target:trail-edge
+label:Glimmerwell Access
+hint:medical caches, triage runs
+note:Sterile lights flicker on as you pass the quarantine tape.
+target:triage-bay
 
-@scene trail-edge
-title:Trail Edge
-desc:Fresh hazard tape flutters on old stakes while rusted lanterns stare blind. Shapes move between wet trunks and never step into the light.
-tags:Recon / Low Cover
-option:Scout the treeline => clearing | risk:medium | time:12 | success:credits+20,stamina-6,log:You flag a path through the rot.,note:Clearing marked on your map. | fail:hp-8,rads+1,log:Thorns tear through sleeves and skin.
-option:Follow the radio ping => rail-wreck | risk:high | time:16 | success:flag:train-signal,log:The ping steadies like a buried heartbeat.,stamina-8 | fail:hp-12,rads+2,log:Something massive shifts in the dark.
-option:Forage for herbs => trail-edge | risk:low | time:10 | success:item:glowing herbs,item:rad moss poultice,log:You harvest bioluminescent herbs and pack moss into a poultice.,hunger-4 | fail:hp-4,log:A glass shard opens your palm.
+@scene triage-bay
+title:Triage Bay
+desc:Cots line the tile floor. A silent monitor blinks beside a stack of sealed med cases.
+tags:Medical / Hazard
+option:Stabilize the power feed => triage-bay | risk:medium | time:8 | reward:clinic access | success:credits+10,flag:clinic-power,log:The lights hum back to steady. | fail:temp-2,log:The breaker snaps.
+option:Scan the quarantine ledger => triage-bay | risk:high | time:7 | reward:medical intel | success:item:compact medkit,flag:clinic-ledger,log:A sealed kit pops open with the correct code. | fail:hp-6,log:An alarm shrieks and then dies.
 
-@scene clearing
-title:Shadowed Clearing
-desc:Broken stone pillars ring a shallow pool that mirrors your visor in bands of static. The air tastes metallic and wrong.
-tags:Staging
-option:Deploy a signal flare => clearing | risk:medium | time:8 | success:temp+2,flag:flare-up,log:The flare stains the canopy with emergency red. | fail:temp+1,log:The flare sputters but refuses to die.
-option:Inspect old camp => cache | risk:low | time:7 | success:item:coil battery,item:spore lantern,log:You recover a battery and a lantern humming with spores.,morale+2 | fail:morale-2,log:Only gnawed bone and stripped metal remain.
-option:Approach strange monolith => monolith | risk:high | time:14 | success:note:Coordinates etched into the stone point to a buried hatch.,credits+10,log:You copy the markings with shaking hands. | fail:morale-6,rads+3,log:Nausea drops you to your knees.
-option:Circle back => trail-edge | risk:low | time:6 | success:stamina+4 | fail:stamina+2
+@mission
+id:medical-run
+label:Dangerous medical loot run
+desc:Push into the sealed pharmacy wing for trauma supplies.
+risk:high
+time:12
+energy:16
+loot:3
+lootType:medical crates
 
-@scene rail-wreck
-title:Derailed Freight
-desc:An overturned freight car lies split open, its guts steaming into the rain. Warning sigils are stenciled over older, scratched-out names.
-tags:Loot / Hazard
-option:Extract reactor shard => rail-wreck | risk:deadly | time:18 | rad:3 | success:item:reactor shard,item:feral talon,credits+35,log:You lift a hot shard and pry a talon from the wreckage.,note:Shards hum louder near water. | fail:hp-18,rads+4,log:Heat bleeds through your gloves.
-option:Search for rations => clearing | risk:medium | time:10 | success:item:military rations,hunger-6,log:You find sealed packs buried under ash. | fail:hunger+8,log:Rats got here first.
-option:Listen in the dark => clearing | risk:low | time:6 | success:note:A two-tone beacon repeats 07-19-07 through the static.,morale+3 | fail:morale-3,log:The wreck answers only with buzzing.
-option:Cut open the cab => cache | risk:medium | time:9 | success:credits+15,item:spare filter,item:monsoon canteen,log:Filters and a monsoon canteen sealed in foil fall into your hands. | fail:hp-6,log:A jagged seam slices deep.
-
-@scene cache
-title:Forgotten Cache
-desc:Ripped duffels, empty syringes, and a half-drained lantern mark a campsite abandoned in a hurry. Footprints circle it like a warning.
-tags:Salvage / Intel
-option:Patch your suit => clearing | risk:low | time:8 | success:stamina+10,temp+1,item:hardened bark plate,log:Seals bite down tight and you lash on bark plating. | fail:stamina-4,log:You overtighten and crack a clasp.
-option:Disarm tripwire => trail-edge | risk:high | time:10 | success:item:copper wire,credits+8,log:You coil the wire without setting it off. | fail:hp-10,log:The trap snaps and blood runs hot.
-option:Follow muddy tracks => monolith | risk:medium | time:11 | success:flag:forest-tracks,log:The tracks sink toward the monolith. | fail:morale-3,log:The rain erases every sign.
-
-@scene monolith
-title:Obsidian Monolith
-desc:A human-height stone hums beneath your palm. Fresh paint across it reads "RUN" but the letters have already started to drip.
-tags:Weird / Lore
-option:Touch the glyphs => monolith | risk:high | time:9 | success:morale+4,flag:forest-glyph,log:The symbols burn into memory like a brand. | fail:morale-6,hp-6,log:Pressure spikes behind your eyes.
-option:Tune the beacon => clearing | risk:medium | time:8 | success:note:Beacon harmonics stored for later.,credits+12,log:You capture the pattern before it slips away. | fail:temp-1,log:Feedback screams through your headset.
-option:Back away quietly => clearing | risk:low | time:4 | success:stamina+3,temp+1 | fail:stamina+1
+@mission
+id:item-run
+label:Dangerous item loot run
+desc:Raid the isolation lockers for high-value gear.
+risk:high
+time:11
+energy:15
+loot:2
+lootType:rare items
 
 @quest
-id:forest-heart
-title:Harvest the Monolith Heart
-desc:Trace the etched coordinates to a buried hatch and recover the humming core before the forest seals over it forever.
+id:clinic-serum
+title:Retrieve the serum capsule
+desc:A sealed vaccine capsule is still logged in the vault fridge.
 risk:high
-time:14
-success:item:monolith sigil,credits+22,morale+4
-fail:hp-10,rads+3,morale-3
-flag:forest-heart
+time:13
+energy:18
+loot:3
+lootType:medical cache
+reward:serum capsule
+success:item:filtered water pack,item:painkillers,credits+20,flag:clinic-serum
+fail:hp-8,morale-4
+flag:clinic-serum
+once:true
+
+@quest
+id:clinic-evac
+title:Evacuate the med drone
+desc:Bring the intact med drone back online and escort it out.
+risk:medium
+time:10
+energy:14
+loot:2
+lootType:clinic supplies
+reward:drone med kit
+success:item:spark tonic,item:bandage,credits+14,flag:clinic-evac
+fail:hp-6,morale-3
+flag:clinic-evac
 once:true

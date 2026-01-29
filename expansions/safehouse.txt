@@ -1,16 +1,49 @@
 @expansion
 id:safehouse
-name:Cold Shelter
-summary:A sealed bunker kept alive by rain barrels and a failing lantern. Survivors come here to stabilize wounds, ration supplies, and plan routes that might keep them breathing.
+name:Horizon Shelter
+summary:A cliffside shelter of reinforced glass and saltcrete. Exhaust fans hum, bunks are warm, and a ration counter trades in quiet promises.
+shop:true
 
 @door
-label:Cold Shelter Hatch
-hint:rest, storage, shops
+label:Horizon Shelter Hatch
+hint:rest, supply shop, recovery
+note:The hatch seals behind you with a dull thud. The air smells of warm metal and soup.
 target:commons
 
 @scene commons
-title:Cold Shelter Commons
-desc:Storage lockers line the concrete walls beside a tiny counter of trade goods. The air is warm and still, safe enough to breathe.
-tags:Safe / Storage / Trade
-option:Rest for a half hour => commons | risk:low | time:30 | success:hp+8,stamina+12,morale+4,hunger-6,thirst-8,log:You grab a guarded half hour of rest. | fail:hp+4,stamina+6
-option:Browse storage and shops => commons | risk:low | time:6 | success:item:lantern oil,item:thermal wrap,log:The lockers yield a few essentials. | fail:morale-1
+title:Horizon Commons
+desc:Rows of bunks glow with heat lamps. A ration counter sits beside a wall of handwritten schedules.
+tags:Safe / Shelter
+option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+10,stamina+12,morale+6,log:The bunk warmth sinks into your bones. | fail:morale-2,log:Sleep won't come tonight.
+option:Boil a meal at the heater => commons | risk:low | time:5 | reward:hot meal | success:hunger-18,thirst-6,temp+2,log:Steam and salt do the job. | fail:hunger-4,log:The burner sputters out.
+option:Update the shelter logbook => commons | risk:low | time:4 | reward:morale boost | success:morale+5,flag:horizon-log,log:New names go on the board. Old names come off. | fail:morale-2,log:The pen runs dry.
+
+@quest
+id:shelter-vent
+title:Seal the frost vents
+desc:Patch a cracked intake valve before the next blizzard rolls through.
+risk:medium
+time:8
+energy:10
+loot:2
+lootType:shelter supplies
+reward:vent patches
+success:item:thermal wrap,item:spare filter,credits+10,flag:shelter-vent
+fail:temp-3,morale-4
+flag:shelter-vent
+once:true
+
+@quest
+id:shelter-reserve
+title:Audit the reserve lockers
+desc:Count and re-tag the emergency lockers in the lower hall.
+risk:low
+time:7
+energy:8
+loot:1
+lootType:stored rations
+reward:bonus rations
+success:item:ration bar,item:water flask,credits+6,flag:shelter-reserve
+fail:morale-2
+flag:shelter-reserve
+once:true
