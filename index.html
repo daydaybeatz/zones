@@ -359,6 +359,7 @@
       inventoryPage:0,
       stashPage:0,
       loadoutPage:0,
+      marketPage:0,
       inventory:["rusty flashlight","ration bar","scrap wiring"],
       equipped:['basic backpack'],
       codex:["Hub online. Reward bays clear."],
@@ -569,257 +570,264 @@
     const riskRank={low:1,medium:2,high:3,deadly:4};
     const expansions={};
     const EXPANSION_MANIFEST=[
-      {id:'town',name:'Iron Ward',file:'expansions/town.txt'},
-      {id:'safehouse',name:'Cold Shelter',file:'expansions/safehouse.txt'},
-      {id:'forest',name:'Blackwood Expanse',file:'expansions/forest.txt'},
-      {id:'portland_slums',name:'Downtown Portland',file:'expansions/portland_slums.txt'}
+      {id:'town',name:'Shatterline Front',file:'expansions/town.txt'},
+      {id:'safehouse',name:'Horizon Shelter',file:'expansions/safehouse.txt'},
+      {id:'forest',name:'Glimmerwell Clinic',file:'expansions/forest.txt'},
+      {id:'portland_slums',name:'Grainfall Depot',file:'expansions/portland_slums.txt'}
     ];
     const EMBEDDED_EXPANSIONS={
       town:`@expansion
 id:town
-name:Iron Ward
-summary:A fortified market built from welded plate and blackout tarps. Traders exchange ammunition, medical scraps, and coordinates spoken like confessions.
+name:Shatterline Front
+summary:A blown-out warfront of collapsed bridges and cratered rail yards. Wind funnels through armor husks and buried comms relays.
+shop:true
 
 @door
-label:Iron Ward Gate
-hint:trade, rumors, quick morale fixes
-note:The guard logs your name without looking up. The ledger is thicker than the walls.
-target:market-square
+label:Shatterline Gate
+hint:warfront salvage, heavy gear
+note:You step past a twisted barricade. Distant sirens echo through the broken spans.
+target:forward-camp
 
-@scene market-square
-title:Market Square
-desc:Generators cough under strings of dead bulbs. A crooked clock tower keeps the wrong time to confuse snipers and thieves.
-tags:Safe / Trade
-option:Check the scrap kiosk => kiosk | risk:low | time:8 | success:credits+15,item:patch-kit,log:You pull usable salvage from a dead shelf. | fail:morale-4,log:The broker bleeds you on price.
-option:Visit the medic => medic | risk:low | time:6 | success:hp+8,credits-10,log:The medic patches you in silence. | fail:credits-5,log:Triage costs more than promised.
-option:Listen for rumors => rumor-board | risk:medium | time:10 | success:note:Rumor: a supply convoy stalled near the old subway cut.,flag:convoy-hook,log:A smuggler sells you a whisper. | fail:morale-3,log:All you hear are recycled lies.
+@scene forward-camp
+title:Forward Camp
+desc:Cargo pallets stack into a makeshift wall. Burn barrels keep the worst of the cold off the sentries.
+tags:Warfront / Staging
+option:Scout the crater grid => forward-camp | risk:medium | time:7 | reward:map intel | success:credits+12,flag:front-scout,log:You chart new cover routes. | fail:morale-3,log:Static hides every useful signal.
+option:Check the ammo bunker => forward-camp | risk:high | time:6 | reward:ammo cache | success:item:pipe rifle,item:riot-line tape,flag:front-bunker,log:A sealed crate still holds a serviceable rifle. | fail:hp-6,log:A loose beam crashes behind you.
 
-@scene kiosk
-title:Scrap Kiosk
-desc:Circuit boards, shell casings, and stripped wiring are sorted into neat, desperate piles. A ceiling fan rattles like loose teeth.
-tags:Trade
-option:Sell copper wiring => market-square | risk:low | time:5 | success:credits+20,log:The kiosk pays in chipped credits. | fail:credits+5,log:They dock you for corrosion.
-option:Browse exo-suit junk => market-square | risk:medium | time:7 | success:item:exo brace,item:tarpaulin roll,temp+1,log:A brace and bundled tarp still hold tension. | fail:morale-2,log:Everything else has already failed someone.
+@mission
+id:scavenger-run
+label:Scavenger loot run
+desc:Quick sweep across the busted trenches for leftover gear.
+risk:medium
+time:9
+energy:12
+loot:2
+lootType:scavenged gear
 
-@scene medic
-title:Patchwork Clinic
-desc:A canvas clinic reeks of antiseptic and ozone. Instruments are clean. The medic's hands are steadier than her eyes.
-tags:Healing
-option:Pay for a proper checkup => market-square | risk:low | time:8 | success:hp+15,morale+4,credits-25,log:Fresh bandages and a measured dose bring you back. | fail:credits-10,morale-2,log:You walk out lighter in wallet, not in pain.
-option:Buy painkillers => market-square | risk:medium | time:4 | success:item:painkillers,item:iron ward seals,credits-12,log:The meds and stamped seals vanish into your pack. | fail:credits-5,log:The batch is cut and crumbles.
-
-@scene rumor-board
-title:Rumor Board
-desc:Paper scraps, maps, and last-known locations are pinned beneath knife blades. A faded stencil reads "NO ONE COMES BACK CLEAN."
-tags:Intel
-option:Study a convoy map => market-square | risk:low | time:6 | success:note:You mark a convoy route running the canyon edge.,item:ledger-etched compass,log:The broker scratches bearings into a compass face. | fail:morale-2
-option:Trade gossip for cash => market-square | risk:medium | time:5 | success:credits+12,morale+2,item:clocktower chime,log:A trader tosses you a chime from the old tower. | fail:credits+2,morale-2,log:Your intel buys you pity, not profit.
+@mission
+id:equipment-run-2
+label:Dangerous equipment loot run II
+desc:Deep push into the collapsed armory for intact kit.
+risk:high
+time:14
+energy:18
+loot:3
+lootType:equipment crates
 
 @quest
-id:rusttown-crown
-title:Recover the Iron Crown
-desc:Find the clock tower's sealed coffer and reclaim the ceremonial helm before it is melted down for scrap.
+id:frontline-relay
+title:Recover the trench relay
+desc:Extract the comms relay buried beneath the east trench so the shelter can listen again.
 risk:high
 time:12
-success:item:iron crown,item:market shock knife,credits+20,morale+4
-fail:hp-8,morale-4
-flag:rusttown-crown
+energy:16
+loot:3
+lootType:equipment cache
+reward:relay salvage
+success:item:signal flare rack,item:riot shield,credits+18,flag:frontline-relay
+fail:hp-10,morale-4
+flag:frontline-relay
+once:true
+
+@quest
+id:frontline-medic
+title:Escort the wounded spotter
+desc:Carry a shell-shocked spotter back across the shattered deck plates.
+risk:medium
+time:10
+energy:14
+loot:2
+lootType:field kits
+reward:medical salvage
+success:item:bandage,item:morale patch,credits+12,flag:frontline-medic
+fail:hp-6,morale-5
+flag:frontline-medic
 once:true`,
       safehouse:`@expansion
 id:safehouse
-name:Cold Shelter
-summary:A sealed bunker kept alive by rain barrels and a failing lantern. Survivors come here to stabilize wounds, ration supplies, and plan routes that might keep them breathing.
+name:Horizon Shelter
+summary:A cliffside shelter of reinforced glass and saltcrete. Exhaust fans hum, bunks are warm, and a ration counter trades in quiet promises.
+shop:true
 
 @door
-label:Cold Shelter Hatch
-hint:rest, storage, shops
+label:Horizon Shelter Hatch
+hint:rest, supply shop, recovery
+note:The hatch seals behind you with a dull thud. The air smells of warm metal and soup.
 target:commons
 
 @scene commons
-title:Cold Shelter Commons
-desc:Storage lockers line the concrete walls beside a tiny counter of trade goods. The air is warm and still, safe enough to breathe.
-tags:Safe / Storage / Trade
-option:Rest for a half hour => commons | risk:low | time:30 | success:hp+8,stamina+12,morale+4,hunger-6,thirst-8,log:You grab a guarded half hour of rest. | fail:hp+4,stamina+6
-option:Browse storage and shops => commons | risk:low | time:6 | success:item:lantern oil,item:thermal wrap,log:The lockers yield a few essentials. | fail:morale-1`,
-      forest:`@expansion
-id:forest
-name:Blackwood Expanse
-summary:A drowned canopy smothers sound while broken exo-suits rot where they fell. A derailed supply train still leaks reactor heat into the mud.
-
-@door
-label:Blackwood Trailhead
-hint:scouting, salvage, high radiation pockets
-note:Static gathers into a low chant as you cross the treeline.
-target:trail-edge
-
-@scene trail-edge
-title:Trail Edge
-desc:Fresh hazard tape flutters on old stakes while rusted lanterns stare blind. Shapes move between wet trunks and never step into the light.
-tags:Recon / Low Cover
-option:Scout the treeline => clearing | risk:medium | time:12 | success:credits+20,stamina-6,log:You flag a path through the rot.,note:Clearing marked on your map. | fail:hp-8,rads+1,log:Thorns tear through sleeves and skin.
-option:Follow the radio ping => rail-wreck | risk:high | time:16 | success:flag:train-signal,log:The ping steadies like a buried heartbeat.,stamina-8 | fail:hp-12,rads+2,log:Something massive shifts in the dark.
-option:Forage for herbs => trail-edge | risk:low | time:10 | success:item:glowing herbs,item:rad moss poultice,log:You harvest bioluminescent herbs and pack moss into a poultice.,hunger-4 | fail:hp-4,log:A glass shard opens your palm.
-
-@scene clearing
-title:Shadowed Clearing
-desc:Broken stone pillars ring a shallow pool that mirrors your visor in bands of static. The air tastes metallic and wrong.
-tags:Staging
-option:Deploy a signal flare => clearing | risk:medium | time:8 | success:temp+2,flag:flare-up,log:The flare stains the canopy with emergency red. | fail:temp+1,log:The flare sputters but refuses to die.
-option:Inspect old camp => cache | risk:low | time:7 | success:item:coil battery,item:spore lantern,log:You recover a battery and a lantern humming with spores.,morale+2 | fail:morale-2,log:Only gnawed bone and stripped metal remain.
-option:Approach strange monolith => monolith | risk:high | time:14 | success:note:Coordinates etched into the stone point to a buried hatch.,credits+10,log:You copy the markings with shaking hands. | fail:morale-6,rads+3,log:Nausea drops you to your knees.
-option:Circle back => trail-edge | risk:low | time:6 | success:stamina+4 | fail:stamina+2
-
-@scene rail-wreck
-title:Derailed Freight
-desc:An overturned freight car lies split open, its guts steaming into the rain. Warning sigils are stenciled over older, scratched-out names.
-tags:Loot / Hazard
-option:Extract reactor shard => rail-wreck | risk:deadly | time:18 | rad:3 | success:item:reactor shard,item:feral talon,credits+35,log:You lift a hot shard and pry a talon from the wreckage.,note:Shards hum louder near water. | fail:hp-18,rads+4,log:Heat bleeds through your gloves.
-option:Search for rations => clearing | risk:medium | time:10 | success:item:military rations,hunger-6,log:You find sealed packs buried under ash. | fail:hunger+8,log:Rats got here first.
-option:Listen in the dark => clearing | risk:low | time:6 | success:note:A two-tone beacon repeats 07-19-07 through the static.,morale+3 | fail:morale-3,log:The wreck answers only with buzzing.
-option:Cut open the cab => cache | risk:medium | time:9 | success:credits+15,item:spare filter,item:monsoon canteen,log:Filters and a monsoon canteen sealed in foil fall into your hands. | fail:hp-6,log:A jagged seam slices deep.
-
-@scene cache
-title:Forgotten Cache
-desc:Ripped duffels, empty syringes, and a half-drained lantern mark a campsite abandoned in a hurry. Footprints circle it like a warning.
-tags:Salvage / Intel
-option:Patch your suit => clearing | risk:low | time:8 | success:stamina+10,temp+1,item:hardened bark plate,log:Seals bite down tight and you lash on bark plating. | fail:stamina-4,log:You overtighten and crack a clasp.
-option:Disarm tripwire => trail-edge | risk:high | time:10 | success:item:copper wire,credits+8,log:You coil the wire without setting it off. | fail:hp-10,log:The trap snaps and blood runs hot.
-option:Follow muddy tracks => monolith | risk:medium | time:11 | success:flag:forest-tracks,log:The tracks sink toward the monolith. | fail:morale-3,log:The rain erases every sign.
-
-@scene monolith
-title:Obsidian Monolith
-desc:A human-height stone hums beneath your palm. Fresh paint across it reads "RUN" but the letters have already started to drip.
-tags:Weird / Lore
-option:Touch the glyphs => monolith | risk:high | time:9 | success:morale+4,flag:forest-glyph,log:The symbols burn into memory like a brand. | fail:morale-6,hp-6,log:Pressure spikes behind your eyes.
-option:Tune the beacon => clearing | risk:medium | time:8 | success:note:Beacon harmonics stored for later.,credits+12,log:You capture the pattern before it slips away. | fail:temp-1,log:Feedback screams through your headset.
-option:Back away quietly => clearing | risk:low | time:4 | success:stamina+3,temp+1 | fail:stamina+1
+title:Horizon Commons
+desc:Rows of bunks glow with heat lamps. A ration counter sits beside a wall of handwritten schedules.
+tags:Safe / Shelter
+option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+10,stamina+12,morale+6,log:The bunk warmth sinks into your bones. | fail:morale-2,log:Sleep won't come tonight.
+option:Boil a meal at the heater => commons | risk:low | time:5 | reward:hot meal | success:hunger-18,thirst-6,temp+2,log:Steam and salt do the job. | fail:hunger-4,log:The burner sputters out.
+option:Update the shelter logbook => commons | risk:low | time:4 | reward:morale boost | success:morale+5,flag:horizon-log,log:New names go on the board. Old names come off. | fail:morale-2,log:The pen runs dry.
 
 @quest
-id:forest-heart
-title:Harvest the Monolith Heart
-desc:Trace the etched coordinates to a buried hatch and recover the humming core before the forest seals over it forever.
+id:shelter-vent
+title:Seal the frost vents
+desc:Patch a cracked intake valve before the next blizzard rolls through.
+risk:medium
+time:8
+energy:10
+loot:2
+lootType:shelter supplies
+reward:vent patches
+success:item:thermal wrap,item:spare filter,credits+10,flag:shelter-vent
+fail:temp-3,morale-4
+flag:shelter-vent
+once:true
+
+@quest
+id:shelter-reserve
+title:Audit the reserve lockers
+desc:Count and re-tag the emergency lockers in the lower hall.
+risk:low
+time:7
+energy:8
+loot:1
+lootType:stored rations
+reward:bonus rations
+success:item:ration bar,item:water flask,credits+6,flag:shelter-reserve
+fail:morale-2
+flag:shelter-reserve
+once:true`,
+      forest:`@expansion
+id:forest
+name:Glimmerwell Clinic
+summary:A collapsed metro clinic lit by emergency red. Cabinets are sealed with bio-tags and the air tastes of antiseptic.
+shop:true
+
+@door
+label:Glimmerwell Access
+hint:medical caches, triage runs
+note:Sterile lights flicker on as you pass the quarantine tape.
+target:triage-bay
+
+@scene triage-bay
+title:Triage Bay
+desc:Cots line the tile floor. A silent monitor blinks beside a stack of sealed med cases.
+tags:Medical / Hazard
+option:Stabilize the power feed => triage-bay | risk:medium | time:8 | reward:clinic access | success:credits+10,flag:clinic-power,log:The lights hum back to steady. | fail:temp-2,log:The breaker snaps.
+option:Scan the quarantine ledger => triage-bay | risk:high | time:7 | reward:medical intel | success:item:compact medkit,flag:clinic-ledger,log:A sealed kit pops open with the correct code. | fail:hp-6,log:An alarm shrieks and then dies.
+
+@mission
+id:medical-run
+label:Dangerous medical loot run
+desc:Push into the sealed pharmacy wing for trauma supplies.
 risk:high
-time:14
-success:item:monolith sigil,credits+22,morale+4
-fail:hp-10,rads+3,morale-3
-flag:forest-heart
+time:12
+energy:16
+loot:3
+lootType:medical crates
+
+@mission
+id:item-run
+label:Dangerous item loot run
+desc:Raid the isolation lockers for high-value gear.
+risk:high
+time:11
+energy:15
+loot:2
+lootType:rare items
+
+@quest
+id:clinic-serum
+title:Retrieve the serum capsule
+desc:A sealed vaccine capsule is still logged in the vault fridge.
+risk:high
+time:13
+energy:18
+loot:3
+lootType:medical cache
+reward:serum capsule
+success:item:filtered water pack,item:painkillers,credits+20,flag:clinic-serum
+fail:hp-8,morale-4
+flag:clinic-serum
+once:true
+
+@quest
+id:clinic-evac
+title:Evacuate the med drone
+desc:Bring the intact med drone back online and escort it out.
+risk:medium
+time:10
+energy:14
+loot:2
+lootType:clinic supplies
+reward:drone med kit
+success:item:spark tonic,item:bandage,credits+14,flag:clinic-evac
+fail:hp-6,morale-3
+flag:clinic-evac
 once:true`,
       portland_slums:`@expansion
 id:portland_slums
-name:Downtown Portland
-summary:A drowned district of cracked towers and barricaded streets. Factions fight over filtration rigs, signal relays, and the last workable routes through the ruins.
+name:Grainfall Depot
+summary:A flooded granary district with toppled silos and drowned loading docks. Grain dust clings to everything.
+shop:true
 
 @door
-label:Downtown Checkpoint
-hint:trade, factions, lethal streets
-note:A militia guard scans your pack, then marks your wrist with ash. "Don't get lost," he says. It sounds like a sentence.
-target:burnside-hub
+label:Grainfall Access
+hint:food runs, random cache pulls
+note:You step onto slick concrete as the smell of wet grain rises.
+target:silo-yard
 
-@scene burnside-hub
-title:Burnside Hub
-desc:Welded streetcars form a hard perimeter around a barter yard lit by burn barrels. Names of the dead are carved into every panel.
-tags:Safe / Trade / Hub
-option:Consult the route broker => route-broker | risk:low | time:6 | success:note:The broker marks a maintenance tunnel that bypasses a kill zone.,log:You buy directions scratched into tin. | fail:morale-2,log:The broker sells you nothing but smoke.
-option:Eat at the ration line => ration-line | risk:low | time:5 | success:hunger-8,credits-10,log:Thin stew settles your hands.,note:The cook mutters about a vanished patrol. | fail:credits-5,hunger-2,log:The pot runs dry halfway through.
-option:Parley with the federal patrol => patrol-van | risk:medium | time:7 | success:flag:patrol-contact,log:You trade scavenged intel for a temporary pass.,morale+2 | fail:temp-2,log:They record your face and send you away.
-option:Hire a tunnel runner => tunnel-runner | risk:medium | time:8 | success:item:sealed boots,item:bridge-runner pack,credits-20,log:The runner outfits you for flooded routes and straps on a bridge-runner pack.,note:She warns of a preacher rally under the bridge. | fail:credits-10,log:The runner ghosts you before the deal closes.
+@scene silo-yard
+title:Silo Yard
+desc:Water laps at the base of broken silos. Carts and pallets float like tombstones.
+tags:Food / Flooded
+option:Patch a floating pallet => silo-yard | risk:medium | time:6 | reward:food salvage | success:item:field rations,flag:grain-pallet,log:You lash down a crate of edible packs. | fail:hunger+6,log:The pallet slips away.
+option:Follow the grain trail => silo-yard | risk:high | time:8 | reward:cache clue | success:item:ember ration,flag:grain-trail,log:A trail of grain leads to a sealed cache. | fail:hp-5,log:The slick walkway drops out beneath you.
 
-@scene route-broker
-title:Route Broker
-desc:A scarred cartographer works beneath a tarp of stitched hazard suits. Maps are etched into metal sheets so the rain cannot erase them.
-tags:Intel
-option:Trade salvage for a grid map => burnside-hub | risk:low | time:6 | success:item:underground map,credits-15,log:The map shows storm drains and sealed doors.,note:A maintenance shaft near the river is circled twice. | fail:credits-7,log:The sheet is outdated and missing half its marks.
-option:Swap rumors for leverage => burnside-hub | risk:medium | time:5 | success:morale+3,log:Your story buys you a cleaner route. | fail:morale-3,log:Your rumor is already old news.
-
-@scene ration-line
-title:Ration Line
-desc:Citizens queue in silence while a filtration rig coughs behind sandbags. Armed volunteers watch for cutters with the patience of snipers.
-tags:Rest / Intel
-option:Ask about the vanished patrol => patrol-hunt | risk:medium | time:9 | success:flag:patrol-lead,log:A veteran points you toward Riot Alley.,morale+2 | fail:temp-1,log:No one wants to speak on record.
-option:Donate a can to the pot => burnside-hub | risk:low | time:3 | success:credits-5,stamina+4,log:The cook nods once and fills your bowl. | fail:credits-2,log:The can slips from your hands into the mud.
-
-@scene patrol-van
-title:Federal Patrol Van
-desc:A black van idles beside a barricade of jersey walls. Officers monitor drone feeds and mark targets on laminated sheets.
-tags:Intel / Risky
-option:Present forged clearance => protest-camp | risk:medium | time:7 | success:temp+2,log:They wave you toward the bridge camp with a warning. | fail:temp-3,log:They hold you at gunpoint while they check the code.
-option:Plant a relay tap => burnside-hub | risk:high | time:10 | success:item:signal tap,item:signal flare rack,flag:van-tapped,log:You splice into their relay and snap on a flare rack before anyone looks up.,temp-1 | fail:hp-8,log:A baton cracks across your knuckles.
-
-@scene tunnel-runner
-title:Tunnel Runner
-desc:A courier in patched waders studies the storm drains like scripture. Her crew measures risk in bodies, not minutes.
-tags:Trade / Lore
-option:Buy a flood route => trolley-bridge | risk:medium | time:5 | success:note:A submerged rail line leads to the trolley bridge span.,log:She traces the path on your glove with chalk. | fail:morale-2,log:She refuses the job after seeing your gear.
-option:Commission a supply pull => burnside-hub | risk:medium | time:6 | success:item:water filters,credits-18,log:Her crew brings back filters sealed in wax.,morale+1 | fail:credits-9,log:The crew returns empty and angry.
-
-@scene protest-camp
-title:Bridge Camp
-desc:Tents cluster beneath the overpass, shielded by murals and sheet metal. The camp is organized like an army that ran out of uniforms.
-tags:Quests / Combat
-option:Meet the camp marshal => camp-briefing | risk:low | time:6 | success:flag:camp-ally,log:The marshal outlines a plan to seize a drone yard. | fail:morale-3,log:They search you twice and send you away.
-option:Separate a knife fight => protest-camp | risk:medium | time:8 | success:morale+5,log:You end it fast and earn wary respect.,note:The camp owes you a favor. | fail:hp-6,log:A blade scores your ribs before order returns.
-option:Intercept infiltrators => alley-ambush | risk:high | time:12 | success:credits+30,item:riot shield,log:You catch saboteurs planting charges.,temp+1 | fail:hp-12,log:The blast throws you into a wall.
-
-@scene camp-briefing
-title:Camp Briefing
-desc:The marshal sketches drone routes across a scavenged steel door. Every arrow ends at the same word: SURVIVE.
-tags:Quest
-option:Accept the drone yard raid => drone-yard | risk:medium | time:10 | success:flag:drone-job,log:You join the strike team at dusk.,item:flare paint | fail:morale-2,log:Hesitation costs you their trust.
-option:Demand payment up front => protest-camp | risk:medium | time:5 | success:credits+15,log:The camp scrapes together a down payment. | fail:temp-1,log:The marshal remembers your greed.
-
-@scene alley-ambush
-title:Riot Alley
-desc:Charred walls narrow into a choke point littered with casings. Speakers blare old siren tones to keep everyone on edge.
-tags:Combat / Hazard
-option:Push through the choke point => alley-ambush | risk:high | time:10 | success:hp-4,credits+25,item:flashbang,log:You break the ambush and strip the fallen. | fail:hp-14,log:Rifle fire chews the concrete around you.
-option:Deploy suppression foam => protest-camp | risk:medium | time:8 | success:item:foam canister,item:riot-line tape,temp+2,log:The foam blinds shooters long enough to retreat and you strip riot tape from the barricade. | fail:item:foam canister,log:The nozzle clogs and you eat smoke.
-
-@scene patrol-hunt
-title:Patrol Hunt
-desc:A cracked HUD beacon pulses from a shuttered storefront. The street is too quiet, like the city is holding its breath.
-tags:Quest / Search
-option:Track the beacon => patrol-safehouse | risk:medium | time:9 | success:flag:found-patrol,log:You locate survivors barricaded in a signal loft.,morale+3 | fail:morale-3,log:The beacon was a lure wired to nothing.
-option:Question the sentries => burnside-hub | risk:low | time:6 | success:note:A sentry mentions a ladder up the rail supports.,stamina+2 | fail:temp-1,log:They give you false directions on purpose.
-
-@scene patrol-safehouse
-title:Signal Loft
-desc:A gutted office tower houses a relay rig pointed at the storm. Exhausted patrol members guard it like it is the last light in the city.
-tags:Combat / Loot
-option:Evacuate the survivors => burnside-hub | risk:medium | time:7 | success:item:relay codes,item:floodgate keycard,credits+20,log:They hand over access codes and a floodgate keycard in exchange for escort.,flag:patrol-safe | fail:hp-8,log:Crossfire erupts as you move them out.
-option:Strip the relay parts => burnside-hub | risk:high | time:9 | success:item:relay coil,credits+15,log:You salvage the rig before the storm hits.,temp-1 | fail:temp-3,log:A surge arcs through your suit.
-
-@scene drone-yard
-title:Drone Yard Raid
-desc:Delivery drones sit in ranks behind razor wire and floodlights. The yard smells of ozone and burned insulation.
-tags:Quest / Combat / Loot
-option:Flash the stolen badge => drone-yard | risk:medium | time:8 | success:temp+3,log:The spoofed badge keeps the turrets asleep.,item:payload crate | fail:temp-3,log:Sirens howl and searchlights lock onto you.
-option:Mark a drone with flare paint => river-cache | risk:medium | time:10 | success:flag:drone-repainted,log:The marked drone reroutes toward the river cache.,morale+2 | fail:hp-6,log:Paint fumes and panic slow your hands.
-option:Hold the line against security => drone-yard | risk:high | time:12 | success:item:stun baton,item:arc pistol,credits+35,log:You scrap a guard bot, loot its core, and pry loose an arc pistol.,temp-1 | fail:hp-15,log:Shock rounds drop you to one knee.
-
-@scene river-cache
-title:River Cache
-desc:Floating pallets are chained into a hidden dock beneath the bridge. Traders speak in code while lookouts track every silhouette on the water.
-tags:Loot / Lore / Trade
-option:Buy the rerouted payload => burnside-hub | risk:medium | time:7 | success:item:mystery supply,credits-20,log:You secure a sealed crate stamped with hazard tape. | fail:credits-8,log:The crate is already stripped clean.
-option:Share names of the fallen => burnside-hub | risk:low | time:6 | success:morale+6,log:Your list is added to the dock ledger with respect. | fail:morale-2,log:No one recognizes the names you carry.
-option:Defend the dock from raiders => river-cache | risk:high | time:11 | success:credits+30,item:salvaged tech,log:You repel the raid and earn a hard cut. | fail:hp-12,log:Raiders breach the chain line and cut you down.
-
-@scene trolley-bridge
-title:Trolley Bridge Span
-desc:A half-collapsed bridge crosses a black river choked with debris. Wind claws at the cables hard enough to sing.
-tags:Traversal / Hazard
-option:Sprint the exposed span => burnside-hub | risk:medium | time:5 | success:stamina+6,log:You clear the gap before the gusts shift. | fail:hp-8,log:A slip sends you skidding across rust and glass.
-option:Cross slow with a tether => burnside-hub | risk:low | time:6 | success:temp+1,stamina+3,log:The tether holds and your breathing steadies. | fail:stamina+1,log:The line snags and costs you precious time.
-
-@quest
-id:slums-broadcast
-title:Seize the Riot Broadcast
-desc:Infiltrate the signal loft and push the camp's warning across the grid before federal jammers silence it.
+@mission
+id:random-run
+label:Dangerous random loot run
+desc:Navigate the drowned alleys for whatever the tide left.
 risk:high
 time:12
-success:item:riot marshal jacket,credits+25,morale+5
-fail:hp-10,morale-5
-flag:slums-broadcast
+energy:16
+loot:3
+lootType:mixed salvage
+
+@mission
+id:food-run
+label:Dangerous food item run
+desc:Break into the intact silo for preserved rations.
+risk:high
+time:10
+energy:15
+loot:3
+lootType:food stores
+
+@quest
+id:grain-silo
+title:Crack the main silo
+desc:Open the central silo hatch before the waterline rises.
+risk:high
+time:13
+energy:18
+loot:4
+lootType:food stores
+reward:silo reserves
+success:item:field rations,item:water canister,credits+18,flag:grain-silo
+fail:hp-8,hunger+8
+flag:grain-silo
+once:true
+
+@quest
+id:grain-barge
+title:Salvage the river barge
+desc:A barge of preserved food sits wedged under the bridge.
+risk:medium
+time:9
+energy:12
+loot:2
+lootType:food crates
+reward:barge haul
+success:item:ember ration,item:hardened canteen,credits+12,flag:grain-barge
+fail:hp-6,morale-3
+flag:grain-barge
 once:true`
     };
     let expansionsExpected=0;
@@ -840,6 +848,7 @@ once:true`
     };
 
     const CRAFTING_PAGE_SIZE=4;
+    const MARKET_PAGE_SIZE=6;
     const CRAFTING_RECIPES=[
       {id:'bandage',label:'Bandage',desc:'Quick field wrap to stabilize wounds.',cost:{'cloth scraps':5}},
       {id:'water flask',label:'Water flask',desc:'Patch together a reusable hydration pouch.',cost:{'plastic shards':6,'cloth scraps':3}},
@@ -857,7 +866,41 @@ once:true`
       {id:'ledger-etched compass',label:'Ledger-etched compass',desc:'Etch trade routes into a compass that never lies.',cost:{'old coin':2,'electronics bits':4,'wire spool':3}}
     ];
 
-    const MARKET_STOCK=[
+    const MARKET_STOCK_BY_ZONE={
+      safehouse:[
+        {id:'bandage',cost:10,tag:'Shelter care'},
+        {id:'water flask',cost:12,tag:'Hydration'},
+        {id:'ration bar',cost:14,tag:'Rations'},
+        {id:'morale patch',cost:16,tag:'Morale'},
+        {id:'spare filter',cost:22,tag:'Air kit'},
+        {id:'thermal wrap',cost:20,tag:'Warmth'}
+      ],
+      town:[
+        {id:'jury-rigged blade',cost:20,tag:'Weapon'},
+        {id:'scrap spear',cost:34,tag:'Weapon'},
+        {id:'pipe rifle',cost:72,tag:'Weapon'},
+        {id:'riot shield',cost:58,tag:'Defense'},
+        {id:'utility coat',cost:32,tag:'Armor'},
+        {id:'exo brace',cost:46,tag:'Field gear'}
+      ],
+      forest:[
+        {id:'bandage',cost:10,tag:'Medical'},
+        {id:'painkillers',cost:18,tag:'Medical'},
+        {id:'compact medkit',cost:32,tag:'Medical'},
+        {id:'filtered water pack',cost:26,tag:'Hydration'},
+        {id:'spark tonic',cost:22,tag:'Stims'},
+        {id:'morale patch',cost:16,tag:'Recovery'}
+      ],
+      portland_slums:[
+        {id:'ration bar',cost:14,tag:'Rations'},
+        {id:'field rations',cost:20,tag:'Rations'},
+        {id:'ember ration',cost:22,tag:'Rations'},
+        {id:'water canister',cost:24,tag:'Hydration'},
+        {id:'hardened canteen',cost:28,tag:'Hydration'},
+        {id:'monsoon canteen',cost:40,tag:'Hydration'}
+      ]
+    };
+    const MARKET_STOCK_DEFAULT=[
       {id:'pocket pack',cost:26,tag:'Backpack'},
       {id:'scout daypack',cost:38,tag:'Backpack'},
       {id:'expedition frame pack',cost:68,tag:'Backpack'},
@@ -976,7 +1019,14 @@ once:true`
     };
     const isMarketZone=(zone=state.zone)=>{
       if(!zone) return false;
+      const exp=expansions[zone.id];
+      if(exp?.meta?.shop==='true') return true;
       return zone.id==='town' || (zone.name||'').toLowerCase().includes('market');
+    };
+    const zoneHasShop=(zone=state.zone)=>isMarketZone(zone) || zone.id==='safehouse';
+    const getMarketStockForZone=(zoneId)=>{
+      if(!zoneId) return MARKET_STOCK_DEFAULT;
+      return MARKET_STOCK_BY_ZONE[zoneId] || MARKET_STOCK_DEFAULT;
     };
     const ensureZoneScene=(zone=state.zone)=>{
       const exp=expansions[zone.id];
@@ -1326,6 +1376,37 @@ once:true`
       logMsg(`Stored ${item} in ${state.stash.name}.`);
       renderAll();
     }
+    function stashItemStack(item,count){
+      if(!canAccessVault()){
+        setCodex(vaultBlockedMessage);
+        return;
+      }
+      const available=getItemCount(state.inventory,item);
+      const transferCount=Math.min(count,available);
+      if(transferCount<=0){
+        setCodex('No stack available to route.');
+        return;
+      }
+      if(!hasCapacityFor(state.stash.items,state.stashLimit,item,transferCount)){
+        setCodex('Stash is full.');
+        return;
+      }
+      removeItems(state.inventory,item,transferCount);
+      addItemCopies(state.stash.items,item,transferCount);
+      state.selected={source:'stash',item};
+      setCodex(`${item} stack routed into ${state.stash.name}.`);
+      logMsg(`Routed ${transferCount}x ${item} into ${state.stash.name}.`);
+      renderAll();
+    }
+    function stashItemHalf(item){
+      const available=getItemCount(state.inventory,item);
+      const half=Math.floor(available/2);
+      if(half<=0){
+        setCodex('Not enough of that item to split.');
+        return;
+      }
+      stashItemStack(item,half);
+    }
     function unstashItem(item){
       if(!canAccessVault()){
         setCodex(vaultBlockedMessage);
@@ -1610,7 +1691,8 @@ once:true`
     }
 
     function buyMarketItem(itemId){
-      const stock=MARKET_STOCK.find(entry=>entry.id===itemId);
+      const zoneId=state.marketAccess.zoneId || state.zone.id;
+      const stock=getMarketStockForZone(zoneId).find(entry=>entry.id===itemId);
       if(!stock) return;
       if(!canAccessMarket()){
         setCodex('Visit a shop to buy items.');
@@ -1819,6 +1901,8 @@ once:true`
 
       const actionConfigs=[];
       if(source==='inventory'){
+        const stackCount=getItemCount(state.inventory,item);
+        const stackable=isStackable(item) || data.stackable;
         if(data.slot){
           const check=canEquipItem(item);
           actionConfigs.push({
@@ -1838,6 +1922,21 @@ once:true`
             disabled:!hasCapacityFor(state.stash.items,state.stashLimit,item,1),
             blockedHint:''
           });
+          if(stackable && stackCount>1){
+            const halfCount=Math.floor(stackCount/2);
+            actionConfigs.push({
+              label:'Route stack to vault',
+              action:()=>stashItemStack(item,stackCount),
+              disabled:!hasCapacityFor(state.stash.items,state.stashLimit,item,stackCount),
+              blockedHint:''
+            });
+            actionConfigs.push({
+              label:'Route half stack',
+              action:()=>stashItemStack(item,halfCount),
+              disabled:halfCount<=0 || !hasCapacityFor(state.stash.items,state.stashLimit,item,halfCount),
+              blockedHint:''
+            });
+          }
         }
         actionConfigs.push({label:'Break down for scrap',action:()=>dismantleItem(item)});
         if(marketActive){
@@ -1949,6 +2048,13 @@ once:true`
       renderCrafting();
     }
 
+    function changeMarketPage(delta){
+      const zoneId=state.marketAccess.zoneId || state.zone.id;
+      const totalPages=Math.max(1,Math.ceil(getMarketStockForZone(zoneId).length/MARKET_PAGE_SIZE));
+      state.marketPage=clamp(state.marketPage+delta,0,totalPages-1);
+      renderMarketStock();
+    }
+
     function renderCrafting(){
       if(!dom.crafting) return;
       dom.crafting.innerHTML='';
@@ -2022,12 +2128,21 @@ once:true`
       if(!dom.marketInventory) return;
       dom.marketInventory.innerHTML='';
       const marketActive=canAccessMarket();
+      const zoneId=state.marketAccess.zoneId || state.zone.id;
+      const stockList=getMarketStockForZone(zoneId);
       if(dom.marketHint){
+        const zoneName=expansions[zoneId]?.meta?.name || state.zone.name;
         dom.marketHint.textContent=marketActive
-          ? 'Market vendors are online. Trade while the shop is open.'
+          ? `Market vendors are online in ${zoneName}. Trade while the shop is open.`
           : 'Visit a shop in your current location to access vendors.';
       }
-      MARKET_STOCK.forEach(stock=>{
+      const totalPages=Math.max(1,Math.ceil(stockList.length/MARKET_PAGE_SIZE));
+      state.marketPage=clamp(state.marketPage,0,totalPages-1);
+      const start=state.marketPage*MARKET_PAGE_SIZE;
+      const visibleStock=stockList.slice(start,start+MARKET_PAGE_SIZE);
+      const grid=document.createElement('div');
+      grid.className='market-grid';
+      visibleStock.forEach(stock=>{
         const data=getItem(stock.id);
         const card=document.createElement('div');
         card.className='market-card';
@@ -2052,8 +2167,29 @@ once:true`
         card.appendChild(desc);
         card.appendChild(cost);
         card.appendChild(btn);
-        dom.marketInventory.appendChild(card);
+        grid.appendChild(card);
       });
+      dom.marketInventory.appendChild(grid);
+      if(totalPages>1){
+        const pager=document.createElement('div');
+        pager.className='pager';
+        const prev=document.createElement('button');
+        prev.textContent='Previous items';
+        prev.disabled=state.marketPage===0;
+        prev.onclick=()=>changeMarketPage(-1);
+        const info=document.createElement('div');
+        info.className='page-info';
+        const end=Math.min(stockList.length,start+visibleStock.length);
+        info.textContent=`Showing items ${start+1}-${end} of ${stockList.length}`;
+        const next=document.createElement('button');
+        next.textContent='More items';
+        next.disabled=state.marketPage>=totalPages-1;
+        next.onclick=()=>changeMarketPage(1);
+        pager.appendChild(prev);
+        pager.appendChild(info);
+        pager.appendChild(next);
+        dom.marketInventory.appendChild(pager);
+      }
     }
 
     function renderIdleOps(){
@@ -2363,28 +2499,94 @@ once:true`
       dom.zoneBadge.textContent=`${state.zone.risk} risk`;
     }
 
+    function formatRewardEstimate({loot=0,lootType='',reward='',risk='low',time=8,xp}={}){
+      const parts=[];
+      if(loot){
+        const min=Math.max(1,loot);
+        const max=Math.max(min,loot+2);
+        const lootLabel=`${min}-${max} loot`;
+        parts.push(lootType ? `${lootLabel} ${lootType}` : lootLabel);
+      }
+      if(reward) parts.push(reward);
+      const xpValue=Number.isFinite(xp) ? xp : computeMissionXp(risk,time);
+      if(xpValue) parts.push(`XP ${xpValue}`);
+      return parts.length ? `Rewards ${parts.join(' · ')}` : '';
+    }
+
+    function buildMissionMeta({risk='low',time=8,energy,key,loot=0,lootType='',reward='',xp}={}){
+      const parts=[`${risk} · ${time} min`];
+      const rewardLabel=formatRewardEstimate({loot,lootType,reward,risk,time,xp});
+      if(rewardLabel) parts.push(rewardLabel);
+      if(Number.isFinite(energy)){
+        const costParts=[`${energy} energy`];
+        if(key) costParts.push(`${key} key`);
+        parts.push(costParts.join(' · '));
+      }
+      return parts.join(' · ');
+    }
+
     function renderRaidActions(){
       dom.raidActions.innerHTML='';
       const exp=expansions[state.zone.id];
       const scene=ensureZoneScene(state.zone);
       if(scene && scene.options && scene.options.length){
         scene.options.forEach(option=>{
+          const optionFlag=option.flag;
+          if(option.once && optionFlag && state.flags.has(optionFlag)) return;
           const btn=document.createElement('button');
           const label=option.label || 'Local action';
-          btn.innerHTML=`<span>${label}</span><span class="small">${option.risk} · ${option.time} min</span>`;
+          const meta=buildMissionMeta({
+            risk:option.risk,
+            time:option.time,
+            loot:option.loot,
+            lootType:option.lootType,
+            reward:option.reward
+          });
+          btn.innerHTML=`<span>${label}</span><span class="small">${meta}</span>`;
           btn.onclick=()=>startSceneAction(option);
           if(state.mission.active || state.travel.active) btn.disabled=true;
           if(option.risk==='high') btn.classList.add('danger');
           dom.raidActions.appendChild(btn);
         });
       }
-      const vendorEligible=isMarketZone() || state.zone.id==='safehouse';
+      const vendorEligible=zoneHasShop();
       if(vendorEligible){
         const shopBtn=document.createElement('button');
         shopBtn.innerHTML=`<span>Visit shop</span><span class="small">trade · vendors</span>`;
         shopBtn.onclick=()=>openMarketAccess();
         if(state.mission.active || state.travel.active) shopBtn.disabled=true;
         dom.raidActions.appendChild(shopBtn);
+      }
+      if(exp && exp.quests && exp.quests.length){
+        exp.quests.forEach(quest=>{
+          const btn=document.createElement('button');
+          const questFlag=quest.flag || quest.id;
+          const completed=quest.once && questFlag && state.flags.has(questFlag);
+          const label=quest.title || 'Local contract';
+          const time=quest.time || 10;
+          const risk=quest.risk || state.zone.risk;
+          const energy=quest.energy ?? 12;
+          const keyCost=quest.key || 0;
+          const meta=buildMissionMeta({
+            risk,
+            time,
+            energy,
+            key:keyCost,
+            loot:quest.loot || 0,
+            lootType:quest.lootType || '',
+            reward:quest.reward || ''
+          });
+          btn.innerHTML=`<span>${label}</span><span class="small">${meta}</span>`;
+          btn.onclick=()=>runQuest(quest);
+          if(completed){
+            btn.disabled=true;
+            btn.title='Contract complete.';
+          }else if(state.mission.active || state.travel.active || !canAfford({energy,keys:keyCost})){
+            btn.disabled=true;
+          }
+          if(risk==='high') btn.classList.add('danger');
+          dom.raidActions.appendChild(btn);
+        });
       }
       if(isHubZone() && !dom.raidActions.children.length){
         const blocked=document.createElement('div');
@@ -2394,42 +2596,36 @@ once:true`
         return;
       }
       if(!isHubZone()){
-        RAID_TEMPLATES.forEach(raid=>{
+        const missions=(exp?.missions && exp.missions.length) ? exp.missions : RAID_TEMPLATES;
+        missions.forEach(raid=>{
           const btn=document.createElement('button');
-          const costParts=[`${raid.energy} energy`];
-          if(raid.key) costParts.push(`${raid.key} key`);
-          btn.innerHTML=`<span>${raid.label}</span><span class="small">${raid.risk} · ${raid.time} min · ${costParts.join(' · ')}</span>`;
+          const meta=buildMissionMeta({
+            risk:raid.risk,
+            time:raid.time,
+            energy:raid.energy,
+            key:raid.key,
+            loot:raid.loot,
+            lootType:raid.lootType,
+            reward:raid.reward,
+            xp:raid.xp
+          });
+          btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
           btn.onclick=()=>startMission(raid);
           if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})) btn.disabled=true;
           if(raid.risk==='high') btn.classList.add('danger');
           dom.raidActions.appendChild(btn);
         });
-        if(exp && exp.quests && exp.quests.length){
-          exp.quests.forEach(quest=>{
-            const btn=document.createElement('button');
-            const questFlag=quest.flag || quest.id;
-            const completed=quest.once && questFlag && state.flags.has(questFlag);
-            const label=quest.title || 'Local contract';
-            const time=quest.time || 10;
-            const risk=quest.risk || state.zone.risk;
-            const energy=quest.energy ?? 12;
-            const keyCost=quest.key || 0;
-            const costParts=[`${energy} energy`];
-            if(keyCost) costParts.push(`${keyCost} key`);
-            btn.innerHTML=`<span>${label}</span><span class="small">${risk} · ${time} min · ${costParts.join(' · ')}</span>`;
-            btn.onclick=()=>runQuest(quest);
-            if(completed){
-              btn.disabled=true;
-              btn.title='Contract complete.';
-            }else if(state.mission.active || state.travel.active || !canAfford({energy,keys:keyCost})){
-              btn.disabled=true;
-            }
-            if(risk==='high') btn.classList.add('danger');
-            dom.raidActions.appendChild(btn);
-          });
-        }
         const combatBtn=document.createElement('button');
-        combatBtn.innerHTML=`<span>Engage hostiles</span><span class="small">${state.zone.risk} · ${getCombatProfile(state.zone.risk).time} min · 10 energy</span>`;
+        const combatProfile=getCombatProfile(state.zone.risk);
+        const combatMeta=buildMissionMeta({
+          risk:combatProfile.risk,
+          time:combatProfile.time,
+          energy:10,
+          loot:2+Math.floor(combatProfile.difficulty),
+          lootType:'combat salvage',
+          xp:computeMissionXp(combatProfile.risk,combatProfile.time)
+        });
+        combatBtn.innerHTML=`<span>Engage hostiles</span><span class="small">${combatMeta}</span>`;
         combatBtn.onclick=startCombatMission;
         if(state.mission.active || state.travel.active || !canAfford({energy:10})) combatBtn.disabled=true;
         combatBtn.classList.add('danger');
@@ -2450,11 +2646,12 @@ once:true`
         setCodex('Finish current operations before visiting vendors.');
         return;
       }
-      if(!(isMarketZone() || state.zone.id==='safehouse')){
+      if(!zoneHasShop()){
         setCodex('No vendors are set up here.');
         return;
       }
       state.marketAccess={active:true,zoneId:state.zone.id};
+      state.marketPage=0;
       setCodex('Vendor bay open. Trade out of your active pack while the shop is live.');
       setActiveTab('field');
       setStashScreen('market');
@@ -3398,7 +3595,8 @@ once:true`
           combatTick(Date.now());
           if(!state.mission.completed) return;
         }
-        const success=forcedFail ? false : (!state.mission.fleeing && state.hp>0 && (combat?.enemiesRemaining||0)<=0);
+        const defeated=!state.mission.fleeing && state.hp>0 && (combat?.enemiesRemaining||0)<=0;
+        const success=forcedFail && !defeated ? false : defeated;
         const result=runCombatEncounter(raid,{success,fleeing:state.mission.fleeing});
         state.mission.completed=true;
         state.mission.success=result.success;
@@ -3651,7 +3849,7 @@ once:true`
       const segments=str.split('|').map(s=>s.trim()).filter(Boolean);
       const [labelPart,...rest]=segments;
       const [label,target]=labelPart.split('=>').map(s=>s&&s.trim());
-      const opt={label:label||'Action',target:target||null,risk:'low',time:8,success:'',fail:'',rad:0,temp:0};
+      const opt={label:label||'Action',target:target||null,risk:'low',time:8,success:'',fail:'',rad:0,temp:0,loot:0,lootType:'',reward:'',once:false,flag:''};
       rest.forEach(seg=>{
         const [k,vRaw]=seg.split(':');
         const v=vRaw?.trim();
@@ -3663,30 +3861,57 @@ once:true`
         else if(key==='fail') opt.fail=v;
         else if(key==='rad') opt.rad=Number(v||0);
         else if(key==='temp') opt.temp=Number(v||0);
+        else if(key==='loot') opt.loot=Number(v||0);
+        else if(key==='loottype') opt.lootType=v;
+        else if(key==='reward') opt.reward=v;
+        else if(key==='once') opt.once=v !== 'false';
+        else if(key==='flag') opt.flag=v;
       });
       return opt;
     }
 
     function parseExpansion(raw){
-      const exp={meta:{},door:{},scenes:{},quests:[]};
+      const exp={meta:{},door:{},scenes:{},quests:[],missions:[]};
       let scope='meta';
       let currentScene=null;
       let currentQuest=null;
+      let currentMission=null;
       raw.split(/\r?\n/).forEach(line=>{
         line=line.trim();
         if(!line || line.startsWith('#')) return;
-        if(line.startsWith('@expansion')){scope='meta';currentScene=null;currentQuest=null;return;}
-        if(line.startsWith('@door')){scope='door';currentScene=null;currentQuest=null;return;}
+        if(line.startsWith('@expansion')){scope='meta';currentScene=null;currentQuest=null;currentMission=null;return;}
+        if(line.startsWith('@door')){scope='door';currentScene=null;currentQuest=null;currentMission=null;return;}
         if(line.startsWith('@scene')){
           scope='scene';
           currentQuest=null;
+          currentMission=null;
           const id=line.split(/\s+/)[1] || `scene-${Object.keys(exp.scenes).length+1}`;
           currentScene={id,title:'',desc:'',tags:'',options:[]};
           exp.scenes[id]=currentScene;return;
         }
+        if(line.startsWith('@mission')){
+          scope='mission';
+          currentScene=null;
+          currentQuest=null;
+          currentMission={
+            id:`mission-${exp.missions.length+1}`,
+            label:'Field operation',
+            desc:'',
+            risk:'medium',
+            time:10,
+            energy:12,
+            loot:2,
+            key:0,
+            lootType:'',
+            reward:''
+          };
+          exp.missions.push(currentMission);
+          return;
+        }
         if(line.startsWith('@quest')){
           scope='quest';
           currentScene=null;
+          currentMission=null;
           currentQuest={
             id:`quest-${exp.quests.length+1}`,
             title:'Special contract',
@@ -3714,6 +3939,10 @@ once:true`
           else if(key==='time') currentQuest.time=Number(value || 10);
           else if(key==='once') currentQuest.once=value !== 'false';
           else currentQuest[key]=value;
+        }else if(scope==='mission' && currentMission){
+          if(key==='desc') currentMission.desc += (currentMission.desc?' ':'') + value;
+          else if(['time','energy','loot','key'].includes(key)) currentMission[key]=Number(value || 0);
+          else currentMission[key]=value;
         }
       });
       return exp;

@@ -1,50 +1,68 @@
 @expansion
 id:town
-name:Iron Ward
-summary:A fortified market built from welded plate and blackout tarps. Traders exchange ammunition, medical scraps, and coordinates spoken like confessions.
+name:Shatterline Front
+summary:A blown-out warfront of collapsed bridges and cratered rail yards. Wind funnels through armor husks and buried comms relays.
+shop:true
 
 @door
-label:Iron Ward Gate
-hint:trade, rumors, quick morale fixes
-note:The guard logs your name without looking up. The ledger is thicker than the walls.
-target:market-square
+label:Shatterline Gate
+hint:warfront salvage, heavy gear
+note:You step past a twisted barricade. Distant sirens echo through the broken spans.
+target:forward-camp
 
-@scene market-square
-title:Market Square
-desc:Generators cough under strings of dead bulbs. A crooked clock tower keeps the wrong time to confuse snipers and thieves.
-tags:Safe / Trade
-option:Check the scrap kiosk => kiosk | risk:low | time:8 | success:credits+15,item:patch-kit,log:You pull usable salvage from a dead shelf. | fail:morale-4,log:The broker bleeds you on price.
-option:Visit the medic => medic | risk:low | time:6 | success:hp+8,credits-10,log:The medic patches you in silence. | fail:credits-5,log:Triage costs more than promised.
-option:Listen for rumors => rumor-board | risk:medium | time:10 | success:note:Rumor: a supply convoy stalled near the old subway cut.,flag:convoy-hook,log:A smuggler sells you a whisper. | fail:morale-3,log:All you hear are recycled lies.
+@scene forward-camp
+title:Forward Camp
+desc:Cargo pallets stack into a makeshift wall. Burn barrels keep the worst of the cold off the sentries.
+tags:Warfront / Staging
+option:Scout the crater grid => forward-camp | risk:medium | time:7 | reward:map intel | success:credits+12,flag:front-scout,log:You chart new cover routes. | fail:morale-3,log:Static hides every useful signal.
+option:Check the ammo bunker => forward-camp | risk:high | time:6 | reward:ammo cache | success:item:pipe rifle,item:riot-line tape,flag:front-bunker,log:A sealed crate still holds a serviceable rifle. | fail:hp-6,log:A loose beam crashes behind you.
 
-@scene kiosk
-title:Scrap Kiosk
-desc:Circuit boards, shell casings, and stripped wiring are sorted into neat, desperate piles. A ceiling fan rattles like loose teeth.
-tags:Trade
-option:Sell copper wiring => market-square | risk:low | time:5 | success:credits+20,log:The kiosk pays in chipped credits. | fail:credits+5,log:They dock you for corrosion.
-option:Browse exo-suit junk => market-square | risk:medium | time:7 | success:item:exo brace,item:tarpaulin roll,temp+1,log:A brace and bundled tarp still hold tension. | fail:morale-2,log:Everything else has already failed someone.
+@mission
+id:scavenger-run
+label:Scavenger loot run
+desc:Quick sweep across the busted trenches for leftover gear.
+risk:medium
+time:9
+energy:12
+loot:2
+lootType:scavenged gear
 
-@scene medic
-title:Patchwork Clinic
-desc:A canvas clinic reeks of antiseptic and ozone. Instruments are clean. The medic's hands are steadier than her eyes.
-tags:Healing
-option:Pay for a proper checkup => market-square | risk:low | time:8 | success:hp+15,morale+4,credits-25,log:Fresh bandages and a measured dose bring you back. | fail:credits-10,morale-2,log:You walk out lighter in wallet, not in pain.
-option:Buy painkillers => market-square | risk:medium | time:4 | success:item:painkillers,item:iron ward seals,credits-12,log:The meds and stamped seals vanish into your pack. | fail:credits-5,log:The batch is cut and crumbles.
-
-@scene rumor-board
-title:Rumor Board
-desc:Paper scraps, maps, and last-known locations are pinned beneath knife blades. A faded stencil reads "NO ONE COMES BACK CLEAN."
-tags:Intel
-option:Study a convoy map => market-square | risk:low | time:6 | success:note:You mark a convoy route running the canyon edge.,item:ledger-etched compass,log:The broker scratches bearings into a compass face. | fail:morale-2
-option:Trade gossip for cash => market-square | risk:medium | time:5 | success:credits+12,morale+2,item:clocktower chime,log:A trader tosses you a chime from the old tower. | fail:credits+2,morale-2,log:Your intel buys you pity, not profit.
+@mission
+id:equipment-run-2
+label:Dangerous equipment loot run II
+desc:Deep push into the collapsed armory for intact kit.
+risk:high
+time:14
+energy:18
+loot:3
+lootType:equipment crates
 
 @quest
-id:rusttown-crown
-title:Recover the Iron Crown
-desc:Find the clock tower's sealed coffer and reclaim the ceremonial helm before it is melted down for scrap.
+id:frontline-relay
+title:Recover the trench relay
+desc:Extract the comms relay buried beneath the east trench so the shelter can listen again.
 risk:high
 time:12
-success:item:iron crown,item:market shock knife,credits+20,morale+4
-fail:hp-8,morale-4
-flag:rusttown-crown
+energy:16
+loot:3
+lootType:equipment cache
+reward:relay salvage
+success:item:signal flare rack,item:riot shield,credits+18,flag:frontline-relay
+fail:hp-10,morale-4
+flag:frontline-relay
+once:true
+
+@quest
+id:frontline-medic
+title:Escort the wounded spotter
+desc:Carry a shell-shocked spotter back across the shattered deck plates.
+risk:medium
+time:10
+energy:14
+loot:2
+lootType:field kits
+reward:medical salvage
+success:item:bandage,item:morale patch,credits+12,flag:frontline-medic
+fail:hp-6,morale-5
+flag:frontline-medic
 once:true

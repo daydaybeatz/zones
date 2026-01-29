@@ -1,117 +1,68 @@
 @expansion
 id:portland_slums
-name:Downtown Portland
-summary:A drowned district of cracked towers and barricaded streets. Factions fight over filtration rigs, signal relays, and the last workable routes through the ruins.
+name:Grainfall Depot
+summary:A flooded granary district with toppled silos and drowned loading docks. Grain dust clings to everything.
+shop:true
 
 @door
-label:Downtown Checkpoint
-hint:trade, factions, lethal streets
-note:A militia guard scans your pack, then marks your wrist with ash. "Don't get lost," he says. It sounds like a sentence.
-target:burnside-hub
+label:Grainfall Access
+hint:food runs, random cache pulls
+note:You step onto slick concrete as the smell of wet grain rises.
+target:silo-yard
 
-@scene burnside-hub
-title:Burnside Hub
-desc:Welded streetcars form a hard perimeter around a barter yard lit by burn barrels. Names of the dead are carved into every panel.
-tags:Safe / Trade / Hub
-option:Consult the route broker => route-broker | risk:low | time:6 | success:note:The broker marks a maintenance tunnel that bypasses a kill zone.,log:You buy directions scratched into tin. | fail:morale-2,log:The broker sells you nothing but smoke.
-option:Eat at the ration line => ration-line | risk:low | time:5 | success:hunger-8,credits-10,log:Thin stew settles your hands.,note:The cook mutters about a vanished patrol. | fail:credits-5,hunger-2,log:The pot runs dry halfway through.
-option:Parley with the federal patrol => patrol-van | risk:medium | time:7 | success:flag:patrol-contact,log:You trade scavenged intel for a temporary pass.,morale+2 | fail:temp-2,log:They record your face and send you away.
-option:Hire a tunnel runner => tunnel-runner | risk:medium | time:8 | success:item:sealed boots,item:bridge-runner pack,credits-20,log:The runner outfits you for flooded routes and straps on a bridge-runner pack.,note:She warns of a preacher rally under the bridge. | fail:credits-10,log:The runner ghosts you before the deal closes.
+@scene silo-yard
+title:Silo Yard
+desc:Water laps at the base of broken silos. Carts and pallets float like tombstones.
+tags:Food / Flooded
+option:Patch a floating pallet => silo-yard | risk:medium | time:6 | reward:food salvage | success:item:field rations,flag:grain-pallet,log:You lash down a crate of edible packs. | fail:hunger+6,log:The pallet slips away.
+option:Follow the grain trail => silo-yard | risk:high | time:8 | reward:cache clue | success:item:ember ration,flag:grain-trail,log:A trail of grain leads to a sealed cache. | fail:hp-5,log:The slick walkway drops out beneath you.
 
-@scene route-broker
-title:Route Broker
-desc:A scarred cartographer works beneath a tarp of stitched hazard suits. Maps are etched into metal sheets so the rain cannot erase them.
-tags:Intel
-option:Trade salvage for a grid map => burnside-hub | risk:low | time:6 | success:item:underground map,credits-15,log:The map shows storm drains and sealed doors.,note:A maintenance shaft near the river is circled twice. | fail:credits-7,log:The sheet is outdated and missing half its marks.
-option:Swap rumors for leverage => burnside-hub | risk:medium | time:5 | success:morale+3,log:Your story buys you a cleaner route. | fail:morale-3,log:Your rumor is already old news.
-
-@scene ration-line
-title:Ration Line
-desc:Citizens queue in silence while a filtration rig coughs behind sandbags. Armed volunteers watch for cutters with the patience of snipers.
-tags:Rest / Intel
-option:Ask about the vanished patrol => patrol-hunt | risk:medium | time:9 | success:flag:patrol-lead,log:A veteran points you toward Riot Alley.,morale+2 | fail:temp-1,log:No one wants to speak on record.
-option:Donate a can to the pot => burnside-hub | risk:low | time:3 | success:credits-5,stamina+4,log:The cook nods once and fills your bowl. | fail:credits-2,log:The can slips from your hands into the mud.
-
-@scene patrol-van
-title:Federal Patrol Van
-desc:A black van idles beside a barricade of jersey walls. Officers monitor drone feeds and mark targets on laminated sheets.
-tags:Intel / Risky
-option:Present forged clearance => protest-camp | risk:medium | time:7 | success:temp+2,log:They wave you toward the bridge camp with a warning. | fail:temp-3,log:They hold you at gunpoint while they check the code.
-option:Plant a relay tap => burnside-hub | risk:high | time:10 | success:item:signal tap,item:signal flare rack,flag:van-tapped,log:You splice into their relay and snap on a flare rack before anyone looks up.,temp-1 | fail:hp-8,log:A baton cracks across your knuckles.
-
-@scene tunnel-runner
-title:Tunnel Runner
-desc:A courier in patched waders studies the storm drains like scripture. Her crew measures risk in bodies, not minutes.
-tags:Trade / Lore
-option:Buy a flood route => trolley-bridge | risk:medium | time:5 | success:note:A submerged rail line leads to the trolley bridge span.,log:She traces the path on your glove with chalk. | fail:morale-2,log:She refuses the job after seeing your gear.
-option:Commission a supply pull => burnside-hub | risk:medium | time:6 | success:item:water filters,credits-18,log:Her crew brings back filters sealed in wax.,morale+1 | fail:credits-9,log:The crew returns empty and angry.
-
-@scene protest-camp
-title:Bridge Camp
-desc:Tents cluster beneath the overpass, shielded by murals and sheet metal. The camp is organized like an army that ran out of uniforms.
-tags:Quests / Combat
-option:Meet the camp marshal => camp-briefing | risk:low | time:6 | success:flag:camp-ally,log:The marshal outlines a plan to seize a drone yard. | fail:morale-3,log:They search you twice and send you away.
-option:Separate a knife fight => protest-camp | risk:medium | time:8 | success:morale+5,log:You end it fast and earn wary respect.,note:The camp owes you a favor. | fail:hp-6,log:A blade scores your ribs before order returns.
-option:Intercept infiltrators => alley-ambush | risk:high | time:12 | success:credits+30,item:riot shield,log:You catch saboteurs planting charges.,temp+1 | fail:hp-12,log:The blast throws you into a wall.
-
-@scene camp-briefing
-title:Camp Briefing
-desc:The marshal sketches drone routes across a scavenged steel door. Every arrow ends at the same word: SURVIVE.
-tags:Quest
-option:Accept the drone yard raid => drone-yard | risk:medium | time:10 | success:flag:drone-job,log:You join the strike team at dusk.,item:flare paint | fail:morale-2,log:Hesitation costs you their trust.
-option:Demand payment up front => protest-camp | risk:medium | time:5 | success:credits+15,log:The camp scrapes together a down payment. | fail:temp-1,log:The marshal remembers your greed.
-
-@scene alley-ambush
-title:Riot Alley
-desc:Charred walls narrow into a choke point littered with casings. Speakers blare old siren tones to keep everyone on edge.
-tags:Combat / Hazard
-option:Push through the choke point => alley-ambush | risk:high | time:10 | success:hp-4,credits+25,item:flashbang,log:You break the ambush and strip the fallen. | fail:hp-14,log:Rifle fire chews the concrete around you.
-option:Deploy suppression foam => protest-camp | risk:medium | time:8 | success:item:foam canister,item:riot-line tape,temp+2,log:The foam blinds shooters long enough to retreat and you strip riot tape from the barricade. | fail:item:foam canister,log:The nozzle clogs and you eat smoke.
-
-@scene patrol-hunt
-title:Patrol Hunt
-desc:A cracked HUD beacon pulses from a shuttered storefront. The street is too quiet, like the city is holding its breath.
-tags:Quest / Search
-option:Track the beacon => patrol-safehouse | risk:medium | time:9 | success:flag:found-patrol,log:You locate survivors barricaded in a signal loft.,morale+3 | fail:morale-3,log:The beacon was a lure wired to nothing.
-option:Question the sentries => burnside-hub | risk:low | time:6 | success:note:A sentry mentions a ladder up the rail supports.,stamina+2 | fail:temp-1,log:They give you false directions on purpose.
-
-@scene patrol-safehouse
-title:Signal Loft
-desc:A gutted office tower houses a relay rig pointed at the storm. Exhausted patrol members guard it like it is the last light in the city.
-tags:Combat / Loot
-option:Evacuate the survivors => burnside-hub | risk:medium | time:7 | success:item:relay codes,item:floodgate keycard,credits+20,log:They hand over access codes and a floodgate keycard in exchange for escort.,flag:patrol-safe | fail:hp-8,log:Crossfire erupts as you move them out.
-option:Strip the relay parts => burnside-hub | risk:high | time:9 | success:item:relay coil,credits+15,log:You salvage the rig before the storm hits.,temp-1 | fail:temp-3,log:A surge arcs through your suit.
-
-@scene drone-yard
-title:Drone Yard Raid
-desc:Delivery drones sit in ranks behind razor wire and floodlights. The yard smells of ozone and burned insulation.
-tags:Quest / Combat / Loot
-option:Flash the stolen badge => drone-yard | risk:medium | time:8 | success:temp+3,log:The spoofed badge keeps the turrets asleep.,item:payload crate | fail:temp-3,log:Sirens howl and searchlights lock onto you.
-option:Mark a drone with flare paint => river-cache | risk:medium | time:10 | success:flag:drone-repainted,log:The marked drone reroutes toward the river cache.,morale+2 | fail:hp-6,log:Paint fumes and panic slow your hands.
-option:Hold the line against security => drone-yard | risk:high | time:12 | success:item:stun baton,item:arc pistol,credits+35,log:You scrap a guard bot, loot its core, and pry loose an arc pistol.,temp-1 | fail:hp-15,log:Shock rounds drop you to one knee.
-
-@scene river-cache
-title:River Cache
-desc:Floating pallets are chained into a hidden dock beneath the bridge. Traders speak in code while lookouts track every silhouette on the water.
-tags:Loot / Lore / Trade
-option:Buy the rerouted payload => burnside-hub | risk:medium | time:7 | success:item:mystery supply,credits-20,log:You secure a sealed crate stamped with hazard tape. | fail:credits-8,log:The crate is already stripped clean.
-option:Share names of the fallen => burnside-hub | risk:low | time:6 | success:morale+6,log:Your list is added to the dock ledger with respect. | fail:morale-2,log:No one recognizes the names you carry.
-option:Defend the dock from raiders => river-cache | risk:high | time:11 | success:credits+30,item:salvaged tech,log:You repel the raid and earn a hard cut. | fail:hp-12,log:Raiders breach the chain line and cut you down.
-
-@scene trolley-bridge
-title:Trolley Bridge Span
-desc:A half-collapsed bridge crosses a black river choked with debris. Wind claws at the cables hard enough to sing.
-tags:Traversal / Hazard
-option:Sprint the exposed span => burnside-hub | risk:medium | time:5 | success:stamina+6,log:You clear the gap before the gusts shift. | fail:hp-8,log:A slip sends you skidding across rust and glass.
-option:Cross slow with a tether => burnside-hub | risk:low | time:6 | success:temp+1,stamina+3,log:The tether holds and your breathing steadies. | fail:stamina+1,log:The line snags and costs you precious time.
-
-@quest
-id:slums-broadcast
-title:Seize the Riot Broadcast
-desc:Infiltrate the signal loft and push the camp's warning across the grid before federal jammers silence it.
+@mission
+id:random-run
+label:Dangerous random loot run
+desc:Navigate the drowned alleys for whatever the tide left.
 risk:high
 time:12
-success:item:riot marshal jacket,credits+25,morale+5
-fail:hp-10,morale-5
-flag:slums-broadcast
+energy:16
+loot:3
+lootType:mixed salvage
+
+@mission
+id:food-run
+label:Dangerous food item run
+desc:Break into the intact silo for preserved rations.
+risk:high
+time:10
+energy:15
+loot:3
+lootType:food stores
+
+@quest
+id:grain-silo
+title:Crack the main silo
+desc:Open the central silo hatch before the waterline rises.
+risk:high
+time:13
+energy:18
+loot:4
+lootType:food stores
+reward:silo reserves
+success:item:field rations,item:water canister,credits+18,flag:grain-silo
+fail:hp-8,hunger+8
+flag:grain-silo
+once:true
+
+@quest
+id:grain-barge
+title:Salvage the river barge
+desc:A barge of preserved food sits wedged under the bridge.
+risk:medium
+time:9
+energy:12
+loot:2
+lootType:food crates
+reward:barge haul
+success:item:ember ration,item:hardened canteen,credits+12,flag:grain-barge
+fail:hp-6,morale-3
+flag:grain-barge
 once:true

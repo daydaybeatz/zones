@@ -2,22 +2,22 @@
   "expansions": [
     {
       "id": "town",
-      "name": "Iron Ward",
+      "name": "Shatterline Front",
       "file": "expansions/town.txt"
     },
     {
       "id": "safehouse",
-      "name": "Cold Shelter",
+      "name": "Horizon Shelter",
       "file": "expansions/safehouse.txt"
     },
     {
       "id": "forest",
-      "name": "Blackwood Expanse",
+      "name": "Glimmerwell Clinic",
       "file": "expansions/forest.txt"
     },
     {
       "id": "portland_slums",
-      "name": "Downtown Portland",
+      "name": "Grainfall Depot",
       "file": "expansions/portland_slums.txt"
     }
   ]
