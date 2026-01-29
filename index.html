@@ -1266,15 +1266,25 @@ once:true`
       const limit=getBackpackLimitAfterSwap(currentBackpack,newBackpack);
       return hasCapacityFor(tempInventory,limit,currentBackpack,1);
     };
-    const canEquipItem=(item)=>{
+    const canEquipItem=(item,source='inventory')=>{
       const data=getItem(item);
       if(!data.slot) return {ok:false,reason:'This item cannot be equipped.'};
       const usage=getEquipmentSlotUsage();
       const limit=EQUIPMENT_SLOTS[data.slot] || 0;
       if((usage[data.slot]||0) >= limit){
+        if(data.slot==='backpack'){
+          const equippedBackpack=getEquippedItemBySlot('backpack');
+          if(equippedBackpack){
+            const removeFromInventory=source==='inventory';
+            if(canSwapBackpack(equippedBackpack,item,removeFromInventory)){
+              return {ok:true,reason:'',requiresSwap:true,swapItem:equippedBackpack};
+            }
+            return {ok:false,reason:'Backpack too full to swap.'};
+          }
+        }
         return {ok:false,reason:`${slotLabel(data.slot)} slot full.`};
       }
-      return {ok:true,reason:''};
+      return {ok:true,reason:'',requiresSwap:false};
     };
     function awardXp(amount,sourceLabel){
       if(amount<=0) return;
@@ -1336,27 +1346,25 @@ once:true`
     function equipItem(item){
       if(state.equipped.includes(item)) return;
       const data=getItem(item);
-      const check=canEquipItem(item);
+      const check=canEquipItem(item,'inventory');
       if(!check.ok){
-        if(data.slot==='backpack'){
-          const equippedBackpack=getEquippedItemBySlot('backpack');
-          if(equippedBackpack){
-            if(!canSwapBackpack(equippedBackpack,item,true)){
-              setCodex('Backpack too full to swap.');
-              return;
-            }
-            removeItem(state.inventory,item);
-            removeItem(state.equipped,equippedBackpack);
-            state.inventory.push(equippedBackpack);
-            state.equipped.push(item);
-            state.selected={source:'equipped',item};
-            setCodex(`${item} equipped.`);
-            logMsg(`Swapped to ${item}.`);
-            renderAll();
-            return;
-          }
-        }
         setCodex(check.reason || 'No open slots for that item.');
+        return;
+      }
+      if(check.requiresSwap){
+        const equippedBackpack=check.swapItem || getEquippedItemBySlot('backpack');
+        if(!equippedBackpack){
+          setCodex('No open slots for that item.');
+          return;
+        }
+        removeItem(state.inventory,item);
+        removeItem(state.equipped,equippedBackpack);
+        state.inventory.push(equippedBackpack);
+        state.equipped.push(item);
+        state.selected={source:'equipped',item};
+        setCodex(`${item} equipped.`);
+        logMsg(`Swapped to ${item}.`);
+        renderAll();
         return;
       }
       removeItem(state.inventory,item);
@@ -1665,27 +1673,25 @@ once:true`
     }
     function equipRewardItem(source,item){
       const data=getItem(item);
-      const check=canEquipItem(item);
+      const check=canEquipItem(item,source);
       if(!check.ok){
-        if(data.slot==='backpack'){
-          const equippedBackpack=getEquippedItemBySlot('backpack');
-          if(equippedBackpack){
-            if(!canSwapBackpack(equippedBackpack,item,false)){
-              setCodex('Backpack too full to swap.');
-              return;
-            }
-            if(!removeRewardItem(source,item)) return;
-            removeItem(state.equipped,equippedBackpack);
-            state.inventory.push(equippedBackpack);
-            state.equipped.push(item);
-            state.selected={source:'equipped',item};
-            setCodex(`${item} equipped from rewards.`);
-            autoCloseMissionIfResolved();
-            renderAll();
-            return;
-          }
-        }
         setCodex(check.reason || 'No open slots for that item.');
+        return;
+      }
+      if(check.requiresSwap){
+        const equippedBackpack=check.swapItem || getEquippedItemBySlot('backpack');
+        if(!equippedBackpack){
+          setCodex('No open slots for that item.');
+          return;
+        }
+        if(!removeRewardItem(source,item)) return;
+        removeItem(state.equipped,equippedBackpack);
+        state.inventory.push(equippedBackpack);
+        state.equipped.push(item);
+        state.selected={source:'equipped',item};
+        setCodex(`${item} equipped from rewards.`);
+        autoCloseMissionIfResolved();
+        renderAll();
         return;
       }
       if(!removeRewardItem(source,item)) return;
@@ -1837,7 +1843,7 @@ once:true`
         if(data.slot){
           const equipBtn=document.createElement('button');
           equipBtn.textContent='Equip';
-          equipBtn.disabled=!canEquipItem(id).ok;
+          equipBtn.disabled=!canEquipItem(id,source).ok;
           equipBtn.onclick=()=>equipRewardItem(source,id);
           actions.appendChild(equipBtn);
         }
@@ -1955,7 +1961,7 @@ once:true`
         const stackCount=getItemCount(state.inventory,item);
         const stackable=isStackable(item) || data.stackable;
         if(data.slot){
-          const check=canEquipItem(item);
+          const check=canEquipItem(item,'inventory');
           actionConfigs.push({
             label:'Deploy to loadout',
             action:()=>equipItem(item),
@@ -2307,7 +2313,7 @@ once:true`
             if(data.slot){
               const equipBtn=document.createElement('button');
               equipBtn.textContent='Equip';
-              equipBtn.disabled=!canEquipItem(id).ok;
+              equipBtn.disabled=!canEquipItem(id,'idleReward').ok;
               equipBtn.onclick=()=>equipRewardItem('idleReward',id);
               actions.appendChild(equipBtn);
             }
