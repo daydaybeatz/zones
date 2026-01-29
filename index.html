@@ -4114,7 +4114,7 @@ once:true`
           completeMission();
         }
       }
-      if(state.mission.active){
+      if(state.mission.active && !state.mission.completed){
         renderMissionStatus();
       }
       if(state.travel.active){
