@@ -1,0 +1,54 @@
+@expansion
+id:metro_ganglands
+name:Metro Ganglands
+summary:An underground maze of tagged tunnels, clattering trains, and gang lookout nests trading in mid-tier gear.
+unlockCost:30
+shop:true
+
+@door
+label:Ganglands Turnstile
+hint:equipment runs, mid-tier weapons, telecom job
+note:Graffiti warnings blur past as the ganglands open into the rail tunnels.
+target:concourse
+
+@scene concourse
+title:Ganglands Concourse
+desc:Abandoned ticket booths are now gang checkpoints. The rails hum with stolen power.
+tags:Metro / Hostile
+option:Trade for a safe route => concourse | risk:low | time:6 | reward:safe passage | success:credits-6,log:You pay a toll and earn a quiet route. | fail:hp-4,log:The lookout spots you anyway.
+option:Slip into the tool cage => concourse | risk:medium | time:7 | reward:gear cache | success:item:coil battery,item:scavenger harness,log:You scoop up toolkits and harnesses. | fail:hp-5,morale-2,log:A sentry catches you climbing out.
+
+@mission
+id:gangland-supply
+label:Gangland supply pull
+desc:Run the tunnels for equipment bundles and mid-tier weapons.
+risk:medium
+time:11
+energy:14
+loot:3
+lootType:equipment crates
+
+@mission
+id:tunnel-sweep
+label:Tunnel gear sweep
+desc:Search maintenance shafts for tools and clothing.
+risk:medium
+time:10
+energy:13
+loot:3
+lootType:utility caches
+
+@quest
+id:metro-telecom
+title:Reconnect the telecom relay
+desc:Splice the shattered fiber lines and bring the relay back online.
+risk:medium
+time:12
+energy:16
+loot:3
+lootType:signal crates
+reward:telecom link
+success:item:data cartridge,credits+18,flag:metro-telecom,log:The relay hums to life. New stock opens across the ganglands.
+fail:hp-6,morale-4
+flag:metro-telecom
+once:true
