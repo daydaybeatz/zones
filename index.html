@@ -94,6 +94,8 @@
     .mission-actions{display:flex;gap:8px;flex-wrap:wrap;}
     @keyframes spin{to{transform:rotate(360deg);}}
     .item-grid{display:flex;flex-direction:column;gap:10px;}
+    .inventory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;}
+    .grid-span{grid-column:1 / -1;}
     .icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;}
     .icon-tile{align-items:flex-start;justify-content:space-between;flex-direction:column;gap:6px;aspect-ratio:1;padding:8px 10px;min-height:0;background:rgba(255,255,255,0.03);text-align:left;}
     .icon-tile .icon-name{font-weight:600;font-size:12px;line-height:1.25;}
@@ -287,11 +289,11 @@
             <div>
               <div id="inventoryBackpack" class="subscreen active">
                 <h4>Backpack Contents <span class="small" id="backpackCount"></span></h4>
-                <div class="item-grid" id="inventory"></div>
+                <div class="item-grid inventory-grid" id="inventory"></div>
               </div>
               <div id="inventoryLoadout" class="subscreen">
                 <h4>Equipped Loadout <span class="small" id="loadoutCount"></span></h4>
-                <div class="item-grid" id="equipment"></div>
+                <div class="item-grid inventory-grid" id="equipment"></div>
               </div>
               <div id="inventoryCrafting" class="subscreen">
                 <h4>Field Crafting</h4>
@@ -534,7 +536,7 @@
       'pipe rifle':{type:'weapon',slot:'weapon',rarity:'rare',value:32,mods:{combatBonus:7,riskMod:-0.01}},
       'compact medkit':{type:'consumable',rarity:'uncommon',value:14,effect:'hp+18'},
       'filtered water pack':{type:'consumable',rarity:'uncommon',value:13,effect:'thirst-20,rads-2'},
-      'anti-rad serum':{type:'consumable',rarity:'rare',value:32,effect:'rads-40%,radshield+25'},
+      'anti-rad serum':{type:'consumable',rarity:'rare',value:32,effect:'rads-40,radshield+25'},
       'morale patch':{type:'consumable',rarity:'common',value:7,effect:'morale+8,stamina+2'},
 
       /* iron ward */
@@ -583,6 +585,7 @@
 
     const ACTION_TIMES={camp:10};
     const RAD_SHIELD_DURATION_MINUTES=12*60;
+    const RAD_DANGER_THRESHOLD=20;
     const riskTable={low:0.08,medium:0.2,high:0.32,deadly:0.45};
     const riskRank={low:1,medium:2,high:3,deadly:4};
     const expansions={};
@@ -2341,16 +2344,14 @@ once:true`
         const empty=document.createElement('div');
         empty.className='muted-box';
         empty.textContent='Backpack empty. Run raids to pull more loot.';
+        empty.classList.add('grid-span');
         dom.inventory.appendChild(empty);
       }else{
-        const grid=document.createElement('div');
-        grid.className='icon-grid';
         const grouped=groupItems(state.inventory);
         const {entries,page,totalPages}=paginateEntries(grouped,'inventoryPage',GRID_PAGE_SIZE);
         entries.forEach(({id,count,data})=>{
-          grid.appendChild(buildItemTile({id,count,data,source:'inventory'}));
+          dom.inventory.appendChild(buildItemTile({id,count,data,source:'inventory'}));
         });
-        dom.inventory.appendChild(grid);
         const pager=renderPager({
           page,
           totalPages,
@@ -2358,10 +2359,11 @@ once:true`
           onPrev:()=>{state.inventoryPage=Math.max(0,page-1); renderInventory();},
           onNext:()=>{state.inventoryPage=Math.min(totalPages-1,page+1); renderInventory();}
         });
-        if(pager) dom.inventory.appendChild(pager);
+        if(pager){
+          pager.classList.add('grid-span');
+          dom.inventory.appendChild(pager);
+        }
       }
-      const equipmentGrid=document.createElement('div');
-      equipmentGrid.className='icon-grid';
       const equippedBySlot=Object.keys(EQUIPMENT_SLOTS).reduce((acc,key)=>{acc[key]=[];return acc;},{});
       state.equipped.forEach(item=>{
         const slot=getItem(item).slot;
@@ -2373,13 +2375,12 @@ once:true`
         for(let i=0;i<count;i++){
           const item=equippedBySlot[slot].shift();
           if(item){
-            equipmentGrid.appendChild(buildItemTile({id:item,count:1,data:getItem(item),source:'equipped'}));
+            dom.equipment.appendChild(buildItemTile({id:item,count:1,data:getItem(item),source:'equipped'}));
           }else{
-            equipmentGrid.appendChild(buildEmptySlotTile(slotLabel(slot)));
+            dom.equipment.appendChild(buildEmptySlotTile(slotLabel(slot)));
           }
         }
       });
-      dom.equipment.appendChild(equipmentGrid);
       if(dom.backpackCount){
         dom.backpackCount.textContent=`(${getBackpackUsage()}/${getBackpackLimit()})`;
       }
@@ -3419,9 +3420,11 @@ once:true`
         {desc:'A cold gust slips through your seals.',effects:'temp-2,stamina-2'},
         {desc:'An unseen stalker snatches some scrap.',effects:'scrap-2,temp-1'},
         {desc:'Hunger cramps slow you down.',effects:'stamina-6,hp-3'},
-        {desc:'Static surge fries a component.',effects:'credits-6,temp-1'},
-        {desc:'Radiation spike makes your skin crawl.',effects:'rads+2,hp-4'}
+        {desc:'Static surge fries a component.',effects:'credits-6,temp-1'}
       ];
+      if(state.rads>RAD_DANGER_THRESHOLD){
+        complications.push({desc:'Radiation spike makes your skin crawl.',effects:'rads+1,hp-2'});
+      }
       const hit=complications[Math.floor(Math.random()*complications.length)];
       applyEffects(hit.effects,'fail');
       logMsg(`Complication (${source}): ${hit.desc}`);
