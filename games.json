@@ -19,6 +19,16 @@
       "id": "portland_slums",
       "name": "Rubbletide Shanty Row",
       "file": "expansions/portland_slums.txt"
+    },
+    {
+      "id": "corporate_complex",
+      "name": "Arclight Corporate High-Rise",
+      "file": "expansions/corporate_complex.txt"
+    },
+    {
+      "id": "metro_ganglands",
+      "name": "Metro Ganglands",
+      "file": "expansions/metro_ganglands.txt"
     }
   ]
 }

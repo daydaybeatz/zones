@@ -1,0 +1,69 @@
+@expansion
+id:corporate_complex
+name:Arclight Corporate High-Rise
+summary:A corporate complex high-rise of shattered glass and cold marble, crawling with patrols guarding premium caches and medical bays.
+minLevel:5
+shop:false
+
+@door
+label:Arclight Service Lift
+hint:executive armory, med bays, high-value loot
+note:Elevator cables groan as you slip into the tower's service lift.
+target:executive-lobby
+
+@scene executive-lobby
+title:Executive Lobby
+desc:Security kiosks blink in the marble atrium. The air reeks of ozone and spilled antiseptic.
+tags:Corporate / Combat
+option:Force the security vault => executive-lobby | risk:high | time:8 | reward:weapon cache | success:item:arc pistol,item:riot shield,log:You pry open a vault drawer stuffed with combat gear. | fail:hp-8,morale-4,log:A stunner arc jumps the panel.
+option:Clear the triage wing => executive-lobby | risk:medium | time:7 | reward:medical supplies | success:item:compact medkit,item:painkillers,log:You strip the triage lockers for intact kits. | fail:hp-4,temp-1,log:A smashed vial cuts your hand.
+
+@mission
+id:executive-run
+label:High-rise weapons sweep
+desc:Room-to-room sweep for intact weapon crates.
+risk:high
+time:14
+energy:18
+loot:4
+lootType:weapon cases
+
+@mission
+id:med-vault-run
+label:High-rise medical sweep
+desc:Secure trauma supplies from sealed clinics.
+risk:medium
+time:12
+energy:15
+loot:3
+lootType:medical supplies
+
+@quest
+id:penthouse-raid
+title:Crack the penthouse armory
+desc:The executive armory still registers sealed. Punch through and haul the best weapons out.
+risk:high
+time:15
+energy:20
+loot:4
+lootType:armory cache
+reward:armory haul
+success:item:arc pistol,item:market shock knife,credits+24,flag:penthouse-raid
+fail:hp-10,morale-6
+flag:penthouse-raid
+once:true
+
+@quest
+id:triage-cache
+title:Secure the triage cabinet
+desc:Pull the locked medical cabinet before patrols return.
+risk:medium
+time:11
+energy:14
+loot:3
+lootType:medical packs
+reward:triage cache
+success:item:anti-rad serum,item:compact medkit,credits+16,flag:triage-cache
+fail:hp-6,temp-2
+flag:triage-cache
+once:true

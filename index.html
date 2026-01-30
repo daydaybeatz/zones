@@ -356,6 +356,8 @@
       thirst:20,maxThirst:100,
       energy:72,maxEnergy:100,
       rads:0,
+      radShield:0,
+      radShieldUntil:null,
       bodyTemp:98,maxBodyTemp:104,
       scrap:6,
       credits:50,
@@ -407,6 +409,9 @@
       const idleDurationMs=Number(merged.idleOps.durationMs);
       merged.idleOps.startedAt=Number.isFinite(idleStartedAt) ? idleStartedAt : null;
       merged.idleOps.durationMs=Number.isFinite(idleDurationMs) ? idleDurationMs : 0;
+      merged.radShield=Number.isFinite(Number(merged.radShield)) ? Number(merged.radShield) : 0;
+      const radShieldUntil=Number(merged.radShieldUntil);
+      merged.radShieldUntil=Number.isFinite(radShieldUntil) ? radShieldUntil : null;
       return merged;
     };
     const loadSavedState=()=>{
@@ -529,6 +534,7 @@
       'pipe rifle':{type:'weapon',slot:'weapon',rarity:'rare',value:32,mods:{combatBonus:7,riskMod:-0.01}},
       'compact medkit':{type:'consumable',rarity:'uncommon',value:14,effect:'hp+18'},
       'filtered water pack':{type:'consumable',rarity:'uncommon',value:13,effect:'thirst-20,rads-2'},
+      'anti-rad serum':{type:'consumable',rarity:'rare',value:32,effect:'rads-40%,radshield+25'},
       'morale patch':{type:'consumable',rarity:'common',value:7,effect:'morale+8,stamina+2'},
 
       /* iron ward */
@@ -563,7 +569,7 @@
     const LOOT_BY_RARITY={
       common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','morale patch','pocket pack','jury-rigged blade','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape'],
       uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack'],
-      rare:['microcell','lockbox key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol'],
+      rare:['microcell','lockbox key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum'],
       epic:['drone core'],
       legendary:['fusion core shard','scrapboss helm','warlord helm','safehouse warden coat','facility command badge','riot jacket']
     };
@@ -576,6 +582,7 @@
     ];
 
     const ACTION_TIMES={camp:10};
+    const RAD_SHIELD_DURATION_MINUTES=12*60;
     const riskTable={low:0.08,medium:0.2,high:0.32,deadly:0.45};
     const riskRank={low:1,medium:2,high:3,deadly:4};
     const expansions={};
@@ -583,7 +590,9 @@
       {id:'town',name:'Titan Mart Megastore',file:'expansions/town.txt'},
       {id:'safehouse',name:'Harbor Barter Shelter',file:'expansions/safehouse.txt'},
       {id:'forest',name:'Blacksite Service Annex',file:'expansions/forest.txt'},
-      {id:'portland_slums',name:'Rubbletide Shanty Row',file:'expansions/portland_slums.txt'}
+      {id:'portland_slums',name:'Rubbletide Shanty Row',file:'expansions/portland_slums.txt'},
+      {id:'corporate_complex',name:'Arclight Corporate High-Rise',file:'expansions/corporate_complex.txt'},
+      {id:'metro_ganglands',name:'Metro Ganglands',file:'expansions/metro_ganglands.txt'}
     ];
     const EMBEDDED_EXPANSIONS={
       town:`@expansion
@@ -839,6 +848,130 @@ success:item:ember ration,item:hardened canteen,credits+12,flag:grain-barge
 fail:hp-6,morale-3
 flag:grain-barge
 once:true`
+      ,
+      corporate_complex:`@expansion
+id:corporate_complex
+name:Arclight Corporate High-Rise
+summary:A corporate complex high-rise of shattered glass and cold marble, crawling with patrols guarding premium caches and medical bays.
+minLevel:5
+shop:false
+
+@door
+label:Arclight Service Lift
+hint:executive armory, med bays, high-value loot
+note:Elevator cables groan as you slip into the tower's service lift.
+target:executive-lobby
+
+@scene executive-lobby
+title:Executive Lobby
+desc:Security kiosks blink in the marble atrium. The air reeks of ozone and spilled antiseptic.
+tags:Corporate / Combat
+option:Force the security vault => executive-lobby | risk:high | time:8 | reward:weapon cache | success:item:arc pistol,item:riot shield,log:You pry open a vault drawer stuffed with combat gear. | fail:hp-8,morale-4,log:A stunner arc jumps the panel.
+option:Clear the triage wing => executive-lobby | risk:medium | time:7 | reward:medical supplies | success:item:compact medkit,item:painkillers,log:You strip the triage lockers for intact kits. | fail:hp-4,temp-1,log:A smashed vial cuts your hand.
+
+@mission
+id:executive-run
+label:High-rise weapons sweep
+desc:Room-to-room sweep for intact weapon crates.
+risk:high
+time:14
+energy:18
+loot:4
+lootType:weapon cases
+
+@mission
+id:med-vault-run
+label:High-rise medical sweep
+desc:Secure trauma supplies from sealed clinics.
+risk:medium
+time:12
+energy:15
+loot:3
+lootType:medical supplies
+
+@quest
+id:penthouse-raid
+title:Crack the penthouse armory
+desc:The executive armory still registers sealed. Punch through and haul the best weapons out.
+risk:high
+time:15
+energy:20
+loot:4
+lootType:armory cache
+reward:armory haul
+success:item:arc pistol,item:market shock knife,credits+24,flag:penthouse-raid
+fail:hp-10,morale-6
+flag:penthouse-raid
+once:true
+
+@quest
+id:triage-cache
+title:Secure the triage cabinet
+desc:Pull the locked medical cabinet before patrols return.
+risk:medium
+time:11
+energy:14
+loot:3
+lootType:medical packs
+reward:triage cache
+success:item:anti-rad serum,item:compact medkit,credits+16,flag:triage-cache
+fail:hp-6,temp-2
+flag:triage-cache
+once:true`,
+      metro_ganglands:`@expansion
+id:metro_ganglands
+name:Metro Ganglands
+summary:An underground maze of tagged tunnels, clattering trains, and gang lookout nests trading in mid-tier gear.
+unlockCost:30
+shop:true
+
+@door
+label:Ganglands Turnstile
+hint:equipment runs, mid-tier weapons, telecom job
+note:Graffiti warnings blur past as the ganglands open into the rail tunnels.
+target:concourse
+
+@scene concourse
+title:Ganglands Concourse
+desc:Abandoned ticket booths are now gang checkpoints. The rails hum with stolen power.
+tags:Metro / Hostile
+option:Trade for a safe route => concourse | risk:low | time:6 | reward:safe passage | success:credits-6,log:You pay a toll and earn a quiet route. | fail:hp-4,log:The lookout spots you anyway.
+option:Slip into the tool cage => concourse | risk:medium | time:7 | reward:gear cache | success:item:coil battery,item:scavenger harness,log:You scoop up toolkits and harnesses. | fail:hp-5,morale-2,log:A sentry catches you climbing out.
+
+@mission
+id:gangland-supply
+label:Gangland supply pull
+desc:Run the tunnels for equipment bundles and mid-tier weapons.
+risk:medium
+time:11
+energy:14
+loot:3
+lootType:equipment crates
+
+@mission
+id:tunnel-sweep
+label:Tunnel gear sweep
+desc:Search maintenance shafts for tools and clothing.
+risk:medium
+time:10
+energy:13
+loot:3
+lootType:utility caches
+
+@quest
+id:metro-telecom
+title:Reconnect the telecom relay
+desc:Splice the shattered fiber lines and bring the relay back online.
+risk:medium
+time:12
+energy:16
+loot:3
+lootType:signal crates
+reward:telecom link
+success:item:data cartridge,credits+18,flag:metro-telecom,log:The relay hums to life. New stock opens across the ganglands.
+fail:hp-6,morale-4
+flag:metro-telecom
+once:true`
     };
     let expansionsExpected=0;
     let expansionsLoaded=0;
@@ -884,7 +1017,8 @@ once:true`
         {id:'ration bar',cost:14,tag:'Rations'},
         {id:'morale patch',cost:16,tag:'Morale'},
         {id:'spare filter',cost:22,tag:'Air kit'},
-        {id:'thermal wrap',cost:20,tag:'Warmth'}
+        {id:'thermal wrap',cost:20,tag:'Warmth'},
+        {id:'anti-rad serum',cost:46,tag:'Anti-rad'}
       ],
       town:[
         {id:'jury-rigged blade',cost:20,tag:'Weapon'},
@@ -892,7 +1026,8 @@ once:true`
         {id:'pipe rifle',cost:72,tag:'Weapon'},
         {id:'riot shield',cost:58,tag:'Defense'},
         {id:'utility coat',cost:32,tag:'Armor'},
-        {id:'exo brace',cost:46,tag:'Field gear'}
+        {id:'exo brace',cost:46,tag:'Field gear'},
+        {id:'anti-rad serum',cost:46,tag:'Anti-rad'}
       ],
       forest:[
         {id:'bandage',cost:10,tag:'Medical'},
@@ -900,7 +1035,8 @@ once:true`
         {id:'compact medkit',cost:32,tag:'Medical'},
         {id:'filtered water pack',cost:26,tag:'Hydration'},
         {id:'spark tonic',cost:22,tag:'Stims'},
-        {id:'morale patch',cost:16,tag:'Recovery'}
+        {id:'morale patch',cost:16,tag:'Recovery'},
+        {id:'anti-rad serum',cost:46,tag:'Anti-rad'}
       ],
       portland_slums:[
         {id:'ration bar',cost:14,tag:'Rations'},
@@ -908,9 +1044,38 @@ once:true`
         {id:'ember ration',cost:22,tag:'Rations'},
         {id:'water canister',cost:24,tag:'Hydration'},
         {id:'hardened canteen',cost:28,tag:'Hydration'},
-        {id:'monsoon canteen',cost:40,tag:'Hydration'}
+        {id:'monsoon canteen',cost:40,tag:'Hydration'},
+        {id:'anti-rad serum',cost:46,tag:'Anti-rad'}
+      ],
+      corporate_complex:[
+        {id:'arc pistol',cost:82,tag:'Weapon'},
+        {id:'market shock knife',cost:64,tag:'Weapon'},
+        {id:'riot shield',cost:60,tag:'Defense'},
+        {id:'compact medkit',cost:32,tag:'Medical'},
+        {id:'painkillers',cost:20,tag:'Medical'},
+        {id:'anti-rad serum',cost:46,tag:'Anti-rad'}
+      ],
+      metro_ganglands:[
+        {id:'scavenger harness',cost:30,tag:'Clothing'},
+        {id:'limited hoodie',cost:44,tag:'Clothing'},
+        {id:'utility coat',cost:34,tag:'Armor'},
+        {id:'coil battery',cost:26,tag:'Tool'},
+        {id:'flashbang',cost:48,tag:'Tool'},
+        {id:'market shock knife',cost:62,tag:'Weapon'}
       ]
     };
+    const METRO_GANGLANDS_UPGRADE_STOCK=[
+      {id:'arc pistol',cost:82,tag:'Weapon'},
+      {id:'stun baton',cost:52,tag:'Weapon'},
+      {id:'riot jacket',cost:120,tag:'Armor'},
+      {id:'facility command badge',cost:140,tag:'Tool'},
+      {id:'drone core',cost:96,tag:'Tool'},
+      {id:'expedition frame pack',cost:72,tag:'Backpack'},
+      {id:'signal jammer',cost:58,tag:'Tool'},
+      {id:'overclock chip',cost:60,tag:'Tool'},
+      {id:'insulated cloak',cost:54,tag:'Armor'},
+      {id:'exo brace',cost:50,tag:'Gear'}
+    ];
     const MARKET_STOCK_DEFAULT=[
       {id:'pocket pack',cost:26,tag:'Backpack'},
       {id:'scout daypack',cost:38,tag:'Backpack'},
@@ -922,6 +1087,7 @@ once:true`
       {id:'compact medkit',cost:30,tag:'Medical'},
       {id:'filtered water pack',cost:28,tag:'Hydration'},
       {id:'morale patch',cost:16,tag:'Morale'},
+      {id:'anti-rad serum',cost:46,tag:'Anti-rad'},
       {id:'spare filter',cost:24,tag:'Gear mod'},
       {id:'coil battery',cost:26,tag:'Gear mod'},
       {id:'bunker schematics',cost:44,tag:'Route intel'}
@@ -1016,6 +1182,15 @@ once:true`
       if(value>target) return Math.max(target,value-amount);
       return value;
     };
+    const getTotalMinutes=()=>((state.day||0)*24*60)+(state.timeMinutes||0);
+    const updateRadShield=()=>{
+      if(!state.radShieldUntil || !state.radShield) return state.radShield || 0;
+      if(getTotalMinutes()>=state.radShieldUntil){
+        state.radShield=0;
+        state.radShieldUntil=null;
+      }
+      return state.radShield || 0;
+    };
     const fmtTime=(mins)=>{
       const m=mins%60;const h=Math.floor(mins/60)%24;const suffix=h>=12?"PM":"AM";
       const hour=((h+11)%12+1);return `${hour}:${m.toString().padStart(2,'0')} ${suffix}`;
@@ -1037,6 +1212,13 @@ once:true`
     const zoneHasShop=(zone=state.zone)=>isMarketZone(zone) || zone.id==='safehouse';
     const getMarketStockForZone=(zoneId)=>{
       if(!zoneId) return MARKET_STOCK_DEFAULT;
+      if(zoneId==='metro_ganglands'){
+        const base=MARKET_STOCK_BY_ZONE[zoneId] || MARKET_STOCK_DEFAULT;
+        if(state.flags.has('metro-telecom')){
+          return [...base,...METRO_GANGLANDS_UPGRADE_STOCK];
+        }
+        return base;
+      }
       return MARKET_STOCK_BY_ZONE[zoneId] || MARKET_STOCK_DEFAULT;
     };
     const ensureZoneScene=(zone=state.zone)=>{
@@ -1213,6 +1395,16 @@ once:true`
         if(token.startsWith('note:')) return token.slice(5).trim();
         if(token.startsWith('log:')) return token.slice(4).trim();
         if(token.startsWith('flag:')) return `Flags ${token.slice(5).trim()}`;
+        const radPercentMatch=token.match(/^rads([+-]\d+)%$/i);
+        if(radPercentMatch){
+          return `radiation ${radPercentMatch[1]}%`;
+        }
+        const radShieldMatch=token.match(/^radshield([+-]\d+)/i);
+        if(radShieldMatch){
+          const value=Number(radShieldMatch[1]);
+          const display=value>0 ? `-${Math.abs(value)}%` : `${value}%`;
+          return `radiation accumulation ${display}`;
+        }
         const match=token.match(/([a-zA-Z]+)([+-]\d+)/);
         if(match){
           const stat=match[1];
@@ -3212,6 +3404,7 @@ once:true`
       }else{
         state.timeMinutes=total;
       }
+      updateRadShield();
     }
 
     function advanceDay(){
@@ -3236,6 +3429,7 @@ once:true`
 
     function applyEffects(effectStr,outcome,options={}){
       if(!effectStr) return;
+      updateRadShield();
       const deferItemsTo=Array.isArray(options.deferItemsTo) ? options.deferItemsTo : null;
       effectStr.split(',').forEach(token=>{
         token=token.trim(); if(!token) return;
@@ -3254,6 +3448,20 @@ once:true`
         if(token.startsWith('flag:')){ state.flags.add(token.slice(5)); return; }
         if(token.startsWith('note:')){ setCodex(token.slice(5)); return; }
         if(token.startsWith('log:')){ logMsg(token.slice(4)); return; }
+        const radPercentMatch=token.match(/^rads([+-]\d+)%$/i);
+        if(radPercentMatch){
+          const percent=Number(radPercentMatch[1]);
+          const delta=Math.round(state.rads*(percent/100));
+          state.rads=Math.max(0,state.rads+delta);
+          return;
+        }
+        const radShieldMatch=token.match(/^radshield([+-]\d+)/i);
+        if(radShieldMatch){
+          const percent=Number(radShieldMatch[1]);
+          state.radShield=clamp(percent/100,0,0.75);
+          state.radShieldUntil=getTotalMinutes()+RAD_SHIELD_DURATION_MINUTES;
+          return;
+        }
         const match=token.match(/([a-zA-Z]+)([+-]\d+)/);
         if(match){
           const stat=match[1]; const delta=Number(match[2]);
@@ -3262,7 +3470,11 @@ once:true`
           else if(stat==='morale') state.morale=clamp(state.morale+delta,0,state.maxMorale);
           else if(stat==='hunger') state.hunger=clamp(state.hunger+delta,0,state.maxHunger);
           else if(stat==='thirst') state.thirst=clamp(state.thirst+delta,0,state.maxThirst);
-          else if(stat==='rads') state.rads=Math.max(0,state.rads+delta);
+          else if(stat==='rads'){
+            const shield=delta>0 ? updateRadShield() : 0;
+            const adjusted=delta>0 ? Math.max(0,Math.round(delta*(1-shield))) : delta;
+            state.rads=Math.max(0,state.rads+adjusted);
+          }
           else if(stat==='credits') state.credits=Math.max(0,state.credits+delta);
           else if(stat==='scrap') state.scrap=Math.max(0,state.scrap+delta);
           else if(stat==='energy') state.energy=clamp(state.energy+delta,0,state.maxEnergy);
@@ -3991,7 +4203,19 @@ once:true`
 
     function addDoor(exp){
       const btn=document.createElement('button');
-      btn.innerHTML=`<span>${exp.door?.label||exp.meta.name}</span><span class="small">${exp.door?.hint||'Unknown contact'}</span>`;
+      const minLevel=Number(exp.meta?.minLevel || exp.meta?.minlevel || 0);
+      const unlockCost=Number(exp.meta?.unlockCost || exp.meta?.unlockcost || 0);
+      const unlockFlag=`unlock-${exp.meta.id}`;
+      let isUnlocked=!unlockCost || state.flags.has(unlockFlag);
+      const getHintText=()=>((!isUnlocked && unlockCost)
+        ? `Unlock ${unlockCost} credits`
+        : (minLevel && state.level<minLevel)
+          ? `Requires level ${minLevel}`
+          : (exp.door?.hint||'Unknown contact'));
+      const setDoorLabel=()=>{
+        btn.innerHTML=`<span>${exp.door?.label||exp.meta.name}</span><span class="small">${getHintText()}</span>`;
+      };
+      setDoorLabel();
       btn.onclick=()=>{
         if(isMissionBlockingTravel()){
           setCodex('Mission in progress. Cannot change locations.');
@@ -4004,6 +4228,22 @@ once:true`
         if(state.travel.active){
           setCodex('Already rerouting. Stand by.');
           return;
+        }
+        if(minLevel && state.level<minLevel){
+          setCodex(`Access denied. Reach level ${minLevel} to enter ${exp.meta.name}.`);
+          return;
+        }
+        if(unlockCost && !isUnlocked){
+          if(state.credits<unlockCost){
+            setCodex(`Need ${unlockCost} credits to unlock ${exp.meta.name}.`);
+            return;
+          }
+          state.credits-=unlockCost;
+          state.flags.add(unlockFlag);
+          isUnlocked=true;
+          setDoorLabel();
+          logMsg(`${exp.meta.name} unlocked for ${unlockCost} credits.`);
+          setCodex(`${exp.meta.name} unlocked. Transit cleared.`);
         }
         const targetScene=exp.door?.target || Object.keys(exp.scenes || {})[0] || null;
         const target={
@@ -4021,6 +4261,10 @@ once:true`
         if(exp.door?.note) setCodex(exp.door.note);
         renderAll();
       };
+      if(minLevel && state.level<minLevel){
+        btn.disabled=true;
+        btn.title=`Requires level ${minLevel}`;
+      }
       dom.doors.appendChild(btn);
     }
 
