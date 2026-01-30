@@ -158,7 +158,17 @@
     .modal-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);width:min(440px,92%);display:flex;flex-direction:column;gap:10px;}
     .modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}
     @media(max-width:900px){header{position:static;} .two-col{grid-template-columns:1fr;} .tab-buttons button{flex:1 1 100%;}}
-    @media(max-width:900px){.inventory-layout{grid-template-columns:1fr;}}
+    @media(max-width:900px){
+      .inventory-layout{grid-template-columns:1fr;}
+      #tab-field .inventory-layout{display:flex;flex-direction:column;}
+      #tab-field #stashColumn{display:contents;}
+      #tab-field #stashMarket.active{display:contents;}
+      #tab-field #marketSubtitle{order:0;}
+      #tab-field #marketBackpack{order:1;}
+      #tab-field #stashCommandCard{order:2;}
+      #tab-field #stashMarket .market-section{order:3;}
+      #tab-field #stashActions{order:4;}
+    }
   </style>
 </head>
 <body>
@@ -306,7 +316,7 @@
             <button data-stash-screen="market">Shop</button>
           </div>
           <div class="inventory-layout">
-            <div>
+            <div id="stashColumn">
               <div id="stashVault" class="subscreen active">
                 <h4 id="stashSubtitle">Vault Inventory <span class="small" id="stashCount"></span></h4>
                 <div id="stash"></div>
@@ -314,14 +324,14 @@
               <div id="stashMarket" class="subscreen">
                 <h4 id="marketSubtitle">Backpack Inventory <span class="small" id="marketBackpackCount"></span></h4>
                 <div id="marketBackpack"></div>
-                <div class="market-section">
+                <div class="market-section" id="marketSection">
                   <h4>Vendor stock</h4>
                   <div class="command-hint" id="marketHint">Visit a shop in your current location to access vendors.</div>
                   <div id="marketInventory" class="market-grid"></div>
                 </div>
               </div>
             </div>
-            <div class="command-card">
+            <div class="command-card" id="stashCommandCard">
               <div class="command-title" id="stashCommandTitle">Vault Command Card</div>
               <div id="stashDetail" class="command-hint">Select stash items to transfer, scrap, or sell.</div>
               <div class="action-grid" id="stashItemActions"></div>
