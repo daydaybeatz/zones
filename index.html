@@ -8,6 +8,7 @@
   :root{
     color-scheme: dark;
     --tab-bar-height:64px;
+    --header-offset:0px;
 
     /* CORE TERMINAL PALETTE */
     --bg:#020202;
@@ -45,7 +46,7 @@
     --scanlineA:rgba(0,0,0,0.32);
     --scanlineB:rgba(0,0,0,0.06);
     --noiseA:rgba(255,255,255,0.06);
-    --vignette:rgba(0,0,0,0.72);
+    --vignette:rgba(0,0,0,0.0);
 
     /* TYPE */
     --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -103,9 +104,7 @@
         rgba(0,0,0,0.18) 1px,
         transparent 3px,
         transparent 7px
-      ),
-      /* vignette */
-      radial-gradient(circle at 50% 55%, rgba(0,0,0,0.05) 0%, var(--vignette) 70%, rgba(0,0,0,0.92) 100%);
+      );
     mix-blend-mode: multiply;
     opacity:0.95;
   }
@@ -164,7 +163,6 @@
     flex-direction:column;
     gap:12px;
     position:relative;
-    padding-top:calc(var(--tab-bar-height) + 8px);
     padding-bottom:72px;
   }
 
@@ -186,7 +184,7 @@
     border-radius: var(--radius);
     box-shadow: var(--shadow), var(--inner), var(--glow);
     position:sticky;
-    top:calc(var(--tab-bar-height) + 8px);
+    top:12px;
     z-index:3;
 
     backdrop-filter: blur(6px);
@@ -490,7 +488,6 @@
     border-radius:var(--radius);
     box-shadow:var(--shadow), var(--inner);
     overflow:hidden;
-    padding-top:calc(var(--tab-bar-height) + 4px);
   }
   .tab-buttons{
     display:flex;
@@ -500,11 +497,9 @@
     flex-wrap:wrap;
     background:
       linear-gradient(180deg, rgba(10,12,10,0.70), rgba(0,0,0,0.60));
-    position:fixed;
-    top:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:min(1200px, calc(100% - 24px));
+    position:sticky;
+    top:var(--header-offset);
+    width:100%;
     min-height:var(--tab-bar-height);
     z-index:6;
     border-radius:0 0 var(--radius) var(--radius);
@@ -605,8 +600,25 @@
     transform:translateX(-50%);
     width:min(1200px, calc(100% - 24px));
     margin:0;
-    border-radius:var(--radius) var(--radius) 0 0;
     z-index:6;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:0 6px 6px;
+  }
+  .signal-log__controls{
+    display:flex;
+    justify-content:flex-end;
+    padding:6px 6px 0;
+  }
+  .signal-log__controls button{
+    padding:6px 10px;
+    min-height:unset;
+    font-size:11px;
+  }
+  .signal-log .log{
+    border-radius:var(--radius) var(--radius) 0 0;
+    margin:0;
   }
 
   .small{font-size:11px;color:rgba(184,255,207,0.70);}
@@ -994,13 +1006,20 @@
         </section>
       </div>
     </div>
-    <div class="log signal-log" id="codex"></div>
+    <div class="signal-log" id="codexPanel">
+      <div class="signal-log__controls">
+        <button class="btn-secondary" id="codexToggle" type="button">Show last 20</button>
+      </div>
+      <div class="log" id="codex"></div>
+    </div>
   </div>
 
   <script>
     /* ================= STATE & CONSTANTS ================= */
     const SAVE_KEY='zeroLuxSave';
     const SAVE_VERSION=2;
+    const CODEX_VISIBLE_LIMIT=20;
+    const CODEX_HISTORY_LIMIT=120;
     const createIdleSlot=()=>({active:false,id:null,startedAt:null,durationMs:0,etaMinutes:0,completed:false,statusMessage:''});
     const createDefaultState=()=>({
       hp:92,maxHp:100,
@@ -1029,6 +1048,7 @@
       inventory:["rusty flashlight","ration bar","scrap wiring"],
       equipped:['basic backpack'],
       codex:["Hub online. Reward bays clear."],
+      codexExpanded:false,
       stash:{name:'Vault Stash',items:[]},
       marketAccess:{active:false,zoneId:null},
       idleOps:[createIdleSlot()],
@@ -1773,6 +1793,7 @@ once:true`
         loadout:document.getElementById('inventoryLoadout'),
         crafting:document.getElementById('inventoryCrafting')
       },
+      codexToggle:document.getElementById('codexToggle'),
       stashNav:Array.from(document.querySelectorAll('#stashNav button')),
       stashScreens:{
         vault:document.getElementById('stashVault'),
@@ -1813,7 +1834,33 @@ once:true`
       const m=mins%60;const h=Math.floor(mins/60)%24;const suffix=h>=12?"PM":"AM";
       const hour=((h+11)%12+1);return `${hour}:${m.toString().padStart(2,'0')} ${suffix}`;
     }
-    const setCodex=(msg)=>{ state.codex=[msg]; };
+    function renderCodex(){
+      if(!dom.codex) return;
+      const entries=state.codex.slice(-CODEX_VISIBLE_LIMIT);
+      const latest=entries[entries.length-1] || '';
+      if(state.codexExpanded){
+        dom.codex.textContent=entries.join('\n');
+      }else{
+        dom.codex.textContent=latest;
+      }
+      if(dom.codexToggle){
+        dom.codexToggle.textContent=state.codexExpanded ? 'Hide log' : 'Show last 20';
+      }
+    }
+    const setCodex=(msg)=>{
+      if(!msg) return;
+      state.codex.push(msg);
+      if(state.codex.length>CODEX_HISTORY_LIMIT){
+        state.codex.splice(0,state.codex.length-CODEX_HISTORY_LIMIT);
+      }
+      renderCodex();
+    };
+    const updateHeaderOffset=()=>{
+      const header=document.querySelector('header');
+      if(!header) return;
+      const offset=header.offsetHeight+12;
+      document.documentElement.style.setProperty('--header-offset',`${offset}px`);
+    };
     const getIdleSlotLimit=()=>state.flags.has('ganglands-telecom') ? 2 : 1;
     const syncIdleSlots=()=>{
       if(!Array.isArray(state.idleOps)){
@@ -3023,7 +3070,7 @@ once:true`
       if(dom.loadoutCount){
         dom.loadoutCount.textContent=`(${getEquipmentUsageCount()}/${getEquipmentSlotTotal()})`;
       }
-      dom.codex.textContent = state.codex[state.codex.length-1] || '';
+      renderCodex();
     }
 
     function changeCraftingPage(delta){
@@ -3359,6 +3406,12 @@ once:true`
     dom.tabButtons.forEach(btn=>{
       btn.onclick=()=>{ activeTab=btn.dataset.tab; syncTabs(); };
     });
+    if(dom.codexToggle){
+      dom.codexToggle.onclick=()=>{
+        state.codexExpanded=!state.codexExpanded;
+        renderCodex();
+      };
+    }
 
     function setInventoryScreen(screen){
       const changed=state.inventoryScreen!==screen;
@@ -5166,6 +5219,8 @@ once:true`
     }
 
     function initGame(){
+      updateHeaderOffset();
+      window.addEventListener('resize',updateHeaderOffset);
       renderAll();
       loadGames();
       showIntroModal({returning:Boolean(savedState)});
