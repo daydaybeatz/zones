@@ -1864,16 +1864,9 @@ once:true`
     };
     const updateTabDockOffset=()=>{
       const header=document.querySelector('header');
-      const dock=document.getElementById('tabDock');
       const headerOffset=header ? header.offsetHeight+12 : 0;
       document.documentElement.style.setProperty('--header-offset',`${headerOffset}px`);
-      if(!dock){
-        document.documentElement.style.setProperty('--tab-stick-offset',`${headerOffset}px`);
-        return;
-      }
-      const dockTop=Math.round(dock.getBoundingClientRect().top);
-      const stickOffset=dockTop>headerOffset ? dockTop : headerOffset;
-      document.documentElement.style.setProperty('--tab-stick-offset',`${stickOffset}px`);
+      document.documentElement.style.setProperty('--tab-stick-offset',`${headerOffset}px`);
     };
     let dockTicking=false;
     const requestTabDockUpdate=()=>{
