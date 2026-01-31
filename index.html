@@ -124,6 +124,37 @@
     animation: noiseDrift 2.2s infinite linear;
   }
 
+  .modal{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:rgba(0,0,0,0.72);
+    z-index:10000;
+  }
+
+  .modal.hidden{
+    display:none;
+  }
+
+  .modal-card{
+    width:min(520px, 92vw);
+    padding:20px 22px;
+    border-radius:var(--radius);
+    border:1px solid var(--border-strong);
+    background:var(--panel);
+    box-shadow:var(--shadow), var(--inner), var(--glow);
+  }
+
+  .modal-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:16px;
+  }
+
   /* app wrapper */
   #app{
     max-width:1200px;
