@@ -7,9 +7,7 @@
 <style>
   :root{
     color-scheme: dark;
-    --tab-bar-height:64px;
-    --header-offset:0px;
-    --tab-stick-offset:0px;
+    --tab-bar-height:52px;
 
     /* CORE TERMINAL PALETTE */
     --bg:#020202;
@@ -60,7 +58,7 @@
   body{
     margin:0;
     min-height:100vh;
-    padding:12px;
+    padding:calc(12px + var(--tab-bar-height)) 12px 12px;
     color:var(--ink);
     font-family:var(--mono);
     letter-spacing:0.2px;
@@ -495,24 +493,28 @@
     gap:8px;
     padding:10px 12px;
     border-bottom:1px solid rgba(57,255,20,0.14);
-    flex-wrap:wrap;
+    flex-wrap:nowrap;
+    justify-content:center;
+    overflow-x:auto;
     background:
       linear-gradient(180deg, rgba(10,12,10,0.70), rgba(0,0,0,0.60));
-    position:sticky;
-    top:var(--tab-stick-offset);
-    width:100%;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
     min-height:var(--tab-bar-height);
-    z-index:6;
+    z-index:10;
     border-radius:0 0 var(--radius) var(--radius);
     box-shadow: var(--shadow), var(--inner), var(--glow);
   }
   .tab-buttons button{
-    flex:1 1 120px;
+    flex:0 0 auto;
+    min-width:110px;
     text-align:center;
     justify-content:center;
     border-radius:10px;
-    padding:10px 12px;
-    min-height:40px;
+    padding:8px 10px;
+    min-height:36px;
   }
   .tab-buttons button.active{
     border-color:rgba(57,255,20,0.75);
@@ -796,7 +798,6 @@
   @media(max-width:900px){
     header{position:static;}
     .two-col{grid-template-columns:1fr;}
-    .tab-buttons button{flex:1 1 100%;}
     .inventory-layout{gap:12px;}
     #tab-field .inventory-layout{display:flex;flex-direction:column;}
     #tab-field #stashColumn{display:contents;}
@@ -1861,21 +1862,6 @@ once:true`
         state.codex.splice(0,state.codex.length-CODEX_HISTORY_LIMIT);
       }
       renderCodex();
-    };
-    const updateTabDockOffset=()=>{
-      const header=document.querySelector('header');
-      const headerOffset=header ? header.offsetHeight+12 : 0;
-      document.documentElement.style.setProperty('--header-offset',`${headerOffset}px`);
-      document.documentElement.style.setProperty('--tab-stick-offset',`${headerOffset}px`);
-    };
-    let dockTicking=false;
-    const requestTabDockUpdate=()=>{
-      if(dockTicking) return;
-      dockTicking=true;
-      requestAnimationFrame(()=>{
-        updateTabDockOffset();
-        dockTicking=false;
-      });
     };
     const getIdleSlotLimit=()=>state.flags.has('ganglands-telecom') ? 2 : 1;
     const syncIdleSlots=()=>{
@@ -5235,9 +5221,6 @@ once:true`
     }
 
     function initGame(){
-      updateTabDockOffset();
-      window.addEventListener('resize',requestTabDockUpdate);
-      window.addEventListener('scroll',requestTabDockUpdate,{passive:true});
       renderAll();
       loadGames();
       showIntroModal({returning:Boolean(savedState)});
