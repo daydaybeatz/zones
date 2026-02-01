@@ -1025,6 +1025,34 @@
     const SAVE_VERSION=2;
     const CODEX_VISIBLE_LIMIT=20;
     const CODEX_HISTORY_LIMIT=120;
+    const ELDER_MISSION_ID='safehouse-elders';
+    const ELDER_ADVICE=[
+      'Keep one energy bar in reserve; emergency actions cost more than you think.',
+      'Scrap weighs less than credits, but credits open gates.',
+      'Morale drops faster than hunger after a bad run—rest before you spiral.',
+      'Stamina recovery is quicker when you stop in safe zones.',
+      'Radiation shield buys time, not safety; reapply before deep dives.',
+      'Cold drains stamina; warm layers matter more than armor on long walks.',
+      'Keys open caches, but the noise draws trouble—move fast after unlocking.',
+      'Low-risk missions still roll for mishaps; never go in empty.',
+      'If your pack is full, a stash upgrade beats another risky run.',
+      'Energy regen between ops is slower while wounded—patch up first.',
+      'Door hints tell you what kind of gear to expect; plan your loadout.',
+      'Combat eats time; budget extra energy on high-risk raids.',
+      'When the codex goes quiet, check idle dispatches—they may need routing.',
+      'Food restores more than hunger; morale steadies with a warm meal.',
+      'Use the market when you can; junk in the pack is lost profit.',
+      'A balanced loadout lowers risk more than a single rare item.',
+      'Always carry one light source; dark halls spike failure rates.',
+      'Trade off loot for survival; an extra medkit beats another trinket.',
+      'If rads climb over twenty, retreat and cleanse before the next run.',
+      'Short runs keep XP climbing without draining morale.',
+      'Listen for hums in the bunker—systems online mean safer routes.',
+      'Hubs are for planning; do not launch raids until your energy is stable.',
+      'Spare filters are worth more than weapons when the air turns bad.',
+      'Trust the mission timer; overruns bleed resources fast.',
+      'A calm mind wins fights—enter combat only when your stamina is ready.'
+    ];
     const createIdleSlot=()=>({active:false,id:null,startedAt:null,durationMs:0,etaMinutes:0,completed:false,statusMessage:''});
     const createDefaultState=()=>({
       hp:92,maxHp:100,
@@ -1059,6 +1087,7 @@
       idleOps:[createIdleSlot()],
       idleRewards:[],
       flags:new Set(),
+      elderAdviceIndex:0,
       zone:{id:'drift-yard',name:'Drift Yard',risk:'low',desc:'Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.',sceneId:null},
       screen:'main',
       travel:{active:false,endsAt:null,target:null},
@@ -1110,6 +1139,10 @@
       merged.mission.startedAt=Number.isFinite(missionStartedAt) ? missionStartedAt : null;
       merged.mission.endsAt=Number.isFinite(missionEndsAt) ? missionEndsAt : null;
       merged.radShield=Number.isFinite(Number(merged.radShield)) ? Number(merged.radShield) : 0;
+      const elderAdviceIndex=Number(merged.elderAdviceIndex);
+      merged.elderAdviceIndex=Number.isFinite(elderAdviceIndex)
+        ? Math.max(0,Math.min(ELDER_ADVICE.length,elderAdviceIndex))
+        : 0;
       const radShieldUntil=Number(merged.radShieldUntil);
       merged.radShieldUntil=Number.isFinite(radShieldUntil) ? radShieldUntil : null;
       return merged;
@@ -1138,6 +1171,19 @@
     const savedState=loadSavedState();
     let state=createDefaultState();
     let allowAutosave=!savedState;
+    const isHubMission=(raid)=>raid?.hub===true || raid?.hub==='true';
+    const isElderAdviceMission=(raid)=>raid?.id===ELDER_MISSION_ID;
+    const isElderAdviceExhausted=()=>state.elderAdviceIndex>=ELDER_ADVICE.length;
+    const grantElderAdvice=()=>{
+      if(isElderAdviceExhausted()) return null;
+      const advice=ELDER_ADVICE[state.elderAdviceIndex];
+      state.elderAdviceIndex=Math.min(state.elderAdviceIndex+1,ELDER_ADVICE.length);
+      const exhausted=isElderAdviceExhausted();
+      if(exhausted){
+        state.flags.add('safehouse-elders-exhausted');
+      }
+      return {advice,exhausted};
+    };
     const MISSION_OVERRUN_MULTIPLIER=2;
     const SAVE_DEBOUNCE_MS=1500;
     const SAVE_MIN_INTERVAL_MS=8000;
@@ -1443,6 +1489,18 @@ desc:Warm lights, clean water, and the trade counter keep the crew steady betwee
 tags:Safe / Hub
 option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,stamina+14,morale+6,log:The bunk warmth sinks into your bones. | fail:morale-2,log:Sleep won't come tonight.
 option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. | fail:stamina-2,log:The bench clamps fail you.
+
+@mission
+id:safehouse-elders
+label:Talk to the bunker elders for advice
+desc:Sit with the bunker elders to trade stories and learn hard-won survival wisdom.
+risk:low
+time:6
+energy:6
+loot:0
+reward:elder advice
+combatChance:0
+hub:true
 
 @quest
 id:safehouse-vents
@@ -3875,14 +3933,44 @@ once:true`
           dom.raidActions.appendChild(btn);
         });
       }
-      if(isHubZone() && !dom.raidActions.children.length){
+      const hubZone=isHubZone();
+      if(hubZone){
+        const hubMissions=(exp?.missions || []).filter(isHubMission);
+        if(hubMissions.length){
+          hubMissions.forEach(raid=>{
+            const btn=document.createElement('button');
+            const meta=buildMissionMeta({
+              risk:raid.risk,
+              time:raid.time,
+              energy:raid.energy,
+              key:raid.key,
+              loot:raid.loot,
+              lootType:raid.lootType,
+              reward:raid.reward,
+              xp:raid.xp
+            });
+            btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
+            btn.onclick=()=>startMission(raid);
+            const adviceDepleted=isElderAdviceMission(raid) && isElderAdviceExhausted();
+            if(adviceDepleted){
+              btn.disabled=true;
+              btn.title="You're very wise, young one.";
+            }else if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})){
+              btn.disabled=true;
+            }
+            if(raid.risk==='high') btn.classList.add('danger');
+            dom.raidActions.appendChild(btn);
+          });
+        }
+      }
+      if(hubZone && !dom.raidActions.children.length){
         const blocked=document.createElement('div');
         blocked.className='muted-box';
         blocked.textContent='Hub zone secure. Use the transit console to select a field site.';
         dom.raidActions.appendChild(blocked);
         return;
       }
-      if(!isHubZone()){
+      if(!hubZone){
         const missions=(exp?.missions && exp.missions.length) ? exp.missions : RAID_TEMPLATES;
         missions.forEach(raid=>{
           const btn=document.createElement('button');
@@ -4583,6 +4671,15 @@ once:true`
         : `Mission failed: ${pending.label}.`;
       state.mission.pendingResolution=null;
       setCodex(outcome==='success' ? 'Mission complete. Rewards ready to review.' : 'Mission failed. Recover and try again.');
+      if(outcome==='success' && pending.sourceId===ELDER_MISSION_ID){
+        const reward=grantElderAdvice();
+        if(reward?.advice){
+          setCodex(`Elder advice: ${reward.advice}`);
+        }
+        if(reward?.exhausted){
+          setCodex("You're very wise, young one.");
+        }
+      }
       setActiveTab('hub');
       state.screen='mission';
       state.selected={source:null,item:null};
@@ -4872,8 +4969,12 @@ once:true`
         setCodex('Finish travel before launching a mission.');
         return;
       }
-      if(isHubZone(state.zone)){
+      if(isHubZone(state.zone) && !isHubMission(raid)){
         setCodex('Cannot launch raids from a hub zone. Travel to a field site.');
+        return;
+      }
+      if(isElderAdviceMission(raid) && isElderAdviceExhausted()){
+        setCodex("You're very wise, young one.");
         return;
       }
       if(!canAfford(cost)){
@@ -4982,6 +5083,7 @@ once:true`
       const success=raidResult.success;
       const effectiveRisk=raidResult.effectiveRisk || raid.risk;
       const pending={
+        sourceId:raid.id,
         label:raid.label,
         success,
         risk:effectiveRisk,
