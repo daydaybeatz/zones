@@ -17,7 +17,7 @@ title:Shanty Concourse
 desc:Ticket booths are barricaded into gang posts and scrap stalls.
 tags:Metro / Hostile
 option:Pay for a safe route => concourse | risk:low | time:6 | reward:safe passage | success:credits-6,log:A toll buys a quieter lane. | fail:hp-4,log:A lookout tags you on the way through.
-option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:scavenger harness,item:coil battery,log:You nab mid-tier tools before the guards return. | fail:hp-5,morale-2,log:A sentry clips you on the exit.
+option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:trackside vest,item:torchlight lantern,log:You nab mid-tier tools before the guards return. | fail:hp-5,morale-2,log:A sentry clips you on the exit.
 
 @mission
 id:gangland-supply
@@ -49,7 +49,7 @@ energy:16
 loot:3
 lootType:signal crates
 reward:mercenary contract
-success:item:data cartridge,credits+18,flag:ganglands-telecom,log:The relay hums to life. A mercenary answers the call, opening a second idle dispatch slot.
+success:item:signal jammer coil,credits+18,flag:ganglands-telecom,log:The relay hums to life. A mercenary answers the call, opening a second idle dispatch slot.
 fail:hp-6,morale-4
 flag:ganglands-telecom
 once:true

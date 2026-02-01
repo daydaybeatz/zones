@@ -15,8 +15,8 @@ target:mess-hall
 title:Mess Hall
 desc:Metal tables and dented lockers sit beneath flickering emergency lights.
 tags:Bunker / Low risk
-option:Search the ration cages => mess-hall | risk:low | time:6 | reward:low-tier food | success:item:ration bar,item:water flask,log:You salvage sealed rations from a rusted cage. | fail:hunger+6,log:Only spoiled tins remain.
-option:Strip the barracks lockers => mess-hall | risk:low | time:7 | reward:clothing scraps | success:item:utility coat,item:cloth scraps,log:You gather worn but usable uniforms. | fail:hp-3,log:A locker door clips your shoulder.
+option:Search the ration cages => mess-hall | risk:low | time:6 | reward:low-tier food | success:item:ration bar,item:bunker stew pouch,log:You salvage sealed rations from a rusted cage. | fail:hunger+6,log:Only spoiled tins remain.
+option:Strip the barracks lockers => mess-hall | risk:low | time:7 | reward:clothing scraps | success:item:bunker fatigues,item:moth-eaten scarf,log:You gather worn but usable uniforms. | fail:hp-3,log:A locker door clips your shoulder.
 
 @mission
 id:bunker-quick
@@ -63,7 +63,7 @@ energy:16
 loot:2
 lootType:relay salvage
 reward:relay restored
-success:item:coil battery,credits+12,flag:bunker-telecom-2,log:The relay crackles to life. New idle dispatch options unlock.
+success:item:coil battery,item:flashline map,credits+12,flag:bunker-telecom-2,log:The relay crackles to life. New idle dispatch options unlock.
 fail:hp-6,morale-4
 flag:bunker-telecom-2
 requires:bunker-telecom-1

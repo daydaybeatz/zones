@@ -28,7 +28,7 @@ energy:12
 loot:1
 lootType:maintenance cache
 reward:ventilation restored
-success:item:spare filter,credits+8,morale+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online.
+success:item:spare filter,item:tool roll,credits+8,morale+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online.
 fail:temp-3,morale-4
 flag:safehouse-vents
 once:true

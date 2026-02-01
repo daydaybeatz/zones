@@ -911,11 +911,6 @@
           </div>
           <div id="screen-locations" class="screen">
             <section class="panel">
-              <h3>Transit Console</h3>
-              <div class="spin-row" id="travelStatus"></div>
-              <button class="btn-secondary" id="returnMain">Return to main hub</button>
-            </section>
-            <section class="panel">
               <h3>Zone Gates</h3>
               <div id="doors"></div>
               <div class="small" id="doorsHint">Loading expansions…</div>
@@ -1287,15 +1282,107 @@
       'signal flare rack':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{lootBonus:0.05,moraleBonus:1}},
       'riot-line tape':{type:'junk',rarity:'common',value:3,salvage:2,stackable:true},
       'bridge-runner pack':{type:'armor',slot:'backpack',rarity:'uncommon',value:28,mods:{carryBonus:10}},
-      'arc pistol':{type:'weapon',slot:'weapon',rarity:'rare',value:38,mods:{combatBonus:8,energyRegen:1}}
+      'arc pistol':{type:'weapon',slot:'weapon',rarity:'rare',value:38,mods:{combatBonus:8,energyRegen:1}},
+
+      /* underground bunker additions */
+      'bunker stew pouch':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,temp+1'},
+      'tinned beans':{type:'consumable',rarity:'common',value:4,effect:'hunger-8'},
+      'stale biscuits':{type:'consumable',rarity:'common',value:3,effect:'hunger-6,morale+1'},
+      'canteen tablets':{type:'consumable',rarity:'uncommon',value:9,effect:'thirst-14,rads-1'},
+      'barracks coffee':{type:'consumable',rarity:'uncommon',value:10,effect:'energy+10,stamina+4'},
+      'moth-eaten scarf':{type:'armor',slot:'chest',rarity:'common',value:8,mods:{insulation:0.4},breakdown:{items:{'cloth scraps':3}}},
+      'bunker fatigues':{type:'armor',slot:'pants',rarity:'common',value:9,mods:{insulation:0.3},breakdown:{items:{'cloth scraps':4}}},
+      'reinforced gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:16,mods:{staminaBonus:2,insulation:0.2}},
+      'mess hall apron':{type:'armor',slot:'chest',rarity:'common',value:7,mods:{insulation:0.2},breakdown:{items:{'cloth scraps':2}}},
+      'locker prybar':{type:'weapon',slot:'weapon',rarity:'common',value:8,mods:{combatBonus:2}},
+      'service wrench':{type:'weapon',slot:'weapon',rarity:'uncommon',value:16,mods:{combatBonus:4}},
+      'flashline map':{type:'tool',slot:'tool',rarity:'uncommon',value:15,mods:{riskMod:-0.03,lootBonus:0.02}},
+
+      /* abandoned mall additions */
+      'mall snack pack':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,morale+2'},
+      'instant noodles':{type:'consumable',rarity:'common',value:4,effect:'hunger-9,temp+1'},
+      'citrus soda':{type:'consumable',rarity:'common',value:4,effect:'thirst-10,energy+4'},
+      'security poncho':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{insulation:0.5,riskMod:-0.02}},
+      'store runner shoes':{type:'armor',slot:'shoes',rarity:'uncommon',value:16,mods:{staminaBonus:2}},
+      'queue jacket':{type:'armor',slot:'chest',rarity:'uncommon',value:17,mods:{moraleBonus:1,insulation:0.4}},
+      'sale-day hoodie':{type:'armor',slot:'chest',rarity:'common',value:9,mods:{moraleBonus:1,insulation:0.3}},
+      'loading hook':{type:'weapon',slot:'weapon',rarity:'uncommon',value:19,mods:{combatBonus:5}},
+      'glass shard shiv':{type:'weapon',slot:'weapon',rarity:'common',value:10,mods:{combatBonus:3}},
+      'kiosk toolkit':{type:'tool',slot:'tool',rarity:'uncommon',value:16,mods:{lootBonus:0.04}},
+      'power coupler':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{energyRegen:1,lootBonus:0.04}},
+      'spark kiosk battery':{type:'tool',slot:'tool',rarity:'uncommon',value:15,mods:{energyRegen:1}},
+
+      /* metro ganglands additions */
+      'rail spike mace':{type:'weapon',slot:'weapon',rarity:'uncommon',value:20,mods:{combatBonus:6}},
+      'shanty revolver':{type:'weapon',slot:'weapon',rarity:'rare',value:36,mods:{combatBonus:8}},
+      'signal jammer coil':{type:'tool',slot:'tool',rarity:'rare',value:32,mods:{riskMod:-0.06,lootBonus:0.02}},
+      'turnstile shield':{type:'weapon',slot:'weapon',rarity:'rare',value:34,mods:{riskMod:-0.05,insulation:0.4}},
+      'trackside vest':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{staminaBonus:1,insulation:0.4}},
+      'graffiti cloak':{type:'armor',slot:'chest',rarity:'rare',value:30,mods:{moraleBonus:3,insulation:0.7}},
+      'metro runner boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:19,mods:{staminaBonus:3}},
+      'gang patchwork pants':{type:'armor',slot:'pants',rarity:'common',value:10,mods:{insulation:0.3}},
+      'torchlight lantern':{type:'tool',slot:'tool',rarity:'uncommon',value:18,mods:{lootBonus:0.04}},
+      'black market battery':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{energyRegen:2}},
+      'coin string':{type:'tool',slot:'tool',rarity:'uncommon',value:17,mods:{moraleBonus:2}},
+      'rail map rig':{type:'tool',slot:'tool',rarity:'uncommon',value:18,mods:{riskMod:-0.04}},
+      'scrapper mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:17,mods:{insulation:0.3,riskMod:-0.02}},
+      'barter satchel':{type:'armor',slot:'backpack',rarity:'uncommon',value:26,mods:{carryBonus:9}},
+
+      /* government facility additions */
+      'security visor':{type:'armor',slot:'helmet',rarity:'rare',value:34,mods:{riskMod:-0.04,insulation:0.4}},
+      'tactical comms rig':{type:'tool',slot:'tool',rarity:'rare',value:34,mods:{lootBonus:0.06,energyRegen:1}},
+      'hazmat undersuit':{type:'armor',slot:'chest',rarity:'rare',value:36,mods:{insulation:0.9,riskMod:-0.03}},
+      'pulse baton':{type:'weapon',slot:'weapon',rarity:'rare',value:38,mods:{combatBonus:7,riskMod:-0.02}},
+      'shock carbine':{type:'weapon',slot:'weapon',rarity:'epic',value:54,mods:{combatBonus:10,energyRegen:1}},
+      'response harness':{type:'armor',slot:'chest',rarity:'uncommon',value:20,mods:{staminaBonus:2,insulation:0.5}},
+      'facility boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:19,mods:{staminaBonus:2,insulation:0.2}},
+      'clearance gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:18,mods:{staminaBonus:2,insulation:0.2}},
+      'access scanner':{type:'tool',slot:'tool',rarity:'uncommon',value:19,mods:{riskMod:-0.04}},
+      'secure datapad':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{lootBonus:0.07}},
+      'containment seal kit':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{riskMod:-0.03}},
+      'warden longcoat':{type:'armor',slot:'chest',rarity:'legendary',value:96,mods:{staminaBonus:4,insulation:1}},
+      'command bracer':{type:'armor',slot:'gloves',rarity:'rare',value:32,mods:{moraleBonus:2,insulation:0.3}},
+      'nutri-gel pack':{type:'consumable',rarity:'rare',value:18,effect:'hunger-18,energy+6'},
+
+      /* medical center additions */
+      'antiseptic wipes':{type:'consumable',rarity:'common',value:4,effect:'hp+6'},
+      'electro bandage':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+14,stamina+2'},
+      'clinic IV pack':{type:'consumable',rarity:'rare',value:26,effect:'hp+24'},
+      'antiviral vial':{type:'consumable',rarity:'rare',value:24,effect:'hp+12,morale+6'},
+      'cooling compress':{type:'consumable',rarity:'common',value:4,effect:'hp+4,temp-2'},
+      'sterile gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:17,mods:{riskMod:-0.02,insulation:0.2}},
+      'scrub jacket':{type:'armor',slot:'chest',rarity:'common',value:8,mods:{insulation:0.3}},
+      'triage boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:18,mods:{staminaBonus:2,insulation:0.2}},
+      'medic satchel':{type:'armor',slot:'backpack',rarity:'uncommon',value:24,mods:{carryBonus:8}},
+      'portable scanner':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{lootBonus:0.05}},
+      'triage lamp':{type:'tool',slot:'tool',rarity:'uncommon',value:16,mods:{lootBonus:0.03}},
+      'biofilter mask':{type:'armor',slot:'helmet',rarity:'rare',value:30,mods:{riskMod:-0.05,insulation:0.4}},
+      'pain suppressant':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+10,morale+3'},
+      'hydration drip':{type:'consumable',rarity:'uncommon',value:11,effect:'thirst-18,energy+4'},
+
+      /* safehouse additions */
+      'bunk blanket':{type:'armor',slot:'chest',rarity:'common',value:8,mods:{insulation:0.5}},
+      'safehouse slippers':{type:'armor',slot:'shoes',rarity:'common',value:6,mods:{staminaBonus:1}},
+      'workshop apron':{type:'armor',slot:'chest',rarity:'uncommon',value:16,mods:{insulation:0.4,staminaBonus:1}},
+      'tool roll':{type:'tool',slot:'tool',rarity:'uncommon',value:16,mods:{lootBonus:0.03,riskMod:-0.02}},
+      'generator capacitor':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{energyRegen:2}},
+      'quiet radio':{type:'tool',slot:'tool',rarity:'uncommon',value:14,mods:{moraleBonus:2}},
+      'galley kit':{type:'tool',slot:'tool',rarity:'common',value:8,mods:{lootBonus:0.02}},
+      'homebrew stew':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,morale+3'},
+      'clean canteen':{type:'consumable',rarity:'common',value:4,effect:'thirst-12,temp-1'},
+      'recovery tonic':{type:'consumable',rarity:'rare',value:22,effect:'hp+18,morale+4'},
+      'spare belt rig':{type:'armor',slot:'backpack',rarity:'uncommon',value:22,mods:{carryBonus:7}},
+      'comfort liner':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{insulation:0.7}},
+      'restful mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:15,mods:{moraleBonus:2,insulation:0.2}},
+      'training weights':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{staminaBonus:3}}
     };
 
     const LOOT_BY_RARITY={
-      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','morale patch','pocket pack','jury-rigged blade','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape'],
-      uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack'],
-      rare:['microcell','lockbox key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum'],
-      epic:['drone core'],
-      legendary:['fusion core shard','scrapboss helm','warlord helm','safehouse warden coat','facility command badge','riot jacket']
+      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','morale patch','pocket pack','jury-rigged blade','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape','bunker stew pouch','tinned beans','stale biscuits','moth-eaten scarf','bunker fatigues','mess hall apron','locker prybar','mall snack pack','instant noodles','citrus soda','sale-day hoodie','glass shard shiv','gang patchwork pants','antiseptic wipes','cooling compress','scrub jacket','bunk blanket','safehouse slippers','galley kit','homebrew stew','clean canteen'],
+      uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack','canteen tablets','barracks coffee','reinforced gloves','service wrench','flashline map','security poncho','store runner shoes','queue jacket','loading hook','kiosk toolkit','spark kiosk battery','rail spike mace','trackside vest','metro runner boots','torchlight lantern','coin string','rail map rig','scrapper mask','barter satchel','response harness','facility boots','clearance gloves','access scanner','containment seal kit','sterile gloves','triage boots','medic satchel','triage lamp','pain suppressant','hydration drip','workshop apron','tool roll','quiet radio','spare belt rig','comfort liner','restful mask'],
+      rare:['microcell','lockbox key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum','power coupler','shanty revolver','signal jammer coil','turnstile shield','graffiti cloak','black market battery','security visor','tactical comms rig','hazmat undersuit','pulse baton','secure datapad','command bracer','nutri-gel pack','clinic IV pack','antiviral vial','portable scanner','biofilter mask','recovery tonic','generator capacitor','training weights'],
+      epic:['drone core','shock carbine'],
+      legendary:['fusion core shard','scrapboss helm','warlord helm','safehouse warden coat','facility command badge','riot jacket','warden longcoat']
     };
 
     const RAID_TEMPLATES=[
@@ -1362,7 +1449,7 @@ energy:12
 loot:1
 lootType:maintenance cache
 reward:ventilation restored
-success:item:spare filter,credits+8,morale+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online.
+success:item:spare filter,item:tool roll,credits+8,morale+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online.
 fail:temp-3,morale-4
 flag:safehouse-vents
 once:true`,
@@ -1383,8 +1470,8 @@ target:mess-hall
 title:Mess Hall
 desc:Metal tables and dented lockers sit beneath flickering emergency lights.
 tags:Bunker / Low risk
-option:Search the ration cages => mess-hall | risk:low | time:6 | reward:low-tier food | success:item:ration bar,item:water flask,log:You salvage sealed rations from a rusted cage. | fail:hunger+6,log:Only spoiled tins remain.
-option:Strip the barracks lockers => mess-hall | risk:low | time:7 | reward:clothing scraps | success:item:utility coat,item:cloth scraps,log:You gather worn but usable uniforms. | fail:hp-3,log:A locker door clips your shoulder.
+option:Search the ration cages => mess-hall | risk:low | time:6 | reward:low-tier food | success:item:ration bar,item:bunker stew pouch,log:You salvage sealed rations from a rusted cage. | fail:hunger+6,log:Only spoiled tins remain.
+option:Strip the barracks lockers => mess-hall | risk:low | time:7 | reward:clothing scraps | success:item:bunker fatigues,item:moth-eaten scarf,log:You gather worn but usable uniforms. | fail:hp-3,log:A locker door clips your shoulder.
 
 @mission
 id:bunker-quick
@@ -1431,7 +1518,7 @@ energy:16
 loot:2
 lootType:relay salvage
 reward:relay restored
-success:item:coil battery,credits+12,flag:bunker-telecom-2,log:The relay crackles to life. New idle dispatch options unlock.
+success:item:coil battery,item:flashline map,credits+12,flag:bunker-telecom-2,log:The relay crackles to life. New idle dispatch options unlock.
 fail:hp-6,morale-4
 flag:bunker-telecom-2
 requires:bunker-telecom-1
@@ -1456,7 +1543,7 @@ title:Shanty Concourse
 desc:Ticket booths are barricaded into gang posts and scrap stalls.
 tags:Metro / Hostile
 option:Pay for a safe route => concourse | risk:low | time:6 | reward:safe passage | success:credits-6,log:A toll buys a quieter lane. | fail:hp-4,log:A lookout tags you on the way through.
-option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:scavenger harness,item:coil battery,log:You nab mid-tier tools before the guards return. | fail:hp-5,morale-2,log:A sentry clips you on the exit.
+option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:trackside vest,item:torchlight lantern,log:You nab mid-tier tools before the guards return. | fail:hp-5,morale-2,log:A sentry clips you on the exit.
 
 @mission
 id:gangland-supply
@@ -1488,7 +1575,7 @@ energy:16
 loot:3
 lootType:signal crates
 reward:mercenary contract
-success:item:data cartridge,credits+18,flag:ganglands-telecom,log:The relay hums to life. A mercenary answers the call, opening a second idle dispatch slot.
+success:item:signal jammer coil,credits+18,flag:ganglands-telecom,log:The relay hums to life. A mercenary answers the call, opening a second idle dispatch slot.
 fail:hp-6,morale-4
 flag:ganglands-telecom
 once:true`,
@@ -1511,7 +1598,7 @@ title:Control Hall
 desc:Security consoles flicker, and sealed doors hiss with pressure.
 tags:Government / Hazard
 option:Run a diagnostic sweep => control-hall | risk:medium | time:7 | reward:systems intel | success:credits+10,log:You recover a diagnostic snapshot. | fail:temp-2,log:The breaker snaps and the room chills.
-option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gear cache | success:item:utility coat,item:patch kit,log:You pry loose a cache of uniforms and tools. | fail:hp-6,log:A security latch bites your hand.
+option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gear cache | success:item:response harness,item:access scanner,log:You pry loose a cache of uniforms and tools. | fail:hp-6,log:A security latch bites your hand.
 
 @mission
 id:facility-sweep
@@ -1543,7 +1630,7 @@ energy:18
 loot:3
 lootType:signal crates
 reward:dispatch acceleration
-success:item:signal flare rack,credits+20,flag:facility-telecom,log:The telecom grid stabilizes. Idle dispatches now complete faster.
+success:item:secure datapad,credits+20,flag:facility-telecom,log:The telecom grid stabilizes. Idle dispatches now complete faster.
 fail:hp-8,morale-5
 flag:facility-telecom
 once:true`,
@@ -1564,8 +1651,8 @@ target:triage
 title:Triage Bay
 desc:Empty gurneys line the bay. Cabinets rattle with leftover kits.
 tags:Medical / Hazard
-option:Check the triage lockers => triage | risk:low | time:6 | reward:basic medical | success:item:bandage,item:painkillers,log:You gather intact wraps and meds. | fail:hp-3,log:A drawer slams on your fingers.
-option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:compact medkit,item:water flask,log:You recover a sealed med case. | fail:hp-5,morale-2,log:A patrol forces a hasty exit.
+option:Check the triage lockers => triage | risk:low | time:6 | reward:basic medical | success:item:antiseptic wipes,item:painkillers,log:You gather intact wraps and meds. | fail:hp-3,log:A drawer slams on your fingers.
+option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:electro bandage,item:compact medkit,log:You recover a sealed med case. | fail:hp-5,morale-2,log:A patrol forces a hasty exit.
 
 @mission
 id:clinic-supply
@@ -1597,7 +1684,7 @@ energy:15
 loot:2
 lootType:signal crates
 reward:expanded medical stock
-success:item:filtered water pack,credits+14,flag:medical-telecom,log:The relay comes online. More medical supplies reach the shop.
+success:item:portable scanner,credits+14,flag:medical-telecom,log:The relay comes online. More medical supplies reach the shop.
 fail:hp-6,morale-3
 flag:medical-telecom
 once:true`,
@@ -1618,8 +1705,8 @@ target:food-court
 title:Food Court
 desc:Tables are stacked into makeshift barriers. The air smells of cold grease.
 tags:Mall / Hazard
-option:Check the kiosk storage => food-court | risk:medium | time:7 | reward:food stash | success:item:ration bar,item:field rations,log:You pull sealed meals from a storage bin. | fail:hunger+8,log:The stash is picked clean.
-option:Search the loading dock => food-court | risk:medium | time:8 | reward:food crates | success:item:water canister,item:ember ration,log:You drag out a pallet of usable supplies. | fail:hp-5,log:A falling shutter clips your shoulder.
+option:Check the kiosk storage => food-court | risk:medium | time:7 | reward:food stash | success:item:mall snack pack,item:field rations,log:You pull sealed meals from a storage bin. | fail:hunger+8,log:The stash is picked clean.
+option:Search the loading dock => food-court | risk:medium | time:8 | reward:food crates | success:item:water canister,item:citrus soda,log:You drag out a pallet of usable supplies. | fail:hp-5,log:A falling shutter clips your shoulder.
 
 @mission
 id:mall-snack
@@ -1651,7 +1738,7 @@ energy:12
 loot:1
 lootType:power parts
 reward:power diagnostics
-success:credits+8,flag:mall-power-1,log:The breaker layout is mapped. You can reach the main switch.
+success:item:power coupler,credits+8,flag:mall-power-1,log:The breaker layout is mapped. You can reach the main switch.
 fail:temp-2,morale-3
 flag:mall-power-1
 once:true
@@ -1666,7 +1753,7 @@ energy:16
 loot:2
 lootType:power salvage
 reward:mall power restored
-success:item:spare filter,credits+12,flag:mall-power,log:The lights blaze back on. Mall risk drops and food supplies are easier to locate.
+success:item:spark kiosk battery,credits+12,flag:mall-power,log:The lights blaze back on. Mall risk drops and food supplies are easier to locate.
 fail:hp-6,morale-4
 flag:mall-power
 requires:mall-power-1
@@ -1714,18 +1801,30 @@ once:true`
         {id:'bandage',cost:10,tag:'Shelter care'},
         {id:'water flask',cost:12,tag:'Hydration'},
         {id:'ration bar',cost:14,tag:'Rations'},
+        {id:'homebrew stew',cost:16,tag:'Rations'},
+        {id:'clean canteen',cost:14,tag:'Hydration'},
         {id:'morale patch',cost:16,tag:'Morale'},
+        {id:'quiet radio',cost:20,tag:'Morale'},
         {id:'spare filter',cost:22,tag:'Air kit'},
         {id:'thermal wrap',cost:20,tag:'Warmth'},
+        {id:'comfort liner',cost:26,tag:'Warmth'},
+        {id:'tool roll',cost:24,tag:'Gear mod'},
+        {id:'recovery tonic',cost:40,tag:'Recovery'},
         {id:'anti-rad serum',cost:46,tag:'Anti-rad'}
       ],
       medical_center:[
         {id:'bandage',cost:10,tag:'Medical'},
+        {id:'electro bandage',cost:18,tag:'Medical'},
         {id:'painkillers',cost:18,tag:'Medical'},
+        {id:'pain suppressant',cost:22,tag:'Medical'},
         {id:'compact medkit',cost:32,tag:'Medical'},
+        {id:'clinic IV pack',cost:42,tag:'Medical'},
         {id:'filtered water pack',cost:26,tag:'Hydration'},
+        {id:'hydration drip',cost:20,tag:'Hydration'},
         {id:'spark tonic',cost:22,tag:'Stims'},
         {id:'morale patch',cost:16,tag:'Recovery'},
+        {id:'portable scanner',cost:38,tag:'Diagnostics'},
+        {id:'biofilter mask',cost:36,tag:'Protection'},
         {id:'anti-rad serum',cost:46,tag:'Anti-rad'}
       ],
       metro_ganglands:[
@@ -1733,8 +1832,12 @@ once:true`
         {id:'riot jacket',cost:120,tag:'Armor'},
         {id:'scavenger harness',cost:30,tag:'Clothing'},
         {id:'limited hoodie',cost:44,tag:'Clothing'},
+        {id:'graffiti cloak',cost:58,tag:'Clothing'},
+        {id:'barter satchel',cost:40,tag:'Pack'},
+        {id:'rail spike mace',cost:36,tag:'Weapon'},
         {id:'market shock knife',cost:62,tag:'Weapon'},
-        {id:'pipe rifle',cost:72,tag:'Weapon'}
+        {id:'pipe rifle',cost:72,tag:'Weapon'},
+        {id:'shanty revolver',cost:78,tag:'Weapon'}
       ]
     };
     const MEDICAL_CENTER_UPGRADE_STOCK=[
@@ -1791,8 +1894,6 @@ once:true`
       },
       screenButtons:Array.from(document.querySelectorAll('#screenNav button')),
       enterLocations:document.getElementById('enterLocations'),
-      returnMain:document.getElementById('returnMain'),
-      travelStatus:document.getElementById('travelStatus'),
       missionTitle:document.getElementById('missionTitle'),
       missionMeta:document.getElementById('missionMeta'),
       missionProgress:document.getElementById('missionProgress'),
@@ -3561,7 +3662,6 @@ once:true`
       btn.onclick=()=>setScreen(btn.dataset.screen);
     });
     dom.enterLocations.onclick=()=>setScreen('locations');
-    dom.returnMain.onclick=()=>setScreen('main');
 
     function renderExcursionStatus(){
       const scene=ensureZoneScene(state.zone);
@@ -3842,10 +3942,6 @@ once:true`
       });
       if(state.travel.active){
         scheduleTravelResolution();
-        const targetName=state.travel.target?.name || 'unknown gate';
-        dom.travelStatus.innerHTML=`<span class="spinner"></span><span>Routing to ${targetName}… hold tight.</span>`;
-      }else{
-        dom.travelStatus.textContent='Transit clear. Select a zone gate to jump.';
       }
     }
 
@@ -5033,6 +5129,7 @@ once:true`
           endsAt:Date.now(),
           target
         };
+        logMsg(`Routing to ${target.name}… hold tight.`);
         if(exp.door?.note) setCodex(exp.door.note);
         renderAll();
       };

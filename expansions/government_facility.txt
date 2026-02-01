@@ -17,7 +17,7 @@ title:Control Hall
 desc:Security consoles flicker, and sealed doors hiss with pressure.
 tags:Government / Hazard
 option:Run a diagnostic sweep => control-hall | risk:medium | time:7 | reward:systems intel | success:credits+10,log:You recover a diagnostic snapshot. | fail:temp-2,log:The breaker snaps and the room chills.
-option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gear cache | success:item:utility coat,item:patch kit,log:You pry loose a cache of uniforms and tools. | fail:hp-6,log:A security latch bites your hand.
+option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gear cache | success:item:response harness,item:access scanner,log:You pry loose a cache of uniforms and tools. | fail:hp-6,log:A security latch bites your hand.
 
 @mission
 id:facility-sweep
@@ -49,7 +49,7 @@ energy:18
 loot:3
 lootType:signal crates
 reward:dispatch acceleration
-success:item:signal flare rack,credits+20,flag:facility-telecom,log:The telecom grid stabilizes. Idle dispatches now complete faster.
+success:item:secure datapad,credits+20,flag:facility-telecom,log:The telecom grid stabilizes. Idle dispatches now complete faster.
 fail:hp-8,morale-5
 flag:facility-telecom
 once:true

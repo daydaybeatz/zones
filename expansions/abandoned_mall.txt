@@ -15,8 +15,8 @@ target:food-court
 title:Food Court
 desc:Tables are stacked into makeshift barriers. The air smells of cold grease.
 tags:Mall / Hazard
-option:Check the kiosk storage => food-court | risk:medium | time:7 | reward:food stash | success:item:ration bar,item:field rations,log:You pull sealed meals from a storage bin. | fail:hunger+8,log:The stash is picked clean.
-option:Search the loading dock => food-court | risk:medium | time:8 | reward:food crates | success:item:water canister,item:ember ration,log:You drag out a pallet of usable supplies. | fail:hp-5,log:A falling shutter clips your shoulder.
+option:Check the kiosk storage => food-court | risk:medium | time:7 | reward:food stash | success:item:mall snack pack,item:field rations,log:You pull sealed meals from a storage bin. | fail:hunger+8,log:The stash is picked clean.
+option:Search the loading dock => food-court | risk:medium | time:8 | reward:food crates | success:item:water canister,item:citrus soda,log:You drag out a pallet of usable supplies. | fail:hp-5,log:A falling shutter clips your shoulder.
 
 @mission
 id:mall-snack
@@ -48,7 +48,7 @@ energy:12
 loot:1
 lootType:power parts
 reward:power diagnostics
-success:credits+8,flag:mall-power-1,log:The breaker layout is mapped. You can reach the main switch.
+success:item:power coupler,credits+8,flag:mall-power-1,log:The breaker layout is mapped. You can reach the main switch.
 fail:temp-2,morale-3
 flag:mall-power-1
 once:true
@@ -63,7 +63,7 @@ energy:16
 loot:2
 lootType:power salvage
 reward:mall power restored
-success:item:spare filter,credits+12,flag:mall-power,log:The lights blaze back on. Mall risk drops and food supplies are easier to locate.
+success:item:spark kiosk battery,credits+12,flag:mall-power,log:The lights blaze back on. Mall risk drops and food supplies are easier to locate.
 fail:hp-6,morale-4
 flag:mall-power
 requires:mall-power-1
