@@ -1108,6 +1108,8 @@
       idleRewards:[],
       flags:new Set(),
       elderAdviceIndex:0,
+      lastHungerDamageAt:null,
+      lastThirstDamageAt:null,
       zone:{id:'drift-yard',name:'Drift Yard',risk:'low',desc:'Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.',sceneId:null},
       screen:'main',
       travel:{active:false,endsAt:null,target:null},
@@ -1139,6 +1141,22 @@
       });
       return slots;
     };
+
+    function getMainHubZone(){
+      const safehouseExp=expansions.safehouse;
+      if(safehouseExp){
+        const targetScene=safehouseExp.door?.target || Object.keys(safehouseExp.scenes || {})[0] || null;
+        return {
+          id:safehouseExp.meta?.id || 'safehouse',
+          name:safehouseExp.meta?.name || 'Safe House',
+          risk:getZoneRiskForExp(safehouseExp,'low'),
+          desc:safehouseExp.door?.desc || safehouseExp.door?.hint || safehouseExp.meta?.summary || 'Safehouse hub.',
+          sceneId:targetScene
+        };
+      }
+      const fallback=createDefaultState().zone;
+      return {...fallback};
+    }
     const hydrateState=(saved)=>{
       const base=createDefaultState();
       if(!saved || typeof saved!=='object') return base;
@@ -1466,6 +1484,8 @@
     const ACTION_TIMES={camp:10};
     const RAD_SHIELD_DURATION_MINUTES=12*60;
     const RAD_DANGER_THRESHOLD=20;
+    const NEED_DAMAGE_THRESHOLD=65;
+    const NEED_DAMAGE_INTERVAL_MINUTES=90;
     const riskTable={low:0.08,medium:0.2,high:0.32,deadly:0.45};
     const riskRank={low:1,medium:2,high:3,deadly:4};
     const riskLevels=['low','medium','high','deadly'];
@@ -4512,6 +4532,28 @@ once:true`
       logMsg(`Complication (${source}): ${hit.desc}`);
     }
 
+    function handlePlayerCollapse(){
+      logMsg('Emergency evac: you collapse and lose momentum.');
+      const creditLoss=Math.ceil(state.credits*0.1);
+      if(creditLoss>0){
+        state.credits=Math.max(0,state.credits-creditLoss);
+        logMsg(`Emergency evac fee deducted: ${creditLoss} credits.`);
+      }
+      state.hp=clamp(Math.round(state.maxHp*0.6),1,state.maxHp);
+      state.hunger=clamp(0,0,state.maxHunger);
+      state.thirst=clamp(0,0,state.maxThirst);
+      const nowMinutes=getTotalMinutes();
+      state.lastHungerDamageAt=nowMinutes;
+      state.lastThirstDamageAt=nowMinutes;
+      resetMissionState();
+      state.travel={active:false,endsAt:null,target:null};
+      clearMarketAccess();
+      state.zone=getMainHubZone();
+      state.selected={source:null,item:null};
+      setActiveTab('hub');
+      state.screen='main';
+    }
+
     function applyEffects(effectStr,outcome,options={}){
       if(!effectStr) return;
       updateRadShield();
@@ -4585,10 +4627,7 @@ once:true`
         logMsg(`Signal log: ${reason} (-${Math.abs(hpLoss)} HP).`);
       }
       if(outcome==='fail' && state.hp<=0){
-        logMsg('Emergency evac: you collapse and lose momentum.');
-        state.hp=clamp(40,1,state.maxHp);
-        state.morale=clamp(state.morale-12,0,state.maxMorale);
-        state.energy=clamp(state.energy-20,0,state.maxEnergy);
+        handlePlayerCollapse();
       }
     }
     function runRaidInstant(raid,location,options={}){
@@ -5723,12 +5762,19 @@ once:true`
         const loss=Math.max(0.4,1.3-insulation);
         state.bodyTemp=clamp(state.bodyTemp-loss,BODY_TEMP_MIN,BODY_TEMP_MAX);
       }
-      if(state.hunger>=90){
-        applyEffects('hp-3,morale-2','fail',{damageSource:'Starvation pangs'});
-        logMsg('Starvation gnaws at you while you hesitate.');
+      const nowMinutes=getTotalMinutes();
+      const hungerDamageReady=state.hunger>NEED_DAMAGE_THRESHOLD
+        && (!Number.isFinite(state.lastHungerDamageAt) || nowMinutes-state.lastHungerDamageAt>=NEED_DAMAGE_INTERVAL_MINUTES);
+      if(hungerDamageReady){
+        state.lastHungerDamageAt=nowMinutes;
+        applyEffects('hp-2,morale-1','fail',{damageSource:'Hunger pangs'});
+        logMsg('Hunger pangs slow you down.');
       }
-      if(state.thirst>=90){
-        applyEffects('hp-4,stamina-5','fail',{damageSource:'Dehydration strain'});
+      const thirstDamageReady=state.thirst>NEED_DAMAGE_THRESHOLD
+        && (!Number.isFinite(state.lastThirstDamageAt) || nowMinutes-state.lastThirstDamageAt>=NEED_DAMAGE_INTERVAL_MINUTES);
+      if(thirstDamageReady){
+        state.lastThirstDamageAt=nowMinutes;
+        applyEffects('hp-3,stamina-2','fail',{damageSource:'Dehydration strain'});
         logMsg('Dehydration blurs your vision.');
       }
       if(state.bodyTemp<=92){
