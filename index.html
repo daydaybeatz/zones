@@ -1203,6 +1203,11 @@
       'electronics bits':{type:'junk',rarity:'common',value:3,salvage:2,stackable:true},
       'old coin':{type:'junk',rarity:'uncommon',value:6,salvage:1},
       'lockbox key':{type:'key',rarity:'rare',value:18},
+      'manager room key':{type:'key',rarity:'rare',value:20},
+      'storage room key':{type:'key',rarity:'rare',value:20},
+      'security supply room key':{type:'key',rarity:'rare',value:22},
+      'director armory key':{type:'key',rarity:'rare',value:24},
+      'bunker armory key':{type:'key',rarity:'rare',value:19},
       'relay crystal':{type:'junk',rarity:'rare',value:20,salvage:6},
       'drone core':{type:'tool',slot:'tool',rarity:'epic',value:32,mods:{lootBonus:0.08,energyRegen:2}},
       'fusion core shard':{type:'junk',rarity:'legendary',value:60,salvage:12},
@@ -1380,7 +1385,7 @@
     const LOOT_BY_RARITY={
       common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','morale patch','pocket pack','jury-rigged blade','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape','bunker stew pouch','tinned beans','stale biscuits','moth-eaten scarf','bunker fatigues','mess hall apron','locker prybar','mall snack pack','instant noodles','citrus soda','sale-day hoodie','glass shard shiv','gang patchwork pants','antiseptic wipes','cooling compress','scrub jacket','bunk blanket','safehouse slippers','galley kit','homebrew stew','clean canteen'],
       uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack','canteen tablets','barracks coffee','reinforced gloves','service wrench','flashline map','security poncho','store runner shoes','queue jacket','loading hook','kiosk toolkit','spark kiosk battery','rail spike mace','trackside vest','metro runner boots','torchlight lantern','coin string','rail map rig','scrapper mask','barter satchel','response harness','facility boots','clearance gloves','access scanner','containment seal kit','sterile gloves','triage boots','medic satchel','triage lamp','pain suppressant','hydration drip','workshop apron','tool roll','quiet radio','spare belt rig','comfort liner','restful mask'],
-      rare:['microcell','lockbox key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum','power coupler','shanty revolver','signal jammer coil','turnstile shield','graffiti cloak','black market battery','security visor','tactical comms rig','hazmat undersuit','pulse baton','secure datapad','command bracer','nutri-gel pack','clinic IV pack','antiviral vial','portable scanner','biofilter mask','recovery tonic','generator capacitor','training weights'],
+      rare:['microcell','lockbox key','manager room key','storage room key','security supply room key','director armory key','bunker armory key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum','power coupler','shanty revolver','signal jammer coil','turnstile shield','graffiti cloak','black market battery','security visor','tactical comms rig','hazmat undersuit','pulse baton','secure datapad','command bracer','nutri-gel pack','clinic IV pack','antiviral vial','portable scanner','biofilter mask','recovery tonic','generator capacitor','training weights'],
       epic:['drone core','shock carbine'],
       legendary:['fusion core shard','scrapboss helm','warlord helm','safehouse warden coat','facility command badge','riot jacket','warden longcoat']
     };
@@ -1493,6 +1498,18 @@ energy:14
 loot:3
 lootType:sealed kits
 
+@mission
+id:bunker-armory
+label:Armory annex breach
+desc:Use the bunker armory key to crack the sealed weapons annex for richer loot.
+risk:medium
+time:13
+energy:16
+loot:4
+lootType:armory kits & rations
+key:1
+combatChance:0.5
+
 @quest
 id:bunker-telecom-1
 title:Trace the telecom line
@@ -1565,6 +1582,18 @@ energy:13
 loot:3
 lootType:weapons & gear
 
+@mission
+id:ganglands-security-cache
+label:Security supply room raid
+desc:Use the security supply room key to access the guarded arsenal cage.
+risk:high
+time:14
+energy:18
+loot:5
+lootType:weapons & armored gear
+key:1
+combatChance:0.5
+
 @quest
 id:ganglands-telecom
 title:Reconnect the ganglands telecoms
@@ -1620,6 +1649,18 @@ energy:18
 loot:4
 lootType:reinforced clothing
 
+@mission
+id:facility-armory
+label:Director armory lock
+desc:Use the director armory key to enter the restricted weapons vault.
+risk:high
+time:15
+energy:20
+loot:5
+lootType:high-tier tactical gear
+key:1
+combatChance:0.5
+
 @quest
 id:facility-telecom
 title:Reconnect the facility telecom grid
@@ -1674,6 +1715,18 @@ energy:14
 loot:3
 lootType:medical packs
 
+@mission
+id:clinic-storage
+label:Storage room breach
+desc:Use the storage room key to crack the locked supply vault for premium medical stock.
+risk:high
+time:14
+energy:18
+loot:5
+lootType:advanced medical stock
+key:1
+combatChance:0.5
+
 @quest
 id:medical-telecom
 title:Reconnect the clinic telecoms
@@ -1727,6 +1780,18 @@ time:12
 energy:14
 loot:3
 lootType:food crates
+
+@mission
+id:mall-manager-cache
+label:Manager suite cache
+desc:Use the manager room key to breach the locked office and cold storage stash.
+risk:high
+time:14
+energy:18
+loot:5
+lootType:premium food & supplies
+key:1
+combatChance:0.5
 
 @quest
 id:mall-power-1
@@ -2107,6 +2172,12 @@ once:true`
     };
     const addItemCopies=(arr,item,count=1)=>{for(let i=0;i<count;i++) arr.push(item);};
     const routeItemGain=(item)=>{
+      const data=getItem(item);
+      if(data.type==='key'){
+        state.keys+=1;
+        logMsg(`Key recovered: ${item}.`);
+        return 'keys';
+      }
       if(hasCapacityFor(state.inventory,getBackpackLimit(),item,1)){
         state.inventory.push(item);
         return 'inventory';
@@ -2713,28 +2784,42 @@ once:true`
       }
     }
     function claimRewardToInventory(source,item){
-      if(!hasCapacityFor(state.inventory,getBackpackLimit(),item,1)){
+      const data=getItem(item);
+      if(data.type!=='key' && !hasCapacityFor(state.inventory,getBackpackLimit(),item,1)){
         setCodex('Backpack full. Make room first.');
         return;
       }
       if(!removeRewardItem(source,item)) return;
-      state.inventory.push(item);
-      state.selected={source:'inventory',item};
-      setCodex(`${item} packed into your backpack.`);
+      if(data.type==='key'){
+        state.keys+=1;
+        state.selected={source:null,item:null};
+        setCodex(`${item} secured. Key count updated.`);
+      }else{
+        state.inventory.push(item);
+        state.selected={source:'inventory',item};
+        setCodex(`${item} packed into your backpack.`);
+      }
       autoCloseMissionIfResolved();
       renderAll();
     }
     function claimRewardStackToInventory(source,item){
       const count=getRewardItemCount(source,item);
       if(!count) return;
-      if(!hasCapacityFor(state.inventory,getBackpackLimit(),item,count)){
+      const data=getItem(item);
+      if(data.type!=='key' && !hasCapacityFor(state.inventory,getBackpackLimit(),item,count)){
         setCodex('Backpack full. Make room first.');
         return;
       }
       if(!removeRewardItems(source,item,count)) return;
-      addItemCopies(state.inventory,item,count);
-      state.selected={source:'inventory',item};
-      setCodex(`${item} stack packed into your backpack.`);
+      if(data.type==='key'){
+        state.keys+=count;
+        state.selected={source:null,item:null};
+        setCodex(`${item} secured. ${count} key${count===1?'':'s'} added.`);
+      }else{
+        addItemCopies(state.inventory,item,count);
+        state.selected={source:'inventory',item};
+        setCodex(`${item} stack packed into your backpack.`);
+      }
       autoCloseMissionIfResolved();
       renderAll();
     }
@@ -2747,14 +2832,21 @@ once:true`
         setCodex(vaultBlockedMessage);
         return;
       }
-      if(!hasCapacityFor(state.stash.items,state.stashLimit,item,1)){
+      const data=getItem(item);
+      if(data.type!=='key' && !hasCapacityFor(state.stash.items,state.stashLimit,item,1)){
         setCodex('Stash full. Sell or break down to clear space.');
         return;
       }
       if(!removeRewardItem(source,item)) return;
-      state.stash.items.push(item);
-      state.selected={source:'stash',item};
-      setCodex(`${item} routed into the vault.`);
+      if(data.type==='key'){
+        state.keys+=1;
+        state.selected={source:null,item:null};
+        setCodex(`${item} secured. Key count updated.`);
+      }else{
+        state.stash.items.push(item);
+        state.selected={source:'stash',item};
+        setCodex(`${item} routed into the vault.`);
+      }
       renderAll();
     }
     function equipRewardItem(source,item){
@@ -4737,7 +4829,7 @@ once:true`
         pendingResolution:null,
         xpReward:computeMissionXp(raidLike.risk,raidLike.time),
         rewardEffects:{success:quest.success||'',fail:quest.fail||''},
-        questMeta:{flag:questFlag,once:quest.once,forceCombat:quest.combat},
+        questMeta:{flag:questFlag,once:quest.once,forceCombat:quest.combat,combatChance:quest.combatChance},
         combat:null,
         sceneTarget:null
       };
@@ -4851,6 +4943,7 @@ once:true`
           const pendingRewards=state.mission.pendingResolution.rewards || [];
           pendingRewards.push(...result.rewards);
           state.mission.pendingResolution.rewards=pendingRewards;
+          logMsg('Combat rewards secured. Continuing mission extraction.');
           resolvePendingMission(result.success ? 'success' : 'fail');
           return;
         }
@@ -4899,8 +4992,19 @@ once:true`
         once:missionType==='contract' ? state.mission.questMeta?.once : false
       };
       preparePendingResolution(pending,rewards);
+      const combatChanceOverride=missionType==='contract'
+        ? state.mission.questMeta?.combatChance
+        : state.mission.raid?.combatChance;
       if(missionType==='contract' && state.mission.questMeta?.forceCombat){
         launchCombatFromPending(pending);
+        return;
+      }
+      if(typeof combatChanceOverride==='number' && combatChanceOverride>=0){
+        if(Math.random()<combatChanceOverride){
+          launchCombatFromPending(pending);
+          return;
+        }
+        resolvePendingMission(success ? 'success' : 'fail');
         return;
       }
       if(shouldTriggerCombat(effectiveRisk)){
@@ -5235,11 +5339,13 @@ once:true`
           else if(['time','energy','loot','key'].includes(key)) currentQuest[key]=Number(value || 0);
           else if(key==='once') currentQuest.once=value !== 'false';
           else if(key==='combat') currentQuest.combat=value !== 'false';
+          else if(key.toLowerCase()==='combatchance') currentQuest.combatChance=Number(value || 0);
           else if(key==='requires') currentQuest.requires=value;
           else currentQuest[key]=value;
         }else if(scope==='mission' && currentMission){
           if(key==='desc') currentMission.desc += (currentMission.desc?' ':'') + value;
           else if(['time','energy','loot','key'].includes(key)) currentMission[key]=Number(value || 0);
+          else if(key.toLowerCase()==='combatchance') currentMission.combatChance=Number(value || 0);
           else currentMission[key]=value;
         }
       });

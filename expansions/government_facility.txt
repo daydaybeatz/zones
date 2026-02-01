@@ -39,6 +39,18 @@ energy:18
 loot:4
 lootType:reinforced clothing
 
+@mission
+id:facility-armory
+label:Director armory lock
+desc:Use the director armory key to enter the restricted weapons vault.
+risk:high
+time:15
+energy:20
+loot:5
+lootType:high-tier tactical gear
+key:1
+combatChance:0.5
+
 @quest
 id:facility-telecom
 title:Reconnect the facility telecom grid

@@ -39,6 +39,18 @@ energy:13
 loot:3
 lootType:weapons & gear
 
+@mission
+id:ganglands-security-cache
+label:Security supply room raid
+desc:Use the security supply room key to access the guarded arsenal cage.
+risk:high
+time:14
+energy:18
+loot:5
+lootType:weapons & armored gear
+key:1
+combatChance:0.5
+
 @quest
 id:ganglands-telecom
 title:Reconnect the ganglands telecoms

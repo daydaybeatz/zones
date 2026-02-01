@@ -38,6 +38,18 @@ energy:14
 loot:3
 lootType:food crates
 
+@mission
+id:mall-manager-cache
+label:Manager suite cache
+desc:Use the manager room key to breach the locked office and cold storage stash.
+risk:high
+time:14
+energy:18
+loot:5
+lootType:premium food & supplies
+key:1
+combatChance:0.5
+
 @quest
 id:mall-power-1
 title:Trace the power breakers

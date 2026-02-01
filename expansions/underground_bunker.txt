@@ -38,6 +38,18 @@ energy:14
 loot:3
 lootType:sealed kits
 
+@mission
+id:bunker-armory
+label:Armory annex breach
+desc:Use the bunker armory key to crack the sealed weapons annex for richer loot.
+risk:medium
+time:13
+energy:16
+loot:4
+lootType:armory kits & rations
+key:1
+combatChance:0.5
+
 @quest
 id:bunker-telecom-1
 title:Trace the telecom line

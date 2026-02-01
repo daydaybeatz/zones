@@ -38,6 +38,18 @@ energy:14
 loot:3
 lootType:medical packs
 
+@mission
+id:clinic-storage
+label:Storage room breach
+desc:Use the storage room key to crack the locked supply vault for premium medical stock.
+risk:high
+time:14
+energy:18
+loot:5
+lootType:advanced medical stock
+key:1
+combatChance:0.5
+
 @quest
 id:medical-telecom
 title:Reconnect the clinic telecoms
