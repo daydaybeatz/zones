@@ -40,6 +40,7 @@
     --glow-red:0 0 10px rgba(255,0,51,.55), 0 0 28px rgba(255,0,51,.25), 0 0 90px rgba(255,0,51,.10);
 
     --radius:12px;
+    --visual-viewport-offset:0px;
 
     /* CRT FX */
     --scanlineA:rgba(0,0,0,0.32);
@@ -505,6 +506,8 @@
     z-index:5;
     border-radius:var(--radius) var(--radius) 0 0;
     box-shadow: var(--shadow), var(--inner), var(--glow);
+    transform:translateY(calc(-1 * var(--visual-viewport-offset)));
+    will-change:transform;
   }
   .tab-buttons button{
     flex:0 0 auto;
@@ -603,7 +606,7 @@
     position:fixed;
     left:50%;
     bottom:var(--tab-bar-height);
-    transform:translateX(-50%);
+    transform:translateX(-50%) translateY(calc(-1 * var(--visual-viewport-offset)));
     width:min(1200px, calc(100% - 24px));
     margin:0;
     z-index:6;
@@ -1162,6 +1165,25 @@
         saveGame();
       },delay);
     };
+
+    const updateVisualViewportOffset=()=>{
+      if(!window.visualViewport){
+        document.documentElement.style.setProperty('--visual-viewport-offset','0px');
+        return;
+      }
+      const { offsetTop, height }=window.visualViewport;
+      const layoutHeight=window.innerHeight;
+      const visualBottom=offsetTop + height;
+      const offset=Math.max(0, layoutHeight - visualBottom);
+      document.documentElement.style.setProperty('--visual-viewport-offset',`${offset}px`);
+    };
+
+    if(window.visualViewport){
+      window.visualViewport.addEventListener('resize', updateVisualViewportOffset);
+      window.visualViewport.addEventListener('scroll', updateVisualViewportOffset);
+    }
+    window.addEventListener('resize', updateVisualViewportOffset);
+    updateVisualViewportOffset();
 
     const ITEM_CATALOG={
       'basic backpack':{type:'armor',slot:'backpack',rarity:'common',value:6,mods:{carryBonus:6,insulation:0.1}},
