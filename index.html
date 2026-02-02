@@ -621,11 +621,11 @@
   .door-card{
     border:1px solid var(--border);
     border-radius:12px;
-    padding:12px;
+    padding:8px 10px;
     background:linear-gradient(180deg, rgba(10,12,10,0.82), rgba(0,0,0,0.68));
     display:flex;
     flex-wrap:wrap;
-    gap:12px;
+    gap:8px;
     align-items:center;
     justify-content:space-between;
   }
@@ -636,22 +636,55 @@
   .door-info{
     display:flex;
     flex-direction:column;
-    gap:4px;
+    gap:2px;
     min-width:200px;
   }
   .door-title{
-    font-size:14px;
+    font-size:13px;
     text-transform:uppercase;
     letter-spacing:0.8px;
   }
   .door-meta{
-    font-size:12px;
+    font-size:11px;
     color:rgba(184,255,207,0.7);
   }
   .door-actions{
     display:flex;
     flex-wrap:wrap;
     gap:8px;
+  }
+  .door-panel{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:10px;
+  }
+  .door-panel.is-collapsed{
+    display:none;
+  }
+  .door-current{
+    margin-top:10px;
+  }
+  .door-current-card{
+    border-style:solid;
+  }
+  .door-current-tag{
+    font-size:10px;
+    letter-spacing:0.9px;
+    text-transform:uppercase;
+    color:rgba(184,255,207,0.7);
+  }
+  .door-pagination{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:8px;
+    font-size:11px;
+    color:rgba(184,255,207,0.7);
+  }
+  .door-pagination button{
+    min-height:30px;
+    padding:4px 10px;
   }
 
   /* LOG/TERMINAL BOX */
@@ -958,7 +991,6 @@
       <div>
         <div class="title-row">
           <div class="title">Zones - fight, loot, survive.</div>
-          <button id="pauseToggle" class="pause-toggle" type="button" aria-pressed="false">Pause</button>
         </div>
         <div class="tagline">Pick zones, run salvage loops, and sort rewards into gear, stash, or scrap.</div>
       </div>
@@ -983,6 +1015,7 @@
         <button data-tab="hub" class="active">Operations</button>
         <button data-tab="inventory">Backpack</button>
         <button data-tab="field">Stash</button>
+        <button id="pauseToggle" class="pause-toggle" type="button" aria-pressed="false">Pause</button>
       </div>
       <div id="tab-hub" class="tab-content active">
         <div class="stack">
@@ -998,9 +1031,16 @@
           </div>
           <div id="screen-locations" class="screen">
             <section class="panel">
-              <h3>Zone Gates</h3>
-              <div id="doors"></div>
-              <div class="small" id="doorsHint">Loading expansions…</div>
+              <div class="inline" style="justify-content:space-between;align-items:center;">
+                <h3>Zone Gates</h3>
+                <button id="doorsToggle" type="button" aria-expanded="false">Change location</button>
+              </div>
+              <div id="doorsCurrent" class="door-current"></div>
+              <div id="doorsPanel" class="door-panel">
+                <div id="doors"></div>
+                <div class="door-pagination" id="doorsPagination"></div>
+                <div class="small" id="doorsHint">Loading expansions…</div>
+              </div>
             </section>
             <section class="panel">
               <div class="inline" style="justify-content:space-between;align-items:center;">
@@ -1179,6 +1219,8 @@
       pausedAt:null,
       lastHungerDamageAt:null,
       lastThirstDamageAt:null,
+      doorsPage:0,
+      doorsCollapsed:true,
       zone:{id:'drift-yard',name:'Drift Yard',risk:'low',desc:'Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.',sceneId:null},
       screen:'main',
       travel:{active:false,endsAt:null,target:null},
@@ -1258,6 +1300,9 @@
       if(!merged.paused){
         merged.pausedAt=null;
       }
+      const doorsPage=Number(merged.doorsPage);
+      merged.doorsPage=Number.isFinite(doorsPage) && doorsPage>=0 ? doorsPage : 0;
+      merged.doorsCollapsed=Boolean(merged.doorsCollapsed);
       return merged;
     };
     const loadSavedState=()=>{
@@ -1561,6 +1606,7 @@
     const RAD_DANGER_THRESHOLD=20;
     const NEED_DAMAGE_THRESHOLD=65;
     const NEED_DAMAGE_INTERVAL_MINUTES=90;
+    const DOORS_PAGE_SIZE=4;
     const riskTable={low:0.08,medium:0.2,high:0.32,deadly:0.45};
     const riskRank={low:1,medium:2,high:3,deadly:4};
     const riskLevels=['low','medium','high','deadly'];
@@ -1582,6 +1628,26 @@
         return lowerRisk(baseRisk);
       }
       return baseRisk;
+    };
+    const getDoorLootScore=(exp)=>{
+      const missionLoot=Array.isArray(exp?.missions) ? exp.missions.map(m=>Number(m.loot || 0)) : [];
+      const questLoot=Array.isArray(exp?.quests) ? exp.quests.map(q=>Number(q.loot || 0)) : [];
+      return Math.max(0,...missionLoot,...questLoot);
+    };
+    const getSortedDoors=()=>{
+      return Object.values(expansions)
+        .filter(exp=>exp?.meta?.id)
+        .sort((a,b)=>{
+          const riskA=getZoneRiskForExp(a,a.door?.risk || 'low');
+          const riskB=getZoneRiskForExp(b,b.door?.risk || 'low');
+          const riskCompare=(riskRank[riskA] || 1) - (riskRank[riskB] || 1);
+          if(riskCompare) return riskCompare;
+          const lootCompare=getDoorLootScore(b) - getDoorLootScore(a);
+          if(lootCompare) return lootCompare;
+          const nameA=(a.meta?.name || '').toLowerCase();
+          const nameB=(b.meta?.name || '').toLowerCase();
+          return nameA.localeCompare(nameB);
+        });
     };
     const expansions={};
     const EXPANSION_MANIFEST=[
@@ -2119,6 +2185,10 @@ once:true`
       pauseToggle:document.getElementById('pauseToggle'),
       doors:document.getElementById('doors'),
       doorsHint:document.getElementById('doorsHint'),
+      doorsPanel:document.getElementById('doorsPanel'),
+      doorsPagination:document.getElementById('doorsPagination'),
+      doorsToggle:document.getElementById('doorsToggle'),
+      doorsCurrent:document.getElementById('doorsCurrent'),
       zoneTitle:document.getElementById('zoneTitle'),
       zoneDesc:document.getElementById('zoneDesc'),
       zoneBadge:document.getElementById('zoneBadge'),
@@ -2173,7 +2243,7 @@ once:true`
         market:document.getElementById('stashMarket')
       },
       tabs:document.querySelector('.tabs'),
-      tabButtons:Array.from(document.querySelectorAll('.tab-buttons button')),
+      tabButtons:Array.from(document.querySelectorAll('.tab-buttons button[data-tab]')),
       tabContents:{
         hub:document.getElementById('tab-hub'),
         inventory:document.getElementById('tab-inventory'),
@@ -3987,6 +4057,12 @@ once:true`
         renderAll();
       };
     }
+    if(dom.doorsToggle){
+      dom.doorsToggle.onclick=()=>{
+        state.doorsCollapsed=!state.doorsCollapsed;
+        renderDoors();
+      };
+    }
 
     function renderPauseToggle(){
       if(!dom.pauseToggle) return;
@@ -5438,8 +5514,11 @@ once:true`
     /* ================= EXPANSION LOADING ================= */
     function ensureExpansionsLoaded(){
       const needsReload=expansionsAttempted===0 || (expansionsLoaded===0 && expansionsAttempted>=expansionsExpected);
-      if(dom.doors.children.length>0 && !needsReload) return;
-      dom.doors.innerHTML='';
+      if(Object.keys(expansions).length>0 && !needsReload){
+        renderDoors();
+        return;
+      }
+      if(dom.doors) dom.doors.innerHTML='';
       loadGames();
     }
 
@@ -5459,7 +5538,7 @@ once:true`
       expansionsExpected=manifest.length;
       expansionsLoaded=0;
       expansionsAttempted=0;
-      dom.doors.innerHTML='';
+      if(dom.doors) dom.doors.innerHTML='';
       dom.doorsHint.textContent=manifest.length ? 'Loading expansions…' : 'No expansions configured.';
       manifest.forEach(meta=>loadExpansion(meta));
     }
@@ -5502,7 +5581,7 @@ once:true`
       }
     }
 
-    function addDoor(exp){
+    function createDoorCard(exp){
       const card=document.createElement('div');
       const info=document.createElement('div');
       const actions=document.createElement('div');
@@ -5601,6 +5680,7 @@ once:true`
           endsAt:Date.now(),
           target
         };
+        state.doorsCollapsed=true;
         logMsg(`Routing to ${target.name}… hold tight.`);
         if(exp.door?.note) setCodex(exp.door.note);
         renderAll();
@@ -5611,7 +5691,85 @@ once:true`
       actions.appendChild(travelBtn);
       card.appendChild(info);
       card.appendChild(actions);
-      dom.doors.appendChild(card);
+      return card;
+    }
+
+    function renderDoorCurrent(){
+      if(!dom.doorsCurrent) return;
+      const exp=expansions[state.zone.id];
+      const name=exp?.meta?.name || state.zone.name;
+      const desc=exp?.door?.hint || exp?.meta?.summary || state.zone.desc;
+      const risk=getZoneRiskForExp(exp || {},state.zone.risk);
+      dom.doorsCurrent.innerHTML='';
+      const card=document.createElement('div');
+      const info=document.createElement('div');
+      const tag=document.createElement('div');
+      card.className='door-card door-current-card';
+      applyRiskClasses(card,risk);
+      info.className='door-info';
+      info.innerHTML=`
+        <div class="door-title">${name}</div>
+        <div class="door-meta">${desc}</div>
+      `;
+      tag.className='door-current-tag';
+      tag.textContent='Current location';
+      card.appendChild(info);
+      card.appendChild(tag);
+      dom.doorsCurrent.appendChild(card);
+    }
+
+    function renderDoors(){
+      if(!dom.doors) return;
+      const list=getSortedDoors();
+      const totalPages=Math.max(1,Math.ceil(list.length/DOORS_PAGE_SIZE));
+      state.doorsPage=clamp(state.doorsPage,0,totalPages-1);
+      const start=state.doorsPage*DOORS_PAGE_SIZE;
+      const pageItems=list.slice(start,start+DOORS_PAGE_SIZE);
+      dom.doors.innerHTML='';
+      pageItems.forEach(exp=>dom.doors.appendChild(createDoorCard(exp)));
+
+      if(dom.doorsPagination){
+        dom.doorsPagination.innerHTML='';
+        if(list.length>0 && totalPages>1){
+          const prev=document.createElement('button');
+          prev.textContent='Prev';
+          prev.disabled=state.doorsPage===0;
+          prev.onclick=()=>{
+            state.doorsPage=clamp(state.doorsPage-1,0,totalPages-1);
+            renderDoors();
+          };
+          const next=document.createElement('button');
+          next.textContent='Next';
+          next.disabled=state.doorsPage>=totalPages-1;
+          next.onclick=()=>{
+            state.doorsPage=clamp(state.doorsPage+1,0,totalPages-1);
+            renderDoors();
+          };
+          const label=document.createElement('span');
+          label.textContent=`Page ${state.doorsPage+1} / ${totalPages}`;
+          dom.doorsPagination.appendChild(prev);
+          dom.doorsPagination.appendChild(label);
+          dom.doorsPagination.appendChild(next);
+        }
+      }
+
+      if(dom.doorsHint){
+        if(expansionsLoaded<expansionsExpected){
+          dom.doorsHint.textContent='Loading expansions…';
+        }else{
+          dom.doorsHint.textContent=list.length ? '' : 'No expansions configured.';
+        }
+      }
+      if(dom.doorsPanel){
+        dom.doorsPanel.classList.toggle('is-collapsed',state.doorsCollapsed);
+      }
+      if(dom.doorsToggle){
+        dom.doorsToggle.setAttribute('aria-expanded',state.doorsCollapsed ? 'false' : 'true');
+      }
+    }
+
+    function addDoor(){
+      renderDoors();
     }
 
     function parseOption(str){
@@ -5731,6 +5889,8 @@ once:true`
       renderMissionStatus();
       renderIdleOps();
       renderZone();
+      renderDoorCurrent();
+      renderDoors();
       renderRaidActions();
       renderStash();
       renderItemDetails();
