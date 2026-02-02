@@ -593,7 +593,16 @@
     box-shadow:0 0 10px rgba(57,255,20,0.55), 0 0 18px rgba(57,255,20,0.22);
   }
   .scene-title{font-size:15px;margin:0;color:#eafff0;text-transform:uppercase;letter-spacing:1px;}
-  .scene-desc{margin:6px 0 10px;color:rgba(184,255,207,0.78);font-size:13px;}
+  .scene-desc{margin:4px 0;color:rgba(184,255,207,0.78);font-size:12px;}
+  .zone-summary{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .zone-summary .scene-desc{
+    margin:0;
+  }
 
   .inline{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
   .stack{display:flex;flex-direction:column;gap:12px;}
@@ -670,14 +679,12 @@
     display:flex;
     flex-direction:column;
     gap:8px;
-    margin-top:10px;
+    margin-top:6px;
   }
   .door-panel.is-collapsed{
     display:none;
   }
-  .door-current{
-    margin-top:10px;
-  }
+  .door-current{margin-top:6px;}
   .door-current-card{
     border-style:solid;
   }
@@ -1006,13 +1013,20 @@
 
 </head>
 <body>
-  <div id="introModal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal-card">
-      <div class="command-title" id="introTitle">Welcome to Zero Lux</div>
-      <div class="small" id="introMessage"></div>
-      <div class="modal-actions" id="introActions"></div>
+    <div id="introModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="command-title" id="introTitle">Welcome to Zero Lux</div>
+        <div class="small" id="introMessage"></div>
+        <div class="modal-actions" id="introActions"></div>
+      </div>
     </div>
-  </div>
+    <div id="barModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="command-title" id="barTitle">The Bar</div>
+        <div class="small" id="barMessage"></div>
+        <div class="modal-actions" id="barActions"></div>
+      </div>
+    </div>
   <div id="app">
     <header>
       <div>
@@ -1047,13 +1061,17 @@
       <div id="tab-hub" class="tab-content active">
         <div class="stack">
           <div class="screen-nav" id="screenNav">
-            <button data-screen="main" class="active">Main Hub</button>
+            <button data-screen="main" class="active">Safe House</button>
             <button data-screen="locations">Locations Hub</button>
           </div>
           <div id="screen-main" class="screen active">
             <section class="panel">
               <h3>Idle Operations</h3>
               <div id="idleOps"></div>
+            </section>
+            <section class="panel">
+              <h3>Safe House Hatch</h3>
+              <div id="safehouseActions"></div>
             </section>
           </div>
           <div id="screen-locations" class="screen">
@@ -1063,11 +1081,8 @@
                 <button id="doorsToggle" type="button" aria-expanded="false">Change location</button>
               </div>
               <div id="doorsCurrent" class="door-current"></div>
-              <div class="inline" style="justify-content:space-between;align-items:center;margin-top:10px;">
-                <div>
-                  <p class="scene-title" id="zoneTitle">Drift Yard</p>
-                  <p class="scene-desc" id="zoneDesc">Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.</p>
-                </div>
+              <div class="zone-summary" style="margin-top:6px;">
+                <p class="scene-desc" id="zoneDesc">Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.</p>
                 <span class="badge" id="zoneBadge">Low risk</span>
               </div>
               <div id="doorsPanel" class="door-panel">
@@ -1234,6 +1249,7 @@
       codexExpanded:false,
       stash:{name:'Vault Stash',items:[]},
       marketAccess:{active:false,zoneId:null},
+      mercs:0,
       idleOps:[createIdleSlot()],
       idleRewards:[],
       flags:new Set(),
@@ -1252,13 +1268,13 @@
       stashScreen:'vault',
       selected:{source:null,item:null}
     });
-    const hydrateIdleOps=(savedIdleOps,flags)=>{
+    const hydrateIdleOps=(savedIdleOps,flags,mercs=0)=>{
       const slots=Array.isArray(savedIdleOps)
         ? savedIdleOps.map(slot=>({ ...createIdleSlot(), ...slot }))
         : savedIdleOps && typeof savedIdleOps==='object'
           ? [{ ...createIdleSlot(), ...savedIdleOps }]
           : [createIdleSlot()];
-      const limit=flags.has('ganglands-telecom') ? 2 : 1;
+      const limit=Math.max(1,1+(flags.has('ganglands-telecom') ? 1 : 0)+Number(mercs || 0));
       while(slots.length<limit){
         slots.push(createIdleSlot());
       }
@@ -1298,7 +1314,7 @@
       merged.flags=new Set(saved.flags || []);
       merged.stash={...base.stash,...(saved.stash||{})};
       merged.marketAccess={...base.marketAccess,...(saved.marketAccess||{})};
-      merged.idleOps=hydrateIdleOps(saved.idleOps,merged.flags);
+      merged.idleOps=hydrateIdleOps(saved.idleOps,merged.flags,merged.mercs);
       merged.idleRewards=Array.isArray(saved.idleRewards) ? [...saved.idleRewards] : [];
       merged.zone={...base.zone,...(saved.zone||{})};
       merged.travel={...base.travel,...(saved.travel||{})};
@@ -1625,6 +1641,7 @@
     ];
 
     const ACTION_TIMES={camp:10};
+    const MERC_HIRE_COST=35;
     const RAD_SHIELD_DURATION_MINUTES=12*60;
     const RAD_DANGER_THRESHOLD=20;
     const NEED_DAMAGE_THRESHOLD=65;
@@ -1659,7 +1676,7 @@
     };
     const getSortedDoors=()=>{
       return Object.values(expansions)
-        .filter(exp=>exp?.meta?.id)
+        .filter(exp=>exp?.meta?.id && exp.meta.id!=='safehouse')
         .sort((a,b)=>{
           const riskA=getZoneRiskForExp(a,a.door?.risk || 'low');
           const riskB=getZoneRiskForExp(b,b.door?.risk || 'low');
@@ -2203,6 +2220,10 @@ once:true`
       introTitle:document.getElementById('introTitle'),
       introMessage:document.getElementById('introMessage'),
       introActions:document.getElementById('introActions'),
+      barModal:document.getElementById('barModal'),
+      barTitle:document.getElementById('barTitle'),
+      barMessage:document.getElementById('barMessage'),
+      barActions:document.getElementById('barActions'),
       stats:document.getElementById('stats'),
       meta:document.getElementById('meta'),
       pauseToggle:document.getElementById('pauseToggle'),
@@ -2212,9 +2233,9 @@ once:true`
       doorsPagination:document.getElementById('doorsPagination'),
       doorsToggle:document.getElementById('doorsToggle'),
       doorsCurrent:document.getElementById('doorsCurrent'),
-      zoneTitle:document.getElementById('zoneTitle'),
       zoneDesc:document.getElementById('zoneDesc'),
       zoneBadge:document.getElementById('zoneBadge'),
+      safehouseActions:document.getElementById('safehouseActions'),
       raidActions:document.getElementById('raidActions'),
       inventory:document.getElementById('inventory'),
       equipment:document.getElementById('equipment'),
@@ -2364,7 +2385,7 @@ once:true`
       }
       renderCodex();
     };
-    const getIdleSlotLimit=()=>state.flags.has('ganglands-telecom') ? 2 : 1;
+    const getIdleSlotLimit=()=>Math.max(1,1+(state.flags.has('ganglands-telecom') ? 1 : 0)+Number(state.mercs || 0));
     const syncIdleSlots=()=>{
       if(!Array.isArray(state.idleOps)){
         state.idleOps=[createIdleSlot()];
@@ -3049,6 +3070,7 @@ once:true`
         `<span class="pill-inline"><b>Keys</b>${state.keys}</span>`+
         `<span class="pill-inline"><b>Level</b>${state.level}</span>`+
         `<span class="pill-inline"><b>XP</b>${state.xp}/${state.nextLevelXp}</span>`+
+        `<span class="pill-inline"><b>Mercs</b>${state.mercs}</span>`+
         `<span class="pill-inline"><b>Time</b>${fmtTime(state.timeMinutes)}</span>`+
         `<span class="pill-inline"><b>Day</b>${state.day}</span>`+
         `<span class="pill-inline"><b>Backpack</b>${getBackpackUsage()}/${getBackpackLimit()}</span>`;
@@ -4177,10 +4199,13 @@ once:true`
         state.zone.risk=getZoneRiskForExp(exp,state.zone.risk);
       }
       const scene=ensureZoneScene(state.zone);
-      dom.zoneTitle.textContent=scene?.title ? `${state.zone.name} · ${scene.title}` : state.zone.name;
-      dom.zoneDesc.textContent=scene?.desc || state.zone.desc;
-      dom.zoneBadge.textContent=`${state.zone.risk} risk`;
-      applyRiskClasses(dom.zoneBadge,state.zone.risk);
+      if(dom.zoneDesc){
+        dom.zoneDesc.textContent=scene?.desc || state.zone.desc;
+      }
+      if(dom.zoneBadge){
+        dom.zoneBadge.textContent=`${state.zone.risk} risk`;
+        applyRiskClasses(dom.zoneBadge,state.zone.risk);
+      }
     }
 
     function formatRewardEstimate({loot=0,lootType='',reward='',risk='low',time=8,xp}={}){
@@ -4219,6 +4244,13 @@ once:true`
     function renderRaidActions(){
       dom.raidActions.innerHTML='';
       const exp=expansions[state.zone.id];
+      if(exp?.meta?.id==='safehouse'){
+        const blocked=document.createElement('div');
+        blocked.className='muted-box';
+        blocked.textContent='Safe house actions are managed from the Safe House tab.';
+        dom.raidActions.appendChild(blocked);
+        return;
+      }
       const scene=ensureZoneScene(state.zone);
       if(scene && scene.options && scene.options.length){
         scene.options.forEach(option=>{
@@ -4240,6 +4272,14 @@ once:true`
           if(option.risk==='high') btn.classList.add('danger');
           dom.raidActions.appendChild(btn);
         });
+      }
+      const isGanglandsBar=state.zone.id==='metro_ganglands';
+      if(isGanglandsBar){
+        const barBtn=document.createElement('button');
+        barBtn.innerHTML=`<span>The Bar</span><span class="small">hire mercs · +1 idle slot</span>`;
+        barBtn.onclick=openBarModal;
+        if(state.mission.active || state.travel.active) barBtn.disabled=true;
+        dom.raidActions.appendChild(barBtn);
       }
       const vendorEligible=zoneHasShop();
       if(vendorEligible){
@@ -4288,33 +4328,35 @@ once:true`
       }
       const hubZone=isHubZone();
       if(hubZone){
-        const hubMissions=(exp?.missions || []).filter(isHubMission);
-        if(hubMissions.length){
-          hubMissions.forEach(raid=>{
-            const btn=document.createElement('button');
-            const meta=buildMissionMeta({
-              risk:raid.risk,
-              time:raid.time,
-              energy:raid.energy,
-              key:raid.key,
-              loot:raid.loot,
-              lootType:raid.lootType,
-              reward:raid.reward,
-              xp:raid.xp,
-              combatChance:raid.combatChance
+        if(exp?.meta?.id!=='safehouse'){
+          const hubMissions=(exp?.missions || []).filter(isHubMission);
+          if(hubMissions.length){
+            hubMissions.forEach(raid=>{
+              const btn=document.createElement('button');
+              const meta=buildMissionMeta({
+                risk:raid.risk,
+                time:raid.time,
+                energy:raid.energy,
+                key:raid.key,
+                loot:raid.loot,
+                lootType:raid.lootType,
+                reward:raid.reward,
+                xp:raid.xp,
+                combatChance:raid.combatChance
+              });
+              btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
+              btn.onclick=()=>startMission(raid);
+              const adviceDepleted=isElderAdviceMission(raid) && isElderAdviceExhausted();
+              if(adviceDepleted){
+                btn.disabled=true;
+                btn.title="You're very wise, young one.";
+              }else if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})){
+                btn.disabled=true;
+              }
+              if(raid.risk==='high') btn.classList.add('danger');
+              dom.raidActions.appendChild(btn);
             });
-            btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
-            btn.onclick=()=>startMission(raid);
-            const adviceDepleted=isElderAdviceMission(raid) && isElderAdviceExhausted();
-            if(adviceDepleted){
-              btn.disabled=true;
-              btn.title="You're very wise, young one.";
-            }else if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})){
-              btn.disabled=true;
-            }
-            if(raid.risk==='high') btn.classList.add('danger');
-            dom.raidActions.appendChild(btn);
-          });
+          }
         }
       }
       if(hubZone && !dom.raidActions.children.length){
@@ -4361,14 +4403,111 @@ once:true`
         if(state.mission.active || state.travel.active || !canAfford({energy:10})) combatBtn.disabled=true;
         combatBtn.classList.add('danger');
         dom.raidActions.appendChild(combatBtn);
-        const canCamp=state.screen==='locations' && state.zone.id!=='safehouse';
-        if(canCamp){
-          const rest=document.createElement('button');
-        rest.innerHTML=`<span>Make camp</span><span class="small">recover · ${formatDisplayMinutes(ACTION_TIMES.camp)} min</span>`;
-          rest.onclick=runCamp;
-          if(state.mission.active || state.travel.active) rest.disabled=true;
-          dom.raidActions.appendChild(rest);
-        }
+      }
+    }
+
+    function renderSafehouseActions(){
+      if(!dom.safehouseActions) return;
+      dom.safehouseActions.innerHTML='';
+      const exp=expansions.safehouse;
+      if(!exp){
+        const empty=document.createElement('div');
+        empty.className='muted-box';
+        empty.textContent='Safe house systems offline. Load expansions to access hatch actions.';
+        dom.safehouseActions.appendChild(empty);
+        return;
+      }
+      const hubZone=getMainHubZone();
+      const scene=ensureZoneScene(hubZone);
+      if(scene?.options?.length){
+        scene.options.forEach(option=>{
+          const btn=document.createElement('button');
+          const label=option.label || 'Local action';
+          const meta=buildMissionMeta({
+            risk:option.risk,
+            time:option.time,
+            loot:option.loot,
+            lootType:option.lootType,
+            reward:option.reward,
+            combatChance:0
+          });
+          btn.innerHTML=`<span>${label}</span><span class="small">${meta}</span>`;
+          btn.onclick=()=>startSceneActionAtZone(option,hubZone);
+          if(state.mission.active || state.travel.active) btn.disabled=true;
+          if(option.risk==='high') btn.classList.add('danger');
+          dom.safehouseActions.appendChild(btn);
+        });
+      }
+      if(exp.quests?.length){
+        exp.quests.forEach(quest=>{
+          const btn=document.createElement('button');
+          const questFlag=quest.flag || quest.id;
+          const completed=quest.once && questFlag && state.flags.has(questFlag);
+          const requiresFlag=quest.requires;
+          const blockedByRequirement=requiresFlag && !state.flags.has(requiresFlag);
+          const label=quest.title || 'Local contract';
+          const time=quest.time || 10;
+          const risk=quest.risk || hubZone.risk;
+          const energy=quest.energy ?? 12;
+          const keyCost=quest.key || 0;
+          const meta=buildMissionMeta({
+            risk,
+            time,
+            energy,
+            key:keyCost,
+            loot:quest.loot || 0,
+            lootType:quest.lootType || '',
+            reward:quest.reward || '',
+            combatChance:quest.combat ? 1 : (Number.isFinite(quest.combatChance) ? quest.combatChance : undefined)
+          });
+          btn.innerHTML=`<span>${label}</span><span class="small">${meta}</span>`;
+          btn.onclick=()=>runQuestAtZone(quest,hubZone);
+          if(completed){
+            btn.disabled=true;
+            btn.title='Contract complete.';
+          }else if(blockedByRequirement){
+            btn.disabled=true;
+            btn.title='Complete the prerequisite contract to unlock this.';
+          }else if(state.mission.active || state.travel.active || !canAfford({energy,keys:keyCost})){
+            btn.disabled=true;
+          }
+          if(risk==='high') btn.classList.add('danger');
+          dom.safehouseActions.appendChild(btn);
+        });
+      }
+      const hubMissions=(exp.missions || []).filter(isHubMission);
+      if(hubMissions.length){
+        hubMissions.forEach(raid=>{
+          const btn=document.createElement('button');
+          const meta=buildMissionMeta({
+            risk:raid.risk,
+            time:raid.time,
+            energy:raid.energy,
+            key:raid.key,
+            loot:raid.loot,
+            lootType:raid.lootType,
+            reward:raid.reward,
+            xp:raid.xp,
+            combatChance:raid.combatChance
+          });
+          btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
+          btn.onclick=()=>startMissionAtZone(raid,hubZone);
+          const adviceDepleted=isElderAdviceMission(raid) && isElderAdviceExhausted();
+          if(adviceDepleted){
+            btn.disabled=true;
+            btn.title="You're very wise, young one.";
+          }else if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})){
+            btn.disabled=true;
+          }
+          if(raid.risk==='high') btn.classList.add('danger');
+          dom.safehouseActions.appendChild(btn);
+        });
+      }
+      if(!dom.safehouseActions.children.length){
+        const empty=document.createElement('div');
+        empty.className='muted-box';
+        empty.textContent='Safe house hatch standing by. Check back after new intel arrives.';
+        dom.safehouseActions.appendChild(empty);
       }
     }
 
@@ -4387,6 +4526,59 @@ once:true`
       setActiveTab('field');
       setStashScreen('market');
       renderAll();
+    }
+
+    function closeBarModal(){
+      if(dom.barModal){
+        dom.barModal.classList.add('hidden');
+      }
+    }
+
+    function renderBarModal(){
+      if(!dom.barModal || !dom.barActions || !dom.barMessage || !dom.barTitle) return;
+      dom.barTitle.textContent='The Bar';
+      dom.barMessage.textContent=`Mercenaries for hire. Each contract adds +1 idle dispatch slot. You currently have ${state.mercs} mercs.`;
+      dom.barActions.innerHTML='';
+      const hireBtn=document.createElement('button');
+      hireBtn.textContent=`Hire mercenary (${MERC_HIRE_COST} credits)`;
+      hireBtn.disabled=state.credits<MERC_HIRE_COST;
+      hireBtn.onclick=hireMercenary;
+      if(hireBtn.disabled){
+        hireBtn.title='Not enough credits.';
+      }
+      const closeBtn=document.createElement('button');
+      closeBtn.textContent='Close';
+      closeBtn.onclick=closeBarModal;
+      dom.barActions.appendChild(hireBtn);
+      dom.barActions.appendChild(closeBtn);
+    }
+
+    function openBarModal(){
+      if(state.mission.active || state.travel.active){
+        setCodex('Finish current operations before visiting the bar.');
+        return;
+      }
+      if(state.zone.id!=='metro_ganglands'){
+        setCodex('The bar is only open in the ganglands.');
+        return;
+      }
+      if(!dom.barModal) return;
+      renderBarModal();
+      dom.barModal.classList.remove('hidden');
+    }
+
+    function hireMercenary(){
+      if(state.credits<MERC_HIRE_COST){
+        setCodex('Not enough credits to hire a mercenary.');
+        return;
+      }
+      state.credits-=MERC_HIRE_COST;
+      state.mercs=(state.mercs||0)+1;
+      syncIdleSlots();
+      setCodex('Mercenary hired. Idle dispatch capacity expanded.');
+      logMsg('Mercenary hired: idle dispatch slots increased.');
+      renderAll();
+      renderBarModal();
     }
 
     function startSceneAction(option){
@@ -4425,6 +4617,59 @@ once:true`
         rewards:[],
         statusMessage:`Action underway: ${label}.`,
         location:{...state.zone},
+        fleeing:false,
+        fleeEndsAt:null,
+        pendingResolution:null,
+        xpReward:computeMissionXp(risk,time),
+        rewardEffects:{success:option.success||'',fail:option.fail||''},
+        questMeta:null,
+        combat:null,
+        sceneTarget:option.target || null
+      };
+      setCodex(`Action launched: ${label}.`);
+      logMsg(`Local action: ${label} (${formatDisplayMinutes(time)} min).`);
+      setActiveTab('hub');
+      setScreen('mission');
+      normalizeMissionTiming(Date.now());
+      renderAll();
+    }
+
+    function startSceneActionAtZone(option,zone){
+      if(state.mission.active){
+        setCodex('Mission already underway.');
+        return;
+      }
+      if(state.travel.active){
+        setCodex('Finish travel before taking local action.');
+        return;
+      }
+      startLoops();
+      const label=option.label || 'Local action';
+      const risk=option.risk || zone.risk;
+      const time=option.time || 8;
+      const durationMs=computeMissionDurationMs({risk,time,loot:option.loot});
+      const raidLike={
+        id:`scene-${Date.now()}`,
+        label,
+        desc:'',
+        time,
+        energy:0,
+        loot:0,
+        risk
+      };
+      const now=Date.now();
+      state.mission={
+        active:true,
+        type:'scene',
+        raid:raidLike,
+        startedAt:now,
+        endsAt:now+durationMs,
+        completed:false,
+        success:null,
+        summary:'',
+        rewards:[],
+        statusMessage:`Action underway: ${label}.`,
+        location:{...zone},
         fleeing:false,
         fleeEndsAt:null,
         pendingResolution:null,
@@ -5345,6 +5590,65 @@ once:true`
       renderAll();
     }
 
+    function runQuestAtZone(quest,zone){
+      if(state.mission.active || state.travel.active){
+        setCodex('Finish current operations before starting a contract.');
+        return;
+      }
+      const questFlag=quest.flag || quest.id;
+      if(quest.once && questFlag && state.flags.has(questFlag)){
+        setCodex('That contract has already been completed.');
+        return;
+      }
+      const energyCost=quest.energy ?? 12;
+      const raidLike={
+        id:quest.id,
+        label:quest.title || 'Special contract',
+        desc:quest.desc,
+        time:quest.time || 10,
+        energy:energyCost,
+        loot:Math.max(2,Math.round((quest.time||10)/5)),
+        risk:quest.risk || zone.risk,
+        key:quest.key||0
+      };
+      const cost={energy:raidLike.energy,keys:raidLike.key||0};
+      if(!canAfford(cost)){
+        setCodex('Not enough resources for that contract.');
+        return;
+      }
+      startLoops();
+      applyCost(cost);
+      const now=Date.now();
+      const durationMs=computeMissionDurationMs({risk:raidLike.risk,time:raidLike.time,loot:raidLike.loot});
+      state.mission={
+        active:true,
+        type:'contract',
+        raid:raidLike,
+        startedAt:now,
+        endsAt:now+durationMs,
+        completed:false,
+        success:null,
+        summary:'',
+        rewards:[],
+        statusMessage:`Contract launched: ${raidLike.label}.`,
+        location:{...zone},
+        fleeing:false,
+        fleeEndsAt:null,
+        pendingResolution:null,
+        xpReward:computeMissionXp(raidLike.risk,raidLike.time),
+        rewardEffects:{success:quest.success||'',fail:quest.fail||''},
+        questMeta:{flag:questFlag,once:quest.once,forceCombat:quest.combat,combatChance:quest.combatChance},
+        combat:null,
+        sceneTarget:null
+      };
+      setCodex(`Contract launched: ${raidLike.label}.`);
+      logMsg(`Contract deployed: ${raidLike.label} (${formatDisplayMinutes(raidLike.time)} min op).`);
+      setActiveTab('hub');
+      setScreen('mission');
+      normalizeMissionTiming(Date.now());
+      renderAll();
+    }
+
     function resetMissionState(){
       state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null};
     }
@@ -5430,6 +5734,57 @@ once:true`
         rewards:[],
         statusMessage:`Mission launched: ${raid.label}.`,
         location:{...state.zone},
+        fleeing:false,
+        fleeEndsAt:null,
+        pendingResolution:null,
+        xpReward:computeMissionXp(raid.risk,raid.time),
+        rewardEffects:{success:'',fail:''},
+        questMeta:null,
+        combat:null,
+        sceneTarget:null
+      };
+      setCodex(`Mission launched: ${raid.label}.`);
+      logMsg(`Mission launched: ${raid.label} (${formatDisplayMinutes(raid.time)} min op).`);
+      setActiveTab('hub');
+      setScreen('mission');
+      normalizeMissionTiming(Date.now());
+      renderAll();
+    }
+
+    function startMissionAtZone(raid,zone){
+      const cost={energy:raid.energy,keys:raid.key||0};
+      if(state.mission.active){
+        setCodex('Mission already underway.');
+        return;
+      }
+      if(state.travel.active){
+        setCodex('Finish travel before launching a mission.');
+        return;
+      }
+      if(isElderAdviceMission(raid) && isElderAdviceExhausted()){
+        setCodex("You're very wise, young one.");
+        return;
+      }
+      if(!canAfford(cost)){
+        setCodex('Not enough resources for that raid.');
+        return;
+      }
+      startLoops();
+      applyCost(cost);
+      const now=Date.now();
+      const durationMs=computeMissionDurationMs({risk:raid.risk,time:raid.time,loot:raid.loot});
+      state.mission={
+        active:true,
+        type:'raid',
+        raid,
+        startedAt:now,
+        endsAt:now+durationMs,
+        completed:false,
+        success:null,
+        summary:'',
+        rewards:[],
+        statusMessage:`Mission launched: ${raid.label}.`,
+        location:{...zone},
         fleeing:false,
         fleeEndsAt:null,
         pendingResolution:null,
@@ -6035,6 +6390,7 @@ once:true`
       renderTravelStatus();
       renderMissionStatus();
       renderIdleOps();
+      renderSafehouseActions();
       renderZone();
       renderDoorCurrent();
       renderDoors();
