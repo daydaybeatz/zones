@@ -248,17 +248,13 @@
     align-items:center;
     gap:8px;
   }
-  .pause-toggle::before{
-    content:"";
-    width:8px;
-    height:8px;
-    border-radius:50%;
+  .pause-toggle::after{
     background:var(--green);
-    box-shadow:0 0 8px rgba(57,255,20,0.6);
+    box-shadow:0 0 10px rgba(57,255,20,0.6);
   }
-  .pause-toggle.paused::before{
+  .pause-toggle.paused::after{
     background:#ffd84a;
-    box-shadow:0 0 10px rgba(255,216,74,0.7);
+    box-shadow:0 0 12px rgba(255,216,74,0.7);
     animation: pauseBlink 2.6s infinite ease-in-out;
   }
   .tagline{
