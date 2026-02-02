@@ -944,6 +944,16 @@
     #tab-field #stashMarket .market-section{order:3;}
     #tab-field #stashActions{order:4;}
   }
+  @media(max-width:600px){
+    .tab-buttons button{
+      min-width:96px;
+      padding:8px 8px;
+    }
+    .tab-buttons button[data-tab="field"],
+    .tab-buttons #pauseToggle{
+      min-width:88px;
+    }
+  }
 
   /* ANIMS */
   @keyframes spin{to{transform:rotate(360deg);}}
@@ -1036,6 +1046,13 @@
                 <button id="doorsToggle" type="button" aria-expanded="false">Change location</button>
               </div>
               <div id="doorsCurrent" class="door-current"></div>
+              <div class="inline" style="justify-content:space-between;align-items:center;margin-top:10px;">
+                <div>
+                  <p class="scene-title" id="zoneTitle">Drift Yard</p>
+                  <p class="scene-desc" id="zoneDesc">Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.</p>
+                </div>
+                <span class="badge" id="zoneBadge">Low risk</span>
+              </div>
               <div id="doorsPanel" class="door-panel">
                 <div id="doors"></div>
                 <div class="door-pagination" id="doorsPagination"></div>
@@ -1043,13 +1060,7 @@
               </div>
             </section>
             <section class="panel">
-              <div class="inline" style="justify-content:space-between;align-items:center;">
-                <div>
-                  <p class="scene-title" id="zoneTitle">Drift Yard</p>
-                  <p class="scene-desc" id="zoneDesc">Low-risk salvage corridor. Ideal for stocking up on scrap and common gear.</p>
-                </div>
-                <span class="badge" id="zoneBadge">Low risk</span>
-              </div>
+              <h3>Zone Operations</h3>
               <div id="raidActions"></div>
             </section>
           </div>
