@@ -8,6 +8,7 @@
   :root{
     color-scheme: dark;
     --tab-bar-height:52px;
+    --tab-buffer:24px;
 
     /* CORE TERMINAL PALETTE */
     --bg:#020202;
@@ -59,7 +60,7 @@
   body{
     margin:0;
     min-height:100vh;
-    padding:12px 12px calc(12px + var(--tab-bar-height));
+    padding:12px 12px calc(12px + var(--tab-bar-height) + var(--tab-buffer));
     color:var(--ink);
     font-family:var(--mono);
     letter-spacing:0.2px;
@@ -163,7 +164,7 @@
     flex-direction:column;
     gap:12px;
     position:relative;
-    padding-bottom:72px;
+    padding-bottom:calc(72px + var(--tab-buffer));
   }
 
   /* HEADER = main terminal bar */
@@ -243,6 +244,22 @@
     font-size:12px;
     letter-spacing:0.08em;
     text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .pause-toggle::before{
+    content:"";
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 8px rgba(57,255,20,0.6);
+  }
+  .pause-toggle.paused::before{
+    background:var(--amber);
+    box-shadow:0 0 10px rgba(255,176,0,0.65);
+    animation: pauseBlink 1.8s infinite ease-in-out;
   }
   .tagline{
     font-size:12px;
@@ -541,7 +558,7 @@
   .tab-content.active{display:block;}
 
   .tab-dock{
-    height:0;
+    height:var(--tab-buffer);
   }
 
   .subtabs{
@@ -962,6 +979,10 @@
     0%{transform:translateX(-120%) skewX(-18deg);}
     100%{transform:translateX(320%) skewX(-18deg);}
   }
+  @keyframes pauseBlink{
+    0%,100%{opacity:1;}
+    50%{opacity:0.35;}
+  }
   @keyframes noiseDrift{
     0%{transform:translate3d(0,0,0);}
     25%{transform:translate3d(-1.2%,0.6%,0);}
@@ -1023,7 +1044,7 @@
     <div class="tabs">
       <div class="tab-buttons">
         <button data-tab="hub" class="active">Operations</button>
-        <button data-tab="inventory">Backpack</button>
+        <button data-tab="inventory">Inventory</button>
         <button data-tab="field">Stash</button>
         <button id="pauseToggle" class="pause-toggle" type="button" aria-pressed="false">Pause</button>
       </div>
@@ -1086,11 +1107,6 @@
       <div id="tab-inventory" class="tab-content">
         <section class="panel">
           <h3>Backpack & Loadout</h3>
-          <div class="subtabs" id="inventoryNav">
-            <button data-inv-screen="backpack" class="active">Backpack</button>
-            <button data-inv-screen="loadout">Loadout</button>
-            <button data-inv-screen="crafting">Crafting</button>
-          </div>
           <div class="inventory-layout">
             <div>
               <div id="inventoryBackpack" class="subscreen active">
@@ -3104,6 +3120,50 @@ once:true`
       autoCloseMissionIfResolved();
       renderAll();
     }
+    function canClaimAllRewardsToInventory(source){
+      const cfg=getRewardConfig(source);
+      if(!cfg) return false;
+      const rewards=[...cfg.getItems()];
+      const tempInventory=[...state.inventory];
+      for(const rewardItem of rewards){
+        const data=getItem(rewardItem);
+        if(data.type==='key') continue;
+        if(!hasCapacityFor(tempInventory,getBackpackLimit(),rewardItem,1)){
+          return false;
+        }
+        tempInventory.push(rewardItem);
+      }
+      return true;
+    }
+    function claimAllRewardsToInventory(source){
+      const cfg=getRewardConfig(source);
+      if(!cfg) return;
+      const rewards=[...cfg.getItems()];
+      if(!rewards.length) return;
+      if(!canClaimAllRewardsToInventory(source)){
+        setCodex('Backpack full. Make room to take all rewards.');
+        return;
+      }
+      let lastItem=null;
+      let keys=0;
+      rewards.forEach(item=>{
+        const data=getItem(item);
+        if(!removeRewardItem(source,item)) return;
+        if(data.type==='key'){
+          keys+=1;
+        }else{
+          state.inventory.push(item);
+          lastItem=item;
+        }
+      });
+      if(keys){
+        state.keys+=keys;
+      }
+      state.selected=lastItem ? {source:'inventory',item:lastItem} : {source:null,item:null};
+      setCodex(`All rewards packed${keys ? ` · ${keys} key${keys===1?'':'s'} secured` : ''}.`);
+      autoCloseMissionIfResolved();
+      renderAll();
+    }
     function claimRewardStackToInventory(source,item){
       const count=getRewardItemCount(source,item);
       if(!count) return;
@@ -3122,6 +3182,22 @@ once:true`
         state.selected={source:'inventory',item};
         setCodex(`${item} stack packed into your backpack.`);
       }
+      autoCloseMissionIfResolved();
+      renderAll();
+    }
+    function consumeRewardItem(source,item){
+      const data=getItem(item);
+      if(data.type!=='consumable'){
+        setCodex('That item cannot be used like a consumable.');
+        return;
+      }
+      if(!removeRewardItem(source,item)) return;
+      if(data.effect){
+        applyEffects(data.effect,'success');
+      }
+      state.selected={source:null,item:null};
+      logMsg(`Consumed ${item}.`);
+      setCodex(`${item} used.`);
       autoCloseMissionIfResolved();
       renderAll();
     }
@@ -3308,6 +3384,12 @@ once:true`
       if(state.selected.source===source && state.selected.item===id){
         const actions=document.createElement('div');
         actions.className='reward-actions';
+        if(data.type==='consumable'){
+          const useBtn=document.createElement('button');
+          useBtn.textContent='Use item';
+          useBtn.onclick=()=>consumeRewardItem(source,id);
+          actions.appendChild(useBtn);
+        }
         const takeOneBtn=document.createElement('button');
         takeOneBtn.textContent='Take one';
         takeOneBtn.disabled=!hasCapacityFor(state.inventory,getBackpackLimit(),id,1);
@@ -3815,6 +3897,12 @@ once:true`
           rewardsWrap.appendChild(row);
           const actions=document.createElement('div');
           actions.className='inline-actions';
+          if(data.type==='consumable'){
+            const useBtn=document.createElement('button');
+            useBtn.textContent='Use item';
+            useBtn.onclick=()=>consumeRewardItem('idleReward',id);
+            actions.appendChild(useBtn);
+          }
           const packBtn=document.createElement('button');
           packBtn.textContent='Take one';
           packBtn.disabled=!hasCapacityFor(state.inventory,getBackpackLimit(),id,1);
@@ -3851,6 +3939,11 @@ once:true`
         rewardCard.appendChild(rewardsWrap);
         const footer=document.createElement('div');
         footer.className='op-actions';
+        const takeAll=document.createElement('button');
+        takeAll.textContent='Take all rewards';
+        takeAll.disabled=!canClaimAllRewardsToInventory('idleReward');
+        takeAll.onclick=()=>claimAllRewardsToInventory('idleReward');
+        footer.appendChild(takeAll);
         const leaveAll=document.createElement('button');
         leaveAll.textContent='Leave all rewards';
         leaveAll.onclick=()=>clearRewardSource('idleReward');
@@ -4079,6 +4172,7 @@ once:true`
       if(!dom.pauseToggle) return;
       dom.pauseToggle.textContent=state.paused ? 'Play' : 'Pause';
       dom.pauseToggle.setAttribute('aria-pressed',state.paused ? 'true' : 'false');
+      dom.pauseToggle.classList.toggle('paused',state.paused);
     }
 
     function renderZone(){
@@ -4496,6 +4590,11 @@ once:true`
       }
       if(state.mission.completed){
         if(rewardsReady){
+          const takeAll=document.createElement('button');
+          takeAll.textContent='Take all rewards';
+          takeAll.disabled=!canClaimAllRewardsToInventory('missionReward');
+          takeAll.onclick=()=>claimAllRewardsToInventory('missionReward');
+          dom.missionActions.appendChild(takeAll);
           const leaveAll=document.createElement('button');
           leaveAll.textContent='Leave all rewards';
           leaveAll.onclick=()=>clearRewardSource('missionReward');
