@@ -9,6 +9,7 @@
     color-scheme: dark;
     --tab-bar-height:52px;
     --tab-buffer:24px;
+    --tab-page-buffer:72px;
 
     /* CORE TERMINAL PALETTE */
     --bg:#020202;
@@ -551,7 +552,7 @@
     box-shadow: var(--glow-strong);
   }
 
-  .tab-content{display:none;padding:12px;}
+  .tab-content{display:none;padding:12px 12px calc(12px + var(--tab-page-buffer));}
   .tab-content.active{display:block;}
 
   .tab-dock{
@@ -1266,6 +1267,7 @@
       pausedAt:null,
       lastHungerDamageAt:null,
       lastThirstDamageAt:null,
+      lastHpWarningAt:null,
       doorsPage:0,
       doorsCollapsed:true,
       zone:{...FALLBACK_HUB_ZONE},
@@ -1343,6 +1345,8 @@
         : 0;
       const radShieldUntil=Number(merged.radShieldUntil);
       merged.radShieldUntil=Number.isFinite(radShieldUntil) ? radShieldUntil : null;
+      const lastHpWarningAt=Number(merged.lastHpWarningAt);
+      merged.lastHpWarningAt=Number.isFinite(lastHpWarningAt) ? lastHpWarningAt : null;
       merged.paused=Boolean(merged.paused);
       const pausedAt=Number(merged.pausedAt);
       merged.pausedAt=Number.isFinite(pausedAt) ? pausedAt : null;
@@ -1379,6 +1383,8 @@
     let state=createDefaultState();
     let allowAutosave=!savedState;
     const isHubMission=(raid)=>raid?.hub===true || raid?.hub==='true';
+    const isMissionUnlocked=(raid)=>!raid?.unlockFlag || state.flags.has(raid.unlockFlag);
+    const getUnlockedMissions=(missions=[])=>missions.filter(isMissionUnlocked);
     const isElderAdviceMission=(raid)=>raid?.id===ELDER_MISSION_ID;
     const isElderAdviceExhausted=()=>state.elderAdviceIndex>=ELDER_ADVICE.length;
     const grantElderAdvice=()=>{
@@ -1722,6 +1728,10 @@
     const RAD_DANGER_THRESHOLD=20;
     const NEED_DAMAGE_THRESHOLD=65;
     const NEED_DAMAGE_INTERVAL_MINUTES=90;
+    const SECRET_IDLE_UNLOCK_CHANCE=0.01;
+    const HEALTH_WARNING_THRESHOLD=0.4;
+    const HEALTH_CRITICAL_THRESHOLD=0.2;
+    const HEALTH_WARNING_COOLDOWN_MINUTES=30;
     const DOORS_PAGE_SIZE=4;
     const riskTable={low:0.08,medium:0.2,high:0.32,deadly:0.45};
     const riskRank={low:1,medium:2,high:3,deadly:4};
@@ -1813,6 +1823,20 @@ reward:elder advice
 combatChance:0
 hub:true
 
+@mission
+id:safehouse-hush
+label:Trace the quiet signal
+desc:Follow a faint relay ping to recover whispered intel for the elders.
+risk:low
+time:7
+energy:8
+loot:1
+lootType:signal scraps
+reward:quiet intel
+hub:true
+unlockFlag:secret-safehouse-ops
+consumeFlag:secret-safehouse-ops
+
 @quest
 id:safehouse-vents
 title:Fix the ventilation system
@@ -1881,6 +1905,18 @@ loot:4
 lootType:armory kits & rations
 key:1
 combatChance:0.5
+
+@mission
+id:bunker-hush
+label:Whispered tunnel cache
+desc:Respond to a faint relay ping tucked in the lower tunnels.
+risk:medium
+time:11
+energy:13
+loot:3
+lootType:sealed caches
+unlockFlag:secret-bunker-mission
+consumeFlag:secret-bunker-mission
 
 @quest
 id:bunker-telecom-1
@@ -2268,6 +2304,18 @@ lootType:elite refinery cache
 key:1
 combatChance:0.6
 
+@mission
+id:refinery-hush
+label:Ghost pressure ping
+desc:Investigate a pressure ping from the drowned refinery subfloor.
+risk:high
+time:15
+energy:19
+loot:4
+lootType:pressure salvage
+unlockFlag:secret-refinery-mission
+consumeFlag:secret-refinery-mission
+
 @quest
 id:refinery-telecom-1
 title:Connect refinery telecoms (part 1/2)
@@ -2356,6 +2404,18 @@ lootType:stormglass core cache
 key:1
 combatChance:0.65
 
+@mission
+id:citadel-hush
+label:Stormglass echo trace
+desc:Track an echoing signal through the stormglass spires.
+risk:high
+time:16
+energy:20
+loot:4
+lootType:stormglass salvage
+unlockFlag:secret-citadel-mission
+consumeFlag:secret-citadel-mission
+
 @quest
 id:citadel-telecom-1
 title:Connect citadel telecoms (part 1/2)
@@ -2442,6 +2502,18 @@ lootType:singularity cache
 key:1
 combatChance:0.7
 
+@mission
+id:rift-hush
+label:Anomaly whisper survey
+desc:Chase a faint whisper across the rift lattice for hidden caches.
+risk:deadly
+time:17
+energy:23
+loot:5
+lootType:rift salvage
+unlockFlag:secret-rift-mission
+consumeFlag:secret-rift-mission
+
 @quest
 id:rift-telecom-1
 title:Connect rift telecoms (part 1/2)
@@ -2477,11 +2549,11 @@ once:true`
     let expansionsLoaded=0;
     let expansionsAttempted=0;
     const idleOperations=[
-      {id:'bunker-maintenance',label:'Bunker maintenance run',desc:'Maintenance crews stabilize morale and earn a few credits.',duration:3,cost:{credits:6},reward:'credits+5,morale+4,item:old coin',unlockFlag:'safehouse-vents',xp:8},
-      {id:'tunnel-relay',label:'Relay salvage sweep',desc:'Bunker scouts recover salvage and food from the old tunnels.',duration:4,cost:{credits:10,scrap:1},reward:'item:ration bar,item:cloth scraps,credits+6',unlockFlag:'bunker-telecom-2',xp:10},
-      {id:'refinery-pressure-run',label:'Refinery pressure run',desc:'Refinery crews escort pressurized salvage and sealed rations.',duration:5,cost:{credits:18,scrap:2},reward:'item:smokehouse ration,item:refinery alloy ingot,credits+10',unlockFlag:'refinery-telecom-2',xp:14},
-      {id:'citadel-resonance',label:'Citadel resonance patrol',desc:'Citadel operatives recover stormglass stock and arc-powered supplies.',duration:5,cost:{credits:22,scrap:2},reward:'item:stormglass shard,item:ionized brew,credits+14',unlockFlag:'citadel-telecom-2',xp:16},
-      {id:'rift-calibration',label:'Rift calibration sweep',desc:'Rift technicians secure anomaly samples and rare provisions.',duration:6,cost:{credits:26,scrap:3},reward:'item:riftwater flask,item:rift crystal splinter,credits+18',unlockFlag:'rift-telecom-2',xp:18}
+      {id:'bunker-maintenance',label:'Bunker maintenance run',desc:'Maintenance crews stabilize morale and earn a few credits.',duration:3,cost:{credits:6},reward:'credits+5,morale+4,item:old coin',unlockFlag:'safehouse-vents',xp:8,secretUnlockFlag:'secret-safehouse-ops',secretZoneId:'safehouse'},
+      {id:'tunnel-relay',label:'Relay salvage sweep',desc:'Bunker scouts recover salvage and food from the old tunnels.',duration:4,cost:{credits:10,scrap:1},reward:'item:ration bar,item:cloth scraps,credits+6',unlockFlag:'bunker-telecom-2',xp:10,secretUnlockFlag:'secret-bunker-mission',secretZoneId:'underground_bunker'},
+      {id:'refinery-pressure-run',label:'Refinery pressure run',desc:'Refinery crews escort pressurized salvage and sealed rations.',duration:5,cost:{credits:18,scrap:2},reward:'item:smokehouse ration,item:refinery alloy ingot,credits+10',unlockFlag:'refinery-telecom-2',xp:14,secretUnlockFlag:'secret-refinery-mission',secretZoneId:'sunken_refinery'},
+      {id:'citadel-resonance',label:'Citadel resonance patrol',desc:'Citadel operatives recover stormglass stock and arc-powered supplies.',duration:5,cost:{credits:22,scrap:2},reward:'item:stormglass shard,item:ionized brew,credits+14',unlockFlag:'citadel-telecom-2',xp:16,secretUnlockFlag:'secret-citadel-mission',secretZoneId:'stormglass_citadel'},
+      {id:'rift-calibration',label:'Rift calibration sweep',desc:'Rift technicians secure anomaly samples and rare provisions.',duration:6,cost:{credits:26,scrap:3},reward:'item:riftwater flask,item:rift crystal splinter,credits+18',unlockFlag:'rift-telecom-2',xp:18,secretUnlockFlag:'secret-rift-mission',secretZoneId:'rift_complex'}
     ];
 
     const IDLE_DURATION_MULTIPLIER=1;
@@ -2830,6 +2902,48 @@ once:true`
       }
       setCodex(msg);
     }
+    const getZoneLabelById=(zoneId)=>{
+      if(!zoneId) return 'Unknown zone';
+      const exp=expansions[zoneId];
+      return exp?.meta?.name || exp?.meta?.id || zoneId;
+    };
+    const getHealthStatLabel=(source)=>{
+      if(!source) return null;
+      const lower=source.toLowerCase();
+      if(lower.includes('hunger')) return 'Hunger';
+      if(lower.includes('dehydration') || lower.includes('thirst')) return 'Thirst';
+      if(lower.includes('radiation') || lower.includes('rads')) return 'Radiation';
+      if(lower.includes('cold')) return 'Low body temperature';
+      if(lower.includes('heat')) return 'Heat stress';
+      return null;
+    };
+    const maybeWarnLowHealth=(beforeHp,afterHp)=>{
+      if(afterHp>=beforeHp) return;
+      const ratio=state.maxHp ? afterHp/state.maxHp : 0;
+      if(ratio>HEALTH_WARNING_THRESHOLD) return;
+      const nowMinutes=getTotalMinutes();
+      const warningFresh=Number.isFinite(state.lastHpWarningAt)
+        ? nowMinutes-state.lastHpWarningAt<HEALTH_WARNING_COOLDOWN_MINUTES
+        : false;
+      if(warningFresh && ratio>HEALTH_CRITICAL_THRESHOLD) return;
+      state.lastHpWarningAt=nowMinutes;
+      const severity=ratio<=HEALTH_CRITICAL_THRESHOLD ? 'critical' : 'low';
+      const direction=afterHp<beforeHp ? ' and falling' : '';
+      logMsg(`Signal log: Health ${severity} (${Math.round(afterHp)}/${state.maxHp})${direction}.`);
+    };
+    const logHealthImpact=(delta,{source='',allowLog=true}={})=>{
+      if(delta>=0) return;
+      if(!allowLog) return;
+      const statLabel=getHealthStatLabel(source);
+      const impact=`-${Math.abs(delta)} HP`;
+      if(statLabel){
+        logMsg(`Signal log: ${statLabel} is draining your health (${impact}).`);
+      }else if(source){
+        logMsg(`Signal log: ${source} (${impact}).`);
+      }else{
+        logMsg(`Signal log: Health drop detected (${impact}).`);
+      }
+    };
     const DIALOG_KEYS=new Set(['arrivalDialog','missionStartDialog','missionEndDialog']);
     const getDialogPool=(zoneId,key)=>{
       if(!zoneId || !key) return [];
@@ -3465,6 +3579,14 @@ once:true`
       if(routedStats.length) parts.push(routedStats.join('; '));
       return parts.join(' · ');
     };
+    const tryUnlockSecretIdleMission=(op)=>{
+      if(!op?.secretUnlockFlag || !op?.secretZoneId) return false;
+      if(state.flags.has(op.secretUnlockFlag)) return false;
+      if(Math.random()>=SECRET_IDLE_UNLOCK_CHANCE) return false;
+      state.flags.add(op.secretUnlockFlag);
+      logMsg(`Signal log: Encrypted dispatch opened a hush-hush mission in ${getZoneLabelById(op.secretZoneId)}.`);
+      return true;
+    };
 
     function completeIdleOp(slot){
       const op=idleOperations.find(entry=>entry.id===slot.id);
@@ -3488,6 +3610,7 @@ once:true`
       if(routingSummary){
         logMsg(`Signal log: Rewards routed — ${routingSummary}.`);
       }
+      tryUnlockSecretIdleMission(op);
       state.selected={source:null,item:null};
       setCodex('Idle operation complete. Review rewards.');
       renderAll();
@@ -4774,7 +4897,7 @@ once:true`
       const hubZone=isHubZone();
       if(hubZone){
         if(exp?.meta?.id!=='safehouse'){
-          const hubMissions=(exp?.missions || []).filter(isHubMission);
+          const hubMissions=getUnlockedMissions(exp?.missions || []).filter(isHubMission);
           if(hubMissions.length){
             hubMissions.forEach(raid=>{
               const btn=document.createElement('button');
@@ -4812,7 +4935,7 @@ once:true`
         return;
       }
       if(!hubZone){
-        const missions=(exp?.missions && exp.missions.length) ? exp.missions : RAID_TEMPLATES;
+        const missions=(exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES;
         missions.forEach(raid=>{
           const btn=document.createElement('button');
           const meta=buildMissionMeta({
@@ -4920,7 +5043,7 @@ once:true`
           dom.safehouseActions.appendChild(btn);
         });
       }
-      const hubMissions=(exp.missions || []).filter(isHubMission);
+      const hubMissions=getUnlockedMissions(exp.missions || []).filter(isHubMission);
       if(hubMissions.length){
         hubMissions.forEach(raid=>{
           const btn=document.createElement('button');
@@ -5558,6 +5681,7 @@ once:true`
     function applyEffects(effectStr,outcome,options={}){
       if(!effectStr) return;
       updateRadShield();
+      const beforeHp=state.hp;
       const deferItemsTo=Array.isArray(options.deferItemsTo) ? options.deferItemsTo : null;
       let hpLoss=0;
       let sawLog=false;
@@ -5623,9 +5747,12 @@ once:true`
           else if(stat==='backpack') state.backpackLimit=Math.max(0,state.backpackLimit+delta);
         }
       });
-      if(hpLoss<0 && !sawLog){
+      const hpDelta=state.hp-beforeHp;
+      if(hpDelta<0){
         const reason=options.damageSource ? options.damageSource : 'Damage taken';
-        logMsg(`Signal log: ${reason} (-${Math.abs(hpLoss)} HP).`);
+        const statLabel=getHealthStatLabel(reason);
+        logHealthImpact(hpDelta,{source:reason,allowLog:Boolean(statLabel) || !sawLog});
+        maybeWarnLowHealth(beforeHp,state.hp);
       }
       if(outcome==='fail' && state.hp<=0){
         handlePlayerCollapse();
@@ -5771,6 +5898,9 @@ once:true`
           syncIdleSlots();
         }
       }
+      if(pending.consumeFlag){
+        state.flags.delete(pending.consumeFlag);
+      }
       state.mission.completed=true;
       state.mission.success=outcome==='success';
       state.mission.rewards=rewards;
@@ -5896,7 +6026,11 @@ once:true`
       }
       const incoming=combatVariance(combat.enemyDamage,0.18);
       combat.totalDamageTaken+=incoming;
+      const beforeHp=state.hp;
       state.hp=clamp(state.hp-incoming,0,state.maxHp);
+      if(state.hp<beforeHp){
+        maybeWarnLowHealth(beforeHp,state.hp);
+      }
       const staminaHit=Math.max(2,Math.round(incoming*0.6));
       state.stamina=clamp(state.stamina-staminaHit,0,state.maxStamina);
       roundLog+=` Incoming fire deals ${incoming}.`;
@@ -6362,7 +6496,8 @@ once:true`
         failEffects:missionType==='contract' ? state.mission.rewardEffects.fail : '',
         failReason:raidResult.failReason,
         flag:missionType==='contract' ? state.mission.questMeta?.flag : null,
-        once:missionType==='contract' ? state.mission.questMeta?.once : false
+        once:missionType==='contract' ? state.mission.questMeta?.once : false,
+        consumeFlag:raid.consumeFlag || null
       };
       preparePendingResolution(pending,rewards);
       const combatChanceOverride=missionType==='contract'

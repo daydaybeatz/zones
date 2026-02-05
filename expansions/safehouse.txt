@@ -33,6 +33,20 @@ reward:elder advice
 combatChance:0
 hub:true
 
+@mission
+id:safehouse-hush
+label:Trace the quiet signal
+desc:Follow a faint relay ping to recover whispered intel for the elders.
+risk:low
+time:7
+energy:8
+loot:1
+lootType:signal scraps
+reward:quiet intel
+hub:true
+unlockFlag:secret-safehouse-ops
+consumeFlag:secret-safehouse-ops
+
 @quest
 id:safehouse-vents
 title:Fix the ventilation system

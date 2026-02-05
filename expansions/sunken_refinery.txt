@@ -56,6 +56,18 @@ lootType:elite refinery cache
 key:1
 combatChance:0.6
 
+@mission
+id:refinery-hush
+label:Ghost pressure ping
+desc:Investigate a pressure ping from the drowned refinery subfloor.
+risk:high
+time:15
+energy:19
+loot:4
+lootType:pressure salvage
+unlockFlag:secret-refinery-mission
+consumeFlag:secret-refinery-mission
+
 @quest
 id:refinery-telecom-1
 title:Connect refinery telecoms (part 1/2)
