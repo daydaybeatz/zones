@@ -54,6 +54,18 @@ lootType:singularity cache
 key:1
 combatChance:0.7
 
+@mission
+id:rift-hush
+label:Anomaly whisper survey
+desc:Chase a faint whisper across the rift lattice for hidden caches.
+risk:deadly
+time:17
+energy:23
+loot:5
+lootType:rift salvage
+unlockFlag:secret-rift-mission
+consumeFlag:secret-rift-mission
+
 @quest
 id:rift-telecom-1
 title:Connect rift telecoms (part 1/2)

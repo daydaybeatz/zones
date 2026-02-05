@@ -53,6 +53,18 @@ lootType:armory kits & rations
 key:1
 combatChance:0.5
 
+@mission
+id:bunker-hush
+label:Whispered tunnel cache
+desc:Respond to a faint relay ping tucked in the lower tunnels.
+risk:medium
+time:11
+energy:13
+loot:3
+lootType:sealed caches
+unlockFlag:secret-bunker-mission
+consumeFlag:secret-bunker-mission
+
 @quest
 id:bunker-telecom-1
 title:Trace the telecom line

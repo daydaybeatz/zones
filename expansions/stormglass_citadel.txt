@@ -56,6 +56,18 @@ lootType:stormglass core cache
 key:1
 combatChance:0.65
 
+@mission
+id:citadel-hush
+label:Stormglass echo trace
+desc:Track an echoing signal through the stormglass spires.
+risk:high
+time:16
+energy:20
+loot:4
+lootType:stormglass salvage
+unlockFlag:secret-citadel-mission
+consumeFlag:secret-citadel-mission
+
 @quest
 id:citadel-telecom-1
 title:Connect citadel telecoms (part 1/2)
