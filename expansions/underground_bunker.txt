@@ -2,6 +2,9 @@
 id:underground_bunker
 name:Abandoned Underground Bunker System
 summary:A low-risk labyrinth of concrete corridors and shuttered barracks. Easy opponents, low-tier food, and worn clothing line the halls.
+arrivalDialog:Tunnel Warden Brag: These corridors were sealed after the Iron Ward mutiny—watch for the old warning marks.
+missionStartDialog:Scout Rhea: The water table rose after the quakes; stay above the rust tide.
+missionEndDialog:Mechanic Oru: The bunker council will hear of this—gear like this keeps the pumps alive.
 shop:false
 
 @door

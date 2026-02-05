@@ -2,6 +2,9 @@
 id:abandoned_mall
 name:Abandoned Mall
 summary:A hollow mall with shuttered storefronts and a quiet food court. Mid-risk runs for low-tier food and supply crates.
+arrivalDialog:Custodian Rue: This mall went dark on the Winter Blackout; the fountain never came back.
+missionStartDialog:Vendor Lio: The food court ghosts sell to anyone—move fast before they vanish.
+missionEndDialog:Courier Pax: Nice haul—kids in the lower stacks still trade mall sweets as currency.
 shop:false
 
 @door

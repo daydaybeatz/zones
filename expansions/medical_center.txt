@@ -2,6 +2,9 @@
 id:medical_center
 name:Medical Center
 summary:A clinic wing stripped of most supplies, but still hiding low-tier medical stock. Mid-risk patrols linger in the halls.
+arrivalDialog:Nurse Kett: This wing treated the Spore Fever surge; masks are still stacked by the doors.
+missionStartDialog:Dr. Osei: Check the cold rooms first—after the collapse, vaccines were bartered like gold.
+missionEndDialog:Orderly Finch: Those supplies will keep the triage stories alive a while longer.
 shop:true
 
 @door

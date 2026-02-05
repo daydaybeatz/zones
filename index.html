@@ -1782,6 +1782,9 @@
 id:safehouse
 name:Safe House
 summary:A reinforced bunker hub with bunks, a trade counter, and a humming generator wall. No loot runs here—just recovery and planning.
+arrivalDialog:Warden Lyra: The generator wall is a relic from the Blackout Accord—keep its coils clean.
+missionStartDialog:Quartermaster Nix: The elders still trade maps of the old floodline; follow the chalk marks.
+missionEndDialog:Medic Hale: Good haul—every run keeps the south ward fed one more night.
 shop:true
 
 @door
@@ -1828,6 +1831,9 @@ once:true`,
 id:underground_bunker
 name:Abandoned Underground Bunker System
 summary:A low-risk labyrinth of concrete corridors and shuttered barracks. Easy opponents, low-tier food, and worn clothing line the halls.
+arrivalDialog:Tunnel Warden Brag: These corridors were sealed after the Iron Ward mutiny—watch for the old warning marks.
+missionStartDialog:Scout Rhea: The water table rose after the quakes; stay above the rust tide.
+missionEndDialog:Mechanic Oru: The bunker council will hear of this—gear like this keeps the pumps alive.
 shop:false
 
 @door
@@ -1911,6 +1917,9 @@ once:true`,
 id:metro_ganglands
 name:Ganglands Metro Shanty
 summary:A mid-risk warren of rail tunnels turned into a shanty bazaar. Mid-tier combatants guard clothing and weapons caches.
+arrivalDialog:Lookout Jax: Redline owns these rails since the Truce of Nine—flash their colors or keep your head low.
+missionStartDialog:Fixer Ivo: The Shanty runs on scrap taxes; bring back anything with a serial tag.
+missionEndDialog:Runner Sera: Good work—this keeps the truce payments ahead of the tunnel gangs.
 unlockCost:50
 shop:true
 bar:true
@@ -1980,6 +1989,9 @@ once:true`,
 id:government_facility
 name:Abandoned Government Facility
 summary:A sealed agency compound with broken scanners and hardened patrols. Mid-tier risk with hard combatants and better gear.
+arrivalDialog:Archivist Venn: The Directorate scrubbed this place after the Signal Riots—logs still whisper.
+missionStartDialog:Handler Quill: If you find a black badge, it belongs to the old Compliance chiefs.
+missionEndDialog:Agent Mira: That's proof the purge happened—stash it before patrol drones wake.
 minLevel:7
 shop:false
 
@@ -2047,6 +2059,9 @@ once:true`,
 id:medical_center
 name:Medical Center
 summary:A clinic wing stripped of most supplies, but still hiding low-tier medical stock. Mid-risk patrols linger in the halls.
+arrivalDialog:Nurse Kett: This wing treated the Spore Fever surge; masks are still stacked by the doors.
+missionStartDialog:Dr. Osei: Check the cold rooms first—after the collapse, vaccines were bartered like gold.
+missionEndDialog:Orderly Finch: Those supplies will keep the triage stories alive a while longer.
 shop:true
 
 @door
@@ -2113,6 +2128,9 @@ once:true`,
 id:abandoned_mall
 name:Abandoned Mall
 summary:A hollow mall with shuttered storefronts and a quiet food court. Mid-risk runs for low-tier food and supply crates.
+arrivalDialog:Custodian Rue: This mall went dark on the Winter Blackout; the fountain never came back.
+missionStartDialog:Vendor Lio: The food court ghosts sell to anyone—move fast before they vanish.
+missionEndDialog:Courier Pax: Nice haul—kids in the lower stacks still trade mall sweets as currency.
 shop:false
 
 @door
@@ -2196,6 +2214,9 @@ once:true`
 id:sunken_refinery
 name:Sunken Refinery
 summary:A submerged industrial refinery with unstable pressure valves and hostile scav crews. Deadly-risk runs with elite tools, weapons, and sealed food packs.
+arrivalDialog:Dockhand Mael: The brine tax sank this place; don't breathe near the sludge stacks.
+missionStartDialog:Boiler Chief Ana: Watch the pressure gauges—one spark wakes the old fire storms.
+missionEndDialog:Salvager Juno: Those parts might restart the tide pumps the coast depends on.
 minLevel:12
 shop:false
 bar:true
@@ -2281,6 +2302,9 @@ once:true`,
 id:stormglass_citadel
 name:Stormglass Citadel
 summary:A shattered tower of stormglass crystal and humming conduits. Deadly-risk raids demand advanced gear and reward high-grade weapons.
+arrivalDialog:Storm Warden Kira: The citadel rose after the Glassfall—each pane is a storm memory.
+missionStartDialog:Keeper Sable: The storm cult keeps relics in the spires; don't touch the etched glass.
+missionEndDialog:Sentinel Roan: The council will honor this—every shard keeps the barrier bright.
 unlockCost:65
 shop:false
 bar:true
@@ -2366,6 +2390,9 @@ once:true`,
 id:rift_complex
 name:Rift Complex
 summary:A warped research facility wrapped in spatial rifts and time shear. The deadliest site yet, demanding top-tier tools for staggering rewards.
+arrivalDialog:Rift Tech Yori: The breach event still hums under the floor; stay inside the marked lanes.
+missionStartDialog:Researcher Vale: Bring back any anomaly tags—the Rift Choir pays in clean water.
+missionEndDialog:Operator Linn: Good pull—these readings keep the council ahead of the next tear.
 requiresTelecoms:3
 shop:false
 
@@ -2803,6 +2830,35 @@ once:true`
       }
       setCodex(msg);
     }
+    const DIALOG_KEYS=new Set(['arrivalDialog','missionStartDialog','missionEndDialog']);
+    const getDialogPool=(zoneId,key)=>{
+      if(!zoneId || !key) return [];
+      const exp=expansions[zoneId];
+      const pool=exp?.meta?.[key];
+      if(Array.isArray(pool)){
+        return pool.map(entry=>String(entry || '').trim()).filter(Boolean);
+      }
+      if(typeof pool==='string' && pool.trim()){
+        return [pool.trim()];
+      }
+      return [];
+    };
+    const pickDialog=(zoneId,key)=>{
+      const pool=getDialogPool(zoneId,key);
+      if(!pool.length) return '';
+      return pool[Math.floor(Math.random()*pool.length)];
+    };
+    const pushNpcDialog=(zoneId,key)=>{
+      const line=pickDialog(zoneId,key);
+      if(!line) return;
+      if(state.mission.active && !state.mission.completed){
+        state.mission.statusMessage=line;
+        state.mission.summary=line;
+        renderMissionStatus();
+        return;
+      }
+      setCodex(line);
+    };
     let travelResolveTimer=null;
     const scheduleTravelResolution=()=>{
       if(travelResolveTimer){
@@ -5025,6 +5081,7 @@ once:true`
       };
       setCodex(`Action launched: ${label}.`);
       logMsg(`Local action: ${label} (${formatDisplayMinutes(time)} min).`);
+      pushNpcDialog(state.mission.location?.id || state.zone?.id,'missionStartDialog');
       setActiveTab('hub');
       setScreen('mission');
       normalizeMissionTiming(Date.now());
@@ -5102,6 +5159,7 @@ once:true`
       state.travel={active:false,endsAt:null,target:null};
       setCodex(`Arrived at ${state.zone.name}.`);
       logMsg(`Transit complete: ${state.zone.name}.`);
+      pushNpcDialog(state.zone?.id,'arrivalDialog');
       saveGame();
       if(travelResolveTimer){
         clearTimeout(travelResolveTimer);
@@ -5734,6 +5792,7 @@ once:true`
           setCodex("You're very wise, young one.");
         }
       }
+      pushNpcDialog(state.mission.location?.id || state.zone?.id,'missionEndDialog');
       setActiveTab('hub');
       state.screen='mission';
       state.selected={source:null,item:null};
@@ -5987,6 +6046,7 @@ once:true`
       };
       setCodex(`Contract launched: ${raidLike.label}.`);
       logMsg(`Contract deployed: ${raidLike.label} (${formatDisplayMinutes(raidLike.time)} min op).`);
+      pushNpcDialog(state.mission.location?.id || state.zone?.id,'missionStartDialog');
       setActiveTab('hub');
       setScreen('mission');
       normalizeMissionTiming(Date.now());
@@ -6046,6 +6106,7 @@ once:true`
       };
       setCodex(`Contract launched: ${raidLike.label}.`);
       logMsg(`Contract deployed: ${raidLike.label} (${formatDisplayMinutes(raidLike.time)} min op).`);
+      pushNpcDialog(state.mission.location?.id || zone?.id,'missionStartDialog');
       setActiveTab('hub');
       setScreen('mission');
       normalizeMissionTiming(Date.now());
@@ -6091,6 +6152,7 @@ once:true`
       }
       const reasonText=reason ? ` (${reason})` : '';
       setCodex(`Combat failed${reasonText}. Mission aborted. Returning to the locations hub.`);
+      pushNpcDialog(lastLocation?.id,'missionEndDialog');
       setActiveTab('hub');
       if(lastLocation){
         setScreen('locations');
@@ -6148,6 +6210,7 @@ once:true`
       };
       setCodex(`Mission launched: ${raid.label}.`);
       logMsg(`Mission launched: ${raid.label} (${formatDisplayMinutes(raid.time)} min op).`);
+      pushNpcDialog(state.mission.location?.id || state.zone?.id,'missionStartDialog');
       setActiveTab('hub');
       setScreen('mission');
       normalizeMissionTiming(Date.now());
@@ -6199,6 +6262,7 @@ once:true`
       };
       setCodex(`Mission launched: ${raid.label}.`);
       logMsg(`Mission launched: ${raid.label} (${formatDisplayMinutes(raid.time)} min op).`);
+      pushNpcDialog(state.mission.location?.id || zone?.id,'missionStartDialog');
       setActiveTab('hub');
       setScreen('mission');
       normalizeMissionTiming(Date.now());
@@ -6248,6 +6312,7 @@ once:true`
           return;
         }
         setCodex('Combat resolved. Rewards ready to review.');
+        pushNpcDialog(state.mission.location?.id || state.zone?.id,'missionEndDialog');
         setActiveTab('hub');
         state.screen='mission';
         renderAll();
@@ -6780,7 +6845,14 @@ once:true`
         }
         const [key,...rest]=line.split(':');
         const value=rest.join(':').trim();
-        if(scope==='meta') exp.meta[key]=value;
+        if(scope==='meta'){
+          if(DIALOG_KEYS.has(key)){
+            if(!Array.isArray(exp.meta[key])) exp.meta[key]=[];
+            exp.meta[key].push(value);
+          }else{
+            exp.meta[key]=value;
+          }
+        }
         else if(scope==='door') exp.door[key]=value;
         else if(scope==='scene' && currentScene){
           if(key==='option') currentScene.options.push(parseOption(value));

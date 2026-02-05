@@ -2,6 +2,9 @@
 id:metro_ganglands
 name:Ganglands Metro Shanty
 summary:A mid-risk warren of rail tunnels turned into a shanty bazaar. Mid-tier combatants guard clothing and weapons caches.
+arrivalDialog:Lookout Jax: Redline owns these rails since the Truce of Nine—flash their colors or keep your head low.
+missionStartDialog:Fixer Ivo: The Shanty runs on scrap taxes; bring back anything with a serial tag.
+missionEndDialog:Runner Sera: Good work—this keeps the truce payments ahead of the tunnel gangs.
 unlockCost:50
 shop:true
 bar:true

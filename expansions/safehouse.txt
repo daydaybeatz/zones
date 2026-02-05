@@ -2,6 +2,9 @@
 id:safehouse
 name:Safe House
 summary:A reinforced bunker hub with bunks, a trade counter, and a humming generator wall. No loot runs here—just recovery and planning.
+arrivalDialog:Warden Lyra: The generator wall is a relic from the Blackout Accord—keep its coils clean.
+missionStartDialog:Quartermaster Nix: The elders still trade maps of the old floodline; follow the chalk marks.
+missionEndDialog:Medic Hale: Good haul—every run keeps the south ward fed one more night.
 shop:true
 
 @door
