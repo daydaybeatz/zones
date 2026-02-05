@@ -45,6 +45,38 @@ loot:3
 lootType:weapons & gear
 
 @mission
+id:gang-assist
+label:Assist Redline runners
+desc:Escort Redline runners and return tagged crates to the gang. High standing (+8) required; success boosts Redline relations (+2) and keeps combat risk lower.
+risk:medium
+time:10
+energy:12
+loot:2
+lootType:gang stock
+reward:Redline favor
+combatChance:0.25
+faction:gang
+relationMin:8
+relationSuccess:2
+relationFail:-1
+
+@mission
+id:gang-sabotage
+label:Sabotage Redline caches
+desc:Poison the gang’s supply line to hurt the Redline (-2 relation). Only crews with low standing (≤ -5) can pull this; combat risk rises when relations are bad.
+risk:high
+time:12
+energy:15
+loot:3
+lootType:stolen stock
+reward:sabotage intel
+combatChance:0.55
+faction:gang
+relationMax:-5
+relationSuccess:-2
+relationFail:-1
+
+@mission
 id:ganglands-security-cache
 label:Security supply room raid
 desc:Use the security supply room key to access the guarded arsenal cage.

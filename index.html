@@ -1193,6 +1193,14 @@
     const CODEX_VISIBLE_LIMIT=20;
     const CODEX_HISTORY_LIMIT=120;
     const ELDER_MISSION_ID='safehouse-elders';
+    const FACTION_RELATION_MIN=-10;
+    const FACTION_RELATION_MAX=10;
+    const FACTION_RELATION_LOW=-5;
+    const FACTION_RELATION_HIGH=8;
+    const FACTIONS=[
+      {id:'military',label:'Directorate',fullName:'Iron Directorate'},
+      {id:'gang',label:'Redline',fullName:'Crimson Redline'}
+    ];
     const ELDER_ADVICE=[
       'Keep one energy bar in reserve; emergency actions cost more than you think.',
       'Scrap weighs less than credits, but credits open gates.',
@@ -1262,6 +1270,8 @@
       idleOps:[createIdleSlot()],
       idleRewards:[],
       flags:new Set(),
+      factions:{military:0,gang:0},
+      missionOffers:{},
       elderAdviceIndex:0,
       paused:false,
       pausedAt:null,
@@ -1325,6 +1335,8 @@
       merged.marketAccess={...base.marketAccess,...(saved.marketAccess||{})};
       merged.idleOps=hydrateIdleOps(saved.idleOps,merged.flags,merged.mercs);
       merged.idleRewards=Array.isArray(saved.idleRewards) ? [...saved.idleRewards] : [];
+      merged.factions={...base.factions,...(saved.factions||{})};
+      merged.missionOffers={...(base.missionOffers||{}),...(saved.missionOffers||{})};
       merged.zone={...base.zone,...(saved.zone||{})};
       if(!merged.zone?.id || merged.zone.id==='drift-yard' || (merged.zone.name||'').toLowerCase().includes('drift yard')){
         merged.zone={...getMainHubZone()};
@@ -1737,6 +1749,9 @@
     const riskRank={low:1,medium:2,high:3,deadly:4};
     const riskLevels=['low','medium','high','deadly'];
     const riskClassList=['risk-low','risk-medium','risk-high','risk-deadly'];
+    const MISSION_OFFER_MIN=2;
+    const MISSION_OFFER_MAX=3;
+    const MISSION_RECENT_LIMIT=3;
     const lowerRisk=(risk)=>{
       const idx=riskLevels.indexOf(risk);
       if(idx<=0) return riskLevels[0];
@@ -1755,6 +1770,87 @@
       }
       return baseRisk;
     };
+    const getFactionLabel=(factionId)=>{
+      const faction=FACTIONS.find(entry=>entry.id===factionId);
+      return faction?.fullName || faction?.label || factionId || 'Unknown faction';
+    };
+    const getFactionRelation=(factionId)=>Number(state.factions?.[factionId] ?? 0);
+    const clampFactionRelation=(value)=>clamp(value,FACTION_RELATION_MIN,FACTION_RELATION_MAX);
+    function updateFactionRelation(factionId,delta){
+      if(!factionId || !Number.isFinite(delta)) return;
+      if(!state.factions) state.factions={};
+      const current=getFactionRelation(factionId);
+      const next=clampFactionRelation(current+delta);
+      state.factions[factionId]=next;
+      if(delta!==0){
+        const sign=delta>0 ? '+' : '';
+        logMsg(`Faction shift: ${getFactionLabel(factionId)} ${sign}${delta} (now ${next}).`);
+      }
+    }
+    const getFactionCombatModifier=(relation)=>{
+      if(relation>=FACTION_RELATION_HIGH) return -0.15;
+      if(relation<=FACTION_RELATION_LOW) return 0.2;
+      return 0;
+    };
+    const getMissionCombatChance=(raid)=>{
+      if(!raid) return 0;
+      const base=Number.isFinite(raid.combatChance)
+        ? clamp(raid.combatChance,0,1)
+        : computeCombatChance(raid.risk);
+      if(raid.faction){
+        const relation=getFactionRelation(raid.faction);
+        return clamp(base+getFactionCombatModifier(relation),0,1);
+      }
+      return base;
+    };
+    const isMissionRelationAllowed=(raid)=>{
+      if(!raid?.faction) return true;
+      const relation=getFactionRelation(raid.faction);
+      if(Number.isFinite(raid.relationMin) && relation<raid.relationMin) return false;
+      if(Number.isFinite(raid.relationMax) && relation>raid.relationMax) return false;
+      return true;
+    };
+    const getMissionOfferCount=(missions=[])=>{
+      if(!missions.length) return 0;
+      const maxCount=Math.min(missions.length,MISSION_OFFER_MAX);
+      return missions.length>=MISSION_OFFER_MIN ? Math.max(MISSION_OFFER_MIN,maxCount) : maxCount;
+    };
+    const shuffleList=(list)=>{
+      const arr=[...list];
+      for(let i=arr.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]]=[arr[j],arr[i]];
+      }
+      return arr;
+    };
+    function getMissionOffers(zoneId,missions){
+      if(!zoneId) return missions;
+      if(!state.missionOffers) state.missionOffers={};
+      if(!state.missionOffers[zoneId]){
+        state.missionOffers[zoneId]={ids:[],recent:[]};
+      }
+      const offerState=state.missionOffers[zoneId];
+      const available=missions.filter(isMissionRelationAllowed);
+      const targetCount=getMissionOfferCount(available);
+      offerState.ids=offerState.ids.filter(id=>available.some(m=>m.id===id));
+      if(offerState.ids.length<targetCount){
+        const recentSet=new Set(offerState.recent || []);
+        const pool=available.filter(m=>!offerState.ids.includes(m.id) && !recentSet.has(m.id));
+        const fallback=available.filter(m=>!offerState.ids.includes(m.id));
+        const source=pool.length>=targetCount-offerState.ids.length ? pool : fallback;
+        const picks=shuffleList(source).slice(0,targetCount-offerState.ids.length);
+        offerState.ids.push(...picks.map(pick=>pick.id));
+      }
+      return offerState.ids
+        .map(id=>available.find(m=>m.id===id))
+        .filter(Boolean);
+    }
+    function recordMissionOfferCompletion(zoneId,missionId){
+      if(!zoneId || !missionId || !state.missionOffers?.[zoneId]) return;
+      const offerState=state.missionOffers[zoneId];
+      offerState.ids=offerState.ids.filter(id=>id!==missionId);
+      offerState.recent=[missionId,...(offerState.recent||[]).filter(id=>id!==missionId)].slice(0,MISSION_RECENT_LIMIT);
+    }
     const getDoorLootScore=(exp)=>{
       const missionLoot=Array.isArray(exp?.missions) ? exp.missions.map(m=>Number(m.loot || 0)) : [];
       const questLoot=Array.isArray(exp?.quests) ? exp.quests.map(q=>Number(q.loot || 0)) : [];
@@ -1996,6 +2092,38 @@ loot:3
 lootType:weapons & gear
 
 @mission
+id:gang-assist
+label:Assist Redline runners
+desc:Escort Redline runners and return tagged crates to the gang. High standing (+8) required; success boosts Redline relations (+2) and keeps combat risk lower.
+risk:medium
+time:10
+energy:12
+loot:2
+lootType:gang stock
+reward:Redline favor
+combatChance:0.25
+faction:gang
+relationMin:8
+relationSuccess:2
+relationFail:-1
+
+@mission
+id:gang-sabotage
+label:Sabotage Redline caches
+desc:Poison the gang’s supply line to hurt the Redline (-2 relation). Only crews with low standing (≤ -5) can pull this; combat risk rises when relations are bad.
+risk:high
+time:12
+energy:15
+loot:3
+lootType:stolen stock
+reward:sabotage intel
+combatChance:0.55
+faction:gang
+relationMax:-5
+relationSuccess:-2
+relationFail:-1
+
+@mission
 id:ganglands-security-cache
 label:Security supply room raid
 desc:Use the security supply room key to access the guarded arsenal cage.
@@ -2066,6 +2194,38 @@ loot:4
 lootType:reinforced clothing
 
 @mission
+id:military-assist
+label:Assist Directorate patrol
+desc:Run a logistics escort for the Iron Directorate. Requires high standing (+8); success improves military relations (+2) and reduces combat risk on allied runs.
+risk:medium
+time:11
+energy:14
+loot:2
+lootType:military rations
+reward:Directorate favor
+combatChance:0.3
+faction:military
+relationMin:8
+relationSuccess:2
+relationFail:-1
+
+@mission
+id:military-infiltrate
+label:Infiltrate Directorate briefing
+desc:Slip into a Directorate briefing to undermine them (-2 relation). Only possible with low standing (≤ -5); combat risk spikes when relations are bad.
+risk:high
+time:13
+energy:16
+loot:3
+lootType:classified intel
+reward:stolen orders
+combatChance:0.6
+faction:military
+relationMax:-5
+relationSuccess:-2
+relationFail:-1
+
+@mission
 id:facility-armory
 label:Director armory lock
 desc:Use the director armory key to enter the restricted weapons vault.
@@ -2113,6 +2273,20 @@ desc:Empty gurneys line the bay. Cabinets rattle with leftover kits.
 tags:Medical / Hazard
 option:Check the triage lockers => triage | risk:low | time:6 | reward:basic medical | success:item:antiseptic wipes,item:painkillers,log:You gather intact wraps and meds. | fail:hp-3,log:A drawer slams on your fingers.
 option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:electro bandage,item:compact medkit,log:You recover a sealed med case. | fail:hp-5,morale-2,log:A patrol forces a hasty exit.
+
+@mission
+id:clinic-errands
+label:Doctor's errand run
+desc:Help the local doctor ferry patient kits through cleared corridors. No fail risk, no combat risk, and rewards 2 medical items.
+risk:low
+time:6
+energy:6
+loot:0
+reward:2 medical items
+combatChance:0
+failChance:0
+fixedRewards:item:antiseptic wipes,item:bandage,log:Dr. Osei thanks you for the calm delivery run.
+fixedRewardsOnly:true
 
 @mission
 id:clinic-supply
@@ -3639,6 +3813,8 @@ once:true`
         `<span class="pill-inline"><b>Level</b>${state.level}</span>`+
         `<span class="pill-inline"><b>XP</b>${state.xp}/${state.nextLevelXp}</span>`+
         `<span class="pill-inline"><b>Mercs</b>${state.mercs}</span>`+
+        `<span class="pill-inline"><b>Directorate</b>${getFactionRelation('military')}</span>`+
+        `<span class="pill-inline"><b>Redline</b>${getFactionRelation('gang')}</span>`+
         `<span class="pill-inline"><b>Time</b>${fmtTime(state.timeMinutes)}</span>`+
         `<span class="pill-inline"><b>Day</b>${state.day}</span>`+
         `<span class="pill-inline"><b>Backpack</b>${getBackpackUsage()}/${getBackpackLimit()}</span>`;
@@ -4790,12 +4966,14 @@ once:true`
       return parts.length ? `Rewards ${parts.join(' · ')}` : '';
     }
 
-    function buildMissionMeta({risk='low',time=8,energy,key,loot=0,lootType='',reward='',xp,combatChance}={}){
+    function buildMissionMeta({risk='low',time=8,energy,key,loot=0,lootType='',reward='',xp,combatChance,failChance}={}){
       const parts=[`${risk} · ${formatDisplayMinutes(time)} min`];
       const rewardLabel=formatRewardEstimate({loot,lootType,reward,risk,time,xp});
       if(rewardLabel) parts.push(rewardLabel);
-      const failChance=Math.round(getFailBreakdown(risk).chance*100);
-      parts.push(`fail ${failChance}%`);
+      const resolvedFailChance=Number.isFinite(failChance)
+        ? clamp(failChance,0,1)
+        : getFailBreakdown(risk).chance;
+      parts.push(`fail ${Math.round(resolvedFailChance*100)}%`);
       const resolvedCombatChance=Number.isFinite(combatChance)
         ? clamp(combatChance,0,1)
         : computeCombatChance(risk);
@@ -4897,7 +5075,8 @@ once:true`
       const hubZone=isHubZone();
       if(hubZone){
         if(exp?.meta?.id!=='safehouse'){
-          const hubMissions=getUnlockedMissions(exp?.missions || []).filter(isHubMission);
+          const hubMissionPool=getUnlockedMissions(exp?.missions || []).filter(isHubMission);
+          const hubMissions=getMissionOffers(state.zone.id,hubMissionPool);
           if(hubMissions.length){
             hubMissions.forEach(raid=>{
               const btn=document.createElement('button');
@@ -4910,7 +5089,8 @@ once:true`
                 lootType:raid.lootType,
                 reward:raid.reward,
                 xp:raid.xp,
-                combatChance:raid.combatChance
+                combatChance:getMissionCombatChance(raid),
+                failChance:raid.failChance
               });
               btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
               btn.onclick=()=>startMission(raid);
@@ -4935,7 +5115,8 @@ once:true`
         return;
       }
       if(!hubZone){
-        const missions=(exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES;
+        const missionPool=(exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES;
+        const missions=getMissionOffers(state.zone.id,missionPool);
         missions.forEach(raid=>{
           const btn=document.createElement('button');
           const meta=buildMissionMeta({
@@ -4947,7 +5128,8 @@ once:true`
             lootType:raid.lootType,
             reward:raid.reward,
             xp:raid.xp,
-            combatChance:raid.combatChance
+            combatChance:getMissionCombatChance(raid),
+            failChance:raid.failChance
           });
           btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
           btn.onclick=()=>startMission(raid);
@@ -5043,7 +5225,8 @@ once:true`
           dom.safehouseActions.appendChild(btn);
         });
       }
-      const hubMissions=getUnlockedMissions(exp.missions || []).filter(isHubMission);
+      const hubMissionPool=getUnlockedMissions(exp.missions || []).filter(isHubMission);
+      const hubMissions=getMissionOffers(hubZone.id,hubMissionPool);
       if(hubMissions.length){
         hubMissions.forEach(raid=>{
           const btn=document.createElement('button');
@@ -5056,7 +5239,8 @@ once:true`
             lootType:raid.lootType,
             reward:raid.reward,
             xp:raid.xp,
-            combatChance:raid.combatChance
+            combatChance:getMissionCombatChance(raid),
+            failChance:raid.failChance
           });
           btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
           btn.onclick=()=>startMissionAtZone(raid,hubZone);
@@ -5769,18 +5953,27 @@ once:true`
 
       const locationRisk=location?.risk || state.zone.risk;
       const effectiveRisk=(riskRank[raid.risk] >= riskRank[locationRisk]) ? raid.risk : locationRisk;
-      const failBreakdown=getFailBreakdown(effectiveRisk);
+      const failBreakdown=Number.isFinite(raid.failChance)
+        ? {chance:clamp(raid.failChance,0,1),reason:raid.failReason || 'no fail risk'}
+        : getFailBreakdown(effectiveRisk);
       const failChance=failBreakdown.chance;
       const failReason=failBreakdown.reason;
       const roll=Math.random();
       const success=roll>failChance;
       state.bodyTemp=clamp(state.bodyTemp-1.1,BODY_TEMP_MIN,BODY_TEMP_MAX);
       if(success){
-        const lootBonus=gearMods.lootBonus || 0;
-        const pulls=Math.max(1,raid.loot+(Math.random()<0.35?1:0));
-        for(let i=0;i<pulls;i++){
-          const drop=rollLootDrop(effectiveRisk,lootBonus);
-          addItemCopies(rewards,drop.id,drop.count);
+        if(raid.fixedRewardsOnly && raid.fixedRewards){
+          applyEffects(raid.fixedRewards,'success',{deferItemsTo:rewards});
+        }else{
+          const lootBonus=gearMods.lootBonus || 0;
+          const pulls=Math.max(1,raid.loot+(Math.random()<0.35?1:0));
+          for(let i=0;i<pulls;i++){
+            const drop=rollLootDrop(effectiveRisk,lootBonus);
+            addItemCopies(rewards,drop.id,drop.count);
+          }
+          if(raid.fixedRewards){
+            applyEffects(raid.fixedRewards,'success',{deferItemsTo:rewards});
+          }
         }
         if(location?.id==='abandoned_mall' && state.flags.has('mall-power')){
           const bonusFood=['ration bar','field rations','ember ration','water canister'];
@@ -5901,6 +6094,12 @@ once:true`
       if(pending.consumeFlag){
         state.flags.delete(pending.consumeFlag);
       }
+      if(pending.factionId){
+        const relationDelta=outcome==='success' ? pending.relationSuccess : pending.relationFail;
+        if(Number.isFinite(relationDelta)){
+          updateFactionRelation(pending.factionId,relationDelta);
+        }
+      }
       state.mission.completed=true;
       state.mission.success=outcome==='success';
       state.mission.rewards=rewards;
@@ -5912,6 +6111,9 @@ once:true`
         ? `Mission complete: ${pending.label}. Rewards ready.`
         : `Mission failed: ${pending.label}.${failDetail}`;
       state.mission.pendingResolution=null;
+      if(state.mission.type==='raid'){
+        recordMissionOfferCompletion(state.mission.location?.id,pending.sourceId);
+      }
       setCodex(outcome==='success' ? 'Mission complete. Rewards ready to review.' : 'Mission failed. Recover and try again.');
       if(outcome==='success' && pending.sourceId===ELDER_MISSION_ID){
         const reward=grantElderAdvice();
@@ -6313,6 +6515,10 @@ once:true`
         setCodex("You're very wise, young one.");
         return;
       }
+      if(!isMissionRelationAllowed(raid)){
+        setCodex('Faction relations block this mission.');
+        return;
+      }
       if(!canAfford(cost)){
         setCodex('Not enough resources for that raid.');
         return;
@@ -6337,7 +6543,7 @@ once:true`
         fleeEndsAt:null,
         pendingResolution:null,
         xpReward:computeMissionXp(raid.risk,raid.time),
-        rewardEffects:{success:'',fail:''},
+        rewardEffects:{success:raid.successEffects||'',fail:raid.failEffects||''},
         questMeta:null,
         combat:null,
         sceneTarget:null
@@ -6365,6 +6571,10 @@ once:true`
         setCodex("You're very wise, young one.");
         return;
       }
+      if(!isMissionRelationAllowed(raid)){
+        setCodex('Faction relations block this mission.');
+        return;
+      }
       if(!canAfford(cost)){
         setCodex('Not enough resources for that raid.');
         return;
@@ -6389,7 +6599,7 @@ once:true`
         fleeEndsAt:null,
         pendingResolution:null,
         xpReward:computeMissionXp(raid.risk,raid.time),
-        rewardEffects:{success:'',fail:''},
+        rewardEffects:{success:raid.successEffects||'',fail:raid.failEffects||''},
         questMeta:null,
         combat:null,
         sceneTarget:null
@@ -6492,17 +6702,22 @@ once:true`
         success,
         risk:effectiveRisk,
         xpReward:state.mission.xpReward,
-        successEffects:missionType==='contract' ? state.mission.rewardEffects.success : '',
-        failEffects:missionType==='contract' ? state.mission.rewardEffects.fail : '',
+        successEffects:state.mission.rewardEffects.success,
+        failEffects:state.mission.rewardEffects.fail,
         failReason:raidResult.failReason,
         flag:missionType==='contract' ? state.mission.questMeta?.flag : null,
         once:missionType==='contract' ? state.mission.questMeta?.once : false,
-        consumeFlag:raid.consumeFlag || null
+        consumeFlag:raid.consumeFlag || null,
+        factionId:raid.faction || null,
+        relationSuccess:Number.isFinite(raid.relationSuccess) ? raid.relationSuccess : null,
+        relationFail:Number.isFinite(raid.relationFail) ? raid.relationFail : null
       };
       preparePendingResolution(pending,rewards);
       const combatChanceOverride=missionType==='contract'
         ? state.mission.questMeta?.combatChance
-        : state.mission.raid?.combatChance;
+        : (state.mission.raid?.faction || Number.isFinite(state.mission.raid?.combatChance))
+          ? getMissionCombatChance(state.mission.raid)
+          : null;
       if(missionType==='contract' && state.mission.questMeta?.forceCombat){
         launchCombatFromPending(pending);
         return;
@@ -7002,10 +7217,31 @@ once:true`
           else if(key==='requires') currentQuest.requires=value;
           else currentQuest[key]=value;
         }else if(scope==='mission' && currentMission){
+          const normalizedKey=key.toLowerCase();
           if(key==='desc') currentMission.desc += (currentMission.desc?' ':'') + value;
           else if(['time','energy','loot','key'].includes(key)) currentMission[key]=Number(value || 0);
-          else if(key.toLowerCase()==='combatchance') currentMission.combatChance=Number(value || 0);
-          else currentMission[key]=value;
+          else if(['relationmin','relationmax','relationsuccess','relationfail','failchance'].includes(normalizedKey)){
+            const num=Number(value || 0);
+            if(normalizedKey==='relationmin') currentMission.relationMin=num;
+            else if(normalizedKey==='relationmax') currentMission.relationMax=num;
+            else if(normalizedKey==='relationsuccess') currentMission.relationSuccess=num;
+            else if(normalizedKey==='relationfail') currentMission.relationFail=num;
+            else if(normalizedKey==='failchance') currentMission.failChance=num;
+          }else if(normalizedKey==='combatchance'){
+            currentMission.combatChance=Number(value || 0);
+          }else if(normalizedKey==='faction'){
+            currentMission.faction=value;
+          }else if(normalizedKey==='fixedrewardsonly'){
+            currentMission.fixedRewardsOnly=value === 'true';
+          }else if(normalizedKey==='fixedrewards'){
+            currentMission.fixedRewards=value;
+          }else if(normalizedKey==='success'){
+            currentMission.successEffects=value;
+          }else if(normalizedKey==='fail'){
+            currentMission.failEffects=value;
+          }else{
+            currentMission[key]=value;
+          }
         }
       });
       return exp;

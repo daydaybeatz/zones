@@ -43,6 +43,38 @@ loot:4
 lootType:reinforced clothing
 
 @mission
+id:military-assist
+label:Assist Directorate patrol
+desc:Run a logistics escort for the Iron Directorate. Requires high standing (+8); success improves military relations (+2) and reduces combat risk on allied runs.
+risk:medium
+time:11
+energy:14
+loot:2
+lootType:military rations
+reward:Directorate favor
+combatChance:0.3
+faction:military
+relationMin:8
+relationSuccess:2
+relationFail:-1
+
+@mission
+id:military-infiltrate
+label:Infiltrate Directorate briefing
+desc:Slip into a Directorate briefing to undermine them (-2 relation). Only possible with low standing (≤ -5); combat risk spikes when relations are bad.
+risk:high
+time:13
+energy:16
+loot:3
+lootType:classified intel
+reward:stolen orders
+combatChance:0.6
+faction:military
+relationMax:-5
+relationSuccess:-2
+relationFail:-1
+
+@mission
 id:facility-armory
 label:Director armory lock
 desc:Use the director armory key to enter the restricted weapons vault.
