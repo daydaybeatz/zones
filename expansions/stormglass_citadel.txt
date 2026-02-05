@@ -2,6 +2,9 @@
 id:stormglass_citadel
 name:Stormglass Citadel
 summary:A shattered tower of stormglass crystal and humming conduits. Deadly-risk raids demand advanced gear and reward high-grade weapons.
+arrivalDialog:Storm Warden Kira: The citadel rose after the Glassfall—each pane is a storm memory.
+missionStartDialog:Keeper Sable: The storm cult keeps relics in the spires; don't touch the etched glass.
+missionEndDialog:Sentinel Roan: The council will honor this—every shard keeps the barrier bright.
 unlockCost:65
 shop:false
 bar:true

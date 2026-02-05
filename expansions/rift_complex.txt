@@ -2,6 +2,9 @@
 id:rift_complex
 name:Rift Complex
 summary:A warped research facility wrapped in spatial rifts and time shear. The deadliest site yet, demanding top-tier tools for staggering rewards.
+arrivalDialog:Rift Tech Yori: The breach event still hums under the floor; stay inside the marked lanes.
+missionStartDialog:Researcher Vale: Bring back any anomaly tags—the Rift Choir pays in clean water.
+missionEndDialog:Operator Linn: Good pull—these readings keep the council ahead of the next tear.
 requiresTelecoms:3
 shop:false
 

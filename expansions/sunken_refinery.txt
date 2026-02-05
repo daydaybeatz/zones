@@ -2,6 +2,9 @@
 id:sunken_refinery
 name:Sunken Refinery
 summary:A submerged industrial refinery with unstable pressure valves and hostile scav crews. Deadly-risk runs with elite tools, weapons, and sealed food packs.
+arrivalDialog:Dockhand Mael: The brine tax sank this place; don't breathe near the sludge stacks.
+missionStartDialog:Boiler Chief Ana: Watch the pressure gauges—one spark wakes the old fire storms.
+missionEndDialog:Salvager Juno: Those parts might restart the tide pumps the coast depends on.
 minLevel:12
 shop:false
 bar:true

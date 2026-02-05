@@ -2,6 +2,9 @@
 id:government_facility
 name:Abandoned Government Facility
 summary:A sealed agency compound with broken scanners and hardened patrols. Mid-tier risk with hard combatants and better gear.
+arrivalDialog:Archivist Venn: The Directorate scrubbed this place after the Signal Riots—logs still whisper.
+missionStartDialog:Handler Quill: If you find a black badge, it belongs to the old Compliance chiefs.
+missionEndDialog:Agent Mira: That's proof the purge happened—stash it before patrol drones wake.
 minLevel:7
 shop:false
 
