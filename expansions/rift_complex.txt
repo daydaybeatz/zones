@@ -31,6 +31,9 @@ time:16
 energy:22
 loot:5
 lootType:rift supplies
+event:Rift anomaly shear | chance:0.5 | prompt:A shear opens in the corridor. Choose your path.
+eventOption:Calibrate the shear with instruments => risk:high | tag:tech | success:item:anomaly scanner,credits+12,log:You stabilize the shear and recover a scanner. | fail:hp-8,rads+4,log:The shear lashes back at you.
+eventOption:Slip through the distorted shadow => risk:deadly | tag:stealth | success:item:drift moss tea,log:You glide through and pocket a tea pack. | fail:hp-10,morale-5,log:The shear tags you as you pass.
 
 @mission
 id:rift-lab
@@ -41,6 +44,9 @@ time:18
 energy:24
 loot:6
 lootType:rift armory
+event:Temporal researcher offers a deal | chance:1 | prompt:A researcher offers their stash for safe passage. What's your move?
+eventOption:Escort them out => risk:high | tag:mercy | success:item:riftwater flask,credits+14,log:The researcher shares rare water and leaves peacefully. | fail:morale-4,log:The researcher freezes, overwhelmed.
+eventOption:Take the stash and run => risk:deadly | tag:betrayal | success:item:rift crystal splinter,credits+20,log:You snatch the stash and disappear into the haze. | fail:hp-11,morale-6,log:The researcher triggers a defensive pulse.
 
 @mission
 id:rift-core

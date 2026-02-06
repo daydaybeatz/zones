@@ -416,6 +416,39 @@
     text-shadow: 0 0 12px rgba(255,176,0,0.25);
     font-size:12px;
   }
+  .event-card{
+    padding:14px 16px;
+    border-radius:12px;
+    border:1px solid rgba(57,255,20,0.28);
+    background:linear-gradient(180deg, rgba(8,12,8,0.85), rgba(0,0,0,0.75));
+    box-shadow: inset 0 0 0 1px rgba(57,255,20,0.08);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .event-title{
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    color:#eafff0;
+  }
+  .event-meta{
+    font-size:12px;
+    color:rgba(184,255,207,0.74);
+  }
+  .event-options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .event-option{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .event-option .small{
+    color:rgba(184,255,207,0.7);
+  }
 
   /* BUTTONS = chunky terminal keys */
   button{
@@ -1283,7 +1316,7 @@
       zone:{...FALLBACK_HUB_ZONE},
       screen:'main',
       travel:{active:false,endsAt:null,target:null},
-      mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null},
+      mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null},
       inventoryScreen:'backpack',
       stashScreen:'vault',
       selected:{source:null,item:null}
@@ -1517,7 +1550,7 @@
       'scavenger harness':{type:'armor',slot:'chest',rarity:'uncommon',value:17,mods:{staminaBonus:2}},
       'hardened canteen':{type:'consumable',rarity:'uncommon',value:9,effect:'thirst-16,stamina+3'},
       'ember ration':{type:'consumable',rarity:'common',value:6,effect:'hunger-14,temp+2'},
-      'signal jammer':{type:'tool',slot:'tool',rarity:'rare',value:33,mods:{riskMod:-0.07,combatBonus:2}},
+      'signal jammer':{type:'tool',slot:'tool',rarity:'rare',value:33,mods:{riskMod:-0.07,combatBonus:2,deceptionBonus:0.05}},
 
       /* base items */
       'pocket pack':{type:'armor',slot:'backpack',rarity:'common',value:18,mods:{carryBonus:7}},
@@ -1578,7 +1611,7 @@
       'mall snack pack':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,morale+2'},
       'instant noodles':{type:'consumable',rarity:'common',value:4,effect:'hunger-9,temp+1'},
       'citrus soda':{type:'consumable',rarity:'common',value:4,effect:'thirst-10,energy+4'},
-      'security poncho':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{insulation:0.5,riskMod:-0.02}},
+      'security poncho':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{insulation:0.5,riskMod:-0.02,stealthBonus:0.02}},
       'store runner shoes':{type:'armor',slot:'shoes',rarity:'uncommon',value:16,mods:{staminaBonus:2}},
       'queue jacket':{type:'armor',slot:'chest',rarity:'uncommon',value:17,mods:{moraleBonus:1,insulation:0.4}},
       'sale-day hoodie':{type:'armor',slot:'chest',rarity:'common',value:9,mods:{moraleBonus:1,insulation:0.3}},
@@ -1594,26 +1627,26 @@
       'signal jammer coil':{type:'tool',slot:'tool',rarity:'rare',value:32,mods:{riskMod:-0.06,lootBonus:0.02}},
       'turnstile shield':{type:'weapon',slot:'weapon',rarity:'rare',value:34,mods:{riskMod:-0.05,insulation:0.4}},
       'trackside vest':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{staminaBonus:1,insulation:0.4}},
-      'graffiti cloak':{type:'armor',slot:'chest',rarity:'rare',value:30,mods:{moraleBonus:3,insulation:0.7}},
+      'graffiti cloak':{type:'armor',slot:'chest',rarity:'rare',value:30,mods:{moraleBonus:3,insulation:0.7,stealthBonus:0.05}},
       'metro runner boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:19,mods:{staminaBonus:3}},
       'gang patchwork pants':{type:'armor',slot:'pants',rarity:'common',value:10,mods:{insulation:0.3}},
       'torchlight lantern':{type:'tool',slot:'tool',rarity:'uncommon',value:18,mods:{lootBonus:0.04}},
       'black market battery':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{energyRegen:2}},
       'coin string':{type:'tool',slot:'tool',rarity:'uncommon',value:17,mods:{moraleBonus:2}},
       'rail map rig':{type:'tool',slot:'tool',rarity:'uncommon',value:18,mods:{riskMod:-0.04}},
-      'scrapper mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:17,mods:{insulation:0.3,riskMod:-0.02}},
+      'scrapper mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:17,mods:{insulation:0.3,riskMod:-0.02,stealthBonus:0.03}},
       'barter satchel':{type:'armor',slot:'backpack',rarity:'uncommon',value:26,mods:{carryBonus:9}},
 
       /* government facility additions */
       'security visor':{type:'armor',slot:'helmet',rarity:'rare',value:34,mods:{riskMod:-0.04,insulation:0.4}},
-      'tactical comms rig':{type:'tool',slot:'tool',rarity:'rare',value:34,mods:{lootBonus:0.06,energyRegen:1}},
+      'tactical comms rig':{type:'tool',slot:'tool',rarity:'rare',value:34,mods:{lootBonus:0.06,energyRegen:1,techBonus:0.05}},
       'hazmat undersuit':{type:'armor',slot:'chest',rarity:'rare',value:36,mods:{insulation:0.9,riskMod:-0.03}},
       'pulse baton':{type:'weapon',slot:'weapon',rarity:'rare',value:38,mods:{combatBonus:7,riskMod:-0.02}},
       'shock carbine':{type:'weapon',slot:'weapon',rarity:'epic',value:54,mods:{combatBonus:10,energyRegen:1}},
       'response harness':{type:'armor',slot:'chest',rarity:'uncommon',value:20,mods:{staminaBonus:2,insulation:0.5}},
       'facility boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:19,mods:{staminaBonus:2,insulation:0.2}},
       'clearance gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:18,mods:{staminaBonus:2,insulation:0.2}},
-      'access scanner':{type:'tool',slot:'tool',rarity:'uncommon',value:19,mods:{riskMod:-0.04}},
+      'access scanner':{type:'tool',slot:'tool',rarity:'uncommon',value:19,mods:{riskMod:-0.04,techBonus:0.04}},
       'secure datapad':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{lootBonus:0.07}},
       'containment seal kit':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{riskMod:-0.03}},
       'warden longcoat':{type:'armor',slot:'chest',rarity:'legendary',value:96,mods:{staminaBonus:4,insulation:1}},
@@ -1626,11 +1659,11 @@
       'clinic IV pack':{type:'consumable',rarity:'rare',value:26,effect:'hp+24'},
       'antiviral vial':{type:'consumable',rarity:'rare',value:24,effect:'hp+12,morale+6'},
       'cooling compress':{type:'consumable',rarity:'common',value:4,effect:'hp+4,temp-2'},
-      'sterile gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:17,mods:{riskMod:-0.02,insulation:0.2}},
+      'sterile gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:17,mods:{riskMod:-0.02,insulation:0.2,mercyBonus:0.03}},
       'scrub jacket':{type:'armor',slot:'chest',rarity:'common',value:8,mods:{insulation:0.3}},
       'triage boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:18,mods:{staminaBonus:2,insulation:0.2}},
-      'medic satchel':{type:'armor',slot:'backpack',rarity:'uncommon',value:24,mods:{carryBonus:8}},
-      'portable scanner':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{lootBonus:0.05}},
+      'medic satchel':{type:'armor',slot:'backpack',rarity:'uncommon',value:24,mods:{carryBonus:8,mercyBonus:0.04}},
+      'portable scanner':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{lootBonus:0.05,techBonus:0.03}},
       'triage lamp':{type:'tool',slot:'tool',rarity:'uncommon',value:16,mods:{lootBonus:0.03}},
       'biofilter mask':{type:'armor',slot:'helmet',rarity:'rare',value:30,mods:{riskMod:-0.05,insulation:0.4}},
       'pain suppressant':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+10,morale+3'},
@@ -1668,7 +1701,7 @@
       'citadel pauldrons':{type:'armor',slot:'chest',rarity:'rare',value:42,mods:{insulation:0.9,riskMod:-0.05}},
       'stormguard greaves':{type:'armor',slot:'pants',rarity:'rare',value:36,mods:{insulation:0.5,staminaBonus:2}},
       'arcthread gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:24,mods:{staminaBonus:3,riskMod:-0.02}},
-      'visor of echoes':{type:'armor',slot:'eyewear',rarity:'rare',value:34,mods:{riskMod:-0.04,moraleBonus:2}},
+      'visor of echoes':{type:'armor',slot:'eyewear',rarity:'rare',value:34,mods:{riskMod:-0.04,moraleBonus:2,stealthBonus:0.03}},
       'stormglass rapier':{type:'weapon',slot:'weapon',rarity:'rare',value:44,mods:{combatBonus:9,lootBonus:0.02}},
       'thundercoil rifle':{type:'weapon',slot:'weapon',rarity:'epic',value:60,mods:{combatBonus:12,energyRegen:1}},
       'phase relay kit':{type:'tool',slot:'tool',rarity:'rare',value:38,mods:{idleSpeed:0.2}},
@@ -1687,8 +1720,8 @@
       'synth-berry pack':{type:'consumable',rarity:'common',value:7,effect:'hunger-12,stamina+2'},
       'nano-restore kit':{type:'consumable',rarity:'rare',value:26,effect:'hp+20,stamina+4'},
       'rift stabilizer shot':{type:'consumable',rarity:'rare',value:28,effect:'rads-20,temp-2'},
-      'quantum mesh cloak':{type:'armor',slot:'chest',rarity:'epic',value:60,mods:{insulation:1.1,riskMod:-0.06}},
-      'phase-woven boots':{type:'armor',slot:'shoes',rarity:'rare',value:40,mods:{staminaBonus:4,riskMod:-0.03}},
+      'quantum mesh cloak':{type:'armor',slot:'chest',rarity:'epic',value:60,mods:{insulation:1.1,riskMod:-0.06,stealthBonus:0.08}},
+      'phase-woven boots':{type:'armor',slot:'shoes',rarity:'rare',value:40,mods:{staminaBonus:4,riskMod:-0.03,stealthBonus:0.04}},
       'singularity gauntlets':{type:'armor',slot:'gloves',rarity:'rare',value:42,mods:{staminaBonus:5}},
       'horizon visor':{type:'armor',slot:'eyewear',rarity:'rare',value:38,mods:{riskMod:-0.04,moraleBonus:2}},
       'graviton glaive':{type:'weapon',slot:'weapon',rarity:'epic',value:62,mods:{combatBonus:13,lootBonus:0.02}},
@@ -1918,6 +1951,9 @@ loot:0
 reward:elder advice
 combatChance:0
 hub:true
+event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice mid-raid. How do you respond?
+eventOption:Share the elders' guidance => risk:low | tag:mercy | success:morale+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:morale-3,log:The runner panics and bolts.
+eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:morale-5,log:The elders hear about the rumor sale.
 
 @mission
 id:safehouse-hush
@@ -1932,6 +1968,9 @@ reward:quiet intel
 hub:true
 unlockFlag:secret-safehouse-ops
 consumeFlag:secret-safehouse-ops
+event:Relay shadow crossing | chance:0.6 | prompt:A patrol cuts across the whispering line. Choose your approach.
+eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. | fail:hp-3,morale-2,log:A clang gives you away.
+eventOption:Confront the patrol => risk:medium | tag:combat | success:item:coil battery,log:You overpower the patrol and seize their battery. | fail:hp-6,log:A scuffle leaves you bruised.
 
 @quest
 id:safehouse-vents
@@ -1979,6 +2018,9 @@ time:9
 energy:10
 loot:2
 lootType:low-tier food & clothing
+event:Service hatch patrol | chance:0.55 | prompt:A patrol blocks the service hatch that hides extra rations.
+eventOption:Crawl through the ventwork => risk:low | tag:stealth | success:item:tinned beans,credits+4,log:You slip past and scoop up sealed tins. | fail:hp-3,morale-2,log:A vent grate clangs and draws attention.
+eventOption:Force the hatch open => risk:medium | tag:combat | success:item:locker prybar,item:ration bar,log:You muscle through and claim the stash. | fail:hp-6,log:The patrol batters you back.
 
 @mission
 id:bunker-deep
@@ -1989,6 +2031,9 @@ time:12
 energy:14
 loot:3
 lootType:sealed kits
+event:Lost tunnel scav | chance:1 | prompt:A starving scav begs to join your run. Decide how to respond.
+eventOption:Share supplies and guide them out => risk:low | tag:mercy | success:morale+5,item:stale biscuits,log:The scav repays you with a hidden snack cache. | fail:morale-3,log:The scav panics and slows you down.
+eventOption:Shake them down for intel => risk:medium | tag:betrayal | success:credits+10,item:old coin,log:You take the intel and a coin for your trouble. | fail:morale-4,log:The scav bolts, cursing your name.
 
 @mission
 id:bunker-armory
@@ -2080,6 +2125,9 @@ time:11
 energy:14
 loot:3
 lootType:mid-tier gear
+event:Rail patrol crossing | chance:0.5 | prompt:A Redline patrol blocks the rail spur. Decide how to clear it.
+eventOption:Sneak along the service duct => risk:medium | tag:stealth | success:item:rail map rig,credits+6,log:You slip by and snag a route rig. | fail:hp-5,morale-2,log:Boots scrape metal and draw fire.
+eventOption:Charge through head-on => risk:high | tag:combat | success:item:rail spike mace,log:You smash through and claim a heavy mace. | fail:hp-8,log:The patrol drives you back hard.
 
 @mission
 id:tunnel-sweep
@@ -2090,6 +2138,9 @@ time:10
 energy:13
 loot:3
 lootType:weapons & gear
+event:Runner swaps crate tags | chance:1 | prompt:A runner offers to flip tags on a crate mid-raid. Take the risk?
+eventOption:Honor the exchange => risk:medium | tag:mercy | success:item:trackside vest,credits+5,log:The runner keeps their word and slips you a vest. | fail:morale-3,log:The runner vanishes before the swap finishes.
+eventOption:Double-cross the runner => risk:high | tag:betrayal | success:credits+14,item:coin string,log:You keep the crate and lift a coin string. | fail:hp-6,morale-4,log:The runner's crew retaliates.
 
 @mission
 id:gang-assist
@@ -2182,6 +2233,9 @@ time:12
 energy:16
 loot:3
 lootType:weapons & tools
+event:Checkpoint console lock | chance:0.55 | prompt:A security checkpoint seals the corridor. Choose your approach.
+eventOption:Spoof the clearance codes => risk:medium | tag:tech | success:item:containment seal kit,credits+8,log:You spoof the codes and lift a seal kit. | fail:hp-4,morale-2,log:The console blares and draws fire.
+eventOption:Break through head-on => risk:high | tag:combat | success:item:pulse baton,log:You smash through and seize a pulse baton. | fail:hp-8,log:The patrol overwhelms you.
 
 @mission
 id:facility-deep
@@ -2224,6 +2278,9 @@ faction:military
 relationMax:-5
 relationSuccess:-2
 relationFail:-1
+event:Directorate courier meets you mid-run | chance:1 | prompt:A courier offers you a sealed briefing packet. Do you take the shot?
+eventOption:Expose the courier => risk:high | tag:betrayal | success:credits+18,item:secure datapad,log:You intercept the packet and slip away. | fail:hp-7,morale-4,log:The courier's escorts pin you down.
+eventOption:Let them pass => risk:medium | tag:mercy | success:morale+4,item:nutri-gel pack,log:The courier leaves you a ration as thanks. | fail:morale-3,log:The courier brands you soft and walks off.
 
 @mission
 id:facility-armory
@@ -2297,6 +2354,9 @@ time:9
 energy:10
 loot:2
 lootType:medical basics
+event:Injured survivor blocks the hall | chance:0.6 | prompt:A wounded survivor begs for antiseptic. Your call?
+eventOption:Patch them up => risk:low | tag:mercy | success:morale+5,item:sterile gloves,log:The survivor hands over spare gloves in thanks. | fail:morale-3,log:The survivor panics and slows you down.
+eventOption:Strip their kit => risk:medium | tag:betrayal | success:item:antiviral vial,credits+6,log:You pocket their kit and move on. | fail:morale-4,log:The survivor's cries draw a patrol.
 
 @mission
 id:clinic-ward
@@ -2307,6 +2367,9 @@ time:12
 energy:14
 loot:3
 lootType:medical packs
+event:Silent drone sweep | chance:1 | prompt:A drone sweep glides through the ward. Pick a response.
+eventOption:Ghost through the shadowed ward => risk:medium | tag:stealth | success:item:clinic IV pack,log:You slip through and grab a sealed IV pack. | fail:hp-6,log:A scanner tags you on the way out.
+eventOption:Stand and fight => risk:high | tag:combat | success:item:portable scanner,credits+8,log:You knock the drone down and salvage its scanner. | fail:hp-9,log:The drone's shock pulse sends you reeling.
 
 @mission
 id:clinic-storage
@@ -2376,6 +2439,9 @@ time:12
 energy:14
 loot:3
 lootType:food crates
+event:Security drone in the backroom | chance:0.55 | prompt:A dormant drone flickers online between the shelves.
+eventOption:Slip past with the shadows => risk:medium | tag:stealth | success:item:mall snack pack,credits+6,log:You ghost by and scoop extra snacks. | fail:hp-5,log:The drone tags you on the exit.
+eventOption:Smash it head-on => risk:high | tag:combat | success:item:loading hook,log:You topple the drone and claim a loading hook. | fail:hp-8,log:The drone's shock rods drive you back.
 
 @mission
 id:mall-manager-cache
@@ -2388,6 +2454,9 @@ loot:5
 lootType:premium food & supplies
 key:1
 combatChance:0.5
+event:Lost shopper hides in the office | chance:1 | prompt:A frightened scav begs to share the cache. What do you do?
+eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:morale+6,item:queue jacket,log:They share a warm jacket in gratitude. | fail:morale-4,log:The scav panics and draws attention.
+eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. | fail:hp-6,morale-5,log:The scav slams the door and sets off a chase.
 
 @quest
 id:mall-power-1
@@ -2455,6 +2524,9 @@ time:14
 energy:18
 loot:4
 lootType:refinery gear & rations
+event:Valve line failure | chance:0.5 | prompt:A pressure line buckles mid-run. Decide how to respond.
+eventOption:Patch it with quick diagnostics => risk:high | tag:tech | success:item:pressure gauge kit,credits+10,log:You stabilize the line and recover a gauge kit. | fail:hp-6,temp+2,log:The line bursts and scalds you.
+eventOption:Muscle through the steam => risk:deadly | tag:combat | success:item:hydraulic spike,log:You force through and claim a hydraulic spike. | fail:hp-10,log:The steam blast drives you back.
 
 @mission
 id:refinery-core
@@ -2465,6 +2537,9 @@ time:16
 energy:20
 loot:5
 lootType:refinery tools & weapons
+event:Scav crew at the core walkway | chance:1 | prompt:A scav crew offers to split the core cache. Do you trust them?
+eventOption:Hold the alliance => risk:high | tag:mercy | success:item:sealed citrus tonic,credits+8,log:The crew splits the cache and leaves you a tonic. | fail:morale-4,log:The crew panics and ruins the split.
+eventOption:Betray the crew => risk:deadly | tag:betrayal | success:item:torque cleaver,credits+18,log:You seize the cache in the chaos. | fail:hp-9,morale-5,log:The crew turns on you.
 
 @mission
 id:refinery-vault
@@ -2555,6 +2630,9 @@ time:15
 energy:20
 loot:4
 lootType:stormglass supplies
+event:Stormglass sentries patrol | chance:0.5 | prompt:Sentries sweep the crystal stair. Choose your response.
+eventOption:Slip behind the glass columns => risk:high | tag:stealth | success:item:stormglass shard,credits+10,log:You ghost past and lift a shard. | fail:hp-7,morale-3,log:The sentries catch your movement.
+eventOption:Strike through the patrol => risk:deadly | tag:combat | success:item:stormglass rapier,log:You cut through the patrol and seize a rapier. | fail:hp-11,log:The sentries overwhelm you.
 
 @mission
 id:citadel-spire
@@ -2565,6 +2643,9 @@ time:17
 energy:22
 loot:5
 lootType:stormglass armory
+event:Storm cult acolyte confronts you | chance:1 | prompt:An acolyte offers to trade relics for safe passage. Decide quickly.
+eventOption:Honor the trade => risk:high | tag:mercy | success:item:ionized brew,credits+12,log:The acolyte shares a relic drink and lets you pass. | fail:morale-4,log:The acolyte retreats, insulted.
+eventOption:Take the relics by force => risk:deadly | tag:betrayal | success:item:stormglass shard,item:storm seal gaskets,credits+16,log:You seize the relics and push onward. | fail:hp-10,morale-5,log:The acolyte triggers a shock wave.
 
 @mission
 id:citadel-vault
@@ -2653,6 +2734,9 @@ time:16
 energy:22
 loot:5
 lootType:rift supplies
+event:Rift anomaly shear | chance:0.5 | prompt:A shear opens in the corridor. Choose your path.
+eventOption:Calibrate the shear with instruments => risk:high | tag:tech | success:item:anomaly scanner,credits+12,log:You stabilize the shear and recover a scanner. | fail:hp-8,rads+4,log:The shear lashes back at you.
+eventOption:Slip through the distorted shadow => risk:deadly | tag:stealth | success:item:drift moss tea,log:You glide through and pocket a tea pack. | fail:hp-10,morale-5,log:The shear tags you as you pass.
 
 @mission
 id:rift-lab
@@ -2663,6 +2747,9 @@ time:18
 energy:24
 loot:6
 lootType:rift armory
+event:Temporal researcher offers a deal | chance:1 | prompt:A researcher offers their stash for safe passage. What's your move?
+eventOption:Escort them out => risk:high | tag:mercy | success:item:riftwater flask,credits+14,log:The researcher shares rare water and leaves peacefully. | fail:morale-4,log:The researcher freezes, overwhelmed.
+eventOption:Take the stash and run => risk:deadly | tag:betrayal | success:item:rift crystal splinter,credits+20,log:You snatch the stash and disappear into the haze. | fail:hp-11,morale-6,log:The researcher triggers a defensive pulse.
 
 @mission
 id:rift-core
@@ -5384,7 +5471,12 @@ once:true`
         rewardEffects:{success:option.success||'',fail:option.fail||''},
         questMeta:null,
         combat:null,
-        sceneTarget:option.target || null
+        sceneTarget:option.target || null,
+        event:null,
+        eventRewards:[],
+        eventHoldRemainingMs:null,
+        eventHoldProgress:null,
+        eventHoldTotalMs:null
       };
       setCodex(`Action launched: ${label}.`);
       logMsg(`Local action: ${label} (${formatDisplayMinutes(time)} min).`);
@@ -5513,7 +5605,10 @@ once:true`
       }
       const remainingMs=Math.max(0,state.mission.endsAt-Date.now());
       const totalMs=Math.max(1,state.mission.endsAt-state.mission.startedAt);
-      const percent=clamp(((totalMs-remainingMs)/totalMs)*100,0,100);
+      const heldProgress=Number.isFinite(state.mission.eventHoldProgress) ? state.mission.eventHoldProgress : null;
+      const percent=Number.isFinite(heldProgress)
+        ? clamp(heldProgress*100,0,100)
+        : clamp(((totalMs-remainingMs)/totalMs)*100,0,100);
       dom.missionProgress.querySelector('span').style.width=`${state.mission.completed ? 100 : percent}%`;
       const remainingSec=Math.ceil(remainingMs/1000);
       const labelPrefix=state.mission.type==='combat'
@@ -5525,9 +5620,11 @@ once:true`
         ? `Mission complete: ${raid.label}`
         : `${labelPrefix}: ${raid.label}`;
       const etaLabel=state.mission.fleeing ? 'Escaping…' : `ETA ${remainingSec}s`;
-      dom.missionMeta.textContent=`${raid.risk} risk · ${formatDisplayMinutes(raid.time)} min op · ${state.mission.location?.name || state.zone.name} · XP ${state.mission.xpReward || computeMissionXp(raid.risk,raid.time)} · ${state.mission.completed ? 'Rewards ready' : etaLabel}`;
+      const eventActive=state.mission.event?.active && !state.mission.completed;
+      const statusTag=state.mission.completed ? 'Rewards ready' : (eventActive ? 'Decision required' : etaLabel);
+      dom.missionMeta.textContent=`${raid.risk} risk · ${formatDisplayMinutes(raid.time)} min op · ${state.mission.location?.name || state.zone.name} · XP ${state.mission.xpReward || computeMissionXp(raid.risk,raid.time)} · ${statusTag}`;
       const liveMessage=state.mission.statusMessage || state.mission.summary;
-      dom.missionLog.textContent=liveMessage || 'Stay sharp. Watch the feed for extraction clearance.';
+      dom.missionLog.textContent=liveMessage || (eventActive ? 'Incoming event: choose your approach.' : 'Stay sharp. Watch the feed for extraction clearance.');
       dom.missionActions.innerHTML='';
       const rewards=state.mission.rewards || [];
       const rewardsReady=state.mission.completed && rewards.length>0;
@@ -5555,6 +5652,43 @@ once:true`
           empty.textContent=state.mission.success ? 'No rewards remaining. Mission will close automatically.' : 'Mission failed. Mission will close automatically.';
           dom.missionRewardList.appendChild(empty);
         }
+      }
+      if(eventActive){
+        const event=state.mission.event?.data;
+        const eventBox=document.createElement('div');
+        eventBox.className='event-card';
+        const title=document.createElement('div');
+        title.className='event-title';
+        title.textContent=event?.label || 'Mid-raid decision';
+        const prompt=document.createElement('div');
+        prompt.className='event-meta';
+        prompt.textContent=event?.prompt || 'Choose your response.';
+        eventBox.appendChild(title);
+        eventBox.appendChild(prompt);
+        const options=document.createElement('div');
+        options.className='event-options';
+        (event?.options || []).forEach(option=>{
+          const optionWrap=document.createElement('div');
+          optionWrap.className='event-option';
+          const btn=document.createElement('button');
+          const {chance,tagMod,bonus}=getEventOptionSuccessChance(option,raid.risk);
+          const successPct=Math.round(chance*100);
+          const modPct=Math.round((tagMod+bonus)*100);
+          btn.innerHTML=`<span>${option.label}</span><span>${successPct}%</span>`;
+          btn.onclick=()=>resolveMissionEventOption(option);
+          optionWrap.appendChild(btn);
+          const details=document.createElement('div');
+          details.className='small';
+          const successText=formatEffects(option.success).join(' · ');
+          const failText=formatEffects(option.fail).join(' · ');
+          const modText=modPct>0 ? `Gear boost +${modPct}%` : 'No gear boost';
+          details.textContent=`${modText}. Success: ${successText || 'no extra effects'}. Fail: ${failText || 'no extra effects'}.`;
+          optionWrap.appendChild(details);
+          options.appendChild(optionWrap);
+        });
+        eventBox.appendChild(options);
+        dom.missionActions.appendChild(eventBox);
+        return;
       }
       if(!state.mission.completed && state.mission.type==='combat'){
         const combat=state.mission.combat;
@@ -6024,6 +6158,77 @@ once:true`
       const riskIdx=getRiskIndex(risk);
       return clamp(0.12+(riskIdx*0.08),0.12,0.55);
     };
+    const getEventTagMod=(tag,gearMods)=>{
+      const clean=(tag || '').toLowerCase();
+      if(clean==='stealth') return gearMods.stealthBonus || 0;
+      if(clean==='combat') return (gearMods.combatBonus || 0) * 0.01;
+      if(clean==='deception' || clean==='betrayal') return gearMods.deceptionBonus || 0;
+      if(clean==='mercy' || clean==='morality') return gearMods.mercyBonus || 0;
+      if(clean==='tech') return gearMods.techBonus || 0;
+      return 0;
+    };
+    const getEventOptionSuccessChance=(option,missionRisk)=>{
+      const risk=option.risk || missionRisk || 'medium';
+      const failChance=computeFailChance(risk);
+      const gearMods=getGearMods();
+      const tagMod=getEventTagMod(option.tag,gearMods);
+      const bonus=Number(option.bonus || 0);
+      const adjustedFail=clamp(failChance - tagMod - bonus,0.05,0.9);
+      return {chance:clamp(1-adjustedFail,0.1,0.95),tagMod,bonus};
+    };
+    const scheduleMissionEvent=(mission)=>{
+      const events=Array.isArray(mission?.raid?.events) ? mission.raid.events.filter(ev=>ev.options?.length) : [];
+      if(!events.length) return;
+      const eligible=events.filter(event=>{
+        const rawChance=Number(event.chance);
+        const chance=Number.isFinite(rawChance) ? rawChance : 0.45;
+        return Math.random()<clamp(chance,0,1);
+      });
+      if(!eligible.length) return;
+      const chosen=eligible[Math.floor(Math.random()*eligible.length)];
+      const totalMs=Math.max(1000,(mission.endsAt || 0)-(mission.startedAt || 0));
+      const triggerOffset=totalMs*(0.35+Math.random()*0.4);
+      mission.event={data:chosen,active:false,resolved:false,triggerAt:(mission.startedAt || Date.now())+triggerOffset};
+    };
+    const triggerMissionEvent=(mission,now)=>{
+      if(!mission?.event || mission.event.active || mission.event.resolved) return;
+      const totalMs=Math.max(1000,(mission.endsAt || now)-(mission.startedAt || now));
+      const elapsedMs=Math.max(0,now-(mission.startedAt || now));
+      mission.event.active=true;
+      mission.eventHoldProgress=clamp(elapsedMs/totalMs,0,1);
+      mission.eventHoldRemainingMs=Math.max(1000,(mission.endsAt || now)-now);
+      mission.eventHoldTotalMs=totalMs;
+      logMsg(`Mid-raid event: ${mission.event.data?.label || 'Unexpected complication'}.`);
+      setCodex(mission.event.data?.prompt || 'A new decision interrupts the raid.');
+    };
+    const resolveMissionEventOption=(option)=>{
+      const mission=state.mission;
+      if(!mission?.event?.active || mission.completed) return;
+      const event=mission.event.data || {label:'Raid event'};
+      const {chance}=getEventOptionSuccessChance(option,mission.raid?.risk || mission.location?.risk || state.zone.risk);
+      const success=Math.random()<chance;
+      const rewards=[];
+      if(success){
+        applyEffects(option.success,'success',{deferItemsTo:rewards});
+      }else{
+        applyEffects(option.fail,'fail',{damageSource:`${event.label} setback`});
+      }
+      if(rewards.length){
+        if(!Array.isArray(mission.eventRewards)) mission.eventRewards=[];
+        mission.eventRewards.push(...rewards);
+      }
+      logMsg(`${success ? '✓' : '✖'} ${event.label}: ${option.label} ${success ? 'succeeded' : 'failed'}.`);
+      mission.event.active=false;
+      mission.event.resolved=true;
+      const now=Date.now();
+      if(Number.isFinite(mission.eventHoldRemainingMs)){
+        mission.endsAt=now+mission.eventHoldRemainingMs;
+      }
+      mission.eventHoldRemainingMs=null;
+      mission.eventHoldProgress=null;
+      mission.eventHoldTotalMs=null;
+      renderAll();
+    };
     function getCombatProfile(risk){
       const riskIdx=getRiskIndex(risk);
       return {
@@ -6320,7 +6525,12 @@ once:true`
         rewardEffects:{success:'',fail:''},
         questMeta:null,
         combat:combatState,
-        sceneTarget:null
+        sceneTarget:null,
+        event:null,
+        eventRewards:[],
+        eventHoldRemainingMs:null,
+        eventHoldProgress:null,
+        eventHoldTotalMs:null
       };
       setCodex('You move to engage hostile contacts.');
       logMsg(`Combat sortie launched against ${profile.enemyName}. ${describeCombatState(combatState)}`);
@@ -6378,7 +6588,12 @@ once:true`
         rewardEffects:{success:quest.success||'',fail:quest.fail||''},
         questMeta:{flag:questFlag,once:quest.once,forceCombat:quest.combat,combatChance:quest.combatChance},
         combat:null,
-        sceneTarget:null
+        sceneTarget:null,
+        event:null,
+        eventRewards:[],
+        eventHoldRemainingMs:null,
+        eventHoldProgress:null,
+        eventHoldTotalMs:null
       };
       setCodex(`Contract launched: ${raidLike.label}.`);
       logMsg(`Contract deployed: ${raidLike.label} (${formatDisplayMinutes(raidLike.time)} min op).`);
@@ -6438,7 +6653,12 @@ once:true`
         rewardEffects:{success:quest.success||'',fail:quest.fail||''},
         questMeta:{flag:questFlag,once:quest.once,forceCombat:quest.combat,combatChance:quest.combatChance},
         combat:null,
-        sceneTarget:null
+        sceneTarget:null,
+        event:null,
+        eventRewards:[],
+        eventHoldRemainingMs:null,
+        eventHoldProgress:null,
+        eventHoldTotalMs:null
       };
       setCodex(`Contract launched: ${raidLike.label}.`);
       logMsg(`Contract deployed: ${raidLike.label} (${formatDisplayMinutes(raidLike.time)} min op).`);
@@ -6450,7 +6670,7 @@ once:true`
     }
 
     function resetMissionState(){
-      state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null};
+      state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null};
     }
     function closeMission({auto=false}={}){
       const lastLocation=state.mission.location ? {...state.mission.location} : null;
@@ -6546,8 +6766,14 @@ once:true`
         rewardEffects:{success:raid.successEffects||'',fail:raid.failEffects||''},
         questMeta:null,
         combat:null,
-        sceneTarget:null
+        sceneTarget:null,
+        event:null,
+        eventRewards:[],
+        eventHoldRemainingMs:null,
+        eventHoldProgress:null,
+        eventHoldTotalMs:null
       };
+      scheduleMissionEvent(state.mission);
       setCodex(`Mission launched: ${raid.label}.`);
       logMsg(`Mission launched: ${raid.label} (${formatDisplayMinutes(raid.time)} min op).`);
       pushNpcDialog(state.mission.location?.id || state.zone?.id,'missionStartDialog');
@@ -6602,8 +6828,14 @@ once:true`
         rewardEffects:{success:raid.successEffects||'',fail:raid.failEffects||''},
         questMeta:null,
         combat:null,
-        sceneTarget:null
+        sceneTarget:null,
+        event:null,
+        eventRewards:[],
+        eventHoldRemainingMs:null,
+        eventHoldProgress:null,
+        eventHoldTotalMs:null
       };
+      scheduleMissionEvent(state.mission);
       setCodex(`Mission launched: ${raid.label}.`);
       logMsg(`Mission launched: ${raid.label} (${formatDisplayMinutes(raid.time)} min op).`);
       pushNpcDialog(state.mission.location?.id || zone?.id,'missionStartDialog');
@@ -6695,6 +6927,9 @@ once:true`
       const rewards=[];
       const raidResult=runRaidInstant(raid,state.mission.location,{deferItemsTo:rewards});
       const success=raidResult.success;
+      if(state.mission.eventRewards?.length){
+        rewards.push(...state.mission.eventRewards);
+      }
       const effectiveRisk=raidResult.effectiveRisk || raid.risk;
       const pending={
         sourceId:raid.id,
@@ -7136,6 +7371,40 @@ once:true`
       });
       return opt;
     }
+    function parseMissionEvent(str){
+      const segments=str.split('|').map(s=>s.trim()).filter(Boolean);
+      const [labelPart,...rest]=segments;
+      const event={label:labelPart||'Raid event',prompt:'',chance:0.45,tag:'',options:[]};
+      rest.forEach(seg=>{
+        const [k,vRaw]=seg.split(':');
+        const v=vRaw?.trim();
+        if(!k) return;
+        const key=k.trim().toLowerCase();
+        if(key==='chance') event.chance=Number(v||0);
+        else if(key==='prompt') event.prompt=v;
+        else if(key==='tag') event.tag=v;
+      });
+      return event;
+    }
+    function parseMissionEventOption(str){
+      const segments=str.split('|').map(s=>s.trim()).filter(Boolean);
+      const [labelPart,...rest]=segments;
+      const [label]=labelPart.split('=>').map(s=>s&&s.trim());
+      const opt={label:label||'Take action',risk:'medium',tag:'',success:'',fail:'',reward:'',bonus:0};
+      rest.forEach(seg=>{
+        const [k,vRaw]=seg.split(':');
+        const v=vRaw?.trim();
+        if(!k) return;
+        const key=k.trim().toLowerCase();
+        if(key==='risk') opt.risk=v;
+        else if(key==='tag') opt.tag=v;
+        else if(key==='success') opt.success=v;
+        else if(key==='fail') opt.fail=v;
+        else if(key==='reward') opt.reward=v;
+        else if(key==='bonus') opt.bonus=Number(v||0);
+      });
+      return opt;
+    }
 
     function parseExpansion(raw){
       const exp={meta:{},door:{},scenes:{},quests:[],missions:[]};
@@ -7170,7 +7439,8 @@ once:true`
             loot:2,
             key:0,
             lootType:'',
-            reward:''
+            reward:'',
+            events:[]
           };
           exp.missions.push(currentMission);
           return;
@@ -7235,6 +7505,14 @@ once:true`
             currentMission.fixedRewardsOnly=value === 'true';
           }else if(normalizedKey==='fixedrewards'){
             currentMission.fixedRewards=value;
+          }else if(normalizedKey==='event'){
+            if(!Array.isArray(currentMission.events)) currentMission.events=[];
+            currentMission.events.push(parseMissionEvent(value));
+          }else if(normalizedKey==='eventoption'){
+            if(!Array.isArray(currentMission.events) || !currentMission.events.length){
+              currentMission.events=[parseMissionEvent('Raid event')];
+            }
+            currentMission.events[currentMission.events.length-1].options.push(parseMissionEventOption(value));
           }else if(normalizedKey==='success'){
             currentMission.successEffects=value;
           }else if(normalizedKey==='fail'){
@@ -7424,7 +7702,12 @@ once:true`
       if(state.mission.active && !state.mission.completed){
         const now=Date.now();
         normalizeMissionTiming(now);
-        if(state.mission.type==='combat'){
+        if((state.mission.type==='raid' || state.mission.type==='contract') && state.mission.event && !state.mission.event.resolved && !state.mission.event.active && now>=state.mission.event.triggerAt){
+          triggerMissionEvent(state.mission,now);
+        }
+        if(state.mission.event?.active){
+          renderMissionStatus();
+        }else if(state.mission.type==='combat'){
           combatTick(now);
           if(state.mission.fleeing && now>=state.mission.endsAt){
             completeMission({combatResolved:true});

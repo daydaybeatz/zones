@@ -44,6 +44,9 @@ time:9
 energy:10
 loot:2
 lootType:medical basics
+event:Injured survivor blocks the hall | chance:0.6 | prompt:A wounded survivor begs for antiseptic. Your call?
+eventOption:Patch them up => risk:low | tag:mercy | success:morale+5,item:sterile gloves,log:The survivor hands over spare gloves in thanks. | fail:morale-3,log:The survivor panics and slows you down.
+eventOption:Strip their kit => risk:medium | tag:betrayal | success:item:antiviral vial,credits+6,log:You pocket their kit and move on. | fail:morale-4,log:The survivor's cries draw a patrol.
 
 @mission
 id:clinic-ward
@@ -54,6 +57,9 @@ time:12
 energy:14
 loot:3
 lootType:medical packs
+event:Silent drone sweep | chance:1 | prompt:A drone sweep glides through the ward. Pick a response.
+eventOption:Ghost through the shadowed ward => risk:medium | tag:stealth | success:item:clinic IV pack,log:You slip through and grab a sealed IV pack. | fail:hp-6,log:A scanner tags you on the way out.
+eventOption:Stand and fight => risk:high | tag:combat | success:item:portable scanner,credits+8,log:You knock the drone down and salvage its scanner. | fail:hp-9,log:The drone's shock pulse sends you reeling.
 
 @mission
 id:clinic-storage

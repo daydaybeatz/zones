@@ -33,6 +33,9 @@ time:11
 energy:14
 loot:3
 lootType:mid-tier gear
+event:Rail patrol crossing | chance:0.5 | prompt:A Redline patrol blocks the rail spur. Decide how to clear it.
+eventOption:Sneak along the service duct => risk:medium | tag:stealth | success:item:rail map rig,credits+6,log:You slip by and snag a route rig. | fail:hp-5,morale-2,log:Boots scrape metal and draw fire.
+eventOption:Charge through head-on => risk:high | tag:combat | success:item:rail spike mace,log:You smash through and claim a heavy mace. | fail:hp-8,log:The patrol drives you back hard.
 
 @mission
 id:tunnel-sweep
@@ -43,6 +46,9 @@ time:10
 energy:13
 loot:3
 lootType:weapons & gear
+event:Runner swaps crate tags | chance:1 | prompt:A runner offers to flip tags on a crate mid-raid. Take the risk?
+eventOption:Honor the exchange => risk:medium | tag:mercy | success:item:trackside vest,credits+5,log:The runner keeps their word and slips you a vest. | fail:morale-3,log:The runner vanishes before the swap finishes.
+eventOption:Double-cross the runner => risk:high | tag:betrayal | success:credits+14,item:coin string,log:You keep the crate and lift a coin string. | fail:hp-6,morale-4,log:The runner's crew retaliates.
 
 @mission
 id:gang-assist

@@ -33,6 +33,9 @@ time:14
 energy:18
 loot:4
 lootType:refinery gear & rations
+event:Valve line failure | chance:0.5 | prompt:A pressure line buckles mid-run. Decide how to respond.
+eventOption:Patch it with quick diagnostics => risk:high | tag:tech | success:item:pressure gauge kit,credits+10,log:You stabilize the line and recover a gauge kit. | fail:hp-6,temp+2,log:The line bursts and scalds you.
+eventOption:Muscle through the steam => risk:deadly | tag:combat | success:item:hydraulic spike,log:You force through and claim a hydraulic spike. | fail:hp-10,log:The steam blast drives you back.
 
 @mission
 id:refinery-core
@@ -43,6 +46,9 @@ time:16
 energy:20
 loot:5
 lootType:refinery tools & weapons
+event:Scav crew at the core walkway | chance:1 | prompt:A scav crew offers to split the core cache. Do you trust them?
+eventOption:Hold the alliance => risk:high | tag:mercy | success:item:sealed citrus tonic,credits+8,log:The crew splits the cache and leaves you a tonic. | fail:morale-4,log:The crew panics and ruins the split.
+eventOption:Betray the crew => risk:deadly | tag:betrayal | success:item:torque cleaver,credits+18,log:You seize the cache in the chaos. | fail:hp-9,morale-5,log:The crew turns on you.
 
 @mission
 id:refinery-vault

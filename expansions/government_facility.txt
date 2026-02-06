@@ -31,6 +31,9 @@ time:12
 energy:16
 loot:3
 lootType:weapons & tools
+event:Checkpoint console lock | chance:0.55 | prompt:A security checkpoint seals the corridor. Choose your approach.
+eventOption:Spoof the clearance codes => risk:medium | tag:tech | success:item:containment seal kit,credits+8,log:You spoof the codes and lift a seal kit. | fail:hp-4,morale-2,log:The console blares and draws fire.
+eventOption:Break through head-on => risk:high | tag:combat | success:item:pulse baton,log:You smash through and seize a pulse baton. | fail:hp-8,log:The patrol overwhelms you.
 
 @mission
 id:facility-deep
@@ -73,6 +76,9 @@ faction:military
 relationMax:-5
 relationSuccess:-2
 relationFail:-1
+event:Directorate courier meets you mid-run | chance:1 | prompt:A courier offers you a sealed briefing packet. Do you take the shot?
+eventOption:Expose the courier => risk:high | tag:betrayal | success:credits+18,item:secure datapad,log:You intercept the packet and slip away. | fail:hp-7,morale-4,log:The courier's escorts pin you down.
+eventOption:Let them pass => risk:medium | tag:mercy | success:morale+4,item:nutri-gel pack,log:The courier leaves you a ration as thanks. | fail:morale-3,log:The courier brands you soft and walks off.
 
 @mission
 id:facility-armory

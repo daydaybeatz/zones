@@ -33,6 +33,9 @@ time:15
 energy:20
 loot:4
 lootType:stormglass supplies
+event:Stormglass sentries patrol | chance:0.5 | prompt:Sentries sweep the crystal stair. Choose your response.
+eventOption:Slip behind the glass columns => risk:high | tag:stealth | success:item:stormglass shard,credits+10,log:You ghost past and lift a shard. | fail:hp-7,morale-3,log:The sentries catch your movement.
+eventOption:Strike through the patrol => risk:deadly | tag:combat | success:item:stormglass rapier,log:You cut through the patrol and seize a rapier. | fail:hp-11,log:The sentries overwhelm you.
 
 @mission
 id:citadel-spire
@@ -43,6 +46,9 @@ time:17
 energy:22
 loot:5
 lootType:stormglass armory
+event:Storm cult acolyte confronts you | chance:1 | prompt:An acolyte offers to trade relics for safe passage. Decide quickly.
+eventOption:Honor the trade => risk:high | tag:mercy | success:item:ionized brew,credits+12,log:The acolyte shares a relic drink and lets you pass. | fail:morale-4,log:The acolyte retreats, insulted.
+eventOption:Take the relics by force => risk:deadly | tag:betrayal | success:item:stormglass shard,item:storm seal gaskets,credits+16,log:You seize the relics and push onward. | fail:hp-10,morale-5,log:The acolyte triggers a shock wave.
 
 @mission
 id:citadel-vault

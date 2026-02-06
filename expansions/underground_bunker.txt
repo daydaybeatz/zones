@@ -30,6 +30,9 @@ time:9
 energy:10
 loot:2
 lootType:low-tier food & clothing
+event:Service hatch patrol | chance:0.55 | prompt:A patrol blocks the service hatch that hides extra rations.
+eventOption:Crawl through the ventwork => risk:low | tag:stealth | success:item:tinned beans,credits+4,log:You slip past and scoop up sealed tins. | fail:hp-3,morale-2,log:A vent grate clangs and draws attention.
+eventOption:Force the hatch open => risk:medium | tag:combat | success:item:locker prybar,item:ration bar,log:You muscle through and claim the stash. | fail:hp-6,log:The patrol batters you back.
 
 @mission
 id:bunker-deep
@@ -40,6 +43,9 @@ time:12
 energy:14
 loot:3
 lootType:sealed kits
+event:Lost tunnel scav | chance:1 | prompt:A starving scav begs to join your run. Decide how to respond.
+eventOption:Share supplies and guide them out => risk:low | tag:mercy | success:morale+5,item:stale biscuits,log:The scav repays you with a hidden snack cache. | fail:morale-3,log:The scav panics and slows you down.
+eventOption:Shake them down for intel => risk:medium | tag:betrayal | success:credits+10,item:old coin,log:You take the intel and a coin for your trouble. | fail:morale-4,log:The scav bolts, cursing your name.
 
 @mission
 id:bunker-armory

@@ -40,6 +40,9 @@ time:12
 energy:14
 loot:3
 lootType:food crates
+event:Security drone in the backroom | chance:0.55 | prompt:A dormant drone flickers online between the shelves.
+eventOption:Slip past with the shadows => risk:medium | tag:stealth | success:item:mall snack pack,credits+6,log:You ghost by and scoop extra snacks. | fail:hp-5,log:The drone tags you on the exit.
+eventOption:Smash it head-on => risk:high | tag:combat | success:item:loading hook,log:You topple the drone and claim a loading hook. | fail:hp-8,log:The drone's shock rods drive you back.
 
 @mission
 id:mall-manager-cache
@@ -52,6 +55,9 @@ loot:5
 lootType:premium food & supplies
 key:1
 combatChance:0.5
+event:Lost shopper hides in the office | chance:1 | prompt:A frightened scav begs to share the cache. What do you do?
+eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:morale+6,item:queue jacket,log:They share a warm jacket in gratitude. | fail:morale-4,log:The scav panics and draws attention.
+eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. | fail:hp-6,morale-5,log:The scav slams the door and sets off a chase.
 
 @quest
 id:mall-power-1
