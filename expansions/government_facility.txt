@@ -26,7 +26,7 @@ option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gea
 @mission
 id:facility-sweep
 label:Security sweep
-desc:Room-to-room sweep for mid-tier weapons and tools.
+desc:Room-to-room sweep for mid-tier weapons and tools the Directorate and Redline both covet.
 risk:medium
 time:12
 energy:16

@@ -32,7 +32,7 @@ loot:0
 reward:elder advice
 combatChance:0
 hub:true
-event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice mid-raid. How do you respond?
+event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice about dodging Directorate patrols and Redline recruiters. How do you respond?
 eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:credits-3,log:The runner panics and bolts.
 eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:credits-5,log:The elders hear about the rumor sale.
 

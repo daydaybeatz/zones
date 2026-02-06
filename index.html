@@ -1156,6 +1156,11 @@
               <h3 id="shopTitle">Trade Bay</h3>
               <div class="inventory-layout">
                 <div>
+                  <div class="command-card" id="shopCommandCard">
+                    <div class="command-title" id="shopCommandTitle">Trade Console</div>
+                    <div id="shopDetail" class="command-hint">Select backpack items to sell or break down in the trade bay.</div>
+                    <div class="action-grid" id="shopItemActions"></div>
+                  </div>
                   <h4 id="marketSubtitle">Backpack Inventory <span class="small" id="marketBackpackCount"></span></h4>
                   <div id="marketBackpack"></div>
                   <div class="market-section" id="marketSection">
@@ -1163,11 +1168,6 @@
                     <div class="command-hint" id="marketHint">Visit a shop in your current location to access vendors.</div>
                     <div id="marketInventory" class="market-grid"></div>
                   </div>
-                </div>
-                <div class="command-card" id="shopCommandCard">
-                  <div class="command-title" id="shopCommandTitle">Trade Console</div>
-                  <div id="shopDetail" class="command-hint">Select backpack items to sell or break down in the trade bay.</div>
-                  <div class="action-grid" id="shopItemActions"></div>
                 </div>
                 <div id="shopActions" class="stack"></div>
               </div>
@@ -1282,6 +1282,8 @@
       'Use the market when you can; junk in the pack is lost profit.',
       'A balanced loadout lowers risk more than a single rare item.',
       'Always carry one light source; dark halls spike failure rates.',
+      'The Iron Directorate trades order for obedience—keep their badges at arm’s length.',
+      'Redline pays in loyalty and noise; don’t let their flags pick your fights.',
       'Trade off loot for survival; an extra medkit beats another trinket.',
       'If rads climb over twenty, retreat and cleanse before the next run.',
       'Short runs keep XP climbing without draining energy reserves.',
@@ -2043,7 +2045,7 @@ loot:0
 reward:elder advice
 combatChance:0
 hub:true
-event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice mid-raid. How do you respond?
+event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice about dodging Directorate patrols and Redline recruiters. How do you respond?
 eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:credits-3,log:The runner panics and bolts.
 eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:credits-5,log:The elders hear about the rumor sale.
 
@@ -2319,7 +2321,7 @@ option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gea
 @mission
 id:facility-sweep
 label:Security sweep
-desc:Room-to-room sweep for mid-tier weapons and tools.
+desc:Room-to-room sweep for mid-tier weapons and tools the Directorate and Redline both covet.
 risk:medium
 time:12
 energy:16
@@ -4050,10 +4052,10 @@ once:true`
       const tempLine=`<div class="statline statline--temp"><div class="temp-status ${tempStatus.tone}">body temperature: ${tempStatus.label}</div></div>`;
       dom.stats.innerHTML=rows.map(([label,key,maxKey,cls])=>{
         if(key==='hunger'){
-          return `<div class="statline"><div>${label}</div><div class="need-status ${hungerStatus.tone}">hunger: ${hungerStatus.label}</div></div>`;
+          return `<div class="statline"><div>${label}</div><div class="need-status ${hungerStatus.tone}">${hungerStatus.label}</div></div>`;
         }
         if(key==='thirst'){
-          return `<div class="statline"><div>${label}</div><div class="need-status ${thirstStatus.tone}">thirst: ${thirstStatus.label}</div></div>`;
+          return `<div class="statline"><div>${label}</div><div class="need-status ${thirstStatus.tone}">${thirstStatus.label}</div></div>`;
         }
         const val=state[key];const max=(typeof maxKey==='string')?state[maxKey]:maxKey;
         const percent=clamp(pct(val,max),0,200);
@@ -4069,7 +4071,8 @@ once:true`
         `<span class="pill-inline"><b>Redline</b>${getFactionRelation('gang')}</span>`+
         `<span class="pill-inline"><b>Time</b>${fmtTime(state.timeMinutes)}</span>`+
         `<span class="pill-inline"><b>Day</b>${state.day}</span>`+
-        `<span class="pill-inline"><b>Backpack</b>${getBackpackUsage()}/${getBackpackLimit()}</span>`;
+        `<span class="pill-inline"><b>Backpack</b>${getBackpackUsage()}/${getBackpackLimit()}</span>`+
+        `<span class="pill-inline"><b>Stash</b>${getStashUsage()}/${state.stashLimit}</span>`;
     }
 
     const rewardSources={
@@ -5028,6 +5031,11 @@ once:true`
         const stashBtn=dom.tabButtons.find(btn=>btn.dataset.tab==='field');
         if(stashBtn) stashBtn.disabled=true;
       }
+      if(state.travel.active){
+        dom.tabButtons.forEach(btn=>{
+          if(btn.dataset.tab!=='hub') btn.disabled=true;
+        });
+      }
       Object.entries(dom.tabContents).forEach(([id,el])=>{
         el.classList.toggle('active',id===activeTab);
       });
@@ -5113,12 +5121,16 @@ once:true`
         setCodex('Mission in progress. Locations hub locked.');
         return;
       }
-      if(screen==='mission' && !state.mission.active){
+      if(screen==='mission' && !state.mission.active && !state.travel.active){
         setCodex('No mission active.');
         return;
       }
       if(screen==='shop' && isMissionBlockingTravel()){
         setCodex('Mission in progress. Shop locked.');
+        return;
+      }
+      if((screen==='locations' || screen==='shop') && state.travel.active){
+        setCodex('Finish travel before taking local action.');
         return;
       }
       if(screen==='shop' && !zoneHasShop()){
@@ -5136,9 +5148,9 @@ once:true`
       syncMissionCompletion();
       dom.screenButtons.forEach(btn=>{
         const target=btn.dataset.screen;
-        const isLocked=target==='mission' && !state.mission.active;
-        const isLocationsLocked=target==='locations' && isMissionBlockingTravel();
-        const isShopLocked=target==='shop' && isMissionBlockingTravel();
+        const isLocked=target==='mission' && !state.mission.active && !state.travel.active;
+        const isLocationsLocked=target==='locations' && (isMissionBlockingTravel() || state.travel.active);
+        const isShopLocked=target==='shop' && (isMissionBlockingTravel() || state.travel.active);
         const isShopUnavailable=target==='shop' && !zoneHasShop();
         btn.classList.toggle('active',target===state.screen);
         if(isShopUnavailable && target==='shop'){
@@ -5696,6 +5708,17 @@ once:true`
     const resetTravelState=()=>{
       state.travel=getDefaultTravelState();
     };
+    const cancelTravel=()=>{
+      if(!state.travel.active) return;
+      if(travelResolveTimer){
+        clearTimeout(travelResolveTimer);
+        travelResolveTimer=null;
+      }
+      resetTravelState();
+      logMsg('Travel cancelled.');
+      setCodex('Travel cancelled.');
+      renderAll();
+    };
 
     function resolveTravelIfComplete(){
       if(!state.travel.active) return false;
@@ -5815,10 +5838,35 @@ once:true`
       if(state.travel.active){
         scheduleTravelResolution();
       }
+      if(state.travel.active && !state.mission.active && state.screen!=='mission'){
+        state.screen='mission';
+      }
     }
 
     function renderMissionStatus(){
       if(!state.mission.active){
+        if(state.travel.active){
+          const remainingMs=Math.max(0,(state.travel.paused ? (state.travel.remainingMs || 0) : (state.travel.endsAt-Date.now())));
+          const totalMs=Math.max(1,state.travel.durationMs || remainingMs || 1);
+          const percent=clamp(((totalMs-remainingMs)/totalMs)*100,0,100);
+          dom.missionProgress.querySelector('span').style.width=`${percent}%`;
+          const remainingSec=Math.ceil(remainingMs/1000);
+          const targetName=state.travel.target?.name || 'destination';
+          dom.missionTitle.textContent=`In transit: ${targetName}`;
+          dom.missionMeta.textContent=`${state.travel.distance || '?'} km · ETA ${remainingSec}s · ${state.travel.target?.risk || state.zone.risk} risk`;
+          dom.missionLog.textContent=state.travel.paused
+            ? 'Transit halted. Clear the ambush before continuing.'
+            : `Course locked. Hold tight until you reach ${targetName}.`;
+          dom.missionActions.innerHTML='';
+          const cancelBtn=document.createElement('button');
+          cancelBtn.textContent='Cancel travel';
+          cancelBtn.onclick=cancelTravel;
+          dom.missionActions.appendChild(cancelBtn);
+          if(dom.missionRewardsCard) dom.missionRewardsCard.style.display='none';
+          if(dom.missionRewardList) dom.missionRewardList.innerHTML='';
+          if(dom.missionRewardHint) dom.missionRewardHint.textContent='Complete a mission to review rewards.';
+          return;
+        }
         dom.missionTitle.textContent='No mission active.';
         dom.missionMeta.textContent='Launch a raid from the locations hub to enter the field.';
         dom.missionProgress.querySelector('span').style.width='0%';
@@ -7527,6 +7575,8 @@ once:true`
         state.doorsCollapsed=true;
         logMsg(`Routing to ${target.name}… ${distance} km out, ETA ${formatTravelEta(durationMs)}.`);
         if(exp.door?.note) setCodex(exp.door.note);
+        setActiveTab('hub');
+        setScreen('mission');
         renderAll();
       };
 
@@ -7564,7 +7614,7 @@ once:true`
 
     function renderDoors(){
       if(!dom.doors) return;
-      const list=getSortedDoors();
+      const list=getSortedDoors().filter(exp=>exp?.meta?.id!==state.zone.id);
       const totalPages=Math.max(1,Math.ceil(list.length/DOORS_PAGE_SIZE));
       state.doorsPage=clamp(state.doorsPage,0,totalPages-1);
       const start=state.doorsPage*DOORS_PAGE_SIZE;
