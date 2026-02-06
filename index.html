@@ -390,6 +390,15 @@
   .bar.hunger span{background:linear-gradient(90deg, var(--orange), var(--red));}
   .bar.thirst span{background:linear-gradient(90deg, var(--blue), rgba(57,255,20,0.6));}
   .bar.temp span{background:linear-gradient(90deg, var(--green), var(--blue));}
+  .need-status{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+    font-weight:600;
+  }
+  .need-status--good{color:var(--green); text-shadow:var(--glow);}
+  .need-status--warn{color:var(--amber); text-shadow:0 0 12px rgba(255,176,0,0.35);}
+  .need-status--bad{color:var(--red); text-shadow:0 0 12px rgba(255,0,51,0.35);}
 
   /* META CHIPS */
   .meta{color:rgba(184,255,207,0.72);font-size:12px;display:flex;flex-wrap:wrap;gap:10px;}
@@ -3910,8 +3919,24 @@ once:true`
         if(state.bodyTemp>=103) return {label:'overheating',tone:'temp-status--hot'};
         return {label:'normal',tone:''};
       })();
+      const hungerStatus=(()=>{
+        if(state.hunger>=NEED_DAMAGE_THRESHOLD) return {label:'starving',tone:'need-status--bad'};
+        if(state.hunger>=45) return {label:'hungry',tone:'need-status--warn'};
+        return {label:'satiated',tone:'need-status--good'};
+      })();
+      const thirstStatus=(()=>{
+        if(state.thirst>=NEED_DAMAGE_THRESHOLD) return {label:'dehydrated',tone:'need-status--bad'};
+        if(state.thirst>=45) return {label:'thirsty',tone:'need-status--warn'};
+        return {label:'quenched',tone:'need-status--good'};
+      })();
       const tempLine=`<div class="statline statline--temp"><div class="temp-status ${tempStatus.tone}">body temperature: ${tempStatus.label}</div></div>`;
       dom.stats.innerHTML=rows.map(([label,key,maxKey,cls])=>{
+        if(key==='hunger'){
+          return `<div class="statline"><div>${label}</div><div class="need-status ${hungerStatus.tone}">hunger: ${hungerStatus.label}</div></div>`;
+        }
+        if(key==='thirst'){
+          return `<div class="statline"><div>${label}</div><div class="need-status ${thirstStatus.tone}">thirst: ${thirstStatus.label}</div></div>`;
+        }
         const val=state[key];const max=(typeof maxKey==='string')?state[maxKey]:maxKey;
         const percent=clamp(pct(val,max),0,200);
         return `<div class="statline"><div>${label}</div><div class="bar ${cls}"><span style="width:${percent}%;"></span></div><div>${Math.round(val)}/${max}</div></div>`;
