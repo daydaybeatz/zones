@@ -22,7 +22,7 @@ title:Pressure Dock
 desc:Steam hisses through cracked pipes, and the floor trembles under old pumps.
 tags:Industrial / Deadly
 option:Stabilize the intake valves => pressure-dock | risk:high | time:8 | reward:pressure salvage | success:item:pressure gauge kit,item:brine crackers,log:You throttle the valves and reclaim a sealed kit. | fail:hp-6,temp+2,log:A pressure burst scorches your hands.
-option:Strip the pump rig => pressure-dock | risk:deadly | time:9 | reward:weapon salvage | success:item:torque cleaver,item:slag shard,log:You wrench a brutal tool free before the rig collapses. | fail:hp-8,morale-4,log:A pump chain snaps and forces a retreat.
+option:Strip the pump rig => pressure-dock | risk:deadly | time:9 | reward:weapon salvage | success:item:torque cleaver,item:slag shard,log:You wrench a brutal tool free before the rig collapses. | fail:hp-8,credits-4,log:A pump chain snaps and forces a retreat.
 
 @mission
 id:refinery-sweep
@@ -47,8 +47,8 @@ energy:20
 loot:5
 lootType:refinery tools & weapons
 event:Scav crew at the core walkway | chance:1 | prompt:A scav crew offers to split the core cache. Do you trust them?
-eventOption:Hold the alliance => risk:high | tag:mercy | success:item:sealed citrus tonic,credits+8,log:The crew splits the cache and leaves you a tonic. | fail:morale-4,log:The crew panics and ruins the split.
-eventOption:Betray the crew => risk:deadly | tag:betrayal | success:item:torque cleaver,credits+18,log:You seize the cache in the chaos. | fail:hp-9,morale-5,log:The crew turns on you.
+eventOption:Hold the alliance => risk:high | tag:mercy | success:item:sealed citrus tonic,credits+8,log:The crew splits the cache and leaves you a tonic. | fail:credits-4,log:The crew panics and ruins the split.
+eventOption:Betray the crew => risk:deadly | tag:betrayal | success:item:torque cleaver,credits+18,log:You seize the cache in the chaos. | fail:hp-9,credits-5,log:The crew turns on you.
 
 @mission
 id:refinery-vault
@@ -85,7 +85,7 @@ loot:2
 lootType:signal parts
 reward:relay components
 success:item:compressed coil,credits+16,flag:refinery-telecom-1,log:You recover the missing relays and mark the conduit run.
-fail:hp-8,morale-5
+fail:hp-8,credits-5
 flag:refinery-telecom-1
 once:true
 
@@ -100,7 +100,7 @@ loot:3
 lootType:signal crates
 reward:idle dispatch uplink
 success:item:idle relay tuner,credits+24,flag:refinery-telecom-2,log:The uplink sparks alive. A new idle dispatch channel opens.
-fail:hp-10,morale-6
+fail:hp-10,credits-6
 flag:refinery-telecom-2
 requires:refinery-telecom-1
 once:true

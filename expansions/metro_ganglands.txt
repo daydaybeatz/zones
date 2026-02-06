@@ -22,7 +22,7 @@ title:Shanty Concourse
 desc:Ticket booths are barricaded into gang posts and scrap stalls.
 tags:Metro / Hostile
 option:Pay for a safe route => concourse | risk:low | time:6 | reward:safe passage | success:credits-6,log:A toll buys a quieter lane. | fail:hp-4,log:A lookout tags you on the way through.
-option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:trackside vest,item:torchlight lantern,log:You nab mid-tier tools before the guards return. | fail:hp-5,morale-2,log:A sentry clips you on the exit.
+option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:trackside vest,item:torchlight lantern,log:You nab mid-tier tools before the guards return. | fail:hp-5,credits-2,log:A sentry clips you on the exit.
 
 @mission
 id:gangland-supply
@@ -34,7 +34,7 @@ energy:14
 loot:3
 lootType:mid-tier gear
 event:Rail patrol crossing | chance:0.5 | prompt:A Redline patrol blocks the rail spur. Decide how to clear it.
-eventOption:Sneak along the service duct => risk:medium | tag:stealth | success:item:rail map rig,credits+6,log:You slip by and snag a route rig. | fail:hp-5,morale-2,log:Boots scrape metal and draw fire.
+eventOption:Sneak along the service duct => risk:medium | tag:stealth | success:item:rail map rig,credits+6,log:You slip by and snag a route rig. | fail:hp-5,credits-2,log:Boots scrape metal and draw fire.
 eventOption:Charge through head-on => risk:high | tag:combat | success:item:rail spike mace,log:You smash through and claim a heavy mace. | fail:hp-8,log:The patrol drives you back hard.
 
 @mission
@@ -47,8 +47,8 @@ energy:13
 loot:3
 lootType:weapons & gear
 event:Runner swaps crate tags | chance:1 | prompt:A runner offers to flip tags on a crate mid-raid. Take the risk?
-eventOption:Honor the exchange => risk:medium | tag:mercy | success:item:trackside vest,credits+5,log:The runner keeps their word and slips you a vest. | fail:morale-3,log:The runner vanishes before the swap finishes.
-eventOption:Double-cross the runner => risk:high | tag:betrayal | success:credits+14,item:coin string,log:You keep the crate and lift a coin string. | fail:hp-6,morale-4,log:The runner's crew retaliates.
+eventOption:Honor the exchange => risk:medium | tag:mercy | success:item:trackside vest,credits+5,log:The runner keeps their word and slips you a vest. | fail:credits-3,log:The runner vanishes before the swap finishes.
+eventOption:Double-cross the runner => risk:high | tag:betrayal | success:credits+14,item:coin string,log:You keep the crate and lift a coin string. | fail:hp-6,credits-4,log:The runner's crew retaliates.
 
 @mission
 id:gang-assist
@@ -105,6 +105,6 @@ loot:3
 lootType:signal crates
 reward:mercenary contract
 success:item:signal jammer coil,credits+18,flag:ganglands-telecom,log:The relay hums to life. A mercenary answers the call, opening a second idle dispatch slot.
-fail:hp-6,morale-4
+fail:hp-6,credits-4
 flag:ganglands-telecom
 once:true

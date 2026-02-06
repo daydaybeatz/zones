@@ -20,7 +20,7 @@ title:Rift Hub
 desc:Floating consoles orbit a fractured core, pulsing with unstable light.
 tags:Rift / Deadly
 option:Stabilize the core nodes => rift-hub | risk:high | time:10 | reward:rift provisions | success:item:riftwater flask,item:synth-berry pack,log:You steady the nodes and bottle chilled riftwater. | fail:hp-8,rads+6,log:A surge lashes across the hub.
-option:Strip the grav lockers => rift-hub | risk:deadly | time:11 | reward:weapon cache | success:item:graviton glaive,item:gravity lens,log:You yank a gleaming glaive from a weightless rack. | fail:hp-10,morale-5,log:The lockers buckle and force a retreat.
+option:Strip the grav lockers => rift-hub | risk:deadly | time:11 | reward:weapon cache | success:item:graviton glaive,item:gravity lens,log:You yank a gleaming glaive from a weightless rack. | fail:hp-10,credits-5,log:The lockers buckle and force a retreat.
 
 @mission
 id:rift-sweep
@@ -33,7 +33,7 @@ loot:5
 lootType:rift supplies
 event:Rift anomaly shear | chance:0.5 | prompt:A shear opens in the corridor. Choose your path.
 eventOption:Calibrate the shear with instruments => risk:high | tag:tech | success:item:anomaly scanner,credits+12,log:You stabilize the shear and recover a scanner. | fail:hp-8,rads+4,log:The shear lashes back at you.
-eventOption:Slip through the distorted shadow => risk:deadly | tag:stealth | success:item:drift moss tea,log:You glide through and pocket a tea pack. | fail:hp-10,morale-5,log:The shear tags you as you pass.
+eventOption:Slip through the distorted shadow => risk:deadly | tag:stealth | success:item:drift moss tea,log:You glide through and pocket a tea pack. | fail:hp-10,credits-5,log:The shear tags you as you pass.
 
 @mission
 id:rift-lab
@@ -45,8 +45,8 @@ energy:24
 loot:6
 lootType:rift armory
 event:Temporal researcher offers a deal | chance:1 | prompt:A researcher offers their stash for safe passage. What's your move?
-eventOption:Escort them out => risk:high | tag:mercy | success:item:riftwater flask,credits+14,log:The researcher shares rare water and leaves peacefully. | fail:morale-4,log:The researcher freezes, overwhelmed.
-eventOption:Take the stash and run => risk:deadly | tag:betrayal | success:item:rift crystal splinter,credits+20,log:You snatch the stash and disappear into the haze. | fail:hp-11,morale-6,log:The researcher triggers a defensive pulse.
+eventOption:Escort them out => risk:high | tag:mercy | success:item:riftwater flask,credits+14,log:The researcher shares rare water and leaves peacefully. | fail:credits-4,log:The researcher freezes, overwhelmed.
+eventOption:Take the stash and run => risk:deadly | tag:betrayal | success:item:rift crystal splinter,credits+20,log:You snatch the stash and disappear into the haze. | fail:hp-11,credits-6,log:The researcher triggers a defensive pulse.
 
 @mission
 id:rift-core
@@ -83,7 +83,7 @@ loot:2
 lootType:signal parts
 reward:signal stabilizers
 success:item:nullfield filament,credits+22,flag:rift-telecom-1,log:The stabilizers are recovered and the signal lattice is traced.
-fail:hp-10,morale-6
+fail:hp-10,credits-6
 flag:rift-telecom-1
 once:true
 
@@ -98,7 +98,7 @@ loot:3
 lootType:signal crates
 reward:idle dispatch uplink
 success:item:dispatch accelerator,credits+30,flag:rift-telecom-2,log:The uplink locks in place. A new idle dispatch channel opens.
-fail:hp-12,morale-7
+fail:hp-12,credits-7
 flag:rift-telecom-2
 requires:rift-telecom-1
 once:true

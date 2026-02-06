@@ -385,7 +385,6 @@
 
   .bar.hp span{background:linear-gradient(90deg, var(--red), var(--orange)); box-shadow: var(--glow-red);}
   .bar.stamina span{background:linear-gradient(90deg, var(--green), rgba(0,183,255,0.55));}
-  .bar.morale span{background:linear-gradient(90deg, var(--amber), rgba(57,255,20,0.55));}
   .bar.rads span{background:linear-gradient(90deg, rgba(57,255,20,0.8), var(--amber), var(--red));}
   .bar.hunger span{background:linear-gradient(90deg, var(--orange), var(--red));}
   .bar.thirst span{background:linear-gradient(90deg, var(--blue), rgba(57,255,20,0.6));}
@@ -1263,7 +1262,7 @@
     const ELDER_ADVICE=[
       'Keep one energy bar in reserve; emergency actions cost more than you think.',
       'Scrap weighs less than credits, but credits open gates.',
-      'Morale drops faster than hunger after a bad run—rest before you spiral.',
+      'After a rough run, rest before the next push; fatigue stacks faster than you think.',
       'Stamina recovery is quicker when you stop in safe zones.',
       'Radiation shield buys time, not safety; reapply before deep dives.',
       'Cold drains stamina; warm layers matter more than armor on long walks.',
@@ -1274,13 +1273,13 @@
       'Door hints tell you what kind of gear to expect; plan your loadout.',
       'Combat eats time; budget extra energy on high-risk raids.',
       'When the codex goes quiet, check idle dispatches—they may need routing.',
-      'Food restores more than hunger; morale steadies with a warm meal.',
+      'Food restores more than hunger; warm meals slow the cold.',
       'Use the market when you can; junk in the pack is lost profit.',
       'A balanced loadout lowers risk more than a single rare item.',
       'Always carry one light source; dark halls spike failure rates.',
       'Trade off loot for survival; an extra medkit beats another trinket.',
       'If rads climb over twenty, retreat and cleanse before the next run.',
-      'Short runs keep XP climbing without draining morale.',
+      'Short runs keep XP climbing without draining energy reserves.',
       'Listen for hums in the bunker—systems online mean safer routes.',
       'Hubs are for planning; do not launch raids until your energy is stable.',
       'Spare filters are worth more than weapons when the air turns bad.',
@@ -1298,7 +1297,6 @@
     const createDefaultState=()=>({
       hp:92,maxHp:100,
       stamina:90,maxStamina:100,
-      morale:62,maxMorale:100,
       hunger:15,maxHunger:100,
       thirst:20,maxThirst:100,
       energy:72,maxEnergy:100,
@@ -1320,7 +1318,7 @@
       loadoutPage:0,
       marketPage:0,
       inventory:["rusty flashlight","ration bar","scrap wiring"],
-      equipped:['basic backpack'],
+      equipped:['basic backpack','cargo pants','sale-day hoodie','safehouse slippers'],
       codex:["Hub online. Reward bays clear."],
       codexExpanded:false,
       stash:{name:'Vault Stash',items:[]},
@@ -1522,7 +1520,7 @@
       'microcell':{type:'tool',slot:'tool',rarity:'rare',value:22,mods:{idleSpeed:0.15,energyRegen:1,staminaBonus:2}},
       'rigged backpack':{type:'armor',slot:'backpack',rarity:'rare',value:24,mods:{carryBonus:12,insulation:0.3}},
       'bandage':{type:'consumable',rarity:'common',value:4,effect:'hp+8'},
-      'ration bar':{type:'consumable',rarity:'common',value:3,effect:'hunger-12,morale+2'},
+      'ration bar':{type:'consumable',rarity:'common',value:3,effect:'hunger-12,stamina+2'},
       'water flask':{type:'consumable',rarity:'common',value:4,effect:'thirst-12'},
       'spark tonic':{type:'consumable',rarity:'uncommon',value:8,effect:'energy+18,stamina+6'},
       'scrap wiring':{type:'junk',rarity:'common',value:2,salvage:2,stackable:true},
@@ -1541,14 +1539,14 @@
       'relay crystal':{type:'junk',rarity:'rare',value:20,salvage:6},
       'drone core':{type:'tool',slot:'tool',rarity:'epic',value:32,mods:{lootBonus:0.08,energyRegen:2}},
       'fusion core shard':{type:'junk',rarity:'legendary',value:60,salvage:12},
-      'scrapboss helm':{type:'armor',slot:'helmet',rarity:'legendary',value:85,mods:{moraleBonus:4,insulation:0.6},breakdown:{items:{'cloth scraps':5,'scrap wiring':2}}},
-      'warlord helm':{type:'armor',slot:'helmet',rarity:'legendary',value:85,mods:{moraleBonus:4,insulation:0.6},breakdown:{items:{'cloth scraps':4,'scrap wiring':2}}},
+      'scrapboss helm':{type:'armor',slot:'helmet',rarity:'legendary',value:85,mods:{staminaBonus:4,insulation:0.6},breakdown:{items:{'cloth scraps':5,'scrap wiring':2}}},
+      'warlord helm':{type:'armor',slot:'helmet',rarity:'legendary',value:85,mods:{staminaBonus:4,insulation:0.6},breakdown:{items:{'cloth scraps':4,'scrap wiring':2}}},
       'safehouse warden coat':{type:'armor',slot:'chest',rarity:'legendary',value:90,mods:{staminaBonus:4,insulation:1}},
       'facility command badge':{type:'tool',slot:'tool',rarity:'legendary',value:95,mods:{lootBonus:0.12,energyRegen:2}},
-      'riot jacket':{type:'armor',slot:'chest',rarity:'legendary',value:88,mods:{insulation:0.9,moraleBonus:2},breakdown:{items:{'cloth scraps':6,'plastic shards':2}}},
+      'riot jacket':{type:'armor',slot:'chest',rarity:'legendary',value:88,mods:{insulation:0.9,staminaBonus:2},breakdown:{items:{'cloth scraps':6,'plastic shards':2}}},
       'field rations':{type:'consumable',rarity:'common',value:5,effect:'hunger-16,stamina+4'},
       'water canister':{type:'consumable',rarity:'common',value:5,effect:'thirst-18,temp-1'},
-      'painkillers':{type:'consumable',rarity:'uncommon',value:11,effect:'hp+12,morale+2'},
+      'painkillers':{type:'consumable',rarity:'uncommon',value:11,effect:'hp+12,stamina+2'},
       'glowing herbs':{type:'consumable',rarity:'uncommon',value:10,effect:'rads-4,temp+1'},
       'military rations':{type:'consumable',rarity:'uncommon',value:12,effect:'hunger-22,stamina+6'},
       'coil battery':{type:'tool',slot:'tool',rarity:'uncommon',value:13,mods:{energyRegen:1}},
@@ -1559,13 +1557,13 @@
       'scavenger boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:16,mods:{staminaBonus:2},breakdown:{items:{'cloth scraps':4,'scrap bundle':1}}},
       'underground map':{type:'tool',slot:'tool',rarity:'uncommon',value:15,mods:{riskMod:-0.05,lootBonus:0.03}},
       'data cartridge':{type:'tool',slot:'tool',rarity:'rare',value:26,mods:{lootBonus:0.06}},
-      'signal wristband':{type:'tool',slot:'tool',rarity:'uncommon',value:14,mods:{moraleBonus:2}},
+      'signal wristband':{type:'tool',slot:'tool',rarity:'uncommon',value:14,mods:{staminaBonus:2}},
       'riot shield':{type:'weapon',slot:'weapon',rarity:'rare',value:30,mods:{riskMod:-0.06,insulation:0.5}},
       'flare paint':{type:'tool',slot:'tool',rarity:'uncommon',value:13,mods:{lootBonus:0.05}},
       'flashbang':{type:'tool',slot:'tool',rarity:'rare',value:24,mods:{combatBonus:5}},
       'foam canister':{type:'tool',slot:'tool',rarity:'uncommon',value:15,mods:{combatBonus:3,riskMod:-0.02}},
       'viral clip drive':{type:'junk',rarity:'rare',value:28,salvage:7},
-      'limited hoodie':{type:'armor',slot:'chest',rarity:'rare',value:27,mods:{moraleBonus:3,insulation:0.6},breakdown:{items:{'cloth scraps':5}}},
+      'limited hoodie':{type:'armor',slot:'chest',rarity:'rare',value:27,mods:{staminaBonus:3,insulation:0.6},breakdown:{items:{'cloth scraps':5}}},
       'payload crate':{type:'junk',rarity:'uncommon',value:18,salvage:5},
       'stun baton':{type:'weapon',slot:'weapon',rarity:'rare',value:29,mods:{combatBonus:6}},
       'mystery supply':{type:'junk',rarity:'rare',value:25,salvage:6},
@@ -1589,8 +1587,6 @@
       'compact medkit':{type:'consumable',rarity:'uncommon',value:14,effect:'hp+18'},
       'filtered water pack':{type:'consumable',rarity:'uncommon',value:13,effect:'thirst-20,rads-2'},
       'anti-rad serum':{type:'consumable',rarity:'rare',value:32,effect:'rads-40,radshield+25'},
-      'morale patch':{type:'consumable',rarity:'common',value:7,effect:'morale+8,stamina+2'},
-
       /* iron ward */
       'ledger-etched compass':{type:'tool',slot:'tool',rarity:'uncommon',value:19,mods:{riskMod:-0.04,lootBonus:0.02}},
       'clocktower chime':{type:'junk',rarity:'uncommon',value:16,salvage:4},
@@ -1614,7 +1610,7 @@
 
       /* downtown portland */
       'floodgate keycard':{type:'key',rarity:'rare',value:22},
-      'signal flare rack':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{lootBonus:0.05,moraleBonus:1}},
+      'signal flare rack':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{lootBonus:0.05,staminaBonus:1}},
       'riot-line tape':{type:'junk',rarity:'common',value:3,salvage:2,stackable:true},
       'bridge-runner pack':{type:'armor',slot:'backpack',rarity:'uncommon',value:28,mods:{carryBonus:10}},
       'arc pistol':{type:'weapon',slot:'weapon',rarity:'rare',value:38,mods:{combatBonus:8,energyRegen:1}},
@@ -1622,7 +1618,7 @@
       /* underground bunker additions */
       'bunker stew pouch':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,temp+1'},
       'tinned beans':{type:'consumable',rarity:'common',value:4,effect:'hunger-8'},
-      'stale biscuits':{type:'consumable',rarity:'common',value:3,effect:'hunger-6,morale+1'},
+      'stale biscuits':{type:'consumable',rarity:'common',value:3,effect:'hunger-6,stamina+1'},
       'canteen tablets':{type:'consumable',rarity:'uncommon',value:9,effect:'thirst-14,rads-1'},
       'barracks coffee':{type:'consumable',rarity:'uncommon',value:10,effect:'energy+10,stamina+4'},
       'moth-eaten scarf':{type:'armor',slot:'chest',rarity:'common',value:8,mods:{insulation:0.4},breakdown:{items:{'cloth scraps':3}}},
@@ -1634,13 +1630,13 @@
       'flashline map':{type:'tool',slot:'tool',rarity:'uncommon',value:15,mods:{riskMod:-0.03,lootBonus:0.02}},
 
       /* abandoned mall additions */
-      'mall snack pack':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,morale+2'},
+      'mall snack pack':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,stamina+2'},
       'instant noodles':{type:'consumable',rarity:'common',value:4,effect:'hunger-9,temp+1'},
       'citrus soda':{type:'consumable',rarity:'common',value:4,effect:'thirst-10,energy+4'},
       'security poncho':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{insulation:0.5,riskMod:-0.02,stealthBonus:0.02}},
       'store runner shoes':{type:'armor',slot:'shoes',rarity:'uncommon',value:16,mods:{staminaBonus:2}},
-      'queue jacket':{type:'armor',slot:'chest',rarity:'uncommon',value:17,mods:{moraleBonus:1,insulation:0.4}},
-      'sale-day hoodie':{type:'armor',slot:'chest',rarity:'common',value:9,mods:{moraleBonus:1,insulation:0.3}},
+      'queue jacket':{type:'armor',slot:'chest',rarity:'uncommon',value:17,mods:{staminaBonus:1,insulation:0.4}},
+      'sale-day hoodie':{type:'armor',slot:'chest',rarity:'common',value:9,mods:{staminaBonus:1,insulation:0.3}},
       'loading hook':{type:'weapon',slot:'weapon',rarity:'uncommon',value:19,mods:{combatBonus:5}},
       'glass shard shiv':{type:'weapon',slot:'weapon',rarity:'common',value:10,mods:{combatBonus:3}},
       'kiosk toolkit':{type:'tool',slot:'tool',rarity:'uncommon',value:16,mods:{lootBonus:0.04}},
@@ -1653,12 +1649,12 @@
       'signal jammer coil':{type:'tool',slot:'tool',rarity:'rare',value:32,mods:{riskMod:-0.06,lootBonus:0.02}},
       'turnstile shield':{type:'weapon',slot:'weapon',rarity:'rare',value:34,mods:{riskMod:-0.05,insulation:0.4}},
       'trackside vest':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{staminaBonus:1,insulation:0.4}},
-      'graffiti cloak':{type:'armor',slot:'chest',rarity:'rare',value:30,mods:{moraleBonus:3,insulation:0.7,stealthBonus:0.05}},
+      'graffiti cloak':{type:'armor',slot:'chest',rarity:'rare',value:30,mods:{staminaBonus:3,insulation:0.7,stealthBonus:0.05}},
       'metro runner boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:19,mods:{staminaBonus:3}},
       'gang patchwork pants':{type:'armor',slot:'pants',rarity:'common',value:10,mods:{insulation:0.3}},
       'torchlight lantern':{type:'tool',slot:'tool',rarity:'uncommon',value:18,mods:{lootBonus:0.04}},
       'black market battery':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{energyRegen:2}},
-      'coin string':{type:'tool',slot:'tool',rarity:'uncommon',value:17,mods:{moraleBonus:2}},
+      'coin string':{type:'tool',slot:'tool',rarity:'uncommon',value:17,mods:{staminaBonus:2}},
       'rail map rig':{type:'tool',slot:'tool',rarity:'uncommon',value:18,mods:{riskMod:-0.04}},
       'scrapper mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:17,mods:{insulation:0.3,riskMod:-0.02,stealthBonus:0.03}},
       'barter satchel':{type:'armor',slot:'backpack',rarity:'uncommon',value:26,mods:{carryBonus:9}},
@@ -1676,14 +1672,14 @@
       'secure datapad':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{lootBonus:0.07}},
       'containment seal kit':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{riskMod:-0.03}},
       'warden longcoat':{type:'armor',slot:'chest',rarity:'legendary',value:96,mods:{staminaBonus:4,insulation:1}},
-      'command bracer':{type:'armor',slot:'gloves',rarity:'rare',value:32,mods:{moraleBonus:2,insulation:0.3}},
+      'command bracer':{type:'armor',slot:'gloves',rarity:'rare',value:32,mods:{staminaBonus:2,insulation:0.3}},
       'nutri-gel pack':{type:'consumable',rarity:'rare',value:18,effect:'hunger-18,energy+6'},
 
       /* medical center additions */
       'antiseptic wipes':{type:'consumable',rarity:'common',value:4,effect:'hp+6'},
       'electro bandage':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+14,stamina+2'},
       'clinic IV pack':{type:'consumable',rarity:'rare',value:26,effect:'hp+24'},
-      'antiviral vial':{type:'consumable',rarity:'rare',value:24,effect:'hp+12,morale+6'},
+      'antiviral vial':{type:'consumable',rarity:'rare',value:24,effect:'hp+12,stamina+4'},
       'cooling compress':{type:'consumable',rarity:'common',value:4,effect:'hp+4,temp-2'},
       'sterile gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:17,mods:{riskMod:-0.02,insulation:0.2,mercyBonus:0.03}},
       'scrub jacket':{type:'armor',slot:'chest',rarity:'common',value:8,mods:{insulation:0.3}},
@@ -1692,13 +1688,13 @@
       'portable scanner':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{lootBonus:0.05,techBonus:0.03}},
       'triage lamp':{type:'tool',slot:'tool',rarity:'uncommon',value:16,mods:{lootBonus:0.03}},
       'biofilter mask':{type:'armor',slot:'helmet',rarity:'rare',value:30,mods:{riskMod:-0.05,insulation:0.4}},
-      'pain suppressant':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+10,morale+3'},
+      'pain suppressant':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+10,stamina+3'},
       'hydration drip':{type:'consumable',rarity:'uncommon',value:11,effect:'thirst-18,energy+4'},
 
       /* sunken refinery */
       'smokehouse ration':{type:'consumable',rarity:'uncommon',value:7,effect:'hunger-18,stamina+4'},
       'brine crackers':{type:'consumable',rarity:'common',value:5,effect:'hunger-12'},
-      'sealed citrus tonic':{type:'consumable',rarity:'uncommon',value:12,effect:'thirst-20,morale+2'},
+      'sealed citrus tonic':{type:'consumable',rarity:'uncommon',value:12,effect:'thirst-20,energy+2'},
       'salted stew pouch':{type:'consumable',rarity:'common',value:6,effect:'hunger-14,temp+1'},
       'burn salve':{type:'consumable',rarity:'uncommon',value:14,effect:'hp+12,temp-1'},
       'antitoxin vial':{type:'consumable',rarity:'rare',value:24,effect:'rads-15,hp+6'},
@@ -1719,20 +1715,20 @@
 
       /* stormglass citadel */
       'stormglass canteen':{type:'consumable',rarity:'uncommon',value:12,effect:'thirst-22,temp+1'},
-      'static fruit bar':{type:'consumable',rarity:'common',value:6,effect:'hunger-14,morale+1'},
+      'static fruit bar':{type:'consumable',rarity:'common',value:6,effect:'hunger-14,stamina+1'},
       'ozone jerky':{type:'consumable',rarity:'uncommon',value:12,effect:'hunger-18,stamina+4'},
-      'ionized brew':{type:'consumable',rarity:'uncommon',value:12,effect:'energy+12,morale+2'},
+      'ionized brew':{type:'consumable',rarity:'uncommon',value:12,effect:'energy+12,stamina+2'},
       'shockwrap bandage':{type:'consumable',rarity:'uncommon',value:14,effect:'hp+14,rads-2'},
       'focus serum':{type:'consumable',rarity:'rare',value:24,effect:'energy+18,stamina+6'},
       'citadel pauldrons':{type:'armor',slot:'chest',rarity:'rare',value:42,mods:{insulation:0.9,riskMod:-0.05}},
       'stormguard greaves':{type:'armor',slot:'pants',rarity:'rare',value:36,mods:{insulation:0.5,staminaBonus:2}},
       'arcthread gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:24,mods:{staminaBonus:3,riskMod:-0.02}},
-      'visor of echoes':{type:'armor',slot:'eyewear',rarity:'rare',value:34,mods:{riskMod:-0.04,moraleBonus:2,stealthBonus:0.03}},
+      'visor of echoes':{type:'armor',slot:'eyewear',rarity:'rare',value:34,mods:{riskMod:-0.04,staminaBonus:2,stealthBonus:0.03}},
       'stormglass rapier':{type:'weapon',slot:'weapon',rarity:'rare',value:44,mods:{combatBonus:9,lootBonus:0.02}},
       'thundercoil rifle':{type:'weapon',slot:'weapon',rarity:'epic',value:60,mods:{combatBonus:12,energyRegen:1}},
       'phase relay kit':{type:'tool',slot:'tool',rarity:'rare',value:38,mods:{idleSpeed:0.2}},
       'breach timer':{type:'tool',slot:'tool',rarity:'rare',value:34,mods:{raidSpeed:0.15,riskMod:-0.02}},
-      'lightning ward charm':{type:'tool',slot:'tool',rarity:'rare',value:36,mods:{riskMod:-0.07,moraleBonus:2}},
+      'lightning ward charm':{type:'tool',slot:'tool',rarity:'rare',value:36,mods:{riskMod:-0.07,staminaBonus:2}},
       'signal anchor':{type:'tool',slot:'tool',rarity:'uncommon',value:24,mods:{lootBonus:0.06}},
       'stormglass shard':{type:'junk',rarity:'uncommon',value:18,salvage:4},
       'capacitor lattice':{type:'junk',rarity:'rare',value:30,salvage:8},
@@ -1742,14 +1738,14 @@
       /* rift complex */
       'riftwater flask':{type:'consumable',rarity:'uncommon',value:14,effect:'thirst-24,rads-2'},
       'chrono ration':{type:'consumable',rarity:'uncommon',value:14,effect:'hunger-20,energy+4'},
-      'drift moss tea':{type:'consumable',rarity:'uncommon',value:12,effect:'temp+2,morale+2'},
+      'drift moss tea':{type:'consumable',rarity:'uncommon',value:12,effect:'temp+2,stamina+2'},
       'synth-berry pack':{type:'consumable',rarity:'common',value:7,effect:'hunger-12,stamina+2'},
       'nano-restore kit':{type:'consumable',rarity:'rare',value:26,effect:'hp+20,stamina+4'},
       'rift stabilizer shot':{type:'consumable',rarity:'rare',value:28,effect:'rads-20,temp-2'},
       'quantum mesh cloak':{type:'armor',slot:'chest',rarity:'epic',value:60,mods:{insulation:1.1,riskMod:-0.06,stealthBonus:0.08}},
       'phase-woven boots':{type:'armor',slot:'shoes',rarity:'rare',value:40,mods:{staminaBonus:4,riskMod:-0.03,stealthBonus:0.04}},
       'singularity gauntlets':{type:'armor',slot:'gloves',rarity:'rare',value:42,mods:{staminaBonus:5}},
-      'horizon visor':{type:'armor',slot:'eyewear',rarity:'rare',value:38,mods:{riskMod:-0.04,moraleBonus:2}},
+      'horizon visor':{type:'armor',slot:'eyewear',rarity:'rare',value:38,mods:{riskMod:-0.04,staminaBonus:2}},
       'graviton glaive':{type:'weapon',slot:'weapon',rarity:'epic',value:62,mods:{combatBonus:13,lootBonus:0.02}},
       'particle repeater':{type:'weapon',slot:'weapon',rarity:'epic',value:64,mods:{combatBonus:14,energyRegen:1}},
       'temporal compass':{type:'tool',slot:'tool',rarity:'epic',value:58,mods:{raidSpeed:0.2,lootBonus:0.04}},
@@ -1763,23 +1759,23 @@
 
       /* safehouse additions */
       'bunk blanket':{type:'armor',slot:'chest',rarity:'common',value:8,mods:{insulation:0.5}},
-      'safehouse slippers':{type:'armor',slot:'shoes',rarity:'common',value:6,mods:{staminaBonus:1}},
+      'safehouse slippers':{type:'armor',slot:'shoes',rarity:'common',value:6,mods:{staminaBonus:1,insulation:0.1}},
       'workshop apron':{type:'armor',slot:'chest',rarity:'uncommon',value:16,mods:{insulation:0.4,staminaBonus:1}},
       'tool roll':{type:'tool',slot:'tool',rarity:'uncommon',value:16,mods:{lootBonus:0.03,riskMod:-0.02}},
       'generator capacitor':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{energyRegen:2}},
-      'quiet radio':{type:'tool',slot:'tool',rarity:'uncommon',value:14,mods:{moraleBonus:2}},
+      'quiet radio':{type:'tool',slot:'tool',rarity:'uncommon',value:14,mods:{staminaBonus:2}},
       'galley kit':{type:'tool',slot:'tool',rarity:'common',value:8,mods:{lootBonus:0.02}},
-      'homebrew stew':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,morale+3'},
+      'homebrew stew':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,stamina+3'},
       'clean canteen':{type:'consumable',rarity:'common',value:4,effect:'thirst-12,temp-1'},
-      'recovery tonic':{type:'consumable',rarity:'rare',value:22,effect:'hp+18,morale+4'},
+      'recovery tonic':{type:'consumable',rarity:'rare',value:22,effect:'hp+18,stamina+4'},
       'spare belt rig':{type:'armor',slot:'backpack',rarity:'uncommon',value:22,mods:{carryBonus:7}},
       'comfort liner':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{insulation:0.7}},
-      'restful mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:15,mods:{moraleBonus:2,insulation:0.2}},
+      'restful mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:15,mods:{staminaBonus:2,insulation:0.2}},
       'training weights':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{staminaBonus:3}}
     };
 
     const LOOT_BY_RARITY={
-      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','morale patch','pocket pack','jury-rigged blade','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape','bunker stew pouch','tinned beans','stale biscuits','moth-eaten scarf','bunker fatigues','mess hall apron','locker prybar','mall snack pack','instant noodles','citrus soda','sale-day hoodie','glass shard shiv','gang patchwork pants','antiseptic wipes','cooling compress','scrub jacket','bunk blanket','safehouse slippers','galley kit','homebrew stew','clean canteen','brine crackers','salted stew pouch','slag shard','static fruit bar','storm seal gaskets','synth-berry pack'],
+      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','pocket pack','jury-rigged blade','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape','bunker stew pouch','tinned beans','stale biscuits','moth-eaten scarf','bunker fatigues','mess hall apron','locker prybar','mall snack pack','instant noodles','citrus soda','sale-day hoodie','glass shard shiv','gang patchwork pants','antiseptic wipes','cooling compress','scrub jacket','bunk blanket','safehouse slippers','galley kit','homebrew stew','clean canteen','brine crackers','salted stew pouch','slag shard','static fruit bar','storm seal gaskets','synth-berry pack'],
       uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack','canteen tablets','barracks coffee','reinforced gloves','service wrench','flashline map','security poncho','store runner shoes','queue jacket','loading hook','kiosk toolkit','spark kiosk battery','rail spike mace','trackside vest','metro runner boots','torchlight lantern','coin string','rail map rig','scrapper mask','barter satchel','response harness','facility boots','clearance gloves','access scanner','containment seal kit','sterile gloves','triage boots','medic satchel','triage lamp','pain suppressant','hydration drip','workshop apron','tool roll','quiet radio','spare belt rig','comfort liner','restful mask','smokehouse ration','sealed citrus tonic','burn salve','pressure-seal gloves','slagline boots','pressure gauge kit','reclaimer hook','refinery alloy ingot','coolant canister','stormglass canteen','ozone jerky','ionized brew','shockwrap bandage','arcthread gloves','signal anchor','stormglass shard','ion circuit puck','riftwater flask','chrono ration','drift moss tea','nullfield filament','vacuum seal ring'],
       rare:['microcell','lockbox key','manager room key','storage room key','security supply room key','director armory key','bunker armory key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum','power coupler','shanty revolver','signal jammer coil','turnstile shield','graffiti cloak','black market battery','security visor','tactical comms rig','hazmat undersuit','pulse baton','secure datapad','command bracer','nutri-gel pack','clinic IV pack','antiviral vial','portable scanner','biofilter mask','recovery tonic','generator capacitor','training weights','antitoxin vial','refinery slickcoat','ventmaster hood','torque cleaver','hydraulic spike','scavenge beacon','idle relay tuner','compressed coil','stormglass rapier','citadel pauldrons','stormguard greaves','visor of echoes','phase relay kit','breach timer','lightning ward charm','capacitor lattice','focus serum','nano-restore kit','rift stabilizer shot','phase-woven boots','singularity gauntlets','horizon visor','inertial dampener','anomaly scanner','rift crystal splinter','gravity lens'],
       epic:['drone core','shock carbine','thundercoil rifle','quantum mesh cloak','graviton glaive','particle repeater','temporal compass','dispatch accelerator'],
@@ -1963,7 +1959,7 @@ target:commons
 title:Safe House Commons
 desc:Warm lights, clean water, and the trade counter keep the crew steady between runs.
 tags:Safe / Hub
-option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,stamina+14,morale+6,log:The bunk warmth sinks into your bones. | fail:morale-2,log:Sleep won't come tonight.
+option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,stamina+14,credits+6,log:The bunk warmth sinks into your bones. | fail:credits-2,log:Sleep won't come tonight.
 option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. | fail:stamina-2,log:The bench clamps fail you.
 
 @mission
@@ -1978,8 +1974,8 @@ reward:elder advice
 combatChance:0
 hub:true
 event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice mid-raid. How do you respond?
-eventOption:Share the elders' guidance => risk:low | tag:mercy | success:morale+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:morale-3,log:The runner panics and bolts.
-eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:morale-5,log:The elders hear about the rumor sale.
+eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:credits-3,log:The runner panics and bolts.
+eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:credits-5,log:The elders hear about the rumor sale.
 
 @mission
 id:safehouse-hush
@@ -1995,7 +1991,7 @@ hub:true
 unlockFlag:secret-safehouse-ops
 consumeFlag:secret-safehouse-ops
 event:Relay shadow crossing | chance:0.6 | prompt:A patrol cuts across the whispering line. Choose your approach.
-eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. | fail:hp-3,morale-2,log:A clang gives you away.
+eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. | fail:hp-3,credits-2,log:A clang gives you away.
 eventOption:Confront the patrol => risk:medium | tag:combat | success:item:coil battery,log:You overpower the patrol and seize their battery. | fail:hp-6,log:A scuffle leaves you bruised.
 
 @quest
@@ -2008,8 +2004,8 @@ energy:12
 loot:1
 lootType:maintenance cache
 reward:ventilation restored
-success:item:spare filter,item:tool roll,credits+8,morale+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online.
-fail:temp-3,morale-4
+success:item:spare filter,item:tool roll,credits+8,credits+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online.
+fail:temp-3,credits-4
 flag:safehouse-vents
 once:true`,
       underground_bunker:`@expansion
@@ -2045,7 +2041,7 @@ energy:10
 loot:2
 lootType:low-tier food & clothing
 event:Service hatch patrol | chance:0.55 | prompt:A patrol blocks the service hatch that hides extra rations.
-eventOption:Crawl through the ventwork => risk:low | tag:stealth | success:item:tinned beans,credits+4,log:You slip past and scoop up sealed tins. | fail:hp-3,morale-2,log:A vent grate clangs and draws attention.
+eventOption:Crawl through the ventwork => risk:low | tag:stealth | success:item:tinned beans,credits+4,log:You slip past and scoop up sealed tins. | fail:hp-3,credits-2,log:A vent grate clangs and draws attention.
 eventOption:Force the hatch open => risk:medium | tag:combat | success:item:locker prybar,item:ration bar,log:You muscle through and claim the stash. | fail:hp-6,log:The patrol batters you back.
 
 @mission
@@ -2058,8 +2054,8 @@ energy:14
 loot:3
 lootType:sealed kits
 event:Lost tunnel scav | chance:1 | prompt:A starving scav begs to join your run. Decide how to respond.
-eventOption:Share supplies and guide them out => risk:low | tag:mercy | success:morale+5,item:stale biscuits,log:The scav repays you with a hidden snack cache. | fail:morale-3,log:The scav panics and slows you down.
-eventOption:Shake them down for intel => risk:medium | tag:betrayal | success:credits+10,item:old coin,log:You take the intel and a coin for your trouble. | fail:morale-4,log:The scav bolts, cursing your name.
+eventOption:Share supplies and guide them out => risk:low | tag:mercy | success:credits+5,item:stale biscuits,log:The scav repays you with a hidden snack cache. | fail:credits-3,log:The scav panics and slows you down.
+eventOption:Shake them down for intel => risk:medium | tag:betrayal | success:credits+10,item:old coin,log:You take the intel and a coin for your trouble. | fail:credits-4,log:The scav bolts, cursing your name.
 
 @mission
 id:bunker-armory
@@ -2096,7 +2092,7 @@ loot:1
 lootType:signal trace
 reward:telecom trace
 success:credits+8,flag:bunker-telecom-1,log:You map the cut and mark a clear path to the relay core.
-fail:morale-3
+fail:credits-3
 flag:bunker-telecom-1
 once:true
 
@@ -2111,7 +2107,7 @@ loot:2
 lootType:relay salvage
 reward:relay restored
 success:item:coil battery,item:flashline map,credits+12,flag:bunker-telecom-2,log:The relay crackles to life. New idle dispatch options unlock.
-fail:hp-6,morale-4
+fail:hp-6,credits-4
 flag:bunker-telecom-2
 requires:bunker-telecom-1
 combat:true
@@ -2140,7 +2136,7 @@ title:Shanty Concourse
 desc:Ticket booths are barricaded into gang posts and scrap stalls.
 tags:Metro / Hostile
 option:Pay for a safe route => concourse | risk:low | time:6 | reward:safe passage | success:credits-6,log:A toll buys a quieter lane. | fail:hp-4,log:A lookout tags you on the way through.
-option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:trackside vest,item:torchlight lantern,log:You nab mid-tier tools before the guards return. | fail:hp-5,morale-2,log:A sentry clips you on the exit.
+option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:trackside vest,item:torchlight lantern,log:You nab mid-tier tools before the guards return. | fail:hp-5,credits-2,log:A sentry clips you on the exit.
 
 @mission
 id:gangland-supply
@@ -2152,7 +2148,7 @@ energy:14
 loot:3
 lootType:mid-tier gear
 event:Rail patrol crossing | chance:0.5 | prompt:A Redline patrol blocks the rail spur. Decide how to clear it.
-eventOption:Sneak along the service duct => risk:medium | tag:stealth | success:item:rail map rig,credits+6,log:You slip by and snag a route rig. | fail:hp-5,morale-2,log:Boots scrape metal and draw fire.
+eventOption:Sneak along the service duct => risk:medium | tag:stealth | success:item:rail map rig,credits+6,log:You slip by and snag a route rig. | fail:hp-5,credits-2,log:Boots scrape metal and draw fire.
 eventOption:Charge through head-on => risk:high | tag:combat | success:item:rail spike mace,log:You smash through and claim a heavy mace. | fail:hp-8,log:The patrol drives you back hard.
 
 @mission
@@ -2165,8 +2161,8 @@ energy:13
 loot:3
 lootType:weapons & gear
 event:Runner swaps crate tags | chance:1 | prompt:A runner offers to flip tags on a crate mid-raid. Take the risk?
-eventOption:Honor the exchange => risk:medium | tag:mercy | success:item:trackside vest,credits+5,log:The runner keeps their word and slips you a vest. | fail:morale-3,log:The runner vanishes before the swap finishes.
-eventOption:Double-cross the runner => risk:high | tag:betrayal | success:credits+14,item:coin string,log:You keep the crate and lift a coin string. | fail:hp-6,morale-4,log:The runner's crew retaliates.
+eventOption:Honor the exchange => risk:medium | tag:mercy | success:item:trackside vest,credits+5,log:The runner keeps their word and slips you a vest. | fail:credits-3,log:The runner vanishes before the swap finishes.
+eventOption:Double-cross the runner => risk:high | tag:betrayal | success:credits+14,item:coin string,log:You keep the crate and lift a coin string. | fail:hp-6,credits-4,log:The runner's crew retaliates.
 
 @mission
 id:gang-assist
@@ -2223,7 +2219,7 @@ loot:3
 lootType:signal crates
 reward:mercenary contract
 success:item:signal jammer coil,credits+18,flag:ganglands-telecom,log:The relay hums to life. A mercenary answers the call, opening a second idle dispatch slot.
-fail:hp-6,morale-4
+fail:hp-6,credits-4
 flag:ganglands-telecom
 once:true`,
       government_facility:`@expansion
@@ -2260,7 +2256,7 @@ energy:16
 loot:3
 lootType:weapons & tools
 event:Checkpoint console lock | chance:0.55 | prompt:A security checkpoint seals the corridor. Choose your approach.
-eventOption:Spoof the clearance codes => risk:medium | tag:tech | success:item:containment seal kit,credits+8,log:You spoof the codes and lift a seal kit. | fail:hp-4,morale-2,log:The console blares and draws fire.
+eventOption:Spoof the clearance codes => risk:medium | tag:tech | success:item:containment seal kit,credits+8,log:You spoof the codes and lift a seal kit. | fail:hp-4,credits-2,log:The console blares and draws fire.
 eventOption:Break through head-on => risk:high | tag:combat | success:item:pulse baton,log:You smash through and seize a pulse baton. | fail:hp-8,log:The patrol overwhelms you.
 
 @mission
@@ -2305,8 +2301,8 @@ relationMax:-5
 relationSuccess:-2
 relationFail:-1
 event:Directorate courier meets you mid-run | chance:1 | prompt:A courier offers you a sealed briefing packet. Do you take the shot?
-eventOption:Expose the courier => risk:high | tag:betrayal | success:credits+18,item:secure datapad,log:You intercept the packet and slip away. | fail:hp-7,morale-4,log:The courier's escorts pin you down.
-eventOption:Let them pass => risk:medium | tag:mercy | success:morale+4,item:nutri-gel pack,log:The courier leaves you a ration as thanks. | fail:morale-3,log:The courier brands you soft and walks off.
+eventOption:Expose the courier => risk:high | tag:betrayal | success:credits+18,item:secure datapad,log:You intercept the packet and slip away. | fail:hp-7,credits-4,log:The courier's escorts pin you down.
+eventOption:Let them pass => risk:medium | tag:mercy | success:credits+4,item:nutri-gel pack,log:The courier leaves you a ration as thanks. | fail:credits-3,log:The courier brands you soft and walks off.
 
 @mission
 id:facility-armory
@@ -2331,7 +2327,7 @@ loot:3
 lootType:signal crates
 reward:dispatch acceleration
 success:item:secure datapad,credits+20,flag:facility-telecom,log:The telecom grid stabilizes. Idle dispatches now complete faster.
-fail:hp-8,morale-5
+fail:hp-8,credits-5
 flag:facility-telecom
 once:true`,
       medical_center:`@expansion
@@ -2355,7 +2351,7 @@ title:Triage Bay
 desc:Empty gurneys line the bay. Cabinets rattle with leftover kits.
 tags:Medical / Hazard
 option:Check the triage lockers => triage | risk:low | time:6 | reward:basic medical | success:item:antiseptic wipes,item:painkillers,log:You gather intact wraps and meds. | fail:hp-3,log:A drawer slams on your fingers.
-option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:electro bandage,item:compact medkit,log:You recover a sealed med case. | fail:hp-5,morale-2,log:A patrol forces a hasty exit.
+option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:electro bandage,item:compact medkit,log:You recover a sealed med case. | fail:hp-5,credits-2,log:A patrol forces a hasty exit.
 
 @mission
 id:clinic-errands
@@ -2381,8 +2377,8 @@ energy:10
 loot:2
 lootType:medical basics
 event:Injured survivor blocks the hall | chance:0.6 | prompt:A wounded survivor begs for antiseptic. Your call?
-eventOption:Patch them up => risk:low | tag:mercy | success:morale+5,item:sterile gloves,log:The survivor hands over spare gloves in thanks. | fail:morale-3,log:The survivor panics and slows you down.
-eventOption:Strip their kit => risk:medium | tag:betrayal | success:item:antiviral vial,credits+6,log:You pocket their kit and move on. | fail:morale-4,log:The survivor's cries draw a patrol.
+eventOption:Patch them up => risk:low | tag:mercy | success:credits+5,item:sterile gloves,log:The survivor hands over spare gloves in thanks. | fail:credits-3,log:The survivor panics and slows you down.
+eventOption:Strip their kit => risk:medium | tag:betrayal | success:item:antiviral vial,credits+6,log:You pocket their kit and move on. | fail:credits-4,log:The survivor's cries draw a patrol.
 
 @mission
 id:clinic-ward
@@ -2420,7 +2416,7 @@ loot:2
 lootType:signal crates
 reward:expanded medical stock
 success:item:portable scanner,credits+14,flag:medical-telecom,log:The relay comes online. More medical supplies reach the shop.
-fail:hp-6,morale-3
+fail:hp-6,credits-3
 flag:medical-telecom
 once:true`,
       abandoned_mall:`@expansion
@@ -2481,8 +2477,8 @@ lootType:premium food & supplies
 key:1
 combatChance:0.5
 event:Lost shopper hides in the office | chance:1 | prompt:A frightened scav begs to share the cache. What do you do?
-eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:morale+6,item:queue jacket,log:They share a warm jacket in gratitude. | fail:morale-4,log:The scav panics and draws attention.
-eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. | fail:hp-6,morale-5,log:The scav slams the door and sets off a chase.
+eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:credits+6,item:queue jacket,log:They share a warm jacket in gratitude. | fail:credits-4,log:The scav panics and draws attention.
+eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. | fail:hp-6,credits-5,log:The scav slams the door and sets off a chase.
 
 @quest
 id:mall-power-1
@@ -2495,7 +2491,7 @@ loot:1
 lootType:power parts
 reward:power diagnostics
 success:item:power coupler,credits+8,flag:mall-power-1,log:The breaker layout is mapped. You can reach the main switch.
-fail:temp-2,morale-3
+fail:temp-2,credits-3
 flag:mall-power-1
 once:true
 
@@ -2510,7 +2506,7 @@ loot:2
 lootType:power salvage
 reward:mall power restored
 success:item:spark kiosk battery,credits+12,flag:mall-power,log:The lights blaze back on. Mall risk drops and food supplies are easier to locate.
-fail:hp-6,morale-4
+fail:hp-6,credits-4
 flag:mall-power
 requires:mall-power-1
 once:true`
@@ -2539,7 +2535,7 @@ title:Pressure Dock
 desc:Steam hisses through cracked pipes, and the floor trembles under old pumps.
 tags:Industrial / Deadly
 option:Stabilize the intake valves => pressure-dock | risk:high | time:8 | reward:pressure salvage | success:item:pressure gauge kit,item:brine crackers,log:You throttle the valves and reclaim a sealed kit. | fail:hp-6,temp+2,log:A pressure burst scorches your hands.
-option:Strip the pump rig => pressure-dock | risk:deadly | time:9 | reward:weapon salvage | success:item:torque cleaver,item:slag shard,log:You wrench a brutal tool free before the rig collapses. | fail:hp-8,morale-4,log:A pump chain snaps and forces a retreat.
+option:Strip the pump rig => pressure-dock | risk:deadly | time:9 | reward:weapon salvage | success:item:torque cleaver,item:slag shard,log:You wrench a brutal tool free before the rig collapses. | fail:hp-8,credits-4,log:A pump chain snaps and forces a retreat.
 
 @mission
 id:refinery-sweep
@@ -2564,8 +2560,8 @@ energy:20
 loot:5
 lootType:refinery tools & weapons
 event:Scav crew at the core walkway | chance:1 | prompt:A scav crew offers to split the core cache. Do you trust them?
-eventOption:Hold the alliance => risk:high | tag:mercy | success:item:sealed citrus tonic,credits+8,log:The crew splits the cache and leaves you a tonic. | fail:morale-4,log:The crew panics and ruins the split.
-eventOption:Betray the crew => risk:deadly | tag:betrayal | success:item:torque cleaver,credits+18,log:You seize the cache in the chaos. | fail:hp-9,morale-5,log:The crew turns on you.
+eventOption:Hold the alliance => risk:high | tag:mercy | success:item:sealed citrus tonic,credits+8,log:The crew splits the cache and leaves you a tonic. | fail:credits-4,log:The crew panics and ruins the split.
+eventOption:Betray the crew => risk:deadly | tag:betrayal | success:item:torque cleaver,credits+18,log:You seize the cache in the chaos. | fail:hp-9,credits-5,log:The crew turns on you.
 
 @mission
 id:refinery-vault
@@ -2602,7 +2598,7 @@ loot:2
 lootType:signal parts
 reward:relay components
 success:item:compressed coil,credits+16,flag:refinery-telecom-1,log:You recover the missing relays and mark the conduit run.
-fail:hp-8,morale-5
+fail:hp-8,credits-5
 flag:refinery-telecom-1
 once:true
 
@@ -2617,7 +2613,7 @@ loot:3
 lootType:signal crates
 reward:idle dispatch uplink
 success:item:idle relay tuner,credits+24,flag:refinery-telecom-2,log:The uplink sparks alive. A new idle dispatch channel opens.
-fail:hp-10,morale-6
+fail:hp-10,credits-6
 flag:refinery-telecom-2
 requires:refinery-telecom-1
 once:true`,
@@ -2645,7 +2641,7 @@ title:Stormhall
 desc:Cracked crystal tiles thrum underfoot as static arcs jump the halls.
 tags:Citadel / Deadly
 option:Harvest the crystal ribs => stormhall | risk:high | time:9 | reward:stormglass salvage | success:item:stormglass shard,item:static fruit bar,log:You pry loose glimmering ribs packed with nutrients. | fail:hp-7,temp+2,log:Static backlash scorches your arms.
-option:Check the armory racks => stormhall | risk:deadly | time:10 | reward:weapon cache | success:item:stormglass rapier,item:storm seal gaskets,log:You lift a pristine blade before the racks spark. | fail:hp-9,morale-4,log:The racks discharge and drive you back.
+option:Check the armory racks => stormhall | risk:deadly | time:10 | reward:weapon cache | success:item:stormglass rapier,item:storm seal gaskets,log:You lift a pristine blade before the racks spark. | fail:hp-9,credits-4,log:The racks discharge and drive you back.
 
 @mission
 id:citadel-sweep
@@ -2657,7 +2653,7 @@ energy:20
 loot:4
 lootType:stormglass supplies
 event:Stormglass sentries patrol | chance:0.5 | prompt:Sentries sweep the crystal stair. Choose your response.
-eventOption:Slip behind the glass columns => risk:high | tag:stealth | success:item:stormglass shard,credits+10,log:You ghost past and lift a shard. | fail:hp-7,morale-3,log:The sentries catch your movement.
+eventOption:Slip behind the glass columns => risk:high | tag:stealth | success:item:stormglass shard,credits+10,log:You ghost past and lift a shard. | fail:hp-7,credits-3,log:The sentries catch your movement.
 eventOption:Strike through the patrol => risk:deadly | tag:combat | success:item:stormglass rapier,log:You cut through the patrol and seize a rapier. | fail:hp-11,log:The sentries overwhelm you.
 
 @mission
@@ -2670,8 +2666,8 @@ energy:22
 loot:5
 lootType:stormglass armory
 event:Storm cult acolyte confronts you | chance:1 | prompt:An acolyte offers to trade relics for safe passage. Decide quickly.
-eventOption:Honor the trade => risk:high | tag:mercy | success:item:ionized brew,credits+12,log:The acolyte shares a relic drink and lets you pass. | fail:morale-4,log:The acolyte retreats, insulted.
-eventOption:Take the relics by force => risk:deadly | tag:betrayal | success:item:stormglass shard,item:storm seal gaskets,credits+16,log:You seize the relics and push onward. | fail:hp-10,morale-5,log:The acolyte triggers a shock wave.
+eventOption:Honor the trade => risk:high | tag:mercy | success:item:ionized brew,credits+12,log:The acolyte shares a relic drink and lets you pass. | fail:credits-4,log:The acolyte retreats, insulted.
+eventOption:Take the relics by force => risk:deadly | tag:betrayal | success:item:stormglass shard,item:storm seal gaskets,credits+16,log:You seize the relics and push onward. | fail:hp-10,credits-5,log:The acolyte triggers a shock wave.
 
 @mission
 id:citadel-vault
@@ -2708,7 +2704,7 @@ loot:2
 lootType:signal parts
 reward:signal spine map
 success:item:capacitor lattice,credits+18,flag:citadel-telecom-1,log:The conduit lattice is restored and the spine is mapped.
-fail:hp-9,morale-5
+fail:hp-9,credits-5
 flag:citadel-telecom-1
 once:true
 
@@ -2723,7 +2719,7 @@ loot:3
 lootType:signal crates
 reward:idle dispatch uplink
 success:item:phase relay kit,credits+26,flag:citadel-telecom-2,log:The stormglass relays sync. A new idle dispatch channel opens.
-fail:hp-11,morale-6
+fail:hp-11,credits-6
 flag:citadel-telecom-2
 requires:citadel-telecom-1
 once:true`,
@@ -2749,7 +2745,7 @@ title:Rift Hub
 desc:Floating consoles orbit a fractured core, pulsing with unstable light.
 tags:Rift / Deadly
 option:Stabilize the core nodes => rift-hub | risk:high | time:10 | reward:rift provisions | success:item:riftwater flask,item:synth-berry pack,log:You steady the nodes and bottle chilled riftwater. | fail:hp-8,rads+6,log:A surge lashes across the hub.
-option:Strip the grav lockers => rift-hub | risk:deadly | time:11 | reward:weapon cache | success:item:graviton glaive,item:gravity lens,log:You yank a gleaming glaive from a weightless rack. | fail:hp-10,morale-5,log:The lockers buckle and force a retreat.
+option:Strip the grav lockers => rift-hub | risk:deadly | time:11 | reward:weapon cache | success:item:graviton glaive,item:gravity lens,log:You yank a gleaming glaive from a weightless rack. | fail:hp-10,credits-5,log:The lockers buckle and force a retreat.
 
 @mission
 id:rift-sweep
@@ -2762,7 +2758,7 @@ loot:5
 lootType:rift supplies
 event:Rift anomaly shear | chance:0.5 | prompt:A shear opens in the corridor. Choose your path.
 eventOption:Calibrate the shear with instruments => risk:high | tag:tech | success:item:anomaly scanner,credits+12,log:You stabilize the shear and recover a scanner. | fail:hp-8,rads+4,log:The shear lashes back at you.
-eventOption:Slip through the distorted shadow => risk:deadly | tag:stealth | success:item:drift moss tea,log:You glide through and pocket a tea pack. | fail:hp-10,morale-5,log:The shear tags you as you pass.
+eventOption:Slip through the distorted shadow => risk:deadly | tag:stealth | success:item:drift moss tea,log:You glide through and pocket a tea pack. | fail:hp-10,credits-5,log:The shear tags you as you pass.
 
 @mission
 id:rift-lab
@@ -2774,8 +2770,8 @@ energy:24
 loot:6
 lootType:rift armory
 event:Temporal researcher offers a deal | chance:1 | prompt:A researcher offers their stash for safe passage. What's your move?
-eventOption:Escort them out => risk:high | tag:mercy | success:item:riftwater flask,credits+14,log:The researcher shares rare water and leaves peacefully. | fail:morale-4,log:The researcher freezes, overwhelmed.
-eventOption:Take the stash and run => risk:deadly | tag:betrayal | success:item:rift crystal splinter,credits+20,log:You snatch the stash and disappear into the haze. | fail:hp-11,morale-6,log:The researcher triggers a defensive pulse.
+eventOption:Escort them out => risk:high | tag:mercy | success:item:riftwater flask,credits+14,log:The researcher shares rare water and leaves peacefully. | fail:credits-4,log:The researcher freezes, overwhelmed.
+eventOption:Take the stash and run => risk:deadly | tag:betrayal | success:item:rift crystal splinter,credits+20,log:You snatch the stash and disappear into the haze. | fail:hp-11,credits-6,log:The researcher triggers a defensive pulse.
 
 @mission
 id:rift-core
@@ -2812,7 +2808,7 @@ loot:2
 lootType:signal parts
 reward:signal stabilizers
 success:item:nullfield filament,credits+22,flag:rift-telecom-1,log:The stabilizers are recovered and the signal lattice is traced.
-fail:hp-10,morale-6
+fail:hp-10,credits-6
 flag:rift-telecom-1
 once:true
 
@@ -2827,7 +2823,7 @@ loot:3
 lootType:signal crates
 reward:idle dispatch uplink
 success:item:dispatch accelerator,credits+30,flag:rift-telecom-2,log:The uplink locks in place. A new idle dispatch channel opens.
-fail:hp-12,morale-7
+fail:hp-12,credits-7
 flag:rift-telecom-2
 requires:rift-telecom-1
 once:true`
@@ -2836,7 +2832,7 @@ once:true`
     let expansionsLoaded=0;
     let expansionsAttempted=0;
     const idleOperations=[
-      {id:'bunker-maintenance',label:'Bunker maintenance run',desc:'Maintenance crews stabilize morale and earn a few credits.',duration:3,cost:{credits:6},reward:'credits+5,morale+4,item:old coin',unlockFlag:'safehouse-vents',xp:8,secretUnlockFlag:'secret-safehouse-ops',secretZoneId:'safehouse'},
+      {id:'bunker-maintenance',label:'Bunker maintenance run',desc:'Maintenance crews stabilize systems and earn a few credits.',duration:3,cost:{credits:6},reward:'credits+7,item:old coin',unlockFlag:'safehouse-vents',xp:8,secretUnlockFlag:'secret-safehouse-ops',secretZoneId:'safehouse'},
       {id:'tunnel-relay',label:'Relay salvage sweep',desc:'Bunker scouts recover salvage and food from the old tunnels.',duration:4,cost:{credits:10,scrap:1},reward:'item:ration bar,item:cloth scraps,credits+6',unlockFlag:'bunker-telecom-2',xp:10,secretUnlockFlag:'secret-bunker-mission',secretZoneId:'underground_bunker'},
       {id:'refinery-pressure-run',label:'Refinery pressure run',desc:'Refinery crews escort pressurized salvage and sealed rations.',duration:5,cost:{credits:18,scrap:2},reward:'item:smokehouse ration,item:refinery alloy ingot,credits+10',unlockFlag:'refinery-telecom-2',xp:14,secretUnlockFlag:'secret-refinery-mission',secretZoneId:'sunken_refinery'},
       {id:'citadel-resonance',label:'Citadel resonance patrol',desc:'Citadel operatives recover stormglass stock and arc-powered supplies.',duration:5,cost:{credits:22,scrap:2},reward:'item:stormglass shard,item:ionized brew,credits+14',unlockFlag:'citadel-telecom-2',xp:16,secretUnlockFlag:'secret-citadel-mission',secretZoneId:'stormglass_citadel'},
@@ -2860,7 +2856,6 @@ once:true`
       {id:'water flask',label:'Water flask',desc:'Patch together a reusable hydration pouch.',cost:{'plastic shards':6,'cloth scraps':3}},
       {id:'ration bar',label:'Ration bar',desc:'Compress salvageable nutrients into a meal.',cost:{'scrap bundle':7,'plastic shards':2}},
       {id:'patch kit',label:'Patch kit',desc:'Bundle wire and electronics into repair gear.',cost:{'wire spool':8,'electronics bits':4}},
-      {id:'morale patch',label:'Morale patch',desc:'Stitch a bright patch that steadies nerves.',cost:{'cloth scraps':4,'plastic shards':2}},
       {id:'compact medkit',label:'Compact medkit',desc:'Upgrade basic wraps into a full trauma pack.',cost:{'bandage':2,'cloth scraps':6,'electronics bits':3}},
       {id:'filtered water pack',label:'Filtered water pack',desc:'Pair a flask with a fresh filter for clean water.',cost:{'water flask':1,'spare filter':1,'plastic shards':4}},
       {id:'jury-rigged blade',label:'Jury-rigged blade',desc:'Sharpen scrap into a brutal close-range tool.',cost:{'scrap wiring':4,'wire spool':3}},
@@ -2879,8 +2874,7 @@ once:true`
         {id:'ration bar',cost:14,tag:'Rations'},
         {id:'homebrew stew',cost:16,tag:'Rations'},
         {id:'clean canteen',cost:14,tag:'Hydration'},
-        {id:'morale patch',cost:16,tag:'Morale'},
-        {id:'quiet radio',cost:20,tag:'Morale'},
+        {id:'quiet radio',cost:20,tag:'Signal'},
         {id:'spare filter',cost:22,tag:'Air kit'},
         {id:'thermal wrap',cost:20,tag:'Warmth'},
         {id:'comfort liner',cost:26,tag:'Warmth'},
@@ -2898,7 +2892,6 @@ once:true`
         {id:'filtered water pack',cost:26,tag:'Hydration'},
         {id:'hydration drip',cost:20,tag:'Hydration'},
         {id:'spark tonic',cost:22,tag:'Stims'},
-        {id:'morale patch',cost:16,tag:'Recovery'},
         {id:'portable scanner',cost:38,tag:'Diagnostics'},
         {id:'biofilter mask',cost:36,tag:'Protection'},
         {id:'anti-rad serum',cost:46,tag:'Anti-rad'}
@@ -2932,7 +2925,6 @@ once:true`
       {id:'arc pistol',cost:82,tag:'Weapon'},
       {id:'compact medkit',cost:30,tag:'Medical'},
       {id:'filtered water pack',cost:28,tag:'Hydration'},
-      {id:'morale patch',cost:16,tag:'Morale'},
       {id:'anti-rad serum',cost:46,tag:'Anti-rad'},
       {id:'spare filter',cost:24,tag:'Gear mod'},
       {id:'coil battery',cost:26,tag:'Gear mod'},
@@ -3571,11 +3563,9 @@ once:true`
         state.level+=1;
         state.maxHp+=6;
         state.maxStamina+=4;
-        state.maxMorale+=3;
         state.nextLevelXp=xpToNextLevel(state.level);
         state.hp=clamp(state.hp+10,0,state.maxHp);
         state.stamina=clamp(state.stamina+8,0,state.maxStamina);
-        state.morale=clamp(state.morale+6,0,state.maxMorale);
         leveled=true;
       }
       if(leveled){
@@ -3834,7 +3824,6 @@ once:true`
         credits:'ledger',
         scrap:'scrap bin',
         keys:'keyring',
-        morale:'crew',
         energy:'cells',
         stamina:'crew',
         hp:'medbay',
@@ -3908,11 +3897,10 @@ once:true`
       const rows=[
         ['HP','hp','maxHp','hp'],
         ['Stamina','stamina','maxStamina','stamina'],
-        ['Morale','morale','maxMorale','morale'],
         ['Energy','energy','maxEnergy','stamina'],
+        ['Radiation','rads',100,'rads'],
         ['Hunger','hunger','maxHunger','hunger'],
-        ['Hydration','thirst','maxThirst','thirst'],
-        ['Radiation','rads',100,'rads']
+        ['Hydration','thirst','maxThirst','thirst']
       ];
       const tempStatus=(()=>{
         if(state.bodyTemp<=92) return {label:'very cold',tone:'temp-status--cold'};
@@ -6096,7 +6084,6 @@ once:true`
             state.hp=clamp(state.hp+delta,0,state.maxHp);
           }
           else if(stat==='stamina') state.stamina=clamp(state.stamina+delta,0,state.maxStamina);
-          else if(stat==='morale') state.morale=clamp(state.morale+delta,0,state.maxMorale);
           else if(stat==='hunger') state.hunger=clamp(state.hunger+delta,0,state.maxHunger);
           else if(stat==='thirst') state.thirst=clamp(state.thirst+delta,0,state.maxThirst);
           else if(stat==='rads'){
@@ -6173,7 +6160,7 @@ once:true`
         }
         logMsg(`✓ ${raid.label} succeeded. Rewards secured.`);
       }else{
-        applyEffects('hp-6,morale-4,temp-2','fail',{damageSource:`${raid.label} setback`});
+        applyEffects('hp-6,credits-4,temp-2','fail',{damageSource:`${raid.label} setback`});
         rollComplication('raid');
         logMsg(`✖ ${raid.label} failed (${failReason}). You limp back empty-handed.`);
       }
@@ -6488,8 +6475,6 @@ once:true`
       const staminaHit=Math.max(2,Math.round(incoming*0.6));
       state.stamina=clamp(state.stamina-staminaHit,0,state.maxStamina);
       roundLog+=` Incoming fire deals ${incoming}.`;
-      const moraleHit=Math.max(1,Math.round(incoming*0.18));
-      state.morale=clamp(state.morale-moraleHit,0,state.maxMorale);
       state.mission.statusMessage=`${roundLog} ${describeCombatState(combat)}`;
       logMsg(state.mission.statusMessage);
     }
@@ -7103,7 +7088,6 @@ once:true`
       const gearMods=getGearMods();
       state.stamina=clamp(state.stamina+14,0,state.maxStamina);
       state.hp=clamp(state.hp+4,0,state.maxHp);
-      state.morale=clamp(state.morale+4+(gearMods.moraleBonus||0),0,state.maxMorale);
       state.energy=clamp(state.energy+18+(gearMods.energyRegen||0),0,state.maxEnergy);
       state.hunger=clamp(state.hunger+3,0,state.maxHunger);
       state.thirst=clamp(state.thirst+3,0,state.maxThirst);
@@ -7816,7 +7800,7 @@ once:true`
         && (!Number.isFinite(state.lastHungerDamageAt) || nowMinutes-state.lastHungerDamageAt>=NEED_DAMAGE_INTERVAL_MINUTES);
       if(hungerDamageReady){
         state.lastHungerDamageAt=nowMinutes;
-        applyEffects('hp-2,morale-1','fail',{damageSource:'Hunger pangs'});
+        applyEffects('hp-2,stamina-1','fail',{damageSource:'Hunger pangs'});
         logMsg('Hunger pangs slow you down.');
       }
       const thirstDamageReady=state.thirst>NEED_DAMAGE_THRESHOLD
@@ -7833,7 +7817,7 @@ once:true`
         }
       }
       if(state.bodyTemp>=103){
-        applyEffects('hp-2,morale-2','fail',{damageSource:'Heat exhaustion'});
+        applyEffects('hp-2,stamina-2','fail',{damageSource:'Heat exhaustion'});
         if(state.timeMinutes%60===0){
           logMsg('Heat haze clouds your focus. Cool down before it worsens.');
         }

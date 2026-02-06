@@ -19,7 +19,7 @@ title:Triage Bay
 desc:Empty gurneys line the bay. Cabinets rattle with leftover kits.
 tags:Medical / Hazard
 option:Check the triage lockers => triage | risk:low | time:6 | reward:basic medical | success:item:antiseptic wipes,item:painkillers,log:You gather intact wraps and meds. | fail:hp-3,log:A drawer slams on your fingers.
-option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:electro bandage,item:compact medkit,log:You recover a sealed med case. | fail:hp-5,morale-2,log:A patrol forces a hasty exit.
+option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:electro bandage,item:compact medkit,log:You recover a sealed med case. | fail:hp-5,credits-2,log:A patrol forces a hasty exit.
 
 @mission
 id:clinic-errands
@@ -45,8 +45,8 @@ energy:10
 loot:2
 lootType:medical basics
 event:Injured survivor blocks the hall | chance:0.6 | prompt:A wounded survivor begs for antiseptic. Your call?
-eventOption:Patch them up => risk:low | tag:mercy | success:morale+5,item:sterile gloves,log:The survivor hands over spare gloves in thanks. | fail:morale-3,log:The survivor panics and slows you down.
-eventOption:Strip their kit => risk:medium | tag:betrayal | success:item:antiviral vial,credits+6,log:You pocket their kit and move on. | fail:morale-4,log:The survivor's cries draw a patrol.
+eventOption:Patch them up => risk:low | tag:mercy | success:credits+5,item:sterile gloves,log:The survivor hands over spare gloves in thanks. | fail:credits-3,log:The survivor panics and slows you down.
+eventOption:Strip their kit => risk:medium | tag:betrayal | success:item:antiviral vial,credits+6,log:You pocket their kit and move on. | fail:credits-4,log:The survivor's cries draw a patrol.
 
 @mission
 id:clinic-ward
@@ -84,6 +84,6 @@ loot:2
 lootType:signal crates
 reward:expanded medical stock
 success:item:portable scanner,credits+14,flag:medical-telecom,log:The relay comes online. More medical supplies reach the shop.
-fail:hp-6,morale-3
+fail:hp-6,credits-3
 flag:medical-telecom
 once:true

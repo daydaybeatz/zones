@@ -18,7 +18,7 @@ target:commons
 title:Safe House Commons
 desc:Warm lights, clean water, and the trade counter keep the crew steady between runs.
 tags:Safe / Hub
-option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,stamina+14,morale+6,log:The bunk warmth sinks into your bones. | fail:morale-2,log:Sleep won't come tonight.
+option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,stamina+14,credits+6,log:The bunk warmth sinks into your bones. | fail:credits-2,log:Sleep won't come tonight.
 option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. | fail:stamina-2,log:The bench clamps fail you.
 
 @mission
@@ -33,8 +33,8 @@ reward:elder advice
 combatChance:0
 hub:true
 event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice mid-raid. How do you respond?
-eventOption:Share the elders' guidance => risk:low | tag:mercy | success:morale+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:morale-3,log:The runner panics and bolts.
-eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:morale-5,log:The elders hear about the rumor sale.
+eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:credits-3,log:The runner panics and bolts.
+eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:credits-5,log:The elders hear about the rumor sale.
 
 @mission
 id:safehouse-hush
@@ -50,7 +50,7 @@ hub:true
 unlockFlag:secret-safehouse-ops
 consumeFlag:secret-safehouse-ops
 event:Relay shadow crossing | chance:0.6 | prompt:A patrol cuts across the whispering line. Choose your approach.
-eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. | fail:hp-3,morale-2,log:A clang gives you away.
+eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. | fail:hp-3,credits-2,log:A clang gives you away.
 eventOption:Confront the patrol => risk:medium | tag:combat | success:item:coil battery,log:You overpower the patrol and seize their battery. | fail:hp-6,log:A scuffle leaves you bruised.
 
 @quest
@@ -63,7 +63,7 @@ energy:12
 loot:1
 lootType:maintenance cache
 reward:ventilation restored
-success:item:spare filter,item:tool roll,credits+8,morale+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online.
-fail:temp-3,morale-4
+success:item:spare filter,item:tool roll,credits+8,credits+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online.
+fail:temp-3,credits-4
 flag:safehouse-vents
 once:true
