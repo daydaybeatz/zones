@@ -1017,12 +1017,14 @@
     .inventory-layout{gap:12px;}
     #tab-field .inventory-layout{display:flex;flex-direction:column;}
     #tab-field #stashColumn{display:contents;}
-    #tab-field #stashMarket.active{display:contents;}
-    #tab-field #marketSubtitle{order:0;}
-    #tab-field #marketBackpack{order:1;}
     #tab-field #stashCommandCard{order:2;}
-    #tab-field #stashMarket .market-section{order:3;}
     #tab-field #stashActions{order:4;}
+    #screen-shop .inventory-layout{display:flex;flex-direction:column;}
+    #screen-shop #marketSubtitle{order:0;}
+    #screen-shop #marketBackpack{order:1;}
+    #screen-shop #shopCommandCard{order:2;}
+    #screen-shop #marketSection{order:3;}
+    #screen-shop #shopActions{order:4;}
   }
   @media(max-width:600px){
     .tab-buttons button{
@@ -1123,6 +1125,7 @@
           <div class="screen-nav" id="screenNav">
             <button data-screen="main" class="active">Safe House</button>
             <button data-screen="locations">Locations Hub</button>
+            <button data-screen="shop">Shop</button>
           </div>
           <div id="screen-main" class="screen active">
             <section class="panel">
@@ -1154,6 +1157,29 @@
             <section class="panel">
               <h3>Zone Operations</h3>
               <div id="raidActions"></div>
+            </section>
+          </div>
+          <div id="screen-shop" class="screen">
+            <section class="panel">
+              <h3 id="shopTitle">Trade Bay</h3>
+              <div class="inventory-layout">
+                <div>
+                  <h4 id="marketSubtitle">Backpack Inventory <span class="small" id="marketBackpackCount"></span></h4>
+                  <div id="marketBackpack"></div>
+                  <div class="market-section" id="marketSection">
+                    <h4>Vendor stock</h4>
+                    <div class="command-hint" id="marketHint">Visit a shop in your current location to access vendors.</div>
+                    <div id="marketInventory" class="market-grid"></div>
+                  </div>
+                </div>
+                <div class="command-card" id="shopCommandCard">
+                  <div class="command-title" id="shopCommandTitle">Trade Console</div>
+                  <div id="shopDetail" class="command-hint">Select backpack items to sell or break down in the trade bay.</div>
+                  <div class="action-grid" id="shopItemActions"></div>
+                </div>
+                <div id="shopActions" class="stack"></div>
+              </div>
+              <p class="small">Trade out of your backpack while vendors are on station.</p>
             </section>
           </div>
           <div id="screen-mission" class="screen">
@@ -1205,24 +1231,11 @@
       <div id="tab-field" class="tab-content">
         <section class="panel">
           <h3 id="stashTitle">Stash Vault</h3>
-          <div class="subtabs" id="stashNav">
-            <button data-stash-screen="vault" class="active">Vault</button>
-            <button data-stash-screen="market">Shop</button>
-          </div>
           <div class="inventory-layout">
             <div id="stashColumn">
               <div id="stashVault" class="subscreen active">
                 <h4 id="stashSubtitle">Vault Inventory <span class="small" id="stashCount"></span></h4>
                 <div id="stash"></div>
-              </div>
-              <div id="stashMarket" class="subscreen">
-                <h4 id="marketSubtitle">Backpack Inventory <span class="small" id="marketBackpackCount"></span></h4>
-                <div id="marketBackpack"></div>
-                <div class="market-section" id="marketSection">
-                  <h4>Vendor stock</h4>
-                  <div class="command-hint" id="marketHint">Visit a shop in your current location to access vendors.</div>
-                  <div id="marketInventory" class="market-grid"></div>
-                </div>
               </div>
             </div>
             <div class="command-card" id="stashCommandCard">
@@ -2988,6 +3001,7 @@ once:true`
       screens:{
         main:document.getElementById('screen-main'),
         locations:document.getElementById('screen-locations'),
+        shop:document.getElementById('screen-shop'),
         mission:document.getElementById('screen-mission')
       },
       screenButtons:Array.from(document.querySelectorAll('#screenNav button')),
@@ -3007,6 +3021,11 @@ once:true`
       stashTitle:document.getElementById('stashTitle'),
       stashSubtitle:document.getElementById('stashSubtitle'),
       stashCommandTitle:document.getElementById('stashCommandTitle'),
+      shopTitle:document.getElementById('shopTitle'),
+      shopCommandTitle:document.getElementById('shopCommandTitle'),
+      shopDetail:document.getElementById('shopDetail'),
+      shopItemActions:document.getElementById('shopItemActions'),
+      shopActions:document.getElementById('shopActions'),
       marketInventory:document.getElementById('marketInventory'),
       marketHint:document.getElementById('marketHint'),
       marketBackpack:document.getElementById('marketBackpack'),
@@ -3021,11 +3040,6 @@ once:true`
         crafting:document.getElementById('inventoryCrafting')
       },
       codexToggle:document.getElementById('codexToggle'),
-      stashNav:Array.from(document.querySelectorAll('#stashNav button')),
-      stashScreens:{
-        vault:document.getElementById('stashVault'),
-        market:document.getElementById('stashMarket')
-      },
       tabs:document.querySelector('.tabs'),
       tabButtons:Array.from(document.querySelectorAll('.tab-buttons button[data-tab]')),
       tabContents:{
@@ -3183,9 +3197,6 @@ once:true`
     const clearMarketAccess=()=>{
       if(state.marketAccess.active){
         state.marketAccess={active:false,zoneId:null};
-        if(state.stashScreen==='market'){
-          state.stashScreen='vault';
-        }
       }
     };
     const vaultBlockedMessage='Return to a hub location to access the vault.';
@@ -4442,12 +4453,12 @@ once:true`
       const data=item?getItem(item):null;
       const vaultAccess=canAccessVault();
       const marketActive=canAccessMarket();
-      const stashDefault=state.stashScreen==='market'
-        ? 'Select backpack items to sell or break down in the trade bay.'
-        : 'Select stash items to transfer, break down, or sell.';
+      const stashDefault='Select stash items to transfer, break down, or sell.';
+      const shopDefault='Select backpack items to sell or break down in the trade bay.';
       const targets=[
         {detail:dom.itemDetail,actions:dom.itemActions,default:'Select gear to view stats, uses, and actions.'},
-        {detail:dom.stashDetail,actions:dom.stashItemActions,default:stashDefault}
+        {detail:dom.stashDetail,actions:dom.stashItemActions,default:stashDefault},
+        {detail:dom.shopDetail,actions:dom.shopItemActions,default:shopDefault}
       ];
       targets.forEach(target=>{
         if(!target.detail || !target.actions) return;
@@ -4999,26 +5010,8 @@ once:true`
       }
     }
 
-    function setStashScreen(screen){
-      const changed=state.stashScreen!==screen;
-      state.stashScreen=screen;
-      dom.stashNav.forEach(btn=>{
-        btn.classList.toggle('active',btn.dataset.stashScreen===screen);
-      });
-      Object.entries(dom.stashScreens).forEach(([id,el])=>{
-        el.classList.toggle('active',id===screen);
-      });
-      if(changed){
-        clearSelection();
-      }
-    }
-
     dom.inventoryNav.forEach(btn=>{
       btn.onclick=()=>setInventoryScreen(btn.dataset.invScreen);
-    });
-
-    dom.stashNav.forEach(btn=>{
-      btn.onclick=()=>setStashScreen(btn.dataset.stashScreen);
     });
 
     function clearSelection(){
@@ -5081,6 +5074,10 @@ once:true`
         setCodex('No mission active.');
         return;
       }
+      if(screen==='shop' && isMissionBlockingTravel()){
+        setCodex('Mission in progress. Shop locked.');
+        return;
+      }
       state.screen=screen;
       if(screen==='locations'){
         ensureExpansionsLoaded();
@@ -5095,8 +5092,9 @@ once:true`
         const isLocked=target==='mission' && !state.mission.active;
         const isLocationsLocked=target==='locations' && isMissionBlockingTravel();
         const isMainLocked=target==='main' && isMissionBlockingTravel();
+        const isShopLocked=target==='shop' && isMissionBlockingTravel();
         btn.classList.toggle('active',target===state.screen);
-        btn.disabled=isLocked || isLocationsLocked || isMainLocked;
+        btn.disabled=isLocked || isLocationsLocked || isMainLocked || isShopLocked;
       });
       Object.entries(dom.screens).forEach(([id,el])=>{
         el.classList.toggle('active',id===state.screen);
@@ -5474,8 +5472,8 @@ once:true`
       state.marketAccess={active:true,zoneId:state.zone.id};
       state.marketPage=0;
       setCodex('Vendor bay open. Trade out of your active pack while the shop is live.');
-      setActiveTab('field');
-      setStashScreen('market');
+      setActiveTab('hub');
+      setScreen('shop');
       renderAll();
     }
 
@@ -5874,57 +5872,13 @@ once:true`
 
     function renderStash(){
       dom.stash.innerHTML='';
-      dom.marketBackpack.innerHTML='';
       dom.stashActions.innerHTML='';
       const vaultAccess=canAccessVault();
-      const marketActive=canAccessMarket();
-      const inMarketScreen=state.stashScreen==='market';
       if(dom.stashTitle){
-        dom.stashTitle.textContent=inMarketScreen ? 'Trade Bay' : 'Stash Vault';
+        dom.stashTitle.textContent='Stash Vault';
       }
       if(dom.stashCommandTitle){
-        dom.stashCommandTitle.textContent=inMarketScreen ? 'Trade Console' : 'Vault Command Card';
-      }
-      if(inMarketScreen){
-        if(dom.marketSubtitle){
-          dom.marketSubtitle.innerHTML=`Backpack Inventory <span class="small" id="marketBackpackCount"></span>`;
-          dom.marketBackpackCount=document.getElementById('marketBackpackCount');
-        }
-        if(dom.marketBackpackCount){
-          dom.marketBackpackCount.textContent=`(${getBackpackUsage()}/${getBackpackLimit()})`;
-        }
-        const items=state.inventory;
-        if(!items.length){
-          const empty=document.createElement('div');
-          empty.className='muted-box';
-          empty.textContent='Backpack is empty. Trade when you have gear on hand.';
-          dom.marketBackpack.appendChild(empty);
-        }else{
-          const grid=document.createElement('div');
-          grid.className='icon-grid';
-          const grouped=groupItems(items);
-          const {entries,page,totalPages}=paginateEntries(grouped,'stashPage',GRID_PAGE_SIZE);
-          entries.forEach(({id,count,data})=>{
-            grid.appendChild(buildItemTile({id,count,data,source:'inventory'}));
-          });
-          dom.marketBackpack.appendChild(grid);
-          const pager=renderPager({
-            page,
-            totalPages,
-            label:'items',
-            onPrev:()=>{state.stashPage=Math.max(0,page-1); renderStash();},
-            onNext:()=>{state.stashPage=Math.min(totalPages-1,page+1); renderStash();}
-          });
-          if(pager) dom.marketBackpack.appendChild(pager);
-        }
-        const notice=document.createElement('div');
-        notice.className='muted-box';
-        notice.textContent=marketActive
-          ? 'Trade bay open. Select backpack items to sell or break down.'
-          : 'Visit a shop to trade with local vendors.';
-        dom.stashActions.appendChild(notice);
-        renderMarketStock();
-        return;
+        dom.stashCommandTitle.textContent='Vault Command Card';
       }
       if(dom.stashSubtitle){
         dom.stashSubtitle.innerHTML=`Vault Inventory <span class="small" id="stashCount"></span>`;
@@ -6023,6 +5977,56 @@ once:true`
       bulk.appendChild(sellAll);
       bulk.appendChild(scrapAll);
       dom.stashActions.appendChild(bulk);
+    }
+
+    function renderShop(){
+      if(!dom.marketBackpack || !dom.shopActions) return;
+      dom.marketBackpack.innerHTML='';
+      dom.shopActions.innerHTML='';
+      const marketActive=canAccessMarket();
+      if(dom.shopTitle){
+        dom.shopTitle.textContent='Trade Bay';
+      }
+      if(dom.shopCommandTitle){
+        dom.shopCommandTitle.textContent='Trade Console';
+      }
+      if(dom.marketSubtitle){
+        dom.marketSubtitle.innerHTML=`Backpack Inventory <span class="small" id="marketBackpackCount"></span>`;
+        dom.marketBackpackCount=document.getElementById('marketBackpackCount');
+      }
+      if(dom.marketBackpackCount){
+        dom.marketBackpackCount.textContent=`(${getBackpackUsage()}/${getBackpackLimit()})`;
+      }
+      const items=state.inventory;
+      if(!items.length){
+        const empty=document.createElement('div');
+        empty.className='muted-box';
+        empty.textContent='Backpack is empty. Trade when you have gear on hand.';
+        dom.marketBackpack.appendChild(empty);
+      }else{
+        const grid=document.createElement('div');
+        grid.className='icon-grid';
+        const grouped=groupItems(items);
+        const {entries,page,totalPages}=paginateEntries(grouped,'stashPage',GRID_PAGE_SIZE);
+        entries.forEach(({id,count,data})=>{
+          grid.appendChild(buildItemTile({id,count,data,source:'inventory'}));
+        });
+        dom.marketBackpack.appendChild(grid);
+        const pager=renderPager({
+          page,
+          totalPages,
+          label:'items',
+          onPrev:()=>{state.stashPage=Math.max(0,page-1); renderShop();},
+          onNext:()=>{state.stashPage=Math.min(totalPages-1,page+1); renderShop();}
+        });
+        if(pager) dom.marketBackpack.appendChild(pager);
+      }
+      const notice=document.createElement('div');
+      notice.className='muted-box';
+      notice.textContent=marketActive
+        ? 'Trade bay open. Select backpack items to sell or break down.'
+        : 'Visit a shop to trade with local vendors.';
+      dom.shopActions.appendChild(notice);
       renderMarketStock();
     }
 
@@ -7672,9 +7676,9 @@ once:true`
       renderDoors();
       renderRaidActions();
       renderStash();
+      renderShop();
       renderItemDetails();
       setInventoryScreen(state.inventoryScreen);
-      setStashScreen(state.stashScreen);
       renderScreens();
       syncTabs();
       queueSave();
