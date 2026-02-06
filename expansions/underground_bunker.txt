@@ -2,6 +2,7 @@
 id:underground_bunker
 name:Abandoned Underground Bunker System
 summary:A low-risk labyrinth of concrete corridors and shuttered barracks. Easy opponents, low-tier food, and worn clothing line the halls.
+temp:cold
 arrivalDialog:Tunnel Warden Brag: These corridors were sealed after the Iron Ward mutiny—watch for the old warning marks.
 missionStartDialog:Scout Rhea: The water table rose after the quakes; stay above the rust tide.
 missionEndDialog:Mechanic Oru: The bunker council will hear of this—gear like this keeps the pumps alive.
@@ -9,14 +10,14 @@ shop:false
 
 @door
 label:Bunker Access Hatch
-hint:low-risk combat, food runs, clothing caches, telecom job
+hint:low-risk combat, cold corridors, food runs, clothing caches, telecom job
 risk:low
 note:Condensation beads on the hatch as you descend into the bunker system.
 target:mess-hall
 
 @scene mess-hall
 title:Mess Hall
-desc:Metal tables and dented lockers sit beneath flickering emergency lights.
+desc:Metal tables and dented lockers sit beneath flickering emergency lights in the cold, drafty hall.
 tags:Bunker / Low risk
 option:Search the ration cages => mess-hall | risk:low | time:6 | reward:low-tier food | success:item:ration bar,item:bunker stew pouch,log:You salvage sealed rations from a rusted cage. | fail:hunger+6,log:Only spoiled tins remain.
 option:Strip the barracks lockers => mess-hall | risk:low | time:7 | reward:clothing scraps | success:item:bunker fatigues,item:moth-eaten scarf,log:You gather worn but usable uniforms. | fail:hp-3,log:A locker door clips your shoulder.

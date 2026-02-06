@@ -2,6 +2,7 @@
 id:rift_complex
 name:Rift Complex
 summary:A warped research facility wrapped in spatial rifts and time shear. The deadliest site yet, demanding top-tier tools for staggering rewards.
+temp:cold
 arrivalDialog:Rift Tech Yori: The breach event still hums under the floor; stay inside the marked lanes.
 missionStartDialog:Researcher Vale: Bring back any anomaly tags—the Rift Choir pays in clean water.
 missionEndDialog:Operator Linn: Good pull—these readings keep the council ahead of the next tear.
@@ -10,14 +11,14 @@ shop:false
 
 @door
 label:Rift Transit Aperture
-hint:deadly anomalies, elite gear, telecom job
+hint:deadly anomalies, cold rift air, elite gear, telecom job
 risk:deadly
 note:The aperture ripples, distorting sound and light as you step through.
 target:rift-hub
 
 @scene rift-hub
 title:Rift Hub
-desc:Floating consoles orbit a fractured core, pulsing with unstable light.
+desc:Floating consoles orbit a fractured core, pulsing with unstable light in the cold rift air.
 tags:Rift / Deadly
 option:Stabilize the core nodes => rift-hub | risk:high | time:10 | reward:rift provisions | success:item:riftwater flask,item:synth-berry pack,log:You steady the nodes and bottle chilled riftwater. | fail:hp-8,rads+6,log:A surge lashes across the hub.
 option:Strip the grav lockers => rift-hub | risk:deadly | time:11 | reward:weapon cache | success:item:graviton glaive,item:gravity lens,log:You yank a gleaming glaive from a weightless rack. | fail:hp-10,credits-5,log:The lockers buckle and force a retreat.

@@ -2,6 +2,7 @@
 id:stormglass_citadel
 name:Stormglass Citadel
 summary:A shattered tower of stormglass crystal and humming conduits. Deadly-risk raids demand advanced gear and reward high-grade weapons.
+temp:hot
 arrivalDialog:Storm Warden Kira: The citadel rose after the Glassfall—each pane is a storm memory.
 missionStartDialog:Keeper Sable: The storm cult keeps relics in the spires; don't touch the etched glass.
 missionEndDialog:Sentinel Roan: The council will honor this—every shard keeps the barrier bright.
@@ -12,14 +13,14 @@ barHireCost:100
 
 @door
 label:Citadel Stormgate
-hint:deadly combatants, stormglass gear, telecom job
+hint:deadly combatants, hot stormglass halls, telecom job
 risk:deadly
 note:Lightning crawls along crystal spires as the stormgate unlocks.
 target:stormhall
 
 @scene stormhall
 title:Stormhall
-desc:Cracked crystal tiles thrum underfoot as static arcs jump the halls.
+desc:Cracked crystal tiles thrum underfoot as static arcs heat the hot halls.
 tags:Citadel / Deadly
 option:Harvest the crystal ribs => stormhall | risk:high | time:9 | reward:stormglass salvage | success:item:stormglass shard,item:static fruit bar,log:You pry loose glimmering ribs packed with nutrients. | fail:hp-7,temp+2,log:Static backlash scorches your arms.
 option:Check the armory racks => stormhall | risk:deadly | time:10 | reward:weapon cache | success:item:stormglass rapier,item:storm seal gaskets,log:You lift a pristine blade before the racks spark. | fail:hp-9,credits-4,log:The racks discharge and drive you back.
