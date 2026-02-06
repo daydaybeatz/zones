@@ -56,8 +56,8 @@ lootType:premium food & supplies
 key:1
 combatChance:0.5
 event:Lost shopper hides in the office | chance:1 | prompt:A frightened scav begs to share the cache. What do you do?
-eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:morale+6,item:queue jacket,log:They share a warm jacket in gratitude. | fail:morale-4,log:The scav panics and draws attention.
-eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. | fail:hp-6,morale-5,log:The scav slams the door and sets off a chase.
+eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:credits+6,item:queue jacket,log:They share a warm jacket in gratitude. | fail:credits-4,log:The scav panics and draws attention.
+eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. | fail:hp-6,credits-5,log:The scav slams the door and sets off a chase.
 
 @quest
 id:mall-power-1
@@ -70,7 +70,7 @@ loot:1
 lootType:power parts
 reward:power diagnostics
 success:item:power coupler,credits+8,flag:mall-power-1,log:The breaker layout is mapped. You can reach the main switch.
-fail:temp-2,morale-3
+fail:temp-2,credits-3
 flag:mall-power-1
 once:true
 
@@ -85,7 +85,7 @@ loot:2
 lootType:power salvage
 reward:mall power restored
 success:item:spark kiosk battery,credits+12,flag:mall-power,log:The lights blaze back on. Mall risk drops and food supplies are easier to locate.
-fail:hp-6,morale-4
+fail:hp-6,credits-4
 flag:mall-power
 requires:mall-power-1
 once:true

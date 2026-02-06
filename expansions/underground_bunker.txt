@@ -31,7 +31,7 @@ energy:10
 loot:2
 lootType:low-tier food & clothing
 event:Service hatch patrol | chance:0.55 | prompt:A patrol blocks the service hatch that hides extra rations.
-eventOption:Crawl through the ventwork => risk:low | tag:stealth | success:item:tinned beans,credits+4,log:You slip past and scoop up sealed tins. | fail:hp-3,morale-2,log:A vent grate clangs and draws attention.
+eventOption:Crawl through the ventwork => risk:low | tag:stealth | success:item:tinned beans,credits+4,log:You slip past and scoop up sealed tins. | fail:hp-3,credits-2,log:A vent grate clangs and draws attention.
 eventOption:Force the hatch open => risk:medium | tag:combat | success:item:locker prybar,item:ration bar,log:You muscle through and claim the stash. | fail:hp-6,log:The patrol batters you back.
 
 @mission
@@ -44,8 +44,8 @@ energy:14
 loot:3
 lootType:sealed kits
 event:Lost tunnel scav | chance:1 | prompt:A starving scav begs to join your run. Decide how to respond.
-eventOption:Share supplies and guide them out => risk:low | tag:mercy | success:morale+5,item:stale biscuits,log:The scav repays you with a hidden snack cache. | fail:morale-3,log:The scav panics and slows you down.
-eventOption:Shake them down for intel => risk:medium | tag:betrayal | success:credits+10,item:old coin,log:You take the intel and a coin for your trouble. | fail:morale-4,log:The scav bolts, cursing your name.
+eventOption:Share supplies and guide them out => risk:low | tag:mercy | success:credits+5,item:stale biscuits,log:The scav repays you with a hidden snack cache. | fail:credits-3,log:The scav panics and slows you down.
+eventOption:Shake them down for intel => risk:medium | tag:betrayal | success:credits+10,item:old coin,log:You take the intel and a coin for your trouble. | fail:credits-4,log:The scav bolts, cursing your name.
 
 @mission
 id:bunker-armory
@@ -82,7 +82,7 @@ loot:1
 lootType:signal trace
 reward:telecom trace
 success:credits+8,flag:bunker-telecom-1,log:You map the cut and mark a clear path to the relay core.
-fail:morale-3
+fail:credits-3
 flag:bunker-telecom-1
 once:true
 
@@ -97,7 +97,7 @@ loot:2
 lootType:relay salvage
 reward:relay restored
 success:item:coil battery,item:flashline map,credits+12,flag:bunker-telecom-2,log:The relay crackles to life. New idle dispatch options unlock.
-fail:hp-6,morale-4
+fail:hp-6,credits-4
 flag:bunker-telecom-2
 requires:bunker-telecom-1
 combat:true
