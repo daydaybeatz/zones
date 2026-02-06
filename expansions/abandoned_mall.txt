@@ -2,6 +2,7 @@
 id:abandoned_mall
 name:Abandoned Mall
 summary:A hollow mall with shuttered storefronts and a quiet food court. Mid-risk runs for low-tier food and supply crates.
+temp:cold
 arrivalDialog:Custodian Rue: This mall went dark on the Winter Blackout; the fountain never came back.
 missionStartDialog:Vendor Lio: The food court ghosts sell to anyone—move fast before they vanish.
 missionEndDialog:Courier Pax: Nice haul—kids in the lower stacks still trade mall sweets as currency.
@@ -9,14 +10,14 @@ shop:false
 
 @door
 label:Mall Service Entrance
-hint:food runs, mid-risk corridors, power restart
+hint:food runs, cold corridors, power restart
 risk:medium
 note:Neon reflections dance on polished tiles as you step inside.
 target:food-court
 
 @scene food-court
 title:Food Court
-desc:Tables are stacked into makeshift barriers. The air smells of cold grease.
+desc:Tables are stacked into makeshift barriers. The air is cold and smells of old grease.
 tags:Mall / Hazard
 option:Check the kiosk storage => food-court | risk:medium | time:7 | reward:food stash | success:item:mall snack pack,item:field rations,log:You pull sealed meals from a storage bin. | fail:hunger+8,log:The stash is picked clean.
 option:Search the loading dock => food-court | risk:medium | time:8 | reward:food crates | success:item:water canister,item:citrus soda,log:You drag out a pallet of usable supplies. | fail:hp-5,log:A falling shutter clips your shoulder.

@@ -1318,7 +1318,7 @@
       loadoutPage:0,
       marketPage:0,
       inventory:["rusty flashlight","ration bar","scrap wiring"],
-      equipped:['basic backpack','cargo pants','sale-day hoodie','safehouse slippers'],
+      equipped:['basic backpack','cargo pants','mess hall apron','safehouse slippers'],
       codex:["Hub online. Reward bays clear."],
       codexExpanded:false,
       stash:{name:'Vault Stash',items:[]},
@@ -1584,6 +1584,15 @@
       'jury-rigged blade':{type:'weapon',slot:'weapon',rarity:'common',value:9,mods:{combatBonus:3}},
       'scrap spear':{type:'weapon',slot:'weapon',rarity:'uncommon',value:18,mods:{combatBonus:5,lootBonus:0.01}},
       'pipe rifle':{type:'weapon',slot:'weapon',rarity:'rare',value:32,mods:{combatBonus:7,riskMod:-0.01}},
+      'handgun ammo':{type:'ammo',rarity:'common',value:6,stackable:true},
+      'rifle ammo':{type:'ammo',rarity:'common',value:7,stackable:true},
+      'shotgun ammo':{type:'ammo',rarity:'uncommon',value:9,stackable:true},
+      'field handgun':{type:'weapon',slot:'weapon',rarity:'rare',value:52,mods:{combatBonus:11},ammoType:'handgun ammo'},
+      'frontier rifle':{type:'weapon',slot:'weapon',rarity:'rare',value:60,mods:{combatBonus:12},ammoType:'rifle ammo'},
+      'breach shotgun':{type:'weapon',slot:'weapon',rarity:'epic',value:74,mods:{combatBonus:13},ammoType:'shotgun ammo'},
+      'surplus crate (basic)':{type:'crate',rarity:'common',value:15,crateTier:1,crateMin:3,crateMax:5,crateRisk:'low',crateBonus:0.01},
+      'surplus crate (standard)':{type:'crate',rarity:'uncommon',value:30,crateTier:2,crateMin:4,crateMax:6,crateRisk:'medium',crateBonus:0.05},
+      'surplus crate (premium)':{type:'crate',rarity:'rare',value:50,crateTier:3,crateMin:5,crateMax:7,crateRisk:'high',crateBonus:0.1},
       'compact medkit':{type:'consumable',rarity:'uncommon',value:14,effect:'hp+18'},
       'filtered water pack':{type:'consumable',rarity:'uncommon',value:13,effect:'thirst-20,rads-2'},
       'anti-rad serum':{type:'consumable',rarity:'rare',value:32,effect:'rads-40,radshield+25'},
@@ -1775,10 +1784,10 @@
     };
 
     const LOOT_BY_RARITY={
-      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','pocket pack','jury-rigged blade','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape','bunker stew pouch','tinned beans','stale biscuits','moth-eaten scarf','bunker fatigues','mess hall apron','locker prybar','mall snack pack','instant noodles','citrus soda','sale-day hoodie','glass shard shiv','gang patchwork pants','antiseptic wipes','cooling compress','scrub jacket','bunk blanket','safehouse slippers','galley kit','homebrew stew','clean canteen','brine crackers','salted stew pouch','slag shard','static fruit bar','storm seal gaskets','synth-berry pack'],
-      uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack','canteen tablets','barracks coffee','reinforced gloves','service wrench','flashline map','security poncho','store runner shoes','queue jacket','loading hook','kiosk toolkit','spark kiosk battery','rail spike mace','trackside vest','metro runner boots','torchlight lantern','coin string','rail map rig','scrapper mask','barter satchel','response harness','facility boots','clearance gloves','access scanner','containment seal kit','sterile gloves','triage boots','medic satchel','triage lamp','pain suppressant','hydration drip','workshop apron','tool roll','quiet radio','spare belt rig','comfort liner','restful mask','smokehouse ration','sealed citrus tonic','burn salve','pressure-seal gloves','slagline boots','pressure gauge kit','reclaimer hook','refinery alloy ingot','coolant canister','stormglass canteen','ozone jerky','ionized brew','shockwrap bandage','arcthread gloves','signal anchor','stormglass shard','ion circuit puck','riftwater flask','chrono ration','drift moss tea','nullfield filament','vacuum seal ring'],
-      rare:['microcell','lockbox key','manager room key','storage room key','security supply room key','director armory key','bunker armory key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum','power coupler','shanty revolver','signal jammer coil','turnstile shield','graffiti cloak','black market battery','security visor','tactical comms rig','hazmat undersuit','pulse baton','secure datapad','command bracer','nutri-gel pack','clinic IV pack','antiviral vial','portable scanner','biofilter mask','recovery tonic','generator capacitor','training weights','antitoxin vial','refinery slickcoat','ventmaster hood','torque cleaver','hydraulic spike','scavenge beacon','idle relay tuner','compressed coil','stormglass rapier','citadel pauldrons','stormguard greaves','visor of echoes','phase relay kit','breach timer','lightning ward charm','capacitor lattice','focus serum','nano-restore kit','rift stabilizer shot','phase-woven boots','singularity gauntlets','horizon visor','inertial dampener','anomaly scanner','rift crystal splinter','gravity lens'],
-      epic:['drone core','shock carbine','thundercoil rifle','quantum mesh cloak','graviton glaive','particle repeater','temporal compass','dispatch accelerator'],
+      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','pocket pack','jury-rigged blade','handgun ammo','rifle ammo','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape','bunker stew pouch','tinned beans','stale biscuits','moth-eaten scarf','bunker fatigues','mess hall apron','locker prybar','mall snack pack','instant noodles','citrus soda','sale-day hoodie','glass shard shiv','gang patchwork pants','antiseptic wipes','cooling compress','scrub jacket','bunk blanket','safehouse slippers','galley kit','homebrew stew','clean canteen','brine crackers','salted stew pouch','slag shard','static fruit bar','storm seal gaskets','synth-berry pack'],
+      uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack','canteen tablets','barracks coffee','reinforced gloves','service wrench','flashline map','security poncho','store runner shoes','queue jacket','loading hook','kiosk toolkit','spark kiosk battery','rail spike mace','trackside vest','metro runner boots','torchlight lantern','coin string','rail map rig','scrapper mask','barter satchel','response harness','facility boots','clearance gloves','access scanner','containment seal kit','sterile gloves','triage boots','medic satchel','triage lamp','pain suppressant','hydration drip','workshop apron','tool roll','quiet radio','spare belt rig','comfort liner','restful mask','smokehouse ration','sealed citrus tonic','burn salve','pressure-seal gloves','slagline boots','pressure gauge kit','reclaimer hook','refinery alloy ingot','coolant canister','stormglass canteen','ozone jerky','ionized brew','shockwrap bandage','shotgun ammo','arcthread gloves','signal anchor','stormglass shard','ion circuit puck','riftwater flask','chrono ration','drift moss tea','nullfield filament','vacuum seal ring'],
+      rare:['microcell','lockbox key','manager room key','storage room key','security supply room key','director armory key','bunker armory key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','field handgun','frontier rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum','power coupler','shanty revolver','signal jammer coil','turnstile shield','graffiti cloak','black market battery','security visor','tactical comms rig','hazmat undersuit','pulse baton','secure datapad','command bracer','nutri-gel pack','clinic IV pack','antiviral vial','portable scanner','biofilter mask','recovery tonic','generator capacitor','training weights','antitoxin vial','refinery slickcoat','ventmaster hood','torque cleaver','hydraulic spike','scavenge beacon','idle relay tuner','compressed coil','stormglass rapier','citadel pauldrons','stormguard greaves','visor of echoes','phase relay kit','breach timer','lightning ward charm','capacitor lattice','focus serum','nano-restore kit','rift stabilizer shot','phase-woven boots','singularity gauntlets','horizon visor','inertial dampener','anomaly scanner','rift crystal splinter','gravity lens'],
+      epic:['drone core','shock carbine','thundercoil rifle','breach shotgun','quantum mesh cloak','graviton glaive','particle repeater','temporal compass','dispatch accelerator'],
       legendary:['fusion core shard','scrapboss helm','warlord helm','safehouse warden coat','facility command badge','riot jacket','warden longcoat']
     };
 
@@ -1959,7 +1968,7 @@ target:commons
 title:Safe House Commons
 desc:Warm lights, clean water, and the trade counter keep the crew steady between runs.
 tags:Safe / Hub
-option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,stamina+14,credits+6,log:The bunk warmth sinks into your bones. | fail:credits-2,log:Sleep won't come tonight.
+option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,stamina+14,credits+6,temp=normal,log:The bunk warmth sinks into your bones. | fail:credits-2,log:Sleep won't come tonight.
 option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. | fail:stamina-2,log:The bench clamps fail you.
 
 @mission
@@ -2874,6 +2883,12 @@ once:true`
         {id:'ration bar',cost:14,tag:'Rations'},
         {id:'homebrew stew',cost:16,tag:'Rations'},
         {id:'clean canteen',cost:14,tag:'Hydration'},
+        {id:'handgun ammo',cost:8,tag:'Ammo'},
+        {id:'rifle ammo',cost:9,tag:'Ammo'},
+        {id:'shotgun ammo',cost:11,tag:'Ammo'},
+        {id:'surplus crate (basic)',cost:15,tag:'Crate'},
+        {id:'surplus crate (standard)',cost:30,tag:'Crate'},
+        {id:'surplus crate (premium)',cost:50,tag:'Crate'},
         {id:'quiet radio',cost:20,tag:'Signal'},
         {id:'spare filter',cost:22,tag:'Air kit'},
         {id:'thermal wrap',cost:20,tag:'Warmth'},
@@ -2906,7 +2921,10 @@ once:true`
         {id:'rail spike mace',cost:36,tag:'Weapon'},
         {id:'market shock knife',cost:62,tag:'Weapon'},
         {id:'pipe rifle',cost:72,tag:'Weapon'},
-        {id:'shanty revolver',cost:78,tag:'Weapon'}
+        {id:'shanty revolver',cost:78,tag:'Weapon'},
+        {id:'field handgun',cost:92,tag:'Firearm'},
+        {id:'frontier rifle',cost:108,tag:'Firearm'},
+        {id:'breach shotgun',cost:128,tag:'Firearm'}
       ]
     };
     const MEDICAL_CENTER_UPGRADE_STOCK=[
@@ -2923,6 +2941,12 @@ once:true`
       {id:'scrap spear',cost:32,tag:'Weapon'},
       {id:'pipe rifle',cost:70,tag:'Weapon'},
       {id:'arc pistol',cost:82,tag:'Weapon'},
+      {id:'handgun ammo',cost:8,tag:'Ammo'},
+      {id:'rifle ammo',cost:9,tag:'Ammo'},
+      {id:'shotgun ammo',cost:11,tag:'Ammo'},
+      {id:'surplus crate (basic)',cost:15,tag:'Crate'},
+      {id:'surplus crate (standard)',cost:30,tag:'Crate'},
+      {id:'surplus crate (premium)',cost:50,tag:'Crate'},
       {id:'compact medkit',cost:30,tag:'Medical'},
       {id:'filtered water pack',cost:28,tag:'Hydration'},
       {id:'anti-rad serum',cost:46,tag:'Anti-rad'},
@@ -3186,6 +3210,23 @@ once:true`
       const exp=expansions[zoneId];
       return exp?.meta?.name || exp?.meta?.id || zoneId;
     };
+    const getZoneTemperatureProfile=(zoneId)=>{
+      const exp=expansions[zoneId];
+      const raw=String(exp?.meta?.temp || exp?.meta?.temperature || '').toLowerCase();
+      if(raw.includes('cold')) return {mode:'cold',label:'cold',base:1.3};
+      if(raw.includes('hot')) return {mode:'hot',label:'hot',base:1.1};
+      return {mode:'temperate',label:'temperate',base:0.8};
+    };
+    const getZoneTempDelta=(zoneId,{insulation=0,scale=1}={})=>{
+      const profile=getZoneTemperatureProfile(zoneId);
+      const base=profile.base*scale;
+      if(profile.mode==='hot'){
+        const heat=Math.max(0.2,base+(insulation*0.6));
+        return heat;
+      }
+      const chill=Math.max(0.2,base-(insulation*0.8));
+      return -chill;
+    };
     const getHealthStatLabel=(source)=>{
       if(!source) return null;
       const lower=source.toLowerCase();
@@ -3272,7 +3313,7 @@ once:true`
     const GRID_PAGE_SIZE=18;
     const STACK_LIMIT=25;
     const STACKABLE_CHUNK_RANGE={min:5,max:20};
-    const STACKABLE_ITEMS=new Set(['scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','scrap wiring','copper wire']);
+    const STACKABLE_ITEMS=new Set(['scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','scrap wiring','copper wire','handgun ammo','rifle ammo','shotgun ammo']);
     const isStackable=(id)=>STACKABLE_ITEMS.has(id);
     const getItemCount=(arr,id)=>arr.reduce((acc,item)=>acc+(item===id?1:0),0);
     const slotUsageFor=(id,count)=>isStackable(id)?Math.ceil(count/STACK_LIMIT):count;
@@ -3393,6 +3434,7 @@ once:true`
       if(!effect) return [];
       const labels={temp:'body temp',backpack:'backpack slots'};
       return effect.split(',').map(token=>token.trim()).filter(Boolean).map(token=>{
+        if(token.toLowerCase()==='temp=normal') return 'body temp restored';
         if(token.startsWith('item:')) return `Adds item: ${token.slice(5).trim()}`;
         if(token.startsWith('note:')) return token.slice(5).trim();
         if(token.startsWith('log:')) return token.slice(4).trim();
@@ -3466,9 +3508,11 @@ once:true`
     const getGearMods=(excludeItem)=>{
       return state.equipped.reduce((acc,item)=>{
         if(excludeItem && item===excludeItem) return acc;
-        const mod=getItem(item).mods;
+        const data=getItem(item);
+        const mod=data.mods;
         if(!mod) return acc;
         Object.entries(mod).forEach(([key,val])=>{
+          if(key==='combatBonus' && data.ammoType && !state.inventory.includes(data.ammoType)) return;
           acc[key]=(acc[key]||0)+val;
         });
         return acc;
@@ -3652,8 +3696,36 @@ once:true`
       logMsg(`Unequipped ${item}.`);
       renderAll();
     }
+    function openCrate(item,removeFn){
+      const data=getItem(item);
+      if(!removeFn || !removeFn(item)) return;
+      const minCount=Math.max(1,Number(data.crateMin || 3));
+      const maxCount=Math.max(minCount,Number(data.crateMax || 5));
+      const dropCount=minCount+Math.floor(Math.random()*(maxCount-minCount+1));
+      const risk=data.crateRisk || 'low';
+      const bonus=Number(data.crateBonus || 0);
+      const drops=[];
+      for(let i=0;i<dropCount;i++){
+        const drop=rollLootDrop(risk,bonus);
+        addItemCopies(drops,drop.id,drop.count);
+      }
+      drops.forEach(dropItem=>{
+        const routed=routeItemGain(dropItem);
+        if(routed==='lost'){
+          logMsg(`${dropItem} lost: no storage space available.`);
+        }
+      });
+      state.selected={source:null,item:null};
+      logMsg(`Opened ${item} for ${dropCount} items.`);
+      setCodex(`${item} opened.`);
+      renderAll();
+    }
     function consumeItem(item){
       const data=getItem(item);
+      if(data.type==='crate'){
+        openCrate(item,(target)=>{removeItem(state.inventory,target); return true;});
+        return;
+      }
       if(data.type!=='consumable'){
         setCodex('That item cannot be used like a consumable.');
         return;
@@ -4071,6 +4143,11 @@ once:true`
     }
     function consumeRewardItem(source,item){
       const data=getItem(item);
+      if(data.type==='crate'){
+        openCrate(item,(target)=>removeRewardItem(source,target));
+        autoCloseMissionIfResolved();
+        return;
+      }
       if(data.type!=='consumable'){
         setCodex('That item cannot be used like a consumable.');
         return;
@@ -6040,6 +6117,10 @@ once:true`
       let sawLog=false;
       effectStr.split(',').forEach(token=>{
         token=token.trim(); if(!token) return;
+        if(token.toLowerCase()==='temp=normal'){
+          state.bodyTemp=NORMAL_BODY_TEMP;
+          return;
+        }
         if(token.startsWith('item:')){
           const item=token.slice(5).trim();
           if(deferItemsTo){
@@ -6128,7 +6209,8 @@ once:true`
       const failReason=failBreakdown.reason;
       const roll=Math.random();
       const success=roll>failChance;
-      state.bodyTemp=clamp(state.bodyTemp-1.1,BODY_TEMP_MIN,BODY_TEMP_MAX);
+      const raidTempDelta=getZoneTempDelta(location?.id || state.zone.id,{insulation:gearMods.insulation||0,scale:1.35});
+      state.bodyTemp=clamp(state.bodyTemp+raidTempDelta,BODY_TEMP_MIN,BODY_TEMP_MAX);
       if(success){
         if(raid.fixedRewardsOnly && raid.fixedRewards){
           applyEffects(raid.fixedRewards,'success',{deferItemsTo:rewards});
@@ -6282,9 +6364,28 @@ once:true`
       const pendingRewards=rewards || [];
       state.mission.pendingResolution={...pending,rewards:pendingRewards};
     }
+    function consumeCombatAmmo(){
+      const ammoToUse=[];
+      state.equipped.forEach(item=>{
+        const data=getItem(item);
+        if(!data.ammoType) return;
+        if(state.inventory.includes(data.ammoType)){
+          ammoToUse.push(data.ammoType);
+        }
+      });
+      if(!ammoToUse.length) return;
+      ammoToUse.forEach(ammo=>removeItem(state.inventory,ammo));
+      const tally=ammoToUse.reduce((acc,ammo)=>{
+        acc[ammo]=(acc[ammo]||0)+1;
+        return acc;
+      },{});
+      const summary=Object.entries(tally).map(([ammo,count])=>`${count}x ${ammo}`).join(', ');
+      logMsg(`Ammunition spent: ${summary}.`);
+    }
     function launchCombatFromPending(pending){
       const combatProfile=getCombatProfile(pending.risk);
       const combatState=initCombatState(combatProfile);
+      consumeCombatAmmo();
       const now=Date.now();
       const estimatedMs=clamp(combatState.expectedRounds*COMBAT_ROUND_MS,MIN_MISSION_SECONDS*1000,MAX_MISSION_SECONDS*1000);
       state.mission={
@@ -6536,6 +6637,7 @@ once:true`
       }
       applyCost(cost);
       const combatState=initCombatState(profile);
+      consumeCombatAmmo();
       const now=Date.now();
       const estimatedMs=clamp(combatState.expectedRounds*COMBAT_ROUND_MS,MIN_MISSION_SECONDS*1000,MAX_MISSION_SECONDS*1000);
       state.mission={
@@ -7787,13 +7889,13 @@ once:true`
       state.energy=clamp(state.energy+4+(gearMods.energyRegen||0),0,state.maxEnergy);
       state.hunger=clamp(state.hunger+1,0,state.maxHunger);
       state.thirst=clamp(state.thirst+1,0,state.maxThirst);
-      const inHub=state.screen==='main' || state.screen==='locations';
+      const inHub=isHubZone(state.zone) && (state.screen==='main' || state.screen==='locations');
       if(inHub){
         state.bodyTemp=moveToward(state.bodyTemp,NORMAL_BODY_TEMP,1.6);
       }else{
         const insulation=gearMods.insulation || 0;
-        const loss=Math.max(0.4,1.3-insulation);
-        state.bodyTemp=clamp(state.bodyTemp-loss,BODY_TEMP_MIN,BODY_TEMP_MAX);
+        const tempDelta=getZoneTempDelta(state.zone.id,{insulation});
+        state.bodyTemp=clamp(state.bodyTemp+tempDelta,BODY_TEMP_MIN,BODY_TEMP_MAX);
       }
       const nowMinutes=getTotalMinutes();
       const hungerDamageReady=state.hunger>NEED_DAMAGE_THRESHOLD

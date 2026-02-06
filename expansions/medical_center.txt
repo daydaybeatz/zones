@@ -2,6 +2,7 @@
 id:medical_center
 name:Medical Center
 summary:A clinic wing stripped of most supplies, but still hiding low-tier medical stock. Mid-risk patrols linger in the halls.
+temp:cold
 arrivalDialog:Nurse Kett: This wing treated the Spore Fever surge; masks are still stacked by the doors.
 missionStartDialog:Dr. Osei: Check the cold rooms first—after the collapse, vaccines were bartered like gold.
 missionEndDialog:Orderly Finch: Those supplies will keep the triage stories alive a while longer.
@@ -9,14 +10,14 @@ shop:true
 
 @door
 label:Clinic Access Bay
-hint:medical salvage, mid-risk patrols, telecom job
+hint:medical salvage, cold wards, mid-risk patrols, telecom job
 risk:medium
 note:Sterile lights flicker as you enter the medical wing.
 target:triage
 
 @scene triage
 title:Triage Bay
-desc:Empty gurneys line the bay. Cabinets rattle with leftover kits.
+desc:Empty gurneys line the bay, and the ward stays cold as cabinets rattle with leftover kits.
 tags:Medical / Hazard
 option:Check the triage lockers => triage | risk:low | time:6 | reward:basic medical | success:item:antiseptic wipes,item:painkillers,log:You gather intact wraps and meds. | fail:hp-3,log:A drawer slams on your fingers.
 option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:electro bandage,item:compact medkit,log:You recover a sealed med case. | fail:hp-5,credits-2,log:A patrol forces a hasty exit.

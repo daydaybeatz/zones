@@ -2,6 +2,7 @@
 id:government_facility
 name:Abandoned Government Facility
 summary:A sealed agency compound with broken scanners and hardened patrols. Mid-tier risk with hard combatants and better gear.
+temp:cold
 arrivalDialog:Archivist Venn: The Directorate scrubbed this place after the Signal Riots—logs still whisper.
 missionStartDialog:Handler Quill: If you find a black badge, it belongs to the old Compliance chiefs.
 missionEndDialog:Agent Mira: That's proof the purge happened—stash it before patrol drones wake.
@@ -10,14 +11,14 @@ shop:false
 
 @door
 label:Facility Security Gate
-hint:hard combatants, weapons, tools, telecom job
+hint:hard combatants, cold halls, weapons, tools, telecom job
 risk:high
 note:The security gate grinds open and the halls go quiet.
 target:control-hall
 
 @scene control-hall
 title:Control Hall
-desc:Security consoles flicker, and sealed doors hiss with pressure.
+desc:Security consoles flicker, and sealed doors hiss with pressure in the cold hall.
 tags:Government / Hazard
 option:Run a diagnostic sweep => control-hall | risk:medium | time:7 | reward:systems intel | success:credits+10,log:You recover a diagnostic snapshot. | fail:temp-2,log:The breaker snaps and the room chills.
 option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gear cache | success:item:response harness,item:access scanner,log:You pry loose a cache of uniforms and tools. | fail:hp-6,log:A security latch bites your hand.

@@ -2,6 +2,7 @@
 id:metro_ganglands
 name:Ganglands Metro Shanty
 summary:A mid-risk warren of rail tunnels turned into a shanty bazaar. Mid-tier combatants guard clothing and weapons caches.
+temp:hot
 arrivalDialog:Lookout Jax: Redline owns these rails since the Truce of Nine—flash their colors or keep your head low.
 missionStartDialog:Fixer Ivo: The Shanty runs on scrap taxes; bring back anything with a serial tag.
 missionEndDialog:Runner Sera: Good work—this keeps the truce payments ahead of the tunnel gangs.
@@ -12,14 +13,14 @@ barHireCost:35
 
 @door
 label:Ganglands Turnstile
-hint:mid-tier gear, weapons, telecom job
+hint:mid-tier gear, hot tunnel air, weapons, telecom job
 risk:medium
 note:Graffiti and torchlight guide you into the rail shanty.
 target:concourse
 
 @scene concourse
 title:Shanty Concourse
-desc:Ticket booths are barricaded into gang posts and scrap stalls.
+desc:Ticket booths are barricaded into gang posts and scrap stalls, and the tunnel air runs hot.
 tags:Metro / Hostile
 option:Pay for a safe route => concourse | risk:low | time:6 | reward:safe passage | success:credits-6,log:A toll buys a quieter lane. | fail:hp-4,log:A lookout tags you on the way through.
 option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:trackside vest,item:torchlight lantern,log:You nab mid-tier tools before the guards return. | fail:hp-5,credits-2,log:A sentry clips you on the exit.

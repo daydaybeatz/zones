@@ -2,6 +2,7 @@
 id:sunken_refinery
 name:Sunken Refinery
 summary:A submerged industrial refinery with unstable pressure valves and hostile scav crews. Deadly-risk runs with elite tools, weapons, and sealed food packs.
+temp:hot
 arrivalDialog:Dockhand Mael: The brine tax sank this place; don't breathe near the sludge stacks.
 missionStartDialog:Boiler Chief Ana: Watch the pressure gauges—one spark wakes the old fire storms.
 missionEndDialog:Salvager Juno: Those parts might restart the tide pumps the coast depends on.
@@ -12,14 +13,14 @@ barHireCost:80
 
 @door
 label:Refinery Floodgate
-hint:deadly salvage, pressure fights, telecom job
+hint:deadly salvage, hot pressure halls, telecom job
 risk:deadly
 note:Brine drips from corroded bulkheads as the floodgate yawns open.
 target:pressure-dock
 
 @scene pressure-dock
 title:Pressure Dock
-desc:Steam hisses through cracked pipes, and the floor trembles under old pumps.
+desc:Steam hisses through cracked pipes, and the floor trembles in the hot pressure dock.
 tags:Industrial / Deadly
 option:Stabilize the intake valves => pressure-dock | risk:high | time:8 | reward:pressure salvage | success:item:pressure gauge kit,item:brine crackers,log:You throttle the valves and reclaim a sealed kit. | fail:hp-6,temp+2,log:A pressure burst scorches your hands.
 option:Strip the pump rig => pressure-dock | risk:deadly | time:9 | reward:weapon salvage | success:item:torque cleaver,item:slag shard,log:You wrench a brutal tool free before the rig collapses. | fail:hp-8,credits-4,log:A pump chain snaps and forces a retreat.
