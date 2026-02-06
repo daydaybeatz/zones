@@ -1123,21 +1123,13 @@
       <div id="tab-hub" class="tab-content active">
         <div class="stack">
           <div class="screen-nav" id="screenNav">
-            <button data-screen="main" class="active">Safe House</button>
-            <button data-screen="locations">Locations Hub</button>
-            <button data-screen="shop">Shop</button>
+            <button data-screen="locations" class="active">Locations Hub</button>
           </div>
-          <div id="screen-main" class="screen active">
+          <div id="screen-locations" class="screen active">
             <section class="panel">
               <h3>Idle Operations</h3>
               <div id="idleOps"></div>
             </section>
-            <section class="panel">
-              <h3>Safe House Hatch</h3>
-              <div id="safehouseActions"></div>
-            </section>
-          </div>
-          <div id="screen-locations" class="screen">
             <section class="panel">
               <div class="inline" style="justify-content:space-between;align-items:center;">
                 <h3>Zone Gates</h3>
@@ -1363,7 +1355,7 @@
       doorsPage:0,
       doorsCollapsed:true,
       zone:{...FALLBACK_HUB_ZONE},
-      screen:'main',
+      screen:'locations',
       travel:getDefaultTravelState(),
       mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null,travelCombat:false},
       inventoryScreen:'backpack',
@@ -1981,7 +1973,7 @@
     };
     const getSortedDoors=()=>{
       return Object.values(expansions)
-        .filter(exp=>exp?.meta?.id && exp.meta.id!=='safehouse')
+        .filter(exp=>exp?.meta?.id)
         .sort((a,b)=>{
           const riskA=getZoneRiskForExp(a,a.door?.risk || 'low');
           const riskB=getZoneRiskForExp(b,b.door?.risk || 'low');
@@ -3044,7 +3036,6 @@ once:true`
       doorsCurrent:document.getElementById('doorsCurrent'),
       zoneDesc:document.getElementById('zoneDesc'),
       zoneBadge:document.getElementById('zoneBadge'),
-      safehouseActions:document.getElementById('safehouseActions'),
       raidActions:document.getElementById('raidActions'),
       inventory:document.getElementById('inventory'),
       equipment:document.getElementById('equipment'),
@@ -3055,7 +3046,6 @@ once:true`
       idleOps:document.getElementById('idleOps'),
       screenNav:document.getElementById('screenNav'),
       screens:{
-        main:document.getElementById('screen-main'),
         locations:document.getElementById('screen-locations'),
         shop:document.getElementById('screen-shop'),
         mission:document.getElementById('screen-mission')
@@ -5123,10 +5113,6 @@ once:true`
         setCodex('Mission in progress. Locations hub locked.');
         return;
       }
-      if(screen==='main' && isMissionBlockingTravel()){
-        setCodex('Mission in progress. Stay on the raid feed.');
-        return;
-      }
       if(screen==='mission' && !state.mission.active){
         setCodex('No mission active.');
         return;
@@ -5152,7 +5138,6 @@ once:true`
         const target=btn.dataset.screen;
         const isLocked=target==='mission' && !state.mission.active;
         const isLocationsLocked=target==='locations' && isMissionBlockingTravel();
-        const isMainLocked=target==='main' && isMissionBlockingTravel();
         const isShopLocked=target==='shop' && isMissionBlockingTravel();
         const isShopUnavailable=target==='shop' && !zoneHasShop();
         btn.classList.toggle('active',target===state.screen);
@@ -5161,9 +5146,10 @@ once:true`
         }else{
           btn.title='';
         }
-        btn.disabled=isLocked || isLocationsLocked || isMainLocked || isShopLocked || isShopUnavailable;
+        btn.disabled=isLocked || isLocationsLocked || isShopLocked || isShopUnavailable;
       });
       Object.entries(dom.screens).forEach(([id,el])=>{
+        if(!el) return;
         el.classList.toggle('active',id===state.screen);
       });
     }
@@ -5254,13 +5240,6 @@ once:true`
     function renderRaidActions(){
       dom.raidActions.innerHTML='';
       const exp=expansions[state.zone.id];
-      if(exp?.meta?.id==='safehouse'){
-        const blocked=document.createElement('div');
-        blocked.className='muted-box';
-        blocked.textContent='Safe house actions are managed from the Safe House tab.';
-        dom.raidActions.appendChild(blocked);
-        return;
-      }
       const scene=ensureZoneScene(state.zone);
       if(scene && scene.options && scene.options.length){
         scene.options.forEach(option=>{
@@ -5290,14 +5269,6 @@ once:true`
         barBtn.onclick=openBarModal;
         if(state.mission.active || state.travel.active) barBtn.disabled=true;
         dom.raidActions.appendChild(barBtn);
-      }
-      const vendorEligible=zoneHasShop();
-      if(vendorEligible){
-        const shopBtn=document.createElement('button');
-        shopBtn.innerHTML=`<span>Visit shop</span><span class="small">trade · vendors</span>`;
-        shopBtn.onclick=()=>openMarketAccess();
-        if(state.mission.active || state.travel.active) shopBtn.disabled=true;
-        dom.raidActions.appendChild(shopBtn);
       }
       if(exp && exp.quests && exp.quests.length){
         exp.quests.forEach(quest=>{
@@ -5338,37 +5309,42 @@ once:true`
       }
       const hubZone=isHubZone();
       if(hubZone){
-        if(exp?.meta?.id!=='safehouse'){
-          const hubMissionPool=getUnlockedMissions(exp?.missions || []).filter(isHubMission);
-          const hubMissions=getMissionOffers(state.zone.id,hubMissionPool);
-          if(hubMissions.length){
-            hubMissions.forEach(raid=>{
-              const btn=document.createElement('button');
-              const meta=buildMissionMeta({
-                risk:raid.risk,
-                time:raid.time,
-                energy:raid.energy,
-                key:raid.key,
-                loot:raid.loot,
-                lootType:raid.lootType,
-                reward:raid.reward,
-                xp:raid.xp,
-                combatChance:getMissionCombatChance(raid),
-                failChance:raid.failChance
-              });
-              btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
-              btn.onclick=()=>startMission(raid);
-              const adviceDepleted=isElderAdviceMission(raid) && isElderAdviceExhausted();
-              if(adviceDepleted){
-                btn.disabled=true;
-                btn.title="You're very wise, young one.";
-              }else if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})){
-                btn.disabled=true;
-              }
-              if(raid.risk==='high') btn.classList.add('danger');
-              dom.raidActions.appendChild(btn);
+        const hubMissionPool=getUnlockedMissions(exp?.missions || []).filter(isHubMission);
+        const hubMissions=getMissionOffers(state.zone.id,hubMissionPool);
+        if(hubMissions.length){
+          hubMissions.forEach(raid=>{
+            const btn=document.createElement('button');
+            const meta=buildMissionMeta({
+              risk:raid.risk,
+              time:raid.time,
+              energy:raid.energy,
+              key:raid.key,
+              loot:raid.loot,
+              lootType:raid.lootType,
+              reward:raid.reward,
+              xp:raid.xp,
+              combatChance:getMissionCombatChance(raid),
+              failChance:raid.failChance
             });
-          }
+            btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
+            btn.onclick=()=>startMission(raid);
+            const adviceDepleted=isElderAdviceMission(raid) && isElderAdviceExhausted();
+            if(adviceDepleted){
+              btn.disabled=true;
+              btn.title="You're very wise, young one.";
+            }else if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})){
+              btn.disabled=true;
+            }
+            if(raid.risk==='high') btn.classList.add('danger');
+            dom.raidActions.appendChild(btn);
+          });
+        }
+        if(state.zone.id==='safehouse' && zoneHasShop()){
+          const shopBtn=document.createElement('button');
+          shopBtn.innerHTML=`<span>Visit shop</span><span class="small">trade · vendors</span>`;
+          shopBtn.onclick=()=>openMarketAccess();
+          if(state.mission.active || state.travel.active) shopBtn.disabled=true;
+          dom.raidActions.appendChild(shopBtn);
         }
       }
       if(hubZone && !dom.raidActions.children.length){
@@ -6253,7 +6229,7 @@ once:true`
       state.zone=getMainHubZone();
       state.selected={source:null,item:null};
       setActiveTab('hub');
-      state.screen='main';
+      state.screen='locations';
     }
 
     function applyEffects(effectStr,outcome,options={}){
@@ -6965,11 +6941,7 @@ once:true`
       }
       setCodex(auto ? 'All rewards routed. Returning to the locations hub.' : 'Mission closed. Returning to the locations hub.');
       setActiveTab('hub');
-      if(lastLocation){
-        setScreen('locations');
-      }else{
-        setScreen('main');
-      }
+      setScreen('locations');
     }
 
     function applyCombatFailurePenalty(){
@@ -6992,11 +6964,7 @@ once:true`
       setCodex(`Combat failed${reasonText}. Mission aborted. Returning to the locations hub.`);
       pushNpcDialog(lastLocation?.id,'missionEndDialog');
       setActiveTab('hub');
-      if(lastLocation){
-        setScreen('locations');
-      }else{
-        setScreen('main');
-      }
+      setScreen('locations');
     }
 
     function startMission(raid){
@@ -8059,7 +8027,7 @@ once:true`
       state.energy=clamp(state.energy+4+(gearMods.energyRegen||0),0,state.maxEnergy);
       state.hunger=clamp(state.hunger+1,0,state.maxHunger);
       state.thirst=clamp(state.thirst+1,0,state.maxThirst);
-      const inHub=isHubZone(state.zone) && (state.screen==='main' || state.screen==='locations');
+      const inHub=isHubZone(state.zone) && (state.screen==='locations' || state.screen==='shop');
       if(inHub){
         state.bodyTemp=moveToward(state.bodyTemp,NORMAL_BODY_TEMP,1.6);
       }else{
