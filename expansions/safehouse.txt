@@ -18,8 +18,8 @@ target:commons
 title:Safe House Commons
 desc:Warm lights, clean water, and the trade counter keep the crew steady between runs.
 tags:Safe / Hub
-option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,stamina+14,credits+6,temp=normal,log:The bunk warmth sinks into your bones. | fail:credits-2,log:Sleep won't come tonight.
-option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. | fail:stamina-2,log:The bench clamps fail you.
+option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,energy+14,credits+6,temp=normal,log:The bunk warmth sinks into your bones. | fail:credits-2,log:Sleep won't come tonight.
+option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. | fail:energy-2,log:The bench clamps fail you.
 
 @mission
 id:safehouse-elders

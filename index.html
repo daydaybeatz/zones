@@ -348,16 +348,8 @@
   .temp-status{
     font-size:12px;
     letter-spacing:0.4px;
-    text-transform:uppercase;
-    color:rgba(184,255,207,0.78);
-  }
-  .temp-status--cold{
-    color:var(--blue);
-    text-shadow:0 0 8px rgba(0,183,255,0.35);
-  }
-  .temp-status--hot{
-    color:var(--red);
-    text-shadow:0 0 8px rgba(255,0,51,0.35);
+    text-transform:none;
+    color:rgba(184,255,207,0.7);
   }
   .bar{
     height:10px;
@@ -384,7 +376,7 @@
   }
 
   .bar.hp span{background:linear-gradient(90deg, var(--red), var(--orange)); box-shadow: var(--glow-red);}
-  .bar.stamina span{background:linear-gradient(90deg, var(--green), rgba(0,183,255,0.55));}
+  .bar.energy span{background:linear-gradient(90deg, var(--green), rgba(0,183,255,0.55));}
   .bar.rads span{background:linear-gradient(90deg, rgba(57,255,20,0.8), var(--amber), var(--red));}
   .bar.hunger span{background:linear-gradient(90deg, var(--orange), var(--red));}
   .bar.thirst span{background:linear-gradient(90deg, var(--blue), rgba(57,255,20,0.6));}
@@ -399,25 +391,37 @@
   .need-status--warn{color:var(--amber); text-shadow:0 0 12px rgba(255,176,0,0.35);}
   .need-status--bad{color:var(--red); text-shadow:0 0 12px rgba(255,0,51,0.35);}
 
-  /* META CHIPS */
-  .meta{color:rgba(184,255,207,0.72);font-size:12px;display:flex;flex-wrap:wrap;gap:10px;}
-  .meta b{color:#eafff0;margin-right:6px;}
-  .pill-inline{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:4px 10px;
-    border-radius:999px;
-    border:1px solid rgba(57,255,20,0.18);
-    background:linear-gradient(180deg, rgba(10,12,10,0.6), rgba(0,0,0,0.55));
-    font-size:11px;
-    color:rgba(184,255,207,0.78);
-    box-shadow: var(--inner);
-    text-transform:uppercase;
-    letter-spacing:0.6px;
+  /* STATUS BOARD */
+  .status-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
   }
-  .pill-inline::before{
-    content:"▸";
-    color:var(--green);
-    text-shadow: var(--glow);
+  .status-title-meta{
+    font-size:12px;
+    color:rgba(184,255,207,0.72);
+    text-transform:lowercase;
+    letter-spacing:0.4px;
+  }
+
+  /* META LINES */
+  .meta{
+    color:rgba(184,255,207,0.72);
+    font-size:12px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .meta-group{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    text-transform:lowercase;
+  }
+  .meta-sep{
+    height:1px;
+    background:rgba(57,255,20,0.18);
   }
 
   .rows{display:flex;flex-direction:column;gap:10px;}
@@ -1171,7 +1175,10 @@
     <section class="panel">
       <div class="two-col">
         <div>
-          <h3>Status Board</h3>
+          <div class="status-title">
+            <h3>status board</h3>
+            <div class="status-title-meta" id="statusTitleMeta"></div>
+          </div>
           <div id="stats"></div>
           <div class="meta" id="meta"></div>
         </div>
@@ -1195,10 +1202,6 @@
           </div>
           <div id="screen-locations" class="screen active">
             <section class="panel">
-              <h3>Idle Operations</h3>
-              <div id="idleOps"></div>
-            </section>
-            <section class="panel">
               <div class="inline" style="justify-content:space-between;align-items:center;">
                 <h3>Zone Gates</h3>
                 <button id="doorsToggle" type="button" aria-expanded="false">Change location</button>
@@ -1217,6 +1220,10 @@
             <section class="panel">
               <h3>Zone Operations</h3>
               <div id="raidActions"></div>
+            </section>
+            <section class="panel">
+              <h3>Idle Operations</h3>
+              <div id="idleOps"></div>
             </section>
           </div>
           <div id="screen-shop" class="screen">
@@ -1339,9 +1346,9 @@
       'Keep one energy bar in reserve; emergency actions cost more than you think.',
       'Scrap weighs less than credits, but credits open gates.',
       'After a rough run, rest before the next push; fatigue stacks faster than you think.',
-      'Stamina recovery is quicker when you stop in safe zones.',
+      'Energy recovery is quicker when you stop in safe zones.',
       'Radiation shield buys time, not safety; reapply before deep dives.',
-      'Cold drains stamina; warm layers matter more than armor on long walks.',
+      'Cold drains energy; warm layers matter more than armor on long walks.',
       'Keys open caches, but the noise draws trouble—move fast after unlocking.',
       'Low-risk missions still roll for mishaps; never go in empty.',
       'If your pack is full, a stash upgrade beats another risky run.',
@@ -1362,10 +1369,10 @@
       'Hubs are for planning; do not launch raids until your energy is stable.',
       'Spare filters are worth more than weapons when the air turns bad.',
       'Trust the mission timer; overruns bleed resources fast.',
-      'A calm mind wins fights—enter combat only when your stamina is ready.'
+      'A calm mind wins fights—enter combat only when your energy is ready.'
     ];
     const createIdleSlot=()=>({active:false,id:null,startedAt:null,durationMs:0,etaMinutes:0,completed:false,statusMessage:''});
-    const SHOP_DEAL_ITEM_POOL=['scrap wiring','scrap bundle','cloth scraps','plastic shards','electronics bits','wire spool','copper wire','tarpaulin roll','tinned beans','stale biscuits'];
+    const SHOP_DEAL_ITEM_POOL=['scrap wiring','scrap bundle','cloth scraps','plastic shards','electronics bits','wire spool','copper wire','tarpaulin roll'];
     const SHOP_DEAL_FOOD_POOL=['ration bar','field rations','ember ration','bunker stew pouch','tinned beans','stale biscuits','mall snack pack','instant noodles','homebrew stew','brine crackers','salted stew pouch','static fruit bar'];
     const SHOP_DEAL_WATER_POOL=['water flask','water canister','filtered water pack','clean canteen','citrus soda'];
     const rollFromPool=(pool)=>pool[Math.floor(Math.random()*pool.length)];
@@ -1430,10 +1437,9 @@
     });
     const createDefaultState=()=>({
       hp:92,maxHp:100,
-      stamina:90,maxStamina:100,
       hunger:15,maxHunger:100,
       thirst:20,maxThirst:100,
-      energy:72,maxEnergy:100,
+      energy:90,maxEnergy:100,
       rads:0,
       radShield:0,
       radShieldUntil:null,
@@ -1634,6 +1640,21 @@
             : rollRange(PANDEMIC_RESPONSE_RANGE);
         }
       }
+      if(Object.prototype.hasOwnProperty.call(saved,'stamina')){
+        const savedStamina=Number(saved.stamina);
+        if(Number.isFinite(savedStamina)){
+          merged.energy=Math.max(merged.energy,savedStamina);
+        }
+      }
+      if(Object.prototype.hasOwnProperty.call(saved,'maxStamina')){
+        const savedMaxStamina=Number(saved.maxStamina);
+        if(Number.isFinite(savedMaxStamina)){
+          merged.maxEnergy=Math.max(merged.maxEnergy,savedMaxStamina);
+        }
+      }
+      merged.energy=clamp(merged.energy,0,merged.maxEnergy);
+      delete merged.stamina;
+      delete merged.maxStamina;
       return merged;
     };
     const loadSavedState=()=>{
@@ -1725,13 +1746,13 @@
       'flare':{type:'tool',slot:'tool',rarity:'uncommon',value:10,mods:{lootBonus:0.04}},
       'patch kit':{type:'tool',slot:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.04}},
       'patch-kit':{type:'tool',slot:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.04}},
-      'utility coat':{type:'armor',slot:'chest',rarity:'uncommon',value:12,mods:{staminaBonus:1,insulation:0.8},breakdown:{items:{'cloth scraps':6}}},
-      'microcell':{type:'tool',slot:'tool',rarity:'rare',value:22,mods:{idleSpeed:0.15,energyRegen:1,staminaBonus:2}},
+      'utility coat':{type:'armor',slot:'chest',rarity:'uncommon',value:12,mods:{energyBonus:1,insulation:0.8},breakdown:{items:{'cloth scraps':6}}},
+      'microcell':{type:'tool',slot:'tool',rarity:'rare',value:22,mods:{idleSpeed:0.15,energyRegen:1,energyBonus:2}},
       'rigged backpack':{type:'armor',slot:'backpack',rarity:'rare',value:24,mods:{carryBonus:12,insulation:0.3}},
       'bandage':{type:'consumable',rarity:'common',value:4,effect:'hp+8'},
-      'ration bar':{type:'consumable',rarity:'common',value:3,effect:'hunger-12,stamina+2'},
+      'ration bar':{type:'consumable',rarity:'common',value:3,effect:'hunger-12,energy+2'},
       'water flask':{type:'consumable',rarity:'common',value:4,effect:'thirst-12'},
-      'spark tonic':{type:'consumable',rarity:'uncommon',value:8,effect:'energy+18,stamina+6'},
+      'spark tonic':{type:'consumable',rarity:'uncommon',value:8,effect:'energy+18,energy+6'},
       'scrap wiring':{type:'junk',rarity:'common',value:2,salvage:2,stackable:true},
       'scrap bundle':{type:'junk',rarity:'common',value:1,salvage:1,stackable:true},
       'wire spool':{type:'junk',rarity:'common',value:2,salvage:2,stackable:true},
@@ -1748,31 +1769,31 @@
       'relay crystal':{type:'junk',rarity:'rare',value:20,salvage:6},
       'drone core':{type:'tool',slot:'tool',rarity:'epic',value:32,mods:{lootBonus:0.08,energyRegen:2}},
       'fusion core shard':{type:'junk',rarity:'legendary',value:60,salvage:12},
-      'scrapboss helm':{type:'armor',slot:'helmet',rarity:'legendary',value:85,mods:{staminaBonus:4,insulation:0.6},breakdown:{items:{'cloth scraps':5,'scrap wiring':2}}},
-      'warlord helm':{type:'armor',slot:'helmet',rarity:'legendary',value:85,mods:{staminaBonus:4,insulation:0.6},breakdown:{items:{'cloth scraps':4,'scrap wiring':2}}},
-      'safehouse warden coat':{type:'armor',slot:'chest',rarity:'legendary',value:90,mods:{staminaBonus:4,insulation:1}},
+      'scrapboss helm':{type:'armor',slot:'helmet',rarity:'legendary',value:85,mods:{energyBonus:4,insulation:0.6},breakdown:{items:{'cloth scraps':5,'scrap wiring':2}}},
+      'warlord helm':{type:'armor',slot:'helmet',rarity:'legendary',value:85,mods:{energyBonus:4,insulation:0.6},breakdown:{items:{'cloth scraps':4,'scrap wiring':2}}},
+      'safehouse warden coat':{type:'armor',slot:'chest',rarity:'legendary',value:90,mods:{energyBonus:4,insulation:1}},
       'facility command badge':{type:'tool',slot:'tool',rarity:'legendary',value:95,mods:{lootBonus:0.12,energyRegen:2}},
-      'riot jacket':{type:'armor',slot:'chest',rarity:'legendary',value:88,mods:{insulation:0.9,staminaBonus:2},breakdown:{items:{'cloth scraps':6,'plastic shards':2}}},
-      'field rations':{type:'consumable',rarity:'common',value:5,effect:'hunger-16,stamina+4'},
+      'riot jacket':{type:'armor',slot:'chest',rarity:'legendary',value:88,mods:{insulation:0.9,energyBonus:2},breakdown:{items:{'cloth scraps':6,'plastic shards':2}}},
+      'field rations':{type:'consumable',rarity:'common',value:5,effect:'hunger-16,energy+4'},
       'water canister':{type:'consumable',rarity:'common',value:5,effect:'thirst-18,temp-1'},
-      'painkillers':{type:'consumable',rarity:'uncommon',value:11,effect:'hp+12,stamina+2'},
+      'painkillers':{type:'consumable',rarity:'uncommon',value:11,effect:'hp+12,energy+2'},
       'glowing herbs':{type:'consumable',rarity:'uncommon',value:10,effect:'rads-4,temp+1'},
-      'military rations':{type:'consumable',rarity:'uncommon',value:12,effect:'hunger-22,stamina+6'},
+      'military rations':{type:'consumable',rarity:'uncommon',value:12,effect:'hunger-22,energy+6'},
       'coil battery':{type:'tool',slot:'tool',rarity:'uncommon',value:13,mods:{energyRegen:1}},
       'spare filter':{type:'tool',slot:'tool',rarity:'uncommon',value:12,mods:{riskMod:-0.03}},
       'copper wire':{type:'junk',rarity:'common',value:4,salvage:3,stackable:true},
       'reactor shard':{type:'junk',rarity:'rare',value:34,salvage:10},
-      'exo brace':{type:'armor',slot:'gloves',rarity:'rare',value:28,mods:{staminaBonus:4,insulation:0.4}},
-      'scavenger boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:16,mods:{staminaBonus:2},breakdown:{items:{'cloth scraps':4,'scrap bundle':1}}},
+      'exo brace':{type:'armor',slot:'gloves',rarity:'rare',value:28,mods:{energyBonus:4,insulation:0.4}},
+      'scavenger boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:16,mods:{energyBonus:2},breakdown:{items:{'cloth scraps':4,'scrap bundle':1}}},
       'underground map':{type:'tool',slot:'tool',rarity:'uncommon',value:15,mods:{riskMod:-0.05,lootBonus:0.03}},
       'data cartridge':{type:'tool',slot:'tool',rarity:'rare',value:26,mods:{lootBonus:0.06}},
-      'signal wristband':{type:'tool',slot:'tool',rarity:'uncommon',value:14,mods:{staminaBonus:2}},
+      'signal wristband':{type:'tool',slot:'tool',rarity:'uncommon',value:14,mods:{energyBonus:2}},
       'riot shield':{type:'weapon',slot:'weapon',rarity:'rare',value:30,mods:{riskMod:-0.06,insulation:0.5}},
       'flare paint':{type:'tool',slot:'tool',rarity:'uncommon',value:13,mods:{lootBonus:0.05}},
       'flashbang':{type:'tool',slot:'tool',rarity:'rare',value:24,mods:{combatBonus:5}},
       'foam canister':{type:'tool',slot:'tool',rarity:'uncommon',value:15,mods:{combatBonus:3,riskMod:-0.02}},
       'viral clip drive':{type:'junk',rarity:'rare',value:28,salvage:7},
-      'limited hoodie':{type:'armor',slot:'chest',rarity:'rare',value:27,mods:{staminaBonus:3,insulation:0.6},breakdown:{items:{'cloth scraps':5}}},
+      'limited hoodie':{type:'armor',slot:'chest',rarity:'rare',value:27,mods:{energyBonus:3,insulation:0.6},breakdown:{items:{'cloth scraps':5}}},
       'payload crate':{type:'junk',rarity:'uncommon',value:18,salvage:5},
       'stun baton':{type:'weapon',slot:'weapon',rarity:'rare',value:29,mods:{combatBonus:6}},
       'mystery supply':{type:'junk',rarity:'rare',value:25,salvage:6},
@@ -1780,8 +1801,8 @@
       'shock gel':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+10,temp+1'},
       'overclock chip':{type:'tool',slot:'tool',rarity:'rare',value:31,mods:{energyRegen:2,combatBonus:4}},
       'insulated cloak':{type:'armor',slot:'chest',rarity:'rare',value:26,mods:{insulation:1.1,riskMod:-0.02},breakdown:{items:{'cloth scraps':6}}},
-      'scavenger harness':{type:'armor',slot:'chest',rarity:'uncommon',value:17,mods:{staminaBonus:2}},
-      'hardened canteen':{type:'consumable',rarity:'uncommon',value:9,effect:'thirst-16,stamina+3'},
+      'scavenger harness':{type:'armor',slot:'chest',rarity:'uncommon',value:17,mods:{energyBonus:2}},
+      'hardened canteen':{type:'consumable',rarity:'uncommon',value:9,effect:'thirst-16,energy+3'},
       'ember ration':{type:'consumable',rarity:'common',value:6,effect:'hunger-14,temp+2'},
       'signal jammer':{type:'tool',slot:'tool',rarity:'rare',value:33,mods:{riskMod:-0.07,combatBonus:2,deceptionBonus:0.05}},
 
@@ -1813,10 +1834,10 @@
       'tarpaulin roll':{type:'junk',rarity:'common',value:4,salvage:2,stackable:true},
 
       /* cold shelter */
-      'thermal wrap':{type:'consumable',rarity:'common',value:6,effect:'temp+3,stamina+4'},
+      'thermal wrap':{type:'consumable',rarity:'common',value:6,effect:'temp+3,energy+4'},
       'bunker schematics':{type:'tool',slot:'tool',rarity:'uncommon',value:21,mods:{riskMod:-0.02}},
       'lantern oil':{type:'junk',rarity:'common',value:2,salvage:1,stackable:true},
-      'stabilizer brace':{type:'armor',slot:'gloves',rarity:'uncommon',value:20,mods:{staminaBonus:3,insulation:0.3}},
+      'stabilizer brace':{type:'armor',slot:'gloves',rarity:'uncommon',value:20,mods:{energyBonus:3,insulation:0.3}},
       'cache latch':{type:'junk',rarity:'uncommon',value:10,salvage:3},
 
       /* blackwood expanse */
@@ -1828,7 +1849,7 @@
 
       /* downtown portland */
       'floodgate keycard':{type:'key',rarity:'rare',value:22},
-      'signal flare rack':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{lootBonus:0.05,staminaBonus:1}},
+      'signal flare rack':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{lootBonus:0.05,energyBonus:1}},
       'riot-line tape':{type:'junk',rarity:'common',value:3,salvage:2,stackable:true},
       'bridge-runner pack':{type:'armor',slot:'backpack',rarity:'uncommon',value:28,mods:{carryBonus:10}},
       'arc pistol':{type:'weapon',slot:'weapon',rarity:'rare',value:38,mods:{combatBonus:8,energyRegen:1}},
@@ -1836,25 +1857,25 @@
       /* underground bunker additions */
       'bunker stew pouch':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,temp+1'},
       'tinned beans':{type:'consumable',rarity:'common',value:4,effect:'hunger-8'},
-      'stale biscuits':{type:'consumable',rarity:'common',value:3,effect:'hunger-6,stamina+1'},
+      'stale biscuits':{type:'consumable',rarity:'common',value:3,effect:'hunger-6,energy+1'},
       'canteen tablets':{type:'consumable',rarity:'uncommon',value:9,effect:'thirst-14,rads-1'},
-      'barracks coffee':{type:'consumable',rarity:'uncommon',value:10,effect:'energy+10,stamina+4'},
+      'barracks coffee':{type:'consumable',rarity:'uncommon',value:10,effect:'energy+10,energy+4'},
       'moth-eaten scarf':{type:'armor',slot:'chest',rarity:'common',value:8,mods:{insulation:0.4},breakdown:{items:{'cloth scraps':3}}},
       'bunker fatigues':{type:'armor',slot:'pants',rarity:'common',value:9,mods:{insulation:0.3},breakdown:{items:{'cloth scraps':4}}},
-      'reinforced gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:16,mods:{staminaBonus:2,insulation:0.2}},
+      'reinforced gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:16,mods:{energyBonus:2,insulation:0.2}},
       'mess hall apron':{type:'armor',slot:'chest',rarity:'common',value:7,mods:{insulation:0.2},breakdown:{items:{'cloth scraps':2}}},
       'locker prybar':{type:'weapon',slot:'weapon',rarity:'common',value:8,mods:{combatBonus:2}},
       'service wrench':{type:'weapon',slot:'weapon',rarity:'uncommon',value:16,mods:{combatBonus:4}},
       'flashline map':{type:'tool',slot:'tool',rarity:'uncommon',value:15,mods:{riskMod:-0.03,lootBonus:0.02}},
 
       /* abandoned mall additions */
-      'mall snack pack':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,stamina+2'},
+      'mall snack pack':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,energy+2'},
       'instant noodles':{type:'consumable',rarity:'common',value:4,effect:'hunger-9,temp+1'},
       'citrus soda':{type:'consumable',rarity:'common',value:4,effect:'thirst-10,energy+4'},
       'security poncho':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{insulation:0.5,riskMod:-0.02,stealthBonus:0.02}},
-      'store runner shoes':{type:'armor',slot:'shoes',rarity:'uncommon',value:16,mods:{staminaBonus:2}},
-      'queue jacket':{type:'armor',slot:'chest',rarity:'uncommon',value:17,mods:{staminaBonus:1,insulation:0.4}},
-      'sale-day hoodie':{type:'armor',slot:'chest',rarity:'common',value:9,mods:{staminaBonus:1,insulation:0.3}},
+      'store runner shoes':{type:'armor',slot:'shoes',rarity:'uncommon',value:16,mods:{energyBonus:2}},
+      'queue jacket':{type:'armor',slot:'chest',rarity:'uncommon',value:17,mods:{energyBonus:1,insulation:0.4}},
+      'sale-day hoodie':{type:'armor',slot:'chest',rarity:'common',value:9,mods:{energyBonus:1,insulation:0.3}},
       'loading hook':{type:'weapon',slot:'weapon',rarity:'uncommon',value:19,mods:{combatBonus:5}},
       'glass shard shiv':{type:'weapon',slot:'weapon',rarity:'common',value:10,mods:{combatBonus:3}},
       'kiosk toolkit':{type:'tool',slot:'tool',rarity:'uncommon',value:16,mods:{lootBonus:0.04}},
@@ -1866,13 +1887,13 @@
       'shanty revolver':{type:'weapon',slot:'weapon',rarity:'rare',value:36,mods:{combatBonus:8}},
       'signal jammer coil':{type:'tool',slot:'tool',rarity:'rare',value:32,mods:{riskMod:-0.06,lootBonus:0.02}},
       'turnstile shield':{type:'weapon',slot:'weapon',rarity:'rare',value:34,mods:{riskMod:-0.05,insulation:0.4}},
-      'trackside vest':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{staminaBonus:1,insulation:0.4}},
-      'graffiti cloak':{type:'armor',slot:'chest',rarity:'rare',value:30,mods:{staminaBonus:3,insulation:0.7,stealthBonus:0.05}},
-      'metro runner boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:19,mods:{staminaBonus:3}},
+      'trackside vest':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{energyBonus:1,insulation:0.4}},
+      'graffiti cloak':{type:'armor',slot:'chest',rarity:'rare',value:30,mods:{energyBonus:3,insulation:0.7,stealthBonus:0.05}},
+      'metro runner boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:19,mods:{energyBonus:3}},
       'gang patchwork pants':{type:'armor',slot:'pants',rarity:'common',value:10,mods:{insulation:0.3}},
       'torchlight lantern':{type:'tool',slot:'tool',rarity:'uncommon',value:18,mods:{lootBonus:0.04}},
       'black market battery':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{energyRegen:2}},
-      'coin string':{type:'tool',slot:'tool',rarity:'uncommon',value:17,mods:{staminaBonus:2}},
+      'coin string':{type:'tool',slot:'tool',rarity:'uncommon',value:17,mods:{energyBonus:2}},
       'rail map rig':{type:'tool',slot:'tool',rarity:'uncommon',value:18,mods:{riskMod:-0.04}},
       'scrapper mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:17,mods:{insulation:0.3,riskMod:-0.02,stealthBonus:0.03}},
       'barter satchel':{type:'armor',slot:'backpack',rarity:'uncommon',value:26,mods:{carryBonus:9}},
@@ -1883,42 +1904,42 @@
       'hazmat undersuit':{type:'armor',slot:'chest',rarity:'rare',value:36,mods:{insulation:0.9,riskMod:-0.03}},
       'pulse baton':{type:'weapon',slot:'weapon',rarity:'rare',value:38,mods:{combatBonus:7,riskMod:-0.02}},
       'shock carbine':{type:'weapon',slot:'weapon',rarity:'epic',value:54,mods:{combatBonus:10,energyRegen:1}},
-      'response harness':{type:'armor',slot:'chest',rarity:'uncommon',value:20,mods:{staminaBonus:2,insulation:0.5}},
-      'facility boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:19,mods:{staminaBonus:2,insulation:0.2}},
-      'clearance gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:18,mods:{staminaBonus:2,insulation:0.2}},
+      'response harness':{type:'armor',slot:'chest',rarity:'uncommon',value:20,mods:{energyBonus:2,insulation:0.5}},
+      'facility boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:19,mods:{energyBonus:2,insulation:0.2}},
+      'clearance gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:18,mods:{energyBonus:2,insulation:0.2}},
       'access scanner':{type:'tool',slot:'tool',rarity:'uncommon',value:19,mods:{riskMod:-0.04,techBonus:0.04}},
       'secure datapad':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{lootBonus:0.07}},
       'containment seal kit':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{riskMod:-0.03}},
-      'warden longcoat':{type:'armor',slot:'chest',rarity:'legendary',value:96,mods:{staminaBonus:4,insulation:1}},
-      'command bracer':{type:'armor',slot:'gloves',rarity:'rare',value:32,mods:{staminaBonus:2,insulation:0.3}},
+      'warden longcoat':{type:'armor',slot:'chest',rarity:'legendary',value:96,mods:{energyBonus:4,insulation:1}},
+      'command bracer':{type:'armor',slot:'gloves',rarity:'rare',value:32,mods:{energyBonus:2,insulation:0.3}},
       'nutri-gel pack':{type:'consumable',rarity:'rare',value:18,effect:'hunger-18,energy+6'},
 
       /* medical center additions */
       'antiseptic wipes':{type:'consumable',rarity:'common',value:4,effect:'hp+6'},
-      'electro bandage':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+14,stamina+2'},
+      'electro bandage':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+14,energy+2'},
       'clinic IV pack':{type:'consumable',rarity:'rare',value:26,effect:'hp+24'},
-      'antiviral vial':{type:'consumable',rarity:'rare',value:24,effect:'hp+12,stamina+4'},
+      'antiviral vial':{type:'consumable',rarity:'rare',value:24,effect:'hp+12,energy+4'},
       'cooling compress':{type:'consumable',rarity:'common',value:4,effect:'hp+4,temp-2'},
       'sterile gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:17,mods:{riskMod:-0.02,insulation:0.2,mercyBonus:0.03}},
       'scrub jacket':{type:'armor',slot:'chest',rarity:'common',value:8,mods:{insulation:0.3}},
-      'triage boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:18,mods:{staminaBonus:2,insulation:0.2}},
+      'triage boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:18,mods:{energyBonus:2,insulation:0.2}},
       'medic satchel':{type:'armor',slot:'backpack',rarity:'uncommon',value:24,mods:{carryBonus:8,mercyBonus:0.04}},
       'portable scanner':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{lootBonus:0.05,techBonus:0.03}},
       'triage lamp':{type:'tool',slot:'tool',rarity:'uncommon',value:16,mods:{lootBonus:0.03}},
       'biofilter mask':{type:'armor',slot:'helmet',rarity:'rare',value:30,mods:{riskMod:-0.05,insulation:0.4}},
-      'pain suppressant':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+10,stamina+3'},
+      'pain suppressant':{type:'consumable',rarity:'uncommon',value:12,effect:'hp+10,energy+3'},
       'hydration drip':{type:'consumable',rarity:'uncommon',value:11,effect:'thirst-18,energy+4'},
 
       /* sunken refinery */
-      'smokehouse ration':{type:'consumable',rarity:'uncommon',value:7,effect:'hunger-18,stamina+4'},
+      'smokehouse ration':{type:'consumable',rarity:'uncommon',value:7,effect:'hunger-18,energy+4'},
       'brine crackers':{type:'consumable',rarity:'common',value:5,effect:'hunger-12'},
       'sealed citrus tonic':{type:'consumable',rarity:'uncommon',value:12,effect:'thirst-20,energy+2'},
       'salted stew pouch':{type:'consumable',rarity:'common',value:6,effect:'hunger-14,temp+1'},
       'burn salve':{type:'consumable',rarity:'uncommon',value:14,effect:'hp+12,temp-1'},
       'antitoxin vial':{type:'consumable',rarity:'rare',value:24,effect:'rads-15,hp+6'},
       'refinery slickcoat':{type:'armor',slot:'chest',rarity:'rare',value:38,mods:{insulation:0.8,riskMod:-0.04}},
-      'pressure-seal gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:22,mods:{staminaBonus:2,insulation:0.3}},
-      'slagline boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:22,mods:{staminaBonus:3,riskMod:-0.02}},
+      'pressure-seal gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:22,mods:{energyBonus:2,insulation:0.3}},
+      'slagline boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:22,mods:{energyBonus:3,riskMod:-0.02}},
       'ventmaster hood':{type:'armor',slot:'helmet',rarity:'rare',value:30,mods:{insulation:0.4,riskMod:-0.03}},
       'torque cleaver':{type:'weapon',slot:'weapon',rarity:'rare',value:40,mods:{combatBonus:8}},
       'hydraulic spike':{type:'weapon',slot:'weapon',rarity:'rare',value:42,mods:{combatBonus:9,riskMod:-0.01}},
@@ -1933,20 +1954,20 @@
 
       /* stormglass citadel */
       'stormglass canteen':{type:'consumable',rarity:'uncommon',value:12,effect:'thirst-22,temp+1'},
-      'static fruit bar':{type:'consumable',rarity:'common',value:6,effect:'hunger-14,stamina+1'},
-      'ozone jerky':{type:'consumable',rarity:'uncommon',value:12,effect:'hunger-18,stamina+4'},
-      'ionized brew':{type:'consumable',rarity:'uncommon',value:12,effect:'energy+12,stamina+2'},
+      'static fruit bar':{type:'consumable',rarity:'common',value:6,effect:'hunger-14,energy+1'},
+      'ozone jerky':{type:'consumable',rarity:'uncommon',value:12,effect:'hunger-18,energy+4'},
+      'ionized brew':{type:'consumable',rarity:'uncommon',value:12,effect:'energy+12,energy+2'},
       'shockwrap bandage':{type:'consumable',rarity:'uncommon',value:14,effect:'hp+14,rads-2'},
-      'focus serum':{type:'consumable',rarity:'rare',value:24,effect:'energy+18,stamina+6'},
+      'focus serum':{type:'consumable',rarity:'rare',value:24,effect:'energy+18,energy+6'},
       'citadel pauldrons':{type:'armor',slot:'chest',rarity:'rare',value:42,mods:{insulation:0.9,riskMod:-0.05}},
-      'stormguard greaves':{type:'armor',slot:'pants',rarity:'rare',value:36,mods:{insulation:0.5,staminaBonus:2}},
-      'arcthread gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:24,mods:{staminaBonus:3,riskMod:-0.02}},
-      'visor of echoes':{type:'armor',slot:'eyewear',rarity:'rare',value:34,mods:{riskMod:-0.04,staminaBonus:2,stealthBonus:0.03}},
+      'stormguard greaves':{type:'armor',slot:'pants',rarity:'rare',value:36,mods:{insulation:0.5,energyBonus:2}},
+      'arcthread gloves':{type:'armor',slot:'gloves',rarity:'uncommon',value:24,mods:{energyBonus:3,riskMod:-0.02}},
+      'visor of echoes':{type:'armor',slot:'eyewear',rarity:'rare',value:34,mods:{riskMod:-0.04,energyBonus:2,stealthBonus:0.03}},
       'stormglass rapier':{type:'weapon',slot:'weapon',rarity:'rare',value:44,mods:{combatBonus:9,lootBonus:0.02}},
       'thundercoil rifle':{type:'weapon',slot:'weapon',rarity:'epic',value:60,mods:{combatBonus:12,energyRegen:1}},
       'phase relay kit':{type:'tool',slot:'tool',rarity:'rare',value:38,mods:{idleSpeed:0.2}},
       'breach timer':{type:'tool',slot:'tool',rarity:'rare',value:34,mods:{raidSpeed:0.15,riskMod:-0.02}},
-      'lightning ward charm':{type:'tool',slot:'tool',rarity:'rare',value:36,mods:{riskMod:-0.07,staminaBonus:2}},
+      'lightning ward charm':{type:'tool',slot:'tool',rarity:'rare',value:36,mods:{riskMod:-0.07,energyBonus:2}},
       'signal anchor':{type:'tool',slot:'tool',rarity:'uncommon',value:24,mods:{lootBonus:0.06}},
       'stormglass shard':{type:'junk',rarity:'uncommon',value:18,salvage:4},
       'capacitor lattice':{type:'junk',rarity:'rare',value:30,salvage:8},
@@ -1956,14 +1977,14 @@
       /* rift complex */
       'riftwater flask':{type:'consumable',rarity:'uncommon',value:14,effect:'thirst-24,rads-2'},
       'chrono ration':{type:'consumable',rarity:'uncommon',value:14,effect:'hunger-20,energy+4'},
-      'drift moss tea':{type:'consumable',rarity:'uncommon',value:12,effect:'temp+2,stamina+2'},
-      'synth-berry pack':{type:'consumable',rarity:'common',value:7,effect:'hunger-12,stamina+2'},
-      'nano-restore kit':{type:'consumable',rarity:'rare',value:26,effect:'hp+20,stamina+4'},
+      'drift moss tea':{type:'consumable',rarity:'uncommon',value:12,effect:'temp+2,energy+2'},
+      'synth-berry pack':{type:'consumable',rarity:'common',value:7,effect:'hunger-12,energy+2'},
+      'nano-restore kit':{type:'consumable',rarity:'rare',value:26,effect:'hp+20,energy+4'},
       'rift stabilizer shot':{type:'consumable',rarity:'rare',value:28,effect:'rads-20,temp-2'},
       'quantum mesh cloak':{type:'armor',slot:'chest',rarity:'epic',value:60,mods:{insulation:1.1,riskMod:-0.06,stealthBonus:0.08}},
-      'phase-woven boots':{type:'armor',slot:'shoes',rarity:'rare',value:40,mods:{staminaBonus:4,riskMod:-0.03,stealthBonus:0.04}},
-      'singularity gauntlets':{type:'armor',slot:'gloves',rarity:'rare',value:42,mods:{staminaBonus:5}},
-      'horizon visor':{type:'armor',slot:'eyewear',rarity:'rare',value:38,mods:{riskMod:-0.04,staminaBonus:2}},
+      'phase-woven boots':{type:'armor',slot:'shoes',rarity:'rare',value:40,mods:{energyBonus:4,riskMod:-0.03,stealthBonus:0.04}},
+      'singularity gauntlets':{type:'armor',slot:'gloves',rarity:'rare',value:42,mods:{energyBonus:5}},
+      'horizon visor':{type:'armor',slot:'eyewear',rarity:'rare',value:38,mods:{riskMod:-0.04,energyBonus:2}},
       'graviton glaive':{type:'weapon',slot:'weapon',rarity:'epic',value:62,mods:{combatBonus:13,lootBonus:0.02}},
       'particle repeater':{type:'weapon',slot:'weapon',rarity:'epic',value:64,mods:{combatBonus:14,energyRegen:1}},
       'temporal compass':{type:'tool',slot:'tool',rarity:'epic',value:58,mods:{raidSpeed:0.2,lootBonus:0.04}},
@@ -1977,19 +1998,19 @@
 
       /* safehouse additions */
       'bunk blanket':{type:'armor',slot:'chest',rarity:'common',value:8,mods:{insulation:0.5}},
-      'safehouse slippers':{type:'armor',slot:'shoes',rarity:'common',value:6,mods:{staminaBonus:1,insulation:0.1}},
-      'workshop apron':{type:'armor',slot:'chest',rarity:'uncommon',value:16,mods:{insulation:0.4,staminaBonus:1}},
+      'safehouse slippers':{type:'armor',slot:'shoes',rarity:'common',value:6,mods:{energyBonus:1,insulation:0.1}},
+      'workshop apron':{type:'armor',slot:'chest',rarity:'uncommon',value:16,mods:{insulation:0.4,energyBonus:1}},
       'tool roll':{type:'tool',slot:'tool',rarity:'uncommon',value:16,mods:{lootBonus:0.03,riskMod:-0.02}},
       'generator capacitor':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{energyRegen:2}},
-      'quiet radio':{type:'tool',slot:'tool',rarity:'uncommon',value:14,mods:{staminaBonus:2}},
+      'quiet radio':{type:'tool',slot:'tool',rarity:'uncommon',value:14,mods:{energyBonus:2}},
       'galley kit':{type:'tool',slot:'tool',rarity:'common',value:8,mods:{lootBonus:0.02}},
-      'homebrew stew':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,stamina+3'},
+      'homebrew stew':{type:'consumable',rarity:'common',value:5,effect:'hunger-10,energy+3'},
       'clean canteen':{type:'consumable',rarity:'common',value:4,effect:'thirst-12,temp-1'},
-      'recovery tonic':{type:'consumable',rarity:'rare',value:22,effect:'hp+18,stamina+4'},
+      'recovery tonic':{type:'consumable',rarity:'rare',value:22,effect:'hp+18,energy+4'},
       'spare belt rig':{type:'armor',slot:'backpack',rarity:'uncommon',value:22,mods:{carryBonus:7}},
       'comfort liner':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{insulation:0.7}},
-      'restful mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:15,mods:{staminaBonus:2,insulation:0.2}},
-      'training weights':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{staminaBonus:3}},
+      'restful mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:15,mods:{energyBonus:2,insulation:0.2}},
+      'training weights':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{energyBonus:3}},
 
       /* stash equipment upgrades */
       'microwave':{type:'stash equipment',rarity:'legendary',value:140,stashMods:{foodBonus:0.08},stashEffect:'Food restores 8% more sustenance when stored in the vault.'},
@@ -2244,8 +2265,8 @@ target:commons
 title:Safe House Commons
 desc:Warm lights, clean water, and the trade counter keep the crew steady between runs.
 tags:Safe / Hub
-option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,stamina+14,credits+6,temp=normal,log:The bunk warmth sinks into your bones. | fail:credits-2,log:Sleep won't come tonight.
-option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. | fail:stamina-2,log:The bench clamps fail you.
+option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,energy+14,credits+6,temp=normal,log:The bunk warmth sinks into your bones. | fail:credits-2,log:Sleep won't come tonight.
+option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. | fail:energy-2,log:The bench clamps fail you.
 
 @mission
 id:safehouse-elders
@@ -3682,6 +3703,7 @@ once:true`
       barMessage:document.getElementById('barMessage'),
       barActions:document.getElementById('barActions'),
       stats:document.getElementById('stats'),
+      statusTitleMeta:document.getElementById('statusTitleMeta'),
       meta:document.getElementById('meta'),
       pauseToggle:document.getElementById('pauseToggle'),
       doors:document.getElementById('doors'),
@@ -3996,8 +4018,8 @@ once:true`
       if(lower.includes('hunger')) return 'Hunger';
       if(lower.includes('dehydration') || lower.includes('thirst')) return 'Thirst';
       if(lower.includes('radiation') || lower.includes('rads')) return 'Radiation';
-      if(lower.includes('cold')) return 'Low body temperature';
-      if(lower.includes('heat')) return 'Heat stress';
+      if(lower.includes('cold')) return 'low body temperature';
+      if(lower.includes('heat')) return 'heat stress';
       return null;
     };
     const maybeWarnLowHealth=(beforeHp,afterHp)=>{
@@ -4301,7 +4323,7 @@ once:true`
           const adjusted=Math.round(delta*(1+medBonus));
           return `${stat}+${adjusted}`;
         }
-        if(restBonus && delta>0 && (stat==='hp' || stat==='stamina' || stat==='energy')){
+        if(restBonus && delta>0 && (stat==='hp' || stat==='energy')){
           const adjusted=Math.round(delta*(1+restBonus));
           return `${stat}+${adjusted}`;
         }
@@ -4409,10 +4431,10 @@ once:true`
         state.xp-=state.nextLevelXp;
         state.level+=1;
         state.maxHp+=6;
-        state.maxStamina+=4;
+        state.maxEnergy+=4;
         state.nextLevelXp=xpToNextLevel(state.level);
         state.hp=clamp(state.hp+10,0,state.maxHp);
-        state.stamina=clamp(state.stamina+8,0,state.maxStamina);
+        state.energy=clamp(state.energy+8,0,state.maxEnergy);
         leveled=true;
       }
       if(leveled){
@@ -4704,7 +4726,6 @@ once:true`
         scrap:'scrap bin',
         keys:'keyring',
         energy:'cells',
-        stamina:'crew',
         hp:'medbay',
         hunger:'rations',
         thirst:'hydration',
@@ -4775,16 +4796,15 @@ once:true`
     function renderBars(){
       const rows=[
         ['HP','hp','maxHp','hp'],
-        ['Stamina','stamina','maxStamina','stamina'],
-        ['Energy','energy','maxEnergy','stamina'],
+        ['Energy','energy','maxEnergy','energy'],
         ['Radiation','rads',100,'rads'],
         ['Hunger','hunger','maxHunger','hunger'],
         ['Hydration','thirst','maxThirst','thirst']
       ];
       const tempStatus=(()=>{
-        if(state.bodyTemp<=92) return {label:'very cold',tone:'temp-status--cold'};
-        if(state.bodyTemp>=103) return {label:'overheating',tone:'temp-status--hot'};
-        return {label:'normal',tone:''};
+        if(state.bodyTemp<=92) return {label:'very cold'};
+        if(state.bodyTemp>=103) return {label:'overheating'};
+        return {label:'normal'};
       })();
       const hungerStatus=(()=>{
         if(state.hunger>=NEED_DAMAGE_THRESHOLD) return {label:'starving',tone:'need-status--bad'};
@@ -4796,7 +4816,7 @@ once:true`
         if(state.thirst>=45) return {label:'thirsty',tone:'need-status--warn'};
         return {label:'quenched',tone:'need-status--good'};
       })();
-      const tempLine=`<div class="statline statline--temp"><div class="temp-status ${tempStatus.tone}">body temperature: ${tempStatus.label}</div></div>`;
+      const tempLine=`<div class="statline statline--temp"><div class="temp-status">body temperature: ${tempStatus.label}</div></div>`;
       dom.stats.innerHTML=rows.map(([label,key,maxKey,cls])=>{
         if(key==='hunger'){
           return `<div class="statline"><div>${label}</div><div class="need-status ${hungerStatus.tone}">${hungerStatus.label}</div></div>`;
@@ -4808,19 +4828,20 @@ once:true`
         const percent=clamp(pct(val,max),0,200);
         return `<div class="statline"><div>${label}</div><div class="bar ${cls}"><span style="width:${percent}%;"></span></div><div>${Math.round(val)}/${max}</div></div>`;
       }).join('')+tempLine;
-    const idleAvailable=getIdleSlotsAvailable();
-    dom.meta.innerHTML=`<span class="pill-inline"><b>Credits</b>${state.credits}</span>`+
-        `<span class="pill-inline"><b>Scrap</b>${state.scrap}</span>`+
-        `<span class="pill-inline"><b>Keys</b>${state.keys}</span>`+
-        `<span class="pill-inline"><b>Level</b>${state.level}</span>`+
-        `<span class="pill-inline"><b>XP</b>${state.xp}/${state.nextLevelXp}</span>`+
-        `<span class="pill-inline"><b>Mercs</b>${state.mercs} (idle: ${idleAvailable})</span>`+
-        `<span class="pill-inline"><b>RMG</b>${getFactionRelation('military')}</span>`+
-        `<span class="pill-inline"><b>Abernathy</b>${getFactionRelation('gang')}</span>`+
-        `<span class="pill-inline"><b>Time</b>${fmtTime(state.timeMinutes)}</span>`+
-        `<span class="pill-inline"><b>Day</b>${state.day}</span>`+
-        `<span class="pill-inline"><b>Backpack</b>${getBackpackUsage()}/${getBackpackLimit()}</span>`+
-        `<span class="pill-inline"><b>Stash</b>${getStashUsage()}/${state.stashLimit}</span>`;
+      const idleAvailable=getIdleSlotsAvailable();
+      if(dom.statusTitleMeta){
+        dom.statusTitleMeta.textContent=`level ${state.level} · xp ${state.xp}/${state.nextLevelXp}`;
+      }
+      dom.meta.innerHTML=
+        `<div class="meta-group">credits: ${state.credits}  scrap: ${state.scrap}  keys: ${state.keys}</div>`+
+        `<div class="meta-sep"></div>`+
+        `<div class="meta-group">mercs: ${state.mercs}  idle: ${idleAvailable}</div>`+
+        `<div class="meta-sep"></div>`+
+        `<div class="meta-group">abernathy: ${getFactionRelation('gang')}  rmg: ${getFactionRelation('military')}</div>`+
+        `<div class="meta-sep"></div>`+
+        `<div class="meta-group">day: ${state.day}  time: ${fmtTime(state.timeMinutes)}</div>`+
+        `<div class="meta-sep"></div>`+
+        `<div class="meta-group">backpack: ${getBackpackUsage()}/${getBackpackLimit()}  stash: ${getStashUsage()}/${state.stashLimit}</div>`;
     }
 
     const rewardSources={
@@ -5906,7 +5927,9 @@ once:true`
         const isLocationsLocked=target==='locations' && (isMissionBlockingTravel() || state.travel.active);
         const isShopLocked=target==='shop' && (isMissionBlockingTravel() || state.travel.active);
         const isShopUnavailable=target==='shop' && !zoneHasShop();
+        const hideLocationsButton=target==='locations' && state.screen==='locations';
         btn.classList.toggle('active',target===state.screen);
+        btn.classList.toggle('hidden',hideLocationsButton);
         if(isShopUnavailable && target==='shop'){
           btn.title='Visit a zone with vendors to access the shop.';
         }else{
@@ -7102,20 +7125,18 @@ once:true`
       const radsPenalty=Math.min(0.08,state.rads*0.004);
       const hungerPenalty=state.hunger>70?0.05:0;
       const thirstPenalty=state.thirst>70?0.05:0;
-      const fatiguePenalty=state.stamina<30?0.04:0;
-      const energyPenalty=state.energy<25?0.06:0;
+      const energyPenalty=state.energy<25?0.08:0;
       const tempPenalty=state.bodyTemp<94?0.07:(state.bodyTemp>102?0.05:0);
       const contributions=[
         {label:`${risk} threat density`,value:base},
         {label:'Hunger cramps',value:hungerPenalty},
         {label:'Thirst strain',value:thirstPenalty},
-        {label:'Fatigue drag',value:fatiguePenalty},
         {label:'Low energy',value:energyPenalty},
         {label:'Radiation exposure',value:radsPenalty},
         {label:state.bodyTemp<94?'Cold exposure':'Heat stress',value:tempPenalty}
       ].filter(entry=>entry.value>0);
       const top=contributions.reduce((best,entry)=>entry.value>best.value?entry:best,{label:'Hazard spike',value:-1});
-      const total=base + hungerPenalty + thirstPenalty + fatiguePenalty + energyPenalty + radsPenalty + tempPenalty - (gearMods.riskMod||0);
+      const total=base + hungerPenalty + thirstPenalty + energyPenalty + radsPenalty + tempPenalty - (gearMods.riskMod||0);
       return {chance:clamp(total,0.05,0.75),reason:top.label};
     }
     function computeFailChance(risk){
@@ -7204,9 +7225,9 @@ once:true`
       const tension=computeFailChance(state.zone.risk) * 0.55;
       if(Math.random()>tension) return;
       const complications=[
-        {desc:'A cold gust slips through your seals.',effects:'temp-2,stamina-2'},
+        {desc:'A cold gust slips through your seals.',effects:'temp-2,energy-2'},
         {desc:'An unseen stalker snatches some scrap.',effects:'scrap-2,temp-1'},
-        {desc:'Hunger cramps slow you down.',effects:'stamina-6,hp-3'},
+        {desc:'Hunger cramps slow you down.',effects:'energy-6,hp-3'},
         {desc:'Static surge fries a component.',effects:'credits-6,temp-1'}
       ];
       if(state.rads>RAD_DANGER_THRESHOLD){
@@ -7298,7 +7319,6 @@ once:true`
             if(delta<0) hpLoss+=delta;
             state.hp=clamp(state.hp+delta,0,state.maxHp);
           }
-          else if(stat==='stamina') state.stamina=clamp(state.stamina+delta,0,state.maxStamina);
           else if(stat==='hunger') state.hunger=clamp(state.hunger+delta,0,state.maxHunger);
           else if(stat==='thirst') state.thirst=clamp(state.thirst+delta,0,state.maxThirst);
           else if(stat==='rads'){
@@ -7334,7 +7354,7 @@ once:true`
       const gearMods=getGearMods();
       state.hunger=clamp(state.hunger+2,0,state.maxHunger);
       state.thirst=clamp(state.thirst+2,0,state.maxThirst);
-      state.stamina=clamp(state.stamina-6+(gearMods.staminaBonus||0),0,state.maxStamina);
+      state.energy=clamp(state.energy-6+(gearMods.energyBonus||0),0,state.maxEnergy);
       const deferItemsTo=Array.isArray(options.deferItemsTo) ? options.deferItemsTo : null;
       const rewards=[];
 
@@ -7625,7 +7645,7 @@ once:true`
       const gearMods=getGearMods();
       const riskIdx=getRiskIndex(profile.risk);
       const totalEnemies=Math.max(1,1+Math.max(0,riskIdx-1));
-      const playerDamage=Math.max(6,Math.round(8+(state.level*1.8)+((gearMods.combatBonus||0)*1.4)+((gearMods.staminaBonus||0)*0.6)));
+      const playerDamage=Math.max(6,Math.round(8+(state.level*1.8)+((gearMods.combatBonus||0)*1.4)+((gearMods.energyBonus||0)*0.6)));
       const enemyDamage=Math.max(2,Math.round((3+(riskIdx*2.6))-(playerDamage*0.12)-((gearMods.riskMod||0)*18)));
       const enemyMaxHp=Math.max(28,Math.round(26+(riskIdx*12)+(profile.difficulty*8)));
       const totalEnemyHp=enemyMaxHp*totalEnemies;
@@ -7720,8 +7740,8 @@ once:true`
       if(state.hp<beforeHp){
         maybeWarnLowHealth(beforeHp,state.hp);
       }
-      const staminaHit=Math.max(2,Math.round(incoming*0.6));
-      state.stamina=clamp(state.stamina-staminaHit,0,state.maxStamina);
+      const energyHit=Math.max(2,Math.round(incoming*0.6));
+      state.energy=clamp(state.energy-energyHit,0,state.maxEnergy);
       roundLog+=` Incoming fire deals ${incoming}.`;
       state.mission.statusMessage=`${roundLog} ${describeCombatState(combat)}`;
       logMsg(state.mission.statusMessage);
@@ -8340,7 +8360,7 @@ once:true`
     function runCamp(){
       tickTime(ACTION_TIMES.camp);
       const gearMods=getGearMods();
-      state.stamina=clamp(state.stamina+14,0,state.maxStamina);
+      state.energy=clamp(state.energy+14,0,state.maxEnergy);
       state.hp=clamp(state.hp+4,0,state.maxHp);
       state.energy=clamp(state.energy+18+(gearMods.energyRegen||0),0,state.maxEnergy);
       state.hunger=clamp(state.hunger+3,0,state.maxHunger);
@@ -9091,24 +9111,24 @@ once:true`
         && (!Number.isFinite(state.lastHungerDamageAt) || nowMinutes-state.lastHungerDamageAt>=NEED_DAMAGE_INTERVAL_MINUTES);
       if(hungerDamageReady){
         state.lastHungerDamageAt=nowMinutes;
-        applyEffects('hp-2,stamina-1','fail',{damageSource:'Hunger pangs'});
+        applyEffects('hp-2,energy-1','fail',{damageSource:'Hunger pangs'});
         logMsg('Hunger pangs slow you down.');
       }
       const thirstDamageReady=state.thirst>NEED_DAMAGE_THRESHOLD
         && (!Number.isFinite(state.lastThirstDamageAt) || nowMinutes-state.lastThirstDamageAt>=NEED_DAMAGE_INTERVAL_MINUTES);
       if(thirstDamageReady){
         state.lastThirstDamageAt=nowMinutes;
-        applyEffects('hp-3,stamina-2','fail',{damageSource:'Dehydration strain'});
+        applyEffects('hp-3,energy-2','fail',{damageSource:'Dehydration strain'});
         logMsg('Dehydration blurs your vision.');
       }
       if(state.bodyTemp<=92){
-        applyEffects('hp-2,stamina-3','fail',{damageSource:'Cold exposure'});
+        applyEffects('hp-2,energy-3','fail',{damageSource:'Cold exposure'});
         if(state.timeMinutes%60===0){
           logMsg('Cold seeps into your limbs. Find shelter or warm up soon.');
         }
       }
       if(state.bodyTemp>=103){
-        applyEffects('hp-2,stamina-2','fail',{damageSource:'Heat exhaustion'});
+        applyEffects('hp-2,energy-2','fail',{damageSource:'Heat exhaustion'});
         if(state.timeMinutes%60===0){
           logMsg('Heat haze clouds your focus. Cool down before it worsens.');
         }

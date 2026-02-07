@@ -21,7 +21,7 @@ target:command-deck
 title:Command Deck Barracks
 desc:Steel bunks and briefing boards line the command deck with a strict quiet order.
 tags:RMG / Military
-option:Rest in the spare bunk => command-deck | risk:low | time:6 | reward:rested | success:hp+8,stamina+10,energy+10,temp=normal,log:The regimented quiet lets you recover. | fail:credits-2,log:An alarm drill cuts your rest short.
+option:Rest in the spare bunk => command-deck | risk:low | time:6 | reward:rested | success:hp+8,energy+10,energy+10,temp=normal,log:The regimented quiet lets you recover. | fail:credits-2,log:An alarm drill cuts your rest short.
 
 @mission
 id:rmg-perimeter-sweep

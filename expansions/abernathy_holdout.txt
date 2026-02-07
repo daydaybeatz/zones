@@ -21,7 +21,7 @@ target:commons
 title:Holdout Commons
 desc:A low-lit commons with salvaged bunks, a heater barrel, and a militia supply counter.
 tags:Abernathy / Friendly
-option:Rest near the heater barrel => commons | risk:low | time:6 | reward:rested | success:hp+10,stamina+12,energy+8,temp=normal,log:The heat seeps into your joints and the alarms quiet down. | fail:credits-2,log:Too many voices in the vents keep you awake.
+option:Rest near the heater barrel => commons | risk:low | time:6 | reward:rested | success:hp+10,energy+12,energy+8,temp=normal,log:The heat seeps into your joints and the alarms quiet down. | fail:credits-2,log:Too many voices in the vents keep you awake.
 
 @mission
 id:holdout-courier-relay
