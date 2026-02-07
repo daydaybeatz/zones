@@ -1720,7 +1720,9 @@
     };
 
     const updateVisualViewportOffset=()=>{
-      if(!window.visualViewport){
+      const shouldApplyVisualViewportOffset=window.visualViewport
+        && window.matchMedia('(pointer: coarse)').matches;
+      if(!shouldApplyVisualViewportOffset){
         document.documentElement.style.setProperty('--visual-viewport-offset','0px');
         return;
       }
