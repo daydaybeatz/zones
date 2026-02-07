@@ -73,6 +73,9 @@ loot:5
 lootType:advanced medical stock
 key:1
 combatChance:0.5
+event:Orderly begs for a crate | chance:0.6 | prompt:An orderly pleads for one crate to keep their ward running.
+eventOption:Leave a crate behind => risk:medium | tag:mercy | success:item:burn salve,credits+6,log:The orderly thanks you with burn salve. | fail:credits-4,log:The orderly panics and the alarm escalates.
+eventOption:Take everything => risk:high | tag:betrayal | success:item:clinic IV pack,credits+12,log:You clear the vault and pocket an IV pack. | fail:hp-6,credits-5,log:The orderly fights back and slows you down.
 
 @mission
 id:clinic-lab-coldcase

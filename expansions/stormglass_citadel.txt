@@ -74,6 +74,9 @@ loot:4
 lootType:stormglass salvage
 unlockFlag:secret-citadel-mission
 consumeFlag:secret-citadel-mission
+event:Echo keeper demands a vow | chance:0.6 | prompt:A keeper demands you vow to leave the relics untouched.
+eventOption:Swear the vow and pass => risk:high | tag:mercy | success:item:stormglass shard,credits+8,log:The keeper grants passage and you take a shard. | fail:credits-4,log:The keeper doubts you and delays the route.
+eventOption:Break the vow and seize relics => risk:deadly | tag:betrayal | success:item:stormglass shard,item:ion circuit puck,credits+14,log:You take the relics and press on. | fail:hp-9,credits-6,log:The keeper calls in stormguard sentries.
 
 @mission
 id:citadel-resonance-run

@@ -31,6 +31,9 @@ time:9
 energy:10
 loot:2
 lootType:low-tier food
+event:Food court vendor offers a deal | chance:0.6 | prompt:A scav vendor offers to trade a stash for safe passage.
+eventOption:Trade fairly and escort them => risk:medium | tag:mercy | success:item:brine crackers,credits+6,log:The vendor hands over crackers and waves you through. | fail:credits-3,log:The vendor backs out at the last moment.
+eventOption:Take the stash and bolt => risk:high | tag:betrayal | success:item:mall snack pack,credits+12,log:You grab the stash and disappear into the kiosks. | fail:hp-5,credits-4,log:The vendor's crew clips you on the way out.
 
 @mission
 id:mall-stockroom

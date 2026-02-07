@@ -3,7 +3,7 @@ id:government_facility
 name:Abandoned Government Facility
 summary:A sealed agency compound with broken scanners and hardened patrols. Mid-tier risk with hard combatants and better gear.
 temp:cold
-arrivalDialog:Archivist Venn: The Directorate scrubbed this place after the Signal Riots—logs still whisper.
+arrivalDialog:Archivist Venn: The RMG scrubbed this place after the Signal Riots—logs still whisper.
 missionStartDialog:Handler Quill: If you find a black badge, it belongs to the old Compliance chiefs.
 missionEndDialog:Agent Mira: That's proof the purge happened—stash it before patrol drones wake.
 minLevel:7
@@ -26,7 +26,7 @@ option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gea
 @mission
 id:facility-sweep
 label:Security sweep
-desc:Room-to-room sweep for mid-tier weapons and tools the Directorate and Redline both covet.
+desc:Room-to-room sweep for mid-tier weapons and tools the RMG and Abernathy Militia both covet.
 risk:medium
 time:12
 energy:16
@@ -45,27 +45,33 @@ time:14
 energy:18
 loot:4
 lootType:reinforced clothing
+event:Locker team begs for a ride | chance:0.6 | prompt:A pinned logistics team begs for escort out of the wing.
+eventOption:Escort them to the access stair => risk:medium | tag:mercy | success:item:security poncho,credits+8,log:They gift a poncho and slip away. | fail:credits-4,log:The detour draws a patrol.
+eventOption:Strip their supplies and move on => risk:high | tag:betrayal | success:item:response harness,credits+12,log:You strip their supplies and keep moving. | fail:hp-7,credits-5,log:The team fights back and slows you down.
 
 @mission
 id:military-assist
-label:Assist Directorate patrol
-desc:Run a logistics escort for the Iron Directorate. Requires high standing (+8); success improves military relations (+2) and reduces combat risk on allied runs.
+label:Assist RMG patrol
+desc:Run a logistics escort for the Redtech Military Group (RMG). Requires high standing (+8); success improves military relations (+2) and reduces combat risk on allied runs.
 risk:medium
 time:11
 energy:14
 loot:2
 lootType:military rations
-reward:Directorate favor
+reward:RMG favor
 combatChance:0.3
 faction:military
 relationMin:8
 relationSuccess:2
 relationFail:-1
+event:RMG lieutenant requests discipline | chance:0.7 | prompt:A lieutenant orders you to make an example of a deserter mid-escort.
+eventOption:Spare the deserter and cover them => risk:medium | tag:mercy | success:credits+6,item:filtered water pack,log:The deserter slips you supplies and disappears. | fail:credits-4,log:The lieutenant notices the delay.
+eventOption:Follow orders without question => risk:high | tag:betrayal | success:item:command bracer,credits+12,log:The patrol rewards your obedience with a bracer. | fail:hp-6,credits-4,log:The deserter's friends ambush the convoy.
 
 @mission
 id:military-infiltrate
-label:Infiltrate Directorate briefing
-desc:Slip into a Directorate briefing to undermine them (-2 relation). Only possible with low standing (≤ -5); combat risk spikes when relations are bad.
+label:Infiltrate RMG briefing
+desc:Slip into a RMG briefing to undermine them (-2 relation). Only possible with low standing (≤ -5); combat risk spikes when relations are bad.
 risk:high
 time:13
 energy:16
@@ -77,7 +83,7 @@ faction:military
 relationMax:-5
 relationSuccess:-2
 relationFail:-1
-event:Directorate courier meets you mid-run | chance:1 | prompt:A courier offers you a sealed briefing packet. Do you take the shot?
+event:RMG courier meets you mid-run | chance:1 | prompt:A courier offers you a sealed briefing packet. Do you take the shot?
 eventOption:Expose the courier => risk:high | tag:betrayal | success:credits+18,item:secure datapad,log:You intercept the packet and slip away. | fail:hp-7,credits-4,log:The courier's escorts pin you down.
 eventOption:Let them pass => risk:medium | tag:mercy | success:credits+4,item:nutri-gel pack,log:The courier leaves you a ration as thanks. | fail:credits-3,log:The courier brands you soft and walks off.
 
@@ -128,9 +134,9 @@ time:11
 energy:14
 loot:3
 lootType:officer kits
-event:Whistleblower tape | chance:1 | prompt:A taped confession implicates the Directorate. What do you do?
+event:Whistleblower tape | chance:1 | prompt:A taped confession implicates the RMG. What do you do?
 eventOption:Send it to the resistance => risk:medium | tag:mercy | success:credits+8,item:wire spool,log:The resistance pays for the evidence. | fail:credits-4,log:The signal gets traced and you bail.
-eventOption:Sell it back to the Directorate => risk:high | tag:betrayal | success:credits+16,item:painkillers,log:The Directorate pays for silence. | fail:hp-6,credits-5,log:A handler tries to double-cross you.
+eventOption:Sell it back to the RMG => risk:high | tag:betrayal | success:credits+16,item:painkillers,log:The RMG pays for silence. | fail:hp-6,credits-5,log:A handler tries to double-cross you.
 
 @quest
 id:facility-telecom
