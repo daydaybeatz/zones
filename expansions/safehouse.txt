@@ -32,6 +32,10 @@ loot:0
 reward:elder advice
 combatChance:0
 hub:true
+event:Elders share vault upgrade lore | chance:0.6 | prompt:The elders whisper about stash equipment upgrades hidden behind locked doors. What do you ask about?
+eventOption:Ask about food upgrades => risk:low | tag:mercy | success:log:They mention a microwave, spice locker, and ration heater array that make rations stretch further. | fail:log:The elder waves you off with a tired sigh.
+eventOption:Ask about medical upgrades => risk:low | tag:mercy | success:log:They recall sterile lights, autoclaves, and medbay analyzers that make medicine hit harder. | fail:log:They tell you to come back with fresh tea.
+eventOption:Ask about rest upgrades => risk:low | tag:mercy | success:log:They describe expensive bedding and recovery recliners that cut rest time and restore more. | fail:log:They fall silent, lost in memory.
 event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice about dodging RMG patrols and Abernathy Militia recruiters. How do you respond?
 eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:credits-3,log:The runner panics and bolts.
 eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:credits-5,log:The elders hear about the rumor sale.

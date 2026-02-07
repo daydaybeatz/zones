@@ -62,6 +62,9 @@ loot:6
 lootType:stormglass core cache
 key:1
 combatChance:0.65
+event:Relic sleeping chamber | chance:0.2 | prompt:A warded chamber holds expensive bedding woven with stormglass threads. Dare the ward?
+eventOption:Disarm the ward sigils => risk:deadly | tag:tech | success:item:expensive bedding,credits+18,log:You disarm the ward and claim the expensive bedding upgrade. | fail:hp-11,temp+2,log:The sigils flare and sear you.
+eventOption:Smash the warded seal => risk:deadly | tag:combat | success:item:expensive bedding,credits+22,log:You smash the seal and drag out the expensive bedding upgrade. | fail:hp-13,log:The seal explodes and throws you back.
 
 @mission
 id:citadel-hush

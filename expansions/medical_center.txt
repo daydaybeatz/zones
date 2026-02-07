@@ -58,6 +58,9 @@ time:12
 energy:14
 loot:3
 lootType:medical packs
+event:Autoclave cart rattles | chance:0.2 | prompt:A powered autoclave cart flickers in the ward. Salvage it?
+eventOption:Wheel it out quietly => risk:medium | tag:stealth | success:item:triage autoclave,credits+10,log:You guide the cart out and secure a triage autoclave upgrade. | fail:hp-5,log:The cart tips and crashes loud.
+eventOption:Cut the cart free => risk:high | tag:combat | success:item:triage autoclave,credits+14,log:You cut the cart loose and haul out the triage autoclave upgrade. | fail:hp-8,log:The cart sparks and scorches you.
 event:Silent drone sweep | chance:1 | prompt:A drone sweep glides through the ward. Pick a response.
 eventOption:Ghost through the shadowed ward => risk:medium | tag:stealth | success:item:clinic IV pack,log:You slip through and grab a sealed IV pack. | fail:hp-6,log:A scanner tags you on the way out.
 eventOption:Stand and fight => risk:high | tag:combat | success:item:portable scanner,credits+8,log:You knock the drone down and salvage its scanner. | fail:hp-9,log:The drone's shock pulse sends you reeling.
@@ -73,6 +76,9 @@ loot:5
 lootType:advanced medical stock
 key:1
 combatChance:0.5
+event:Sterile light rig hums | chance:0.2 | prompt:A sterilization rig still glows in the vault. Try to secure it?
+eventOption:Disconnect it carefully => risk:high | tag:tech | success:item:sterile lights,credits+12,log:You cut power and pack the sterile lights upgrade. | fail:hp-6,log:The rig arcs and burns your gloves.
+eventOption:Rip it from the mount => risk:deadly | tag:combat | success:item:sterile lights,credits+16,log:You rip free the sterile lights upgrade and bolt. | fail:hp-9,log:The rig collapses on you.
 event:Orderly begs for a crate | chance:0.6 | prompt:An orderly pleads for one crate to keep their ward running.
 eventOption:Leave a crate behind => risk:medium | tag:mercy | success:item:burn salve,credits+6,log:The orderly thanks you with burn salve. | fail:credits-4,log:The orderly panics and the alarm escalates.
 eventOption:Take everything => risk:high | tag:betrayal | success:item:clinic IV pack,credits+12,log:You clear the vault and pocket an IV pack. | fail:hp-6,credits-5,log:The orderly fights back and slows you down.
@@ -86,6 +92,9 @@ time:12
 energy:15
 loot:3
 lootType:lab specimens
+event:Analyzer bench flickers | chance:0.2 | prompt:A medbay analyzer bench pulses with power. Salvage it?
+eventOption:Stabilize the bench => risk:medium | tag:tech | success:item:medbay analyzer,credits+10,log:You stabilize the bench and recover a medbay analyzer upgrade. | fail:hp-5,log:The bench overloads and sparks.
+eventOption:Drag it out fast => risk:high | tag:combat | success:item:medbay analyzer,credits+14,log:You yank the analyzer free and rush out. | fail:hp-8,log:The analyzer frame cuts you as it falls.
 event:Lab freezer alarm | chance:0.6 | prompt:The freezer alarm wails and draws attention.
 eventOption:Shut off the breaker => risk:medium | tag:tech | success:item:filtered water pack,credits+8,log:You silence the alarm and grab clean packs. | fail:temp-2,log:The breaker sparks and the lab chills fast.
 eventOption:Grab and bolt => risk:high | tag:combat | success:item:compact medkit,log:You snatch a medkit and sprint out. | fail:hp-6,log:You take a hit fleeing the ward.
@@ -112,6 +121,9 @@ time:13
 energy:17
 loot:4
 lootType:respiratory supplies
+event:Supply cabinet seal | chance:0.2 | prompt:A sealed supply cabinet is wedged behind the oxygen line. Try to pry it free?
+eventOption:Bleed the line and pry it loose => risk:high | tag:tech | success:item:sterile supply cabinet,credits+12,log:You bleed the line and recover a sterile supply cabinet upgrade. | fail:hp-7,log:The line bursts and knocks you back.
+eventOption:Break the hinges fast => risk:deadly | tag:combat | success:item:sterile supply cabinet,credits+16,log:You smash the hinges and drag out the sterile supply cabinet upgrade. | fail:hp-10,log:The hinge snaps and slices you.
 event:Oxygen flare burst | chance:0.55 | prompt:A flare ignites near the oxygen line.
 eventOption:Vent the corridor => risk:high | tag:tech | success:item:anti-rad serum,credits+10,log:You vent the line and recover a serum case. | fail:hp-7,log:The flare scorches your gear.
 eventOption:Duck into a side room => risk:medium | tag:stealth | success:item:hardened canteen,log:You avoid the blast and grab a canteen. | fail:credits-5,log:The blast rattles your pack.

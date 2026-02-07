@@ -59,6 +59,9 @@ loot:4
 lootType:armory kits & rations
 key:1
 combatChance:0.5
+event:Sealed ration locker | chance:0.2 | prompt:A sealed ration locker hums behind the armory cages. Try for it?
+eventOption:Bypass the old lock => risk:high | tag:tech | success:item:spice locker,credits+10,log:You bypass the lock and haul out a spice locker upgrade. | fail:hp-6,log:The lock bites back and sparks.
+eventOption:Rip it off the hinges => risk:deadly | tag:combat | success:credits+12,item:spice locker,log:You rip the locker free and drag the spice locker upgrade out. | fail:hp-9,log:The hinges snap and slam you.
 
 @mission
 id:bunker-hush

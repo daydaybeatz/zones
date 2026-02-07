@@ -98,6 +98,9 @@ loot:5
 lootType:high-tier tactical gear
 key:1
 combatChance:0.5
+event:Executive ration lab | chance:0.2 | prompt:A locked lab stores an experimental ration heater array. Take the risk?
+eventOption:Spoof the executive lock => risk:high | tag:tech | success:item:ration heater array,credits+14,log:You spoof the lock and secure a ration heater array upgrade. | fail:hp-7,log:The lock alarms and stuns you.
+eventOption:Cut through the vault bars => risk:deadly | tag:combat | success:item:ration heater array,credits+18,log:You cut the bars and drag out the ration heater array upgrade. | fail:hp-10,log:The bars snap back and slash your arm.
 
 @mission
 id:facility-archives

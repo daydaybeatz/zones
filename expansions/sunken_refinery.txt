@@ -62,6 +62,9 @@ loot:6
 lootType:elite refinery cache
 key:1
 combatChance:0.6
+event:Nutrient grow rack hums | chance:0.2 | prompt:A sealed bay holds a hydroponic rack. Do you risk the pressure lock?
+eventOption:Bleed the pressure lock => risk:deadly | tag:tech | success:item:hydroponic rack,credits+16,log:You bleed the lock and secure a hydroponic rack upgrade. | fail:hp-10,temp+2,log:The lock blows hot steam in your face.
+eventOption:Force the hatch open => risk:deadly | tag:combat | success:item:hydroponic rack,credits+20,log:You force the hatch and haul out the hydroponic rack upgrade. | fail:hp-12,log:The hatch snaps shut and crushes your shoulder.
 
 @mission
 id:refinery-hush

@@ -1900,7 +1900,19 @@
       'spare belt rig':{type:'armor',slot:'backpack',rarity:'uncommon',value:22,mods:{carryBonus:7}},
       'comfort liner':{type:'armor',slot:'chest',rarity:'uncommon',value:18,mods:{insulation:0.7}},
       'restful mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:15,mods:{staminaBonus:2,insulation:0.2}},
-      'training weights':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{staminaBonus:3}}
+      'training weights':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{staminaBonus:3}},
+
+      /* stash equipment upgrades */
+      'microwave':{type:'stash equipment',rarity:'legendary',value:140,stashMods:{foodBonus:0.08},stashEffect:'Food restores 8% more sustenance when stored in the vault.'},
+      'sterile lights':{type:'stash equipment',rarity:'legendary',value:140,stashMods:{medBonus:0.08},stashEffect:'Medicine heals 8% more when stored in the vault.'},
+      'expensive bedding':{type:'stash equipment',rarity:'legendary',value:155,stashMods:{restBonus:0.08,restSpeed:0.08},stashEffect:'Rest actions are 8% faster and restore 8% more when stored in the vault.'},
+      'hydroponic rack':{type:'stash equipment',rarity:'legendary',value:150,stashMods:{foodBonus:0.08},stashEffect:'Food restores 8% more sustenance when stored in the vault.'},
+      'spice locker':{type:'stash equipment',rarity:'legendary',value:135,stashMods:{foodBonus:0.08},stashEffect:'Food restores 8% more sustenance when stored in the vault.'},
+      'ration heater array':{type:'stash equipment',rarity:'legendary',value:145,stashMods:{foodBonus:0.08},stashEffect:'Food restores 8% more sustenance when stored in the vault.'},
+      'triage autoclave':{type:'stash equipment',rarity:'legendary',value:150,stashMods:{medBonus:0.08},stashEffect:'Medicine heals 8% more when stored in the vault.'},
+      'medbay analyzer':{type:'stash equipment',rarity:'legendary',value:155,stashMods:{medBonus:0.08},stashEffect:'Medicine heals 8% more when stored in the vault.'},
+      'sterile supply cabinet':{type:'stash equipment',rarity:'legendary',value:145,stashMods:{medBonus:0.08},stashEffect:'Medicine heals 8% more when stored in the vault.'},
+      'recovery recliner':{type:'stash equipment',rarity:'legendary',value:160,stashMods:{restBonus:0.08,restSpeed:0.08},stashEffect:'Rest actions are 8% faster and restore 8% more when stored in the vault.'}
     };
 
     const LOOT_BY_RARITY={
@@ -2157,6 +2169,10 @@ loot:0
 reward:elder advice
 combatChance:0
 hub:true
+event:Elders share vault upgrade lore | chance:0.6 | prompt:The elders whisper about stash equipment upgrades hidden behind locked doors. What do you ask about?
+eventOption:Ask about food upgrades => risk:low | tag:mercy | success:log:They mention a microwave, spice locker, and ration heater array that make rations stretch further. | fail:log:The elder waves you off with a tired sigh.
+eventOption:Ask about medical upgrades => risk:low | tag:mercy | success:log:They recall sterile lights, autoclaves, and medbay analyzers that make medicine hit harder. | fail:log:They tell you to come back with fresh tea.
+eventOption:Ask about rest upgrades => risk:low | tag:mercy | success:log:They describe expensive bedding and recovery recliners that cut rest time and restore more. | fail:log:They fall silent, lost in memory.
 event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice about dodging RMG patrols and Abernathy Militia recruiters. How do you respond?
 eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:credits-3,log:The runner panics and bolts.
 eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:credits-5,log:The elders hear about the rumor sale.
@@ -4015,7 +4031,8 @@ once:true`
       tool:{items:{'electronics bits':3,'plastic shards':2}},
       weapon:{items:{'scrap wiring':3,'copper wire':2},scrap:1},
       consumable:{items:{'scrap bundle':2,'plastic shards':1}},
-      key:{items:{'electronics bits':2,'scrap wiring':1}}
+      key:{items:{'electronics bits':2,'scrap wiring':1}},
+      'stash equipment':{items:{'electronics bits':4,'plastic shards':3},scrap:2}
     };
     const getBreakdownOutputs=(item)=>{
       const data=getItem(item);
@@ -4151,6 +4168,43 @@ once:true`
       const id=rollLootItem(risk,bonus);
       const count=isStackable(id)?rollStackableChunk():1;
       return {id,count};
+    };
+    const getStashUpgradeMods=()=>{
+      return state.stash.items.reduce((acc,item)=>{
+        const data=getItem(item);
+        if(data.stashMods){
+          Object.entries(data.stashMods).forEach(([key,val])=>{
+            acc[key]=(acc[key]||0)+val;
+          });
+        }
+        return acc;
+      },{foodBonus:0,medBonus:0,restBonus:0,restSpeed:0});
+    };
+    const applyStashBonusToEffect=(effectStr,{foodBonus=0,medBonus=0,restBonus=0}={})=>{
+      if(!effectStr) return effectStr;
+      if(!foodBonus && !medBonus && !restBonus) return effectStr;
+      return effectStr.split(',').map(token=>{
+        const trimmed=token.trim();
+        if(!trimmed) return token;
+        const match=trimmed.match(/^([a-zA-Z]+)([+-]\d+)$/);
+        if(!match) return token;
+        const stat=match[1];
+        const delta=Number(match[2]);
+        if(!Number.isFinite(delta)) return token;
+        if(stat==='hunger' && delta<0 && foodBonus){
+          const adjusted=Math.round(delta*(1+foodBonus));
+          return `${stat}${adjusted>=0?'+':''}${adjusted}`;
+        }
+        if(stat==='hp' && delta>0 && medBonus){
+          const adjusted=Math.round(delta*(1+medBonus));
+          return `${stat}+${adjusted}`;
+        }
+        if(restBonus && delta>0 && (stat==='hp' || stat==='stamina' || stat==='energy')){
+          const adjusted=Math.round(delta*(1+restBonus));
+          return `${stat}+${adjusted}`;
+        }
+        return token;
+      }).join(',');
     };
     const getGearMods=(excludeItem)=>{
       return state.equipped.reduce((acc,item)=>{
@@ -4380,7 +4434,9 @@ once:true`
         return;
       }
       if(data.effect){
-        applyEffects(data.effect,'success');
+        const stashMods=getStashUpgradeMods();
+        const adjusted=applyStashBonusToEffect(data.effect,{foodBonus:stashMods.foodBonus,medBonus:stashMods.medBonus});
+        applyEffects(adjusted,'success');
       }
       removeItem(state.inventory,item);
       state.selected={source:null,item:null};
@@ -4804,7 +4860,9 @@ once:true`
       }
       if(!removeRewardItem(source,item)) return;
       if(data.effect){
-        applyEffects(data.effect,'success');
+        const stashMods=getStashUpgradeMods();
+        const adjusted=applyStashBonusToEffect(data.effect,{foodBonus:stashMods.foodBonus,medBonus:stashMods.medBonus});
+        applyEffects(adjusted,'success');
       }
       state.selected={source:null,item:null};
       logMsg(`Consumed ${item}.`);
@@ -5106,11 +5164,13 @@ once:true`
         }else{
           const mods=formatMods(data.mods);
           const effects=formatEffects(data.effect);
+          const stashEffects=data.stashEffect ? [data.stashEffect] : [];
           const uses=[];
           const breakdown=getBreakdownOutputs(item);
           const breakdownLabel=formatBreakdownOutput(breakdown);
           if(data.type==='consumable') uses.push('Consume for field boost.');
           if(data.slot) uses.push('Equip to gain passive bonuses.');
+          if(data.type==='stash equipment') uses.push('Store in the vault to activate stash upgrades.');
           uses.push('Break down into salvage.');
           if(data.type==='key') uses.push('Unlocks lockbox raids.');
           target.detail.innerHTML=`
@@ -5124,6 +5184,7 @@ once:true`
             </div>
             ${uses.length ? `<div class="small">${uses.join(' ')}</div>` : ''}
             ${effects.length ? `<div class="small"><b>Effects:</b> ${effects.join(' · ')}</div>` : ''}
+            ${stashEffects.length ? `<div class="small"><b>Stash Upgrade:</b> ${stashEffects.join(' · ')}</div>` : ''}
             ${mods.length ? `<div class="small"><b>Mods:</b> ${mods.join(' · ')}</div>` : ''}
           `;
         }
@@ -6183,6 +6244,12 @@ once:true`
       renderBarModal();
     }
 
+    const isRestOption=(option)=>{
+      const reward=(option?.reward || '').toLowerCase();
+      const label=(option?.label || '').toLowerCase();
+      return reward.includes('rested') || label.includes('rest');
+    };
+
     function startSceneAction(option){
       if(state.mission.active){
         setCodex('Mission already underway.');
@@ -6197,6 +6264,14 @@ once:true`
       const risk=option.risk || state.zone.risk;
       const time=option.time || 8;
       const durationMs=getMissionDurationMsWithGear({risk,time,loot:option.loot});
+      const stashMods=getStashUpgradeMods();
+      const restAction=isRestOption(option);
+      const adjustedDurationMs=restAction && stashMods.restSpeed
+        ? Math.max(MIN_MISSION_SECONDS*1000, Math.round(durationMs*(1-stashMods.restSpeed)))
+        : durationMs;
+      const successEffects=restAction
+        ? applyStashBonusToEffect(option.success || '',{restBonus:stashMods.restBonus})
+        : (option.success || '');
       const raidLike={
         id:`scene-${Date.now()}`,
         label,
@@ -6212,7 +6287,7 @@ once:true`
         type:'scene',
         raid:raidLike,
         startedAt:now,
-        endsAt:now+durationMs,
+        endsAt:now+adjustedDurationMs,
         completed:false,
         success:null,
         summary:'',
@@ -6223,7 +6298,7 @@ once:true`
         fleeEndsAt:null,
         pendingResolution:null,
         xpReward:computeMissionXp(risk,time),
-        rewardEffects:{success:option.success||'',fail:option.fail||''},
+        rewardEffects:{success:successEffects,fail:option.fail||''},
         questMeta:null,
         combat:null,
         sceneTarget:option.target || null,
@@ -6256,6 +6331,14 @@ once:true`
       const risk=option.risk || zone.risk;
       const time=option.time || 8;
       const durationMs=getMissionDurationMsWithGear({risk,time,loot:option.loot});
+      const stashMods=getStashUpgradeMods();
+      const restAction=isRestOption(option);
+      const adjustedDurationMs=restAction && stashMods.restSpeed
+        ? Math.max(MIN_MISSION_SECONDS*1000, Math.round(durationMs*(1-stashMods.restSpeed)))
+        : durationMs;
+      const successEffects=restAction
+        ? applyStashBonusToEffect(option.success || '',{restBonus:stashMods.restBonus})
+        : (option.success || '');
       const raidLike={
         id:`scene-${Date.now()}`,
         label,
@@ -6271,7 +6354,7 @@ once:true`
         type:'scene',
         raid:raidLike,
         startedAt:now,
-        endsAt:now+durationMs,
+        endsAt:now+adjustedDurationMs,
         completed:false,
         success:null,
         summary:'',
@@ -6282,7 +6365,7 @@ once:true`
         fleeEndsAt:null,
         pendingResolution:null,
         xpReward:computeMissionXp(risk,time),
-        rewardEffects:{success:option.success||'',fail:option.fail||''},
+        rewardEffects:{success:successEffects,fail:option.fail||''},
         questMeta:null,
         combat:null,
         sceneTarget:option.target || null
@@ -7425,7 +7508,11 @@ once:true`
       if(combat.consumable && now>=combat.consumable.readyAt){
         const {item}=combat.consumable;
         const data=getItem(item);
-        if(data.effect) applyEffects(data.effect,'success');
+        if(data.effect){
+          const stashMods=getStashUpgradeMods();
+          const adjusted=applyStashBonusToEffect(data.effect,{foodBonus:stashMods.foodBonus,medBonus:stashMods.medBonus});
+          applyEffects(adjusted,'success');
+        }
         removeItem(state.inventory,item);
         combat.consumable=null;
         state.selected={source:null,item:null};

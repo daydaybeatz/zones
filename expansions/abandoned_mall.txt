@@ -59,6 +59,9 @@ loot:5
 lootType:premium food & supplies
 key:1
 combatChance:0.5
+event:Executive kitchenette cache | chance:0.2 | prompt:A kitchenette hums behind a keypad-locked door. Power it up?
+eventOption:Hotwire the keypad => risk:high | tag:tech | success:item:microwave,credits+12,log:The keypad sparks and you carry off a working microwave upgrade. | fail:hp-6,log:The keypad shocks you and locks down.
+eventOption:Pry the door open => risk:deadly | tag:combat | success:item:microwave,credits+16,log:The door buckles and you drag out a microwave upgrade. | fail:hp-9,log:The door snaps back and bruises you.
 event:Lost shopper hides in the office | chance:1 | prompt:A frightened scav begs to share the cache. What do you do?
 eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:credits+6,item:queue jacket,log:They share a warm jacket in gratitude. | fail:credits-4,log:The scav panics and draws attention.
 eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. | fail:hp-6,credits-5,log:The scav slams the door and sets off a chase.

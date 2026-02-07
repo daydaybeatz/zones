@@ -60,6 +60,9 @@ loot:7
 lootType:singularity cache
 key:1
 combatChance:0.7
+event:Suspended recovery pod | chance:0.2 | prompt:A recovery recliner floats inside a stasis ring. Pull it free?
+eventOption:Stabilize the ring field => risk:deadly | tag:tech | success:item:recovery recliner,credits+20,log:You steady the field and secure the recovery recliner upgrade. | fail:hp-12,rads+6,log:The ring surges and scorches you.
+eventOption:Grab it and run => risk:deadly | tag:combat | success:item:recovery recliner,credits+24,log:You yank the recliner free and bolt through the distortion. | fail:hp-14,log:The distortion slams you into the bulkhead.
 
 @mission
 id:rift-hush
