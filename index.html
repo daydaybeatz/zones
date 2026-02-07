@@ -839,6 +839,17 @@
     min-height:unset;
     font-size:11px;
   }
+  .signal-log__location{
+    margin:0 6px;
+    padding:6px 10px;
+    border:1px solid rgba(57,255,20,0.3);
+    border-radius:10px;
+    background:rgba(0,0,0,0.78);
+    box-shadow: inset 0 0 12px rgba(0,0,0,0.55);
+    font-size:12px;
+    color:#b8ffcf;
+    text-shadow:0 0 10px rgba(57,255,20,0.2);
+  }
   .signal-log__pinned{
     border-radius:var(--radius) var(--radius) 8px 8px;
     border:1px solid rgba(0,183,255,0.35);
@@ -856,6 +867,21 @@
   .signal-log .log{
     border-radius:var(--radius) var(--radius) 0 0;
     margin:0;
+  }
+
+  .bar-slot-card{
+    border:1px solid rgba(255,176,0,0.35);
+    border-radius:var(--radius);
+    padding:10px 12px;
+    margin-top:12px;
+    background:rgba(0,0,0,0.6);
+    box-shadow: inset 0 0 12px rgba(255,176,0,0.1);
+  }
+  .bar-slot-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
   }
 
   .hidden{display:none !important;}
@@ -1287,6 +1313,7 @@
       <div class="signal-log__controls">
         <button class="btn-secondary" id="codexToggle" type="button">Show last 20</button>
       </div>
+      <div class="signal-log__location" id="codexLocation">Current location: Safe House (low risk)</div>
       <div class="signal-log__pinned hidden" id="codexPinned"></div>
       <div class="log" id="codex"></div>
     </div>
@@ -1298,7 +1325,7 @@
     const SAVE_VERSION=2;
     const CODEX_VISIBLE_LIMIT=20;
     const CODEX_HISTORY_LIMIT=120;
-    const PINNED_SIGNAL_DURATION_MS=4500;
+    const PINNED_SIGNAL_DURATION_MS=6000;
     const ELDER_MISSION_ID='safehouse-elders';
     const FACTION_RELATION_MIN=-10;
     const FACTION_RELATION_MAX=10;
@@ -1338,6 +1365,34 @@
       'A calm mind wins fights—enter combat only when your stamina is ready.'
     ];
     const createIdleSlot=()=>({active:false,id:null,startedAt:null,durationMs:0,etaMinutes:0,completed:false,statusMessage:''});
+    const SHOP_DEAL_ITEM_POOL=['scrap wiring','scrap bundle','cloth scraps','plastic shards','electronics bits','wire spool','copper wire','tarpaulin roll','tinned beans','stale biscuits'];
+    const SHOP_DEAL_FOOD_POOL=['ration bar','field rations','ember ration','bunker stew pouch','tinned beans','stale biscuits','mall snack pack','instant noodles','homebrew stew','brine crackers','salted stew pouch','static fruit bar'];
+    const SHOP_DEAL_WATER_POOL=['water flask','water canister','filtered water pack','clean canteen','citrus soda'];
+    const rollFromPool=(pool)=>pool[Math.floor(Math.random()*pool.length)];
+    const createShopDeal=(type)=>{
+      const costItem=rollFromPool(SHOP_DEAL_ITEM_POOL);
+      const costCount=2+Math.floor(Math.random()*4);
+      const rewardPool=type==='water' ? SHOP_DEAL_WATER_POOL : SHOP_DEAL_FOOD_POOL;
+      const rewardItem=rollFromPool(rewardPool);
+      return {
+        id:`${type}-${Date.now()}-${Math.floor(Math.random()*1000)}`,
+        type,
+        costItem,
+        costCount,
+        rewardItem,
+        rewardCount:3
+      };
+    };
+    const hydrateShopDeals=(savedDeals=[])=>{
+      const deals=Array.isArray(savedDeals) ? savedDeals.filter(Boolean) : [];
+      while(deals.length<2){
+        deals.push(createShopDeal(deals.length===0 ? 'food' : 'water'));
+      }
+      if(deals.length>2){
+        deals.length=2;
+      }
+      return deals;
+    };
     const FALLBACK_HUB_ZONE={
       id:'safehouse',
       name:'Safe House',
@@ -1403,6 +1458,7 @@
       pinnedCodex:{message:'',expiresAt:null},
       stash:{name:'Vault Stash',items:[]},
       marketAccess:{active:false,zoneId:null},
+      shopDeals:hydrateShopDeals(),
       mercs:0,
       idleOps:[createIdleSlot()],
       idleRewards:[],
@@ -1464,6 +1520,38 @@
       }
       return {...FALLBACK_HUB_ZONE};
     }
+    const hasRestOption=(exp)=>{
+      if(!exp) return false;
+      const hintText=`${exp.meta?.hint || ''} ${exp.meta?.summary || ''}`.toLowerCase();
+      return hintText.includes('rest');
+    };
+    const buildZoneFromExp=(exp,defaultId)=>{
+      if(!exp) return null;
+      const id=exp.meta?.id || defaultId;
+      const targetScene=exp.door?.target || Object.keys(exp.scenes || {})[0] || null;
+      return {
+        id,
+        name:exp.meta?.name || exp.meta?.id || id,
+        risk:getZoneRiskForExp(exp,exp.door?.risk || 'low'),
+        desc:exp.door?.desc || exp.door?.hint || exp.meta?.summary || 'Field site.',
+        sceneId:targetScene
+      };
+    };
+    const getNearestRestZone=(originId=state.zone?.id)=>{
+      const candidates=Object.entries(expansions).filter(([,exp])=>hasRestOption(exp));
+      if(!candidates.length) return getMainHubZone();
+      let best=null;
+      let bestDistance=Number.POSITIVE_INFINITY;
+      candidates.forEach(([id,exp])=>{
+        const candidateId=exp.meta?.id || id;
+        const distance=getZoneDistance(candidateId,originId);
+        if(distance<bestDistance){
+          bestDistance=distance;
+          best=buildZoneFromExp(exp,id);
+        }
+      });
+      return best || getMainHubZone();
+    };
     const hydrateState=(saved)=>{
       const base=createDefaultState();
       if(!saved || typeof saved!=='object') return base;
@@ -1471,6 +1559,7 @@
       merged.flags=new Set(saved.flags || []);
       merged.stash={...base.stash,...(saved.stash||{})};
       merged.marketAccess={...base.marketAccess,...(saved.marketAccess||{})};
+      merged.shopDeals=hydrateShopDeals(saved.shopDeals || base.shopDeals);
       merged.idleOps=hydrateIdleOps(saved.idleOps,merged.flags,merged.mercs);
       merged.idleRewards=Array.isArray(saved.idleRewards) ? [...saved.idleRewards] : [];
       merged.factions={...base.factions,...(saved.factions||{})};
@@ -1931,9 +2020,9 @@
     const DOORS_PAGE_SIZE=4;
     const TRAVEL_DISTANCE_BASE=2;
     const TRAVEL_DISTANCE_STEP=2;
-    const TRAVEL_BASE_SECONDS=6;
-    const TRAVEL_SECONDS_PER_KM=2;
-    const TRAVEL_MAX_SECONDS=30;
+    const TRAVEL_BASE_SECONDS=4;
+    const TRAVEL_SECONDS_PER_KM=1;
+    const TRAVEL_MAX_SECONDS=20;
     const riskTable={low:0.08,medium:0.2,high:0.32,deadly:0.45};
     const riskRank={low:1,medium:2,high:3,deadly:4};
     const riskLevels=['low','medium','high','deadly'];
@@ -3594,6 +3683,7 @@ once:true`
       backpackCount:document.getElementById('backpackCount'),
       loadoutCount:document.getElementById('loadoutCount'),
       codex:document.getElementById('codex'),
+      codexLocation:document.getElementById('codexLocation'),
       codexPinned:document.getElementById('codexPinned'),
       idleOps:document.getElementById('idleOps'),
       screenNav:document.getElementById('screenNav'),
@@ -3706,7 +3796,7 @@ once:true`
     };
     const isImportantSignal=(msg)=>{
       if(!msg) return false;
-      return /Signal log: Health|Rewards|Mission complete|✓ |✖ |Transit complete/i.test(msg);
+      return /Signal log: Health|Rewards|Mission complete|✓ |✖ |Transit complete|Combat failed|Mission aborted|Emergency evac|collapse/i.test(msg);
     };
     const renderPinnedCodex=()=>{
       if(!dom.codexPinned) return;
@@ -3718,6 +3808,12 @@ once:true`
       }
       dom.codexPinned.textContent=pinned.message;
       dom.codexPinned.classList.remove('hidden');
+    };
+    const renderCodexLocation=()=>{
+      if(!dom.codexLocation) return;
+      const zoneName=state.zone?.name || 'Unknown';
+      const zoneRisk=state.zone?.risk || 'low';
+      dom.codexLocation.textContent=`Current location: ${zoneName} (${zoneRisk} risk)`;
     };
     function renderCodex(){
       if(!dom.codex) return;
@@ -3771,6 +3867,12 @@ once:true`
       renderCodex();
     };
     const getIdleSlotLimit=()=>Math.max(1,1+(state.flags.has('ganglands-telecom') ? 1 : 0)+Number(state.mercs || 0));
+    const getIdleSlotsAvailable=()=>{
+      const activeCount=Array.isArray(state.idleOps)
+        ? state.idleOps.filter(slot=>slot.active && !slot.completed).length
+        : 0;
+      return Math.max(0,getIdleSlotLimit()-activeCount);
+    };
     const syncIdleSlots=()=>{
       if(!Array.isArray(state.idleOps)){
         state.idleOps=[createIdleSlot()];
@@ -4650,12 +4752,13 @@ once:true`
         const percent=clamp(pct(val,max),0,200);
         return `<div class="statline"><div>${label}</div><div class="bar ${cls}"><span style="width:${percent}%;"></span></div><div>${Math.round(val)}/${max}</div></div>`;
       }).join('')+tempLine;
+    const idleAvailable=getIdleSlotsAvailable();
     dom.meta.innerHTML=`<span class="pill-inline"><b>Credits</b>${state.credits}</span>`+
         `<span class="pill-inline"><b>Scrap</b>${state.scrap}</span>`+
         `<span class="pill-inline"><b>Keys</b>${state.keys}</span>`+
         `<span class="pill-inline"><b>Level</b>${state.level}</span>`+
         `<span class="pill-inline"><b>XP</b>${state.xp}/${state.nextLevelXp}</span>`+
-        `<span class="pill-inline"><b>Mercs</b>${state.mercs}</span>`+
+        `<span class="pill-inline"><b>Mercs</b>${state.mercs} (idle: ${idleAvailable})</span>`+
         `<span class="pill-inline"><b>RMG</b>${getFactionRelation('military')}</span>`+
         `<span class="pill-inline"><b>Abernathy</b>${getFactionRelation('gang')}</span>`+
         `<span class="pill-inline"><b>Time</b>${fmtTime(state.timeMinutes)}</span>`+
@@ -6128,6 +6231,32 @@ once:true`
       }
     }
 
+    const BAR_SLOT_BETS=[5,25,60];
+    const BAR_SLOT_WIN_CHANCE=0.1;
+    const BAR_SLOT_MAX_PAYOUT_PERCENT=280;
+    function playBarSlots(bet){
+      if(state.credits<bet){
+        setCodex('Not enough credits to place that bet.');
+        return;
+      }
+      state.credits-=bet;
+      const hit=Math.random()<BAR_SLOT_WIN_CHANCE;
+      if(hit){
+        const payoutPercent=Math.floor(Math.random()*(BAR_SLOT_MAX_PAYOUT_PERCENT+1));
+        const payout=Math.round(bet*(payoutPercent/100));
+        if(payout>0){
+          state.credits+=payout;
+        }
+        logMsg(`Slot machine payout: ${payoutPercent}% on ${bet} credits.`);
+        setCodex(`Slot machine hit: ${payoutPercent}% payout (${payout} credits).`);
+      }else{
+        logMsg(`Slot machine miss on ${bet} credits.`);
+        setCodex('Slot machine miss. Better luck next spin.');
+      }
+      renderAll();
+      renderBarModal();
+    }
+
     function renderBarModal(){
       if(!dom.barModal || !dom.barActions || !dom.barMessage || !dom.barTitle) return;
       const barConfig=getBarConfig(state.zone.id);
@@ -6142,10 +6271,34 @@ once:true`
       if(hireBtn.disabled){
         hireBtn.title='Not enough credits.';
       }
+      const slotsCard=document.createElement('div');
+      slotsCard.className='bar-slot-card';
+      const slotsTitle=document.createElement('div');
+      slotsTitle.className='command-title';
+      slotsTitle.textContent='Bar slot machines';
+      const slotsHint=document.createElement('div');
+      slotsHint.className='command-hint';
+      slotsHint.textContent='Bet 5/25/60 credits for a 1/10 chance at 0%-280% payout.';
+      const slotsActions=document.createElement('div');
+      slotsActions.className='bar-slot-actions';
+      BAR_SLOT_BETS.forEach(bet=>{
+        const btn=document.createElement('button');
+        btn.textContent=`Spin (${bet} credits)`;
+        btn.disabled=state.credits<bet;
+        btn.onclick=()=>playBarSlots(bet);
+        if(btn.disabled){
+          btn.title='Not enough credits.';
+        }
+        slotsActions.appendChild(btn);
+      });
+      slotsCard.appendChild(slotsTitle);
+      slotsCard.appendChild(slotsHint);
+      slotsCard.appendChild(slotsActions);
       const closeBtn=document.createElement('button');
       closeBtn.textContent='Close';
       closeBtn.onclick=closeBarModal;
       dom.barActions.appendChild(hireBtn);
+      dom.barActions.appendChild(slotsCard);
       dom.barActions.appendChild(closeBtn);
     }
 
@@ -6330,6 +6483,8 @@ once:true`
       setCodex(`Arrived at ${state.zone.name}.`);
       logMsg(`Transit complete: ${state.zone.name}.`);
       pushNpcDialog(state.zone?.id,'arrivalDialog');
+      setActiveTab('hub');
+      state.screen='locations';
       saveGame();
       if(travelResolveTimer){
         clearTimeout(travelResolveTimer);
@@ -6737,6 +6892,74 @@ once:true`
       dom.stashActions.appendChild(bulk);
     }
 
+    function redeemShopDeal(dealIndex){
+      if(!canAccessMarket()){
+        setCodex('Visit a shop to trade for deals.');
+        return;
+      }
+      if(!Array.isArray(state.shopDeals) || !state.shopDeals[dealIndex]) return;
+      const deal=state.shopDeals[dealIndex];
+      const available=getItemCount(state.inventory,deal.costItem);
+      if(available<deal.costCount){
+        setCodex(`Need ${deal.costCount}x ${deal.costItem} for this deal.`);
+        return;
+      }
+      if(!hasCapacityFor(state.inventory,getBackpackLimit(),deal.rewardItem,deal.rewardCount)){
+        setCodex('Backpack full. Make space for the deal rewards.');
+        return;
+      }
+      removeItems(state.inventory,deal.costItem,deal.costCount);
+      addItemCopies(state.inventory,deal.rewardItem,deal.rewardCount);
+      logMsg(`Trade sealed: ${deal.costCount}x ${deal.costItem} for ${deal.rewardCount}x ${deal.rewardItem}.`);
+      setCodex(`Deal redeemed: ${deal.rewardCount}x ${deal.rewardItem} acquired.`);
+      state.shopDeals[dealIndex]=createShopDeal(deal.type);
+      renderAll();
+    }
+
+    function renderShopDeals({marketActive}={}){
+      if(!dom.shopActions) return;
+      if(!Array.isArray(state.shopDeals) || state.shopDeals.length<2){
+        state.shopDeals=hydrateShopDeals(state.shopDeals);
+      }
+      const dealsCard=document.createElement('div');
+      dealsCard.className='command-card';
+      const title=document.createElement('div');
+      title.className='command-title';
+      title.textContent='Vendor exchange deals';
+      const hint=document.createElement('div');
+      hint.className='command-hint';
+      hint.textContent='Redeem rotating barter deals for bulk food or water.';
+      dealsCard.appendChild(title);
+      dealsCard.appendChild(hint);
+      state.shopDeals.forEach((deal,idx)=>{
+        const row=document.createElement('div');
+        row.className='inline';
+        row.style.justifyContent='space-between';
+        row.style.alignItems='center';
+        row.style.gap='10px';
+        const label=document.createElement('div');
+        label.textContent=`Trade ${deal.costCount}x ${deal.costItem} → ${deal.rewardCount}x ${deal.rewardItem}`;
+        const action=document.createElement('button');
+        action.textContent=deal.type==='water' ? 'Redeem water deal' : 'Redeem food deal';
+        const available=getItemCount(state.inventory,deal.costItem);
+        const hasItems=available>=deal.costCount;
+        const hasSpace=hasCapacityFor(state.inventory,getBackpackLimit(),deal.rewardItem,deal.rewardCount);
+        action.disabled=!marketActive || !hasItems || !hasSpace;
+        if(!marketActive){
+          action.title='Visit a shop to redeem deals.';
+        }else if(!hasItems){
+          action.title=`Need ${deal.costCount}x ${deal.costItem}.`;
+        }else if(!hasSpace){
+          action.title='Backpack full.';
+        }
+        action.onclick=()=>redeemShopDeal(idx);
+        row.appendChild(label);
+        row.appendChild(action);
+        dealsCard.appendChild(row);
+      });
+      dom.shopActions.appendChild(dealsCard);
+    }
+
     function renderShop(){
       if(!dom.marketBackpack || !dom.shopActions) return;
       dom.marketBackpack.innerHTML='';
@@ -6785,6 +7008,7 @@ once:true`
         ? 'Trade bay open. Select backpack items to sell or break down.'
         : 'Visit a shop to trade with local vendors.';
       dom.shopActions.appendChild(notice);
+      renderShopDeals({marketActive});
       renderMarketStock();
     }
 
@@ -6928,10 +7152,11 @@ once:true`
       resetMissionState();
       resetTravelState();
       clearMarketAccess();
-      state.zone=getMainHubZone();
+      state.zone=getNearestRestZone(state.zone?.id);
       state.selected={source:null,item:null};
       setActiveTab('hub');
       state.screen='locations';
+      setCodex('Emergency evac: you collapse and lose momentum.');
     }
 
     function applyEffects(effectStr,outcome,options={}){
@@ -8546,6 +8771,7 @@ once:true`
       renderStash();
       renderShop();
       renderItemDetails();
+      renderCodexLocation();
       setInventoryScreen(state.inventoryScreen);
       renderScreens();
       syncTabs();
