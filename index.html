@@ -1345,6 +1345,22 @@
       desc:'Safehouse hub.',
       sceneId:null
     };
+    const PANDEMIC_INTERVAL_RANGE={min:7,max:20};
+    const PANDEMIC_DURATION_RANGE={min:3,max:5};
+    const PANDEMIC_RESPONSE_RANGE={min:2,max:3};
+    const PANDEMIC_TYPES={
+      drought:{id:'drought',label:'Drought',flag:'pandemic-drought',missionId:'safehouse-drought'},
+      virus:{id:'virus',label:'Virus outbreak',flag:'pandemic-virus',missionId:'safehouse-virus'},
+      food:{id:'food',label:'Food shortage',flag:'pandemic-food',missionId:'safehouse-food'}
+    };
+    const rollRange=({min,max})=>Math.floor(Math.random()*(max-min+1))+min;
+    const createPandemicState=(day=1)=>({
+      active:false,
+      type:null,
+      endsOnDay:null,
+      nextTriggerDay:day+rollRange(PANDEMIC_INTERVAL_RANGE),
+      missionsRemaining:0
+    });
     const getDefaultTravelState=()=>({
       active:false,
       endsAt:null,
@@ -1390,7 +1406,7 @@
       mercs:0,
       idleOps:[createIdleSlot()],
       idleRewards:[],
-      flags:new Set(),
+      flags:new Set(['safehouse-funds-offer']),
       factions:{military:0,gang:0},
       missionOffers:{},
       elderAdviceIndex:0,
@@ -1405,6 +1421,7 @@
       screen:'locations',
       travel:getDefaultTravelState(),
       mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null,travelCombat:false},
+      pandemic:createPandemicState(),
       inventoryScreen:'backpack',
       stashScreen:'vault',
       selected:{source:null,item:null}
@@ -1464,6 +1481,7 @@
       }
       merged.travel={...base.travel,...(saved.travel||{})};
       merged.mission={...base.mission,...(saved.mission||{})};
+      merged.pandemic={...base.pandemic,...(saved.pandemic||{})};
       merged.selected={...base.selected,...(saved.selected||{})};
       const travelEndsAt=Number(merged.travel.endsAt);
       merged.travel.endsAt=Number.isFinite(travelEndsAt) ? travelEndsAt : null;
@@ -1500,6 +1518,33 @@
       const doorsPage=Number(merged.doorsPage);
       merged.doorsPage=Number.isFinite(doorsPage) && doorsPage>=0 ? doorsPage : 0;
       merged.doorsCollapsed=Boolean(merged.doorsCollapsed);
+      if(!merged.flags.has('safehouse-funds-offer') && !merged.flags.has('safehouse-funds-complete')){
+        merged.flags.add('safehouse-funds-offer');
+      }
+      const nextTriggerDay=Number(merged.pandemic.nextTriggerDay);
+      merged.pandemic.nextTriggerDay=Number.isFinite(nextTriggerDay) && nextTriggerDay>0
+        ? nextTriggerDay
+        : (merged.day || base.day)+rollRange(PANDEMIC_INTERVAL_RANGE);
+      if(merged.pandemic.active){
+        const typeId=merged.pandemic.type;
+        if(!typeId || !PANDEMIC_TYPES[typeId]){
+          merged.pandemic.active=false;
+          merged.pandemic.type=null;
+          merged.pandemic.endsOnDay=null;
+          merged.pandemic.missionsRemaining=0;
+        }else{
+          const config=PANDEMIC_TYPES[typeId];
+          merged.flags.add(config.flag);
+          const endsOnDay=Number(merged.pandemic.endsOnDay);
+          merged.pandemic.endsOnDay=Number.isFinite(endsOnDay) && endsOnDay>0
+            ? endsOnDay
+            : (merged.day || base.day)+rollRange(PANDEMIC_DURATION_RANGE);
+          const remaining=Number(merged.pandemic.missionsRemaining);
+          merged.pandemic.missionsRemaining=Number.isFinite(remaining) && remaining>0
+            ? remaining
+            : rollRange(PANDEMIC_RESPONSE_RANGE);
+        }
+      }
       return merged;
     };
     const loadSavedState=()=>{
@@ -2115,6 +2160,9 @@ hub:true
 event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice about dodging RMG patrols and Abernathy Militia recruiters. How do you respond?
 eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:credits-3,log:The runner panics and bolts.
 eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:credits-5,log:The elders hear about the rumor sale.
+event:Mercenary takes a seat nearby | chance:0.35 | prompt:A mercenary offers to guard the Safe House for 40 credits. Do you hire them?
+eventOption:Hire the mercenary => risk:low | tag:mercy | success:credits-40,mercs+1,log:The merc takes the credits and signs on for bunker duty. | fail:credits-40,mercs+1,log:The merc shrugs and pockets the credits anyway.
+eventOption:Decline the offer => risk:low | tag:stealth | success:log:You decline and the merc fades back into the crowd. | fail:log:The merc laughs it off and melts away.
 
 @mission
 id:safehouse-hush
@@ -2132,6 +2180,69 @@ consumeFlag:secret-safehouse-ops
 event:Relay shadow crossing | chance:0.6 | prompt:A patrol cuts across the whispering line. Choose your approach.
 eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. | fail:hp-3,credits-2,log:A clang gives you away.
 eventOption:Confront the patrol => risk:medium | tag:combat | success:item:coil battery,log:You overpower the patrol and seize their battery. | fail:hp-6,log:A scuffle leaves you bruised.
+
+@mission
+id:safehouse-drought
+label:Bolster water supply systems
+desc:Stabilize the pumps and reinforce routing lines to keep the Safe House hydrated.
+risk:low
+time:8
+energy:8
+loot:0
+reward:water relief
+hub:true
+unlockFlag:pandemic-drought
+fixedRewards:item:water flask,item:water flask,item:water flask,log:You reroute clean water into the Safe House reservoir.
+fixedRewardsOnly:true
+
+@mission
+id:safehouse-virus
+label:Distribute antiviral kits
+desc:Coordinate the clinic caches and distribute antivirals through the bunks.
+risk:low
+time:8
+energy:9
+loot:0
+reward:outbreak relief
+hub:true
+unlockFlag:pandemic-virus
+fixedRewards:item:antiviral vial,item:antiviral vial,item:bandage,log:You move antivirals into quarantine and shore up triage lines.
+fixedRewardsOnly:true
+
+@mission
+id:safehouse-food
+label:Stabilize ration stockpiles
+desc:Audit the pantry vaults and reinforce ration runs for the next week.
+risk:low
+time:8
+energy:9
+loot:0
+reward:food relief
+hub:true
+unlockFlag:pandemic-food
+fixedRewards:item:ration bar,item:ration bar,item:field rations,log:You rebalance the stockpile and deliver fresh rations.
+fixedRewardsOnly:true
+
+@mission
+id:safehouse-missing-funds
+label:Investigate missing bunker funds
+desc:Track missing credits and confront the source of the ledger leak before the bunker collapses into panic.
+risk:medium
+time:10
+energy:12
+loot:1
+lootType:ledger evidence
+reward:funds recovered
+hub:true
+unlockFlag:safehouse-funds-offer
+consumeFlag:safehouse-funds-offer
+combatChance:1
+event:Ledger runners dodge your questions | chance:1 | prompt:Wallets are lighter and a corrupt elder's signature repeats in the ledger. How do you proceed?
+eventOption:Press the quartermaster in public => risk:medium | tag:mercy | success:credits+6,log:The crowd backs you and the quartermaster hands over a lead. | fail:credits-3,log:The quartermaster stalls and the crowd scatters.
+eventOption:Shadow the midnight runner => risk:high | tag:stealth | success:item:old coin,log:You tail the runner to a hidden cache of bribe money. | fail:hp-4,log:The runner spots you and bolts into the dark.
+eventOption:Crack the sealed archive in private => risk:medium | tag:tech | success:item:ledger-etched compass,log:The archive coughs up the ledger proof you need. | fail:credits-4,log:The archive locks you out and wipes the trace.
+success:flag:safehouse-funds-conspiracy,flag:safehouse-funds-complete,credits+12,log:The corrupt elder's scheme breaks in the firefight. The ledger is yours.
+fail:flag:safehouse-funds-complete,credits-6,log:The elder's enforcers bury the trail and the bunker loses faith.
 
 @quest
 id:safehouse-vents
@@ -3322,6 +3433,7 @@ once:true`
     let expansionsAttempted=0;
     const idleOperations=[
       {id:'bunker-maintenance',label:'Bunker maintenance run',desc:'Maintenance crews stabilize systems and earn a few credits.',duration:3,cost:{credits:6},reward:'credits+7,item:old coin',unlockFlag:'safehouse-vents',xp:8,secretUnlockFlag:'secret-safehouse-ops',secretZoneId:'safehouse'},
+      {id:'bunker-ledger-watch',label:'Ledger watch rotation',desc:'Keep the bunker ledger clean while diverting funds to water stocks.',duration:3,cost:{credits:8},reward:'item:water flask,credits+4',unlockFlag:'safehouse-funds-conspiracy',xp:8},
       {id:'tunnel-relay',label:'Relay salvage sweep',desc:'Bunker scouts recover salvage and food from the old tunnels.',duration:4,cost:{credits:10,scrap:1},reward:'item:ration bar,item:cloth scraps,credits+6',unlockFlag:'bunker-telecom-2',xp:10,secretUnlockFlag:'secret-bunker-mission',secretZoneId:'underground_bunker'},
       {id:'refinery-pressure-run',label:'Refinery pressure run',desc:'Refinery crews escort pressurized salvage and sealed rations.',duration:5,cost:{credits:18,scrap:2},reward:'item:smokehouse ration,item:refinery alloy ingot,credits+10',unlockFlag:'refinery-telecom-2',xp:14,secretUnlockFlag:'secret-refinery-mission',secretZoneId:'sunken_refinery'},
       {id:'citadel-resonance',label:'Citadel resonance patrol',desc:'Citadel operatives recover stormglass stock and arc-powered supplies.',duration:5,cost:{credits:22,scrap:2},reward:'item:stormglass shard,item:ionized brew,credits+14',unlockFlag:'citadel-telecom-2',xp:16,secretUnlockFlag:'secret-citadel-mission',secretZoneId:'stormglass_citadel'},
@@ -6703,6 +6815,67 @@ once:true`
       return getFailBreakdown(risk).chance;
     }
 
+    function scheduleNextPandemicDay(day){
+      state.pandemic.nextTriggerDay=day+rollRange(PANDEMIC_INTERVAL_RANGE);
+    }
+    function startPandemic(typeId){
+      const config=PANDEMIC_TYPES[typeId];
+      if(!config) return;
+      const durationDays=rollRange(PANDEMIC_DURATION_RANGE);
+      state.pandemic.active=true;
+      state.pandemic.type=typeId;
+      state.pandemic.endsOnDay=state.day+durationDays;
+      state.pandemic.missionsRemaining=rollRange(PANDEMIC_RESPONSE_RANGE);
+      state.flags.add(config.flag);
+      logMsg(`Pandemic alert: ${config.label} reported in the bunker network.`);
+      setCodex(`${config.label} outbreak active. Safe House response missions available.`);
+    }
+    function endPandemic({resolved=false,expired=false}={}){
+      if(!state.pandemic.active) return;
+      const config=PANDEMIC_TYPES[state.pandemic.type];
+      if(config){
+        state.flags.delete(config.flag);
+      }
+      state.pandemic.active=false;
+      state.pandemic.type=null;
+      state.pandemic.endsOnDay=null;
+      state.pandemic.missionsRemaining=0;
+      scheduleNextPandemicDay(state.day);
+      if(resolved){
+        logMsg('Pandemic contained: bunker response teams report stabilization.');
+        setCodex('Pandemic contained. Safe House response ops stand down.');
+      }else if(expired){
+        logMsg('Pandemic wave passes after days of strain.');
+        setCodex('The outbreak fades, but supplies are strained.');
+      }
+    }
+    function updatePandemicDay(){
+      if(state.pandemic.active){
+        if(Number.isFinite(state.pandemic.endsOnDay) && state.day>=state.pandemic.endsOnDay){
+          endPandemic({expired:true});
+        }
+        return;
+      }
+      const triggerDay=Number(state.pandemic.nextTriggerDay);
+      if(Number.isFinite(triggerDay) && state.day>=triggerDay){
+        const types=Object.keys(PANDEMIC_TYPES);
+        const picked=types[Math.floor(Math.random()*types.length)];
+        startPandemic(picked);
+      }
+    }
+    function handlePandemicMissionCompletion(missionId,outcome){
+      if(outcome!=='success' || !state.pandemic.active) return;
+      const config=PANDEMIC_TYPES[state.pandemic.type];
+      if(!config || config.missionId!==missionId) return;
+      const remaining=Number.isFinite(state.pandemic.missionsRemaining) ? state.pandemic.missionsRemaining : rollRange(PANDEMIC_RESPONSE_RANGE);
+      state.pandemic.missionsRemaining=Math.max(0,remaining-1);
+      if(state.pandemic.missionsRemaining<=0){
+        endPandemic({resolved:true});
+      }else{
+        logMsg(`Pandemic response ongoing: ${state.pandemic.missionsRemaining} more run${state.pandemic.missionsRemaining===1?'':'s'} needed.`);
+      }
+    }
+
     function tickTime(minutes){
       const total=state.timeMinutes+formatDisplayMinutes(minutes);
       if(total>=24*60){
@@ -6717,6 +6890,7 @@ once:true`
     function advanceDay(){
       state.day++;
       state.timeMinutes=6*60;
+      updatePandemicDay();
     }
 
     function rollComplication(source){
@@ -6830,6 +7004,10 @@ once:true`
           else if(stat==='keys') state.keys=Math.max(0,state.keys+delta);
           else if(stat==='temp') state.bodyTemp=clamp(state.bodyTemp+delta,BODY_TEMP_MIN,BODY_TEMP_MAX);
           else if(stat==='backpack') state.backpackLimit=Math.max(0,state.backpackLimit+delta);
+          else if(stat==='mercs'){
+            state.mercs=Math.max(0,state.mercs+delta);
+            syncIdleSlots();
+          }
         }
       });
       const hpDelta=state.hp-beforeHp;
@@ -7097,6 +7275,9 @@ once:true`
         if(Number.isFinite(relationDelta)){
           updateFactionRelation(pending.oppositionFactionId,relationDelta);
         }
+      }
+      if(pending.sourceId){
+        handlePandemicMissionCompletion(pending.sourceId,outcome);
       }
       state.mission.completed=true;
       state.mission.success=outcome==='success';
@@ -8548,6 +8729,9 @@ once:true`
       }
       if(state.travel.active){
         renderTravelStatus();
+        if(!state.mission.active){
+          renderMissionStatus();
+        }
       }
       const hasActiveIdle=state.idleOps.some(slot=>slot.active);
       if(hasActiveIdle){
