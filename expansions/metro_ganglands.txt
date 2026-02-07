@@ -3,7 +3,7 @@ id:metro_ganglands
 name:Ganglands Metro Shanty
 summary:A mid-risk warren of rail tunnels turned into a shanty bazaar. Mid-tier combatants guard clothing and weapons caches.
 temp:hot
-arrivalDialog:Lookout Jax: Redline owns these rails since the Truce of Nine—flash their colors or keep your head low.
+arrivalDialog:Lookout Jax: Abernathy Militia owns these rails since the Truce of Nine—flash their colors or keep your head low.
 missionStartDialog:Fixer Ivo: The Shanty runs on scrap taxes; bring back anything with a serial tag.
 missionEndDialog:Runner Sera: Good work—this keeps the truce payments ahead of the tunnel gangs.
 unlockCost:50
@@ -34,7 +34,7 @@ time:11
 energy:14
 loot:3
 lootType:mid-tier gear
-event:Rail patrol crossing | chance:0.5 | prompt:A Redline patrol blocks the rail spur. Decide how to clear it.
+event:Rail patrol crossing | chance:0.5 | prompt:A Abernathy Militia patrol blocks the rail spur. Decide how to clear it.
 eventOption:Sneak along the service duct => risk:medium | tag:stealth | success:item:rail map rig,credits+6,log:You slip by and snag a route rig. | fail:hp-5,credits-2,log:Boots scrape metal and draw fire.
 eventOption:Charge through head-on => risk:high | tag:combat | success:item:rail spike mace,log:You smash through and claim a heavy mace. | fail:hp-8,log:The patrol drives you back hard.
 
@@ -53,24 +53,27 @@ eventOption:Double-cross the runner => risk:high | tag:betrayal | success:credit
 
 @mission
 id:gang-assist
-label:Assist Redline runners
-desc:Escort Redline runners and return tagged crates to the gang. High standing (+8) required; success boosts Redline relations (+2) and keeps combat risk lower.
+label:Assist Abernathy Militia runners
+desc:Escort Abernathy Militia runners and return tagged crates to the gang. High standing (+8) required; success boosts Abernathy Militia relations (+2) and keeps combat risk lower.
 risk:medium
 time:10
 energy:12
 loot:2
 lootType:gang stock
-reward:Redline favor
+reward:Abernathy Militia favor
 combatChance:0.25
 faction:gang
 relationMin:8
 relationSuccess:2
 relationFail:-1
+event:Militia runner asks for restraint | chance:0.7 | prompt:A runner asks you to keep bystanders safe during the escort. Do you agree?
+eventOption:Shield the civilians => risk:medium | tag:mercy | success:credits+6,item:rail map rig,log:The escort stays clean and the runner shares a route rig. | fail:credits-3,log:The crowd panics and slows the convoy.
+eventOption:Push through no matter what => risk:high | tag:betrayal | success:item:coin string,credits+12,log:You keep the pace and pocket a coin string. | fail:hp-6,credits-4,log:The rush sparks a skirmish.
 
 @mission
 id:gang-sabotage
-label:Sabotage Redline caches
-desc:Poison the gang’s supply line to hurt the Redline (-2 relation). Only crews with low standing (≤ -5) can pull this; combat risk rises when relations are bad.
+label:Sabotage Abernathy Militia caches
+desc:Poison the gang’s supply line to hurt the Abernathy Militia (-2 relation). Only crews with low standing (≤ -5) can pull this; combat risk rises when relations are bad.
 risk:high
 time:12
 energy:15
@@ -82,6 +85,9 @@ faction:gang
 relationMax:-5
 relationSuccess:-2
 relationFail:-1
+event:Cache guard offers a bribe | chance:0.65 | prompt:A guard offers to look away if you spare their family stash.
+eventOption:Take the bribe and spare it => risk:medium | tag:mercy | success:credits+10,item:gang patchwork pants,log:You take the bribe and leave the family stash alone. | fail:credits-4,log:The guard backs out and raises an alarm.
+eventOption:Take everything anyway => risk:high | tag:betrayal | success:item:rail spike mace,credits+16,log:You clear the cache and leave no supplies behind. | fail:hp-7,credits-5,log:The guard's squad corners you.
 
 @mission
 id:ganglands-security-cache

@@ -72,6 +72,9 @@ loot:5
 lootType:rift salvage
 unlockFlag:secret-rift-mission
 consumeFlag:secret-rift-mission
+event:Echoed scientist pleads | chance:0.6 | prompt:A displaced scientist begs you to stabilize their beacon before looters arrive.
+eventOption:Stabilize the beacon => risk:high | tag:mercy | success:item:riftwater flask,credits+12,log:The scientist repays you with chilled riftwater. | fail:credits-4,log:The beacon fizzles before it locks.
+eventOption:Strip the beacon for parts => risk:deadly | tag:betrayal | success:item:gravity lens,credits+18,log:You strip the beacon and pocket a lens. | fail:hp-10,credits-6,log:The beacon flashes and burns you.
 
 @mission
 id:rift-observatory

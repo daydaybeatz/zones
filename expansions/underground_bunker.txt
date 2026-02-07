@@ -71,6 +71,9 @@ loot:3
 lootType:sealed caches
 unlockFlag:secret-bunker-mission
 consumeFlag:secret-bunker-mission
+event:Relay whisperer calls out | chance:0.6 | prompt:A lost tech whispers from behind a sealed hatch, offering a cache for safe passage.
+eventOption:Help them reach the ladder => risk:low | tag:mercy | success:item:filtered water pack,credits+6,log:The tech slips you a water pack in gratitude. | fail:credits-3,log:The tech freezes and the moment passes.
+eventOption:Take the cache and leave => risk:medium | tag:betrayal | success:item:locker prybar,credits+10,log:You take the cache and vanish into the dark. | fail:hp-5,credits-4,log:The hatch swings open and clips you.
 
 @mission
 id:bunker-waterline

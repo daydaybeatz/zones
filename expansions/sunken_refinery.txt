@@ -74,6 +74,9 @@ loot:4
 lootType:pressure salvage
 unlockFlag:secret-refinery-mission
 consumeFlag:secret-refinery-mission
+event:Subfloor diver signals | chance:0.6 | prompt:A diver signals from a flooded catwalk, asking for a tow line.
+eventOption:Pull them to safety => risk:high | tag:mercy | success:item:coolant canister,credits+10,log:The diver shares a coolant canister before slipping away. | fail:credits-4,log:The line snaps and you lose time.
+eventOption:Cut the line and take the cache => risk:deadly | tag:betrayal | success:item:refinery alloy ingot,credits+16,log:You cut the line and pocket a rare ingot. | fail:hp-9,credits-6,log:The line whips back and injures you.
 
 @mission
 id:refinery-slag-run
