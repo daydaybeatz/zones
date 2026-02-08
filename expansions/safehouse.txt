@@ -19,7 +19,7 @@ title:Safe House Commons
 desc:Warm lights, clean water, and the trade counter keep the crew steady between runs.
 tags:Safe / Hub
 option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,energy+14,credits+6,temp=normal,log:The bunk warmth sinks into your bones. | fail:credits-2,log:Sleep won't come tonight.
-option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. | fail:energy-2,log:The bench clamps fail you.
+option:Repack the supply crates => commons | risk:low | time:5 | reward:prep | success:energy+6,credits+4,log:You sort fresh crates and restock the outbound packs. | fail:energy-2,log:The crate seals jam and slow you down.
 
 @mission
 id:safehouse-elders
@@ -41,6 +41,48 @@ eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits
 eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:credits-5,log:The elders hear about the rumor sale.
 
 @mission
+id:safehouse-ledger
+label:Audit the ration ledger
+desc:Cross-check the ration ledger with the vault shelves to catch any gaps in supply.
+risk:low
+time:6
+energy:6
+loot:0
+reward:ration audit
+combatChance:0
+hub:true
+success:credits+6,log:You reconcile the ledger and recover a few forgotten credits.
+fail:credits-3,log:Numbers blur together and the audit stalls out.
+
+@mission
+id:safehouse-watch
+label:Walk the outer watch
+desc:Circle the perimeter checkpoints and confirm the signal lamps still burn.
+risk:low
+time:7
+energy:7
+loot:0
+reward:perimeter check
+combatChance:0
+hub:true
+success:energy+4,credits+4,log:The lamps are steady and the watch captain slips you a token.
+fail:hp-2,log:A slick rung sends you down a few steps.
+
+@mission
+id:safehouse-welds
+label:Reinforce the generator welds
+desc:Help the engineers keep the generator wall stable with a quick weld pass.
+risk:low
+time:6
+energy:8
+loot:0
+reward:generator stability
+combatChance:0
+hub:true
+success:energy+6,log:The welds hold and the humming wall steadies.
+fail:hp-2,log:A spark bites your glove and ends the shift early.
+
+@mission
 id:safehouse-hush
 label:Trace the quiet signal
 desc:Follow a faint relay ping to recover whispered intel for the elders.
@@ -56,6 +98,22 @@ consumeFlag:secret-safehouse-ops
 event:Relay shadow crossing | chance:0.6 | prompt:A patrol cuts across the whispering line. Choose your approach.
 eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. | fail:hp-3,credits-2,log:A clang gives you away.
 eventOption:Confront the patrol => risk:medium | tag:combat | success:item:coil battery,log:You overpower the patrol and seize their battery. | fail:hp-6,log:A scuffle leaves you bruised.
+
+@quest
+id:safehouse-firing-range
+title:Go to the firing range
+desc:A bunker elder walks you through the firing range and drills you on recoil control.
+risk:low
+time:8
+energy:8
+loot:0
+reward:training session
+minLevel:3
+once:true
+flag:safehouse-firing-range
+hideWhenComplete:true
+success:item:field handgun,item:handgun ammo,item:handgun ammo,log:The elder approves your stance and hands you a field handgun with two rounds.
+fail:log:Your grouping is off today. The elder sends you back to rest.
 
 @quest
 id:safehouse-vents
