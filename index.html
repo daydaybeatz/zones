@@ -383,7 +383,7 @@
   .bar.temp span{background:linear-gradient(90deg, var(--green), var(--blue));}
   .need-status{
     font-size:12px;
-    text-transform:uppercase;
+    text-transform:none;
     letter-spacing:0.6px;
     font-weight:600;
   }
@@ -418,6 +418,18 @@
     flex-wrap:wrap;
     gap:12px;
     text-transform:lowercase;
+  }
+  .sub-stat{
+    display:inline-flex;
+    align-items:center;
+    padding:2px 8px;
+    border-radius:999px;
+    border:1px solid rgba(57,255,20,0.25);
+    background:rgba(0,0,0,0.55);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.55);
+    color:#b8ffcf;
+    text-transform:lowercase;
+    letter-spacing:0.3px;
   }
   .meta-sep{
     height:1px;
@@ -1682,7 +1694,12 @@
     let state=createDefaultState();
     let allowAutosave=!savedState;
     const isHubMission=(raid)=>raid?.hub===true || raid?.hub==='true';
-    const isMissionUnlocked=(raid)=>!raid?.unlockFlag || state.flags.has(raid.unlockFlag);
+    const isMissionUnlocked=(raid)=>{
+      if(raid?.unlockFlag && !state.flags.has(raid.unlockFlag)) return false;
+      const minLevel=Number(raid?.minLevel || raid?.minlevel || 0);
+      if(minLevel && state.level<minLevel) return false;
+      return true;
+    };
     const getUnlockedMissions=(missions=[])=>missions.filter(isMissionUnlocked);
     const isElderAdviceMission=(raid)=>raid?.id===ELDER_MISSION_ID;
     const isElderAdviceExhausted=()=>state.elderAdviceIndex>=ELDER_ADVICE.length;
@@ -4801,24 +4818,27 @@ once:true`
         ['Energy','energy','maxEnergy','energy'],
         ['Radiation','rads',100,'rads'],
         ['Hunger','hunger','maxHunger','hunger'],
-        ['Hydration','thirst','maxThirst','thirst']
+        ['Hydration','thirst','maxThirst','thirst'],
+        ['Body temperature','tempStatus',null,null]
       ];
-      const tempStatus=(()=>{
-        if(state.bodyTemp<=92) return {label:'very cold'};
-        if(state.bodyTemp>=103) return {label:'overheating'};
-        return {label:'normal'};
-      })();
       const hungerStatus=(()=>{
-        if(state.hunger>=NEED_DAMAGE_THRESHOLD) return {label:'starving',tone:'need-status--bad'};
-        if(state.hunger>=45) return {label:'hungry',tone:'need-status--warn'};
-        return {label:'satiated',tone:'need-status--good'};
+        if(state.hunger>=NEED_DAMAGE_THRESHOLD) return {label:'Starving',tone:'need-status--bad'};
+        if(state.hunger>=45) return {label:'Hungry',tone:'need-status--warn'};
+        return {label:'Satiated',tone:'need-status--good'};
       })();
       const thirstStatus=(()=>{
-        if(state.thirst>=NEED_DAMAGE_THRESHOLD) return {label:'dehydrated',tone:'need-status--bad'};
-        if(state.thirst>=45) return {label:'thirsty',tone:'need-status--warn'};
-        return {label:'quenched',tone:'need-status--good'};
+        if(state.thirst>=NEED_DAMAGE_THRESHOLD) return {label:'Dehydrated',tone:'need-status--bad'};
+        if(state.thirst>=45) return {label:'Thirsty',tone:'need-status--warn'};
+        return {label:'Quenched',tone:'need-status--good'};
       })();
-      const tempLine=`<div class="statline statline--temp"><div class="temp-status">body temperature: ${tempStatus.label}</div></div>`;
+      const tempStatus=(()=>{
+        if(state.bodyTemp<=94) return {label:'Very cold',tone:'need-status--bad'};
+        if(state.bodyTemp<=97) return {label:'Cold',tone:'need-status--warn'};
+        if(state.bodyTemp>=103) return {label:'Overheating',tone:'need-status--bad'};
+        if(state.bodyTemp>=101) return {label:'Warm',tone:'need-status--warn'};
+        return {label:'Normal',tone:'need-status--good'};
+      })();
+      const formatSubStats=(items)=>items.map(item=>`<span class="sub-stat">${item}</span>`).join(' ');
       dom.stats.innerHTML=rows.map(([label,key,maxKey,cls])=>{
         if(key==='hunger'){
           return `<div class="statline"><div>${label}</div><div class="need-status ${hungerStatus.tone}">${hungerStatus.label}</div></div>`;
@@ -4826,24 +4846,27 @@ once:true`
         if(key==='thirst'){
           return `<div class="statline"><div>${label}</div><div class="need-status ${thirstStatus.tone}">${thirstStatus.label}</div></div>`;
         }
+        if(key==='tempStatus'){
+          return `<div class="statline"><div>${label}</div><div class="need-status ${tempStatus.tone}">${tempStatus.label}</div></div>`;
+        }
         const val=state[key];const max=(typeof maxKey==='string')?state[maxKey]:maxKey;
         const percent=clamp(pct(val,max),0,200);
         return `<div class="statline"><div>${label}</div><div class="bar ${cls}"><span style="width:${percent}%;"></span></div><div>${Math.round(val)}/${max}</div></div>`;
-      }).join('')+tempLine;
+      }).join('');
       const idleAvailable=getIdleSlotsAvailable();
       if(dom.statusTitleMeta){
         dom.statusTitleMeta.textContent=`level ${state.level} · xp ${state.xp}/${state.nextLevelXp}`;
       }
       dom.meta.innerHTML=
-        `<div class="meta-group">credits: ${state.credits}  scrap: ${state.scrap}  keys: ${state.keys}</div>`+
+        `<div class="meta-group">${formatSubStats([`credits: ${state.credits}`,`scrap: ${state.scrap}`,`keys: ${state.keys}`])}</div>`+
         `<div class="meta-sep"></div>`+
-        `<div class="meta-group">mercs: ${state.mercs}  idle: ${idleAvailable}</div>`+
+        `<div class="meta-group">${formatSubStats([`mercs: ${state.mercs}`,`idle: ${idleAvailable}`])}</div>`+
         `<div class="meta-sep"></div>`+
-        `<div class="meta-group">abernathy: ${getFactionRelation('gang')}  rmg: ${getFactionRelation('military')}</div>`+
+        `<div class="meta-group">${formatSubStats([`abernathy: ${getFactionRelation('gang')}`,`rmg: ${getFactionRelation('military')}`])}</div>`+
         `<div class="meta-sep"></div>`+
-        `<div class="meta-group">day: ${state.day}  time: ${fmtTime(state.timeMinutes)}</div>`+
+        `<div class="meta-group">${formatSubStats([`day: ${state.day}`,`time: ${fmtTime(state.timeMinutes)}`])}</div>`+
         `<div class="meta-sep"></div>`+
-        `<div class="meta-group">backpack: ${getBackpackUsage()}/${getBackpackLimit()}  stash: ${getStashUsage()}/${state.stashLimit}</div>`;
+        `<div class="meta-group">${formatSubStats([`backpack: ${getBackpackUsage()}/${getBackpackLimit()}`,`stash: ${getStashUsage()}/${state.stashLimit}`])}</div>`;
     }
 
     const rewardSources={
@@ -6221,9 +6244,12 @@ once:true`
       }
       if(exp.quests?.length){
         exp.quests.forEach(quest=>{
+          const minLevel=Number(quest.minLevel || quest.minlevel || 0);
+          if(minLevel && state.level<minLevel) return;
           const btn=document.createElement('button');
           const questFlag=quest.flag || quest.id;
           const completed=quest.once && questFlag && state.flags.has(questFlag);
+          if(completed && quest.hideWhenComplete) return;
           const requiresFlag=quest.requires;
           const blockedByRequirement=requiresFlag && !state.flags.has(requiresFlag);
           const label=quest.title || 'Local contract';
@@ -7493,7 +7519,9 @@ once:true`
         if(!Array.isArray(mission.eventRewards)) mission.eventRewards=[];
         mission.eventRewards.push(...rewards);
       }
-      logMsg(`${success ? '✓' : '✖'} ${event.label}: ${option.label} ${success ? 'succeeded' : 'failed'}.`);
+      const outcomeMessage=`${success ? '✓' : '✖'} ${event.label}: ${option.label} ${success ? 'succeeded' : 'failed'}.`;
+      logMsg(outcomeMessage);
+      pinCodexMessage(outcomeMessage);
       mission.event.active=false;
       mission.event.resolved=true;
       const now=Date.now();
@@ -8899,7 +8927,7 @@ once:true`
         dom.introTitle.textContent='Welcome back, runner';
         dom.introMessage.textContent='Your autosave is ready. Continue from your last loop or start fresh.';
         const continueBtn=document.createElement('button');
-        continueBtn.textContent='Continue autosave';
+        continueBtn.textContent='Continue';
         continueBtn.onclick=()=>{
           const latestState=loadSavedState();
           if(latestState) state=latestState;
@@ -8912,7 +8940,6 @@ once:true`
         restartBtn.textContent='Start fresh';
         restartBtn.classList.add('danger');
         restartBtn.onclick=()=>{
-          localStorage.removeItem(SAVE_KEY);
           state=createDefaultState();
           allowAutosave=true;
           renderAll();
@@ -8923,27 +8950,26 @@ once:true`
         dom.introActions.appendChild(restartBtn);
       }else{
         dom.introTitle.textContent='Fight, loot, survive.';
-        dom.introMessage.textContent='Start a fresh loop or purge storage to reset everything.';
-        const startBtn=document.createElement('button');
-        startBtn.textContent='Start fresh';
-        startBtn.onclick=()=>{
+        dom.introMessage.textContent='Start a fresh loop or continue into the bunker.';
+        const continueBtn=document.createElement('button');
+        continueBtn.textContent='Continue';
+        continueBtn.onclick=()=>{
           allowAutosave=true;
           queueSave({force:true});
           hideIntroModal();
         };
-        const resetBtn=document.createElement('button');
-        resetBtn.textContent='Clear saves';
-        resetBtn.classList.add('danger');
-        resetBtn.onclick=()=>{
-          localStorage.removeItem(SAVE_KEY);
+        const startBtn=document.createElement('button');
+        startBtn.textContent='Start fresh';
+        startBtn.classList.add('danger');
+        startBtn.onclick=()=>{
           state=createDefaultState();
           allowAutosave=true;
           renderAll();
           queueSave({force:true});
           hideIntroModal();
         };
+        dom.introActions.appendChild(continueBtn);
         dom.introActions.appendChild(startBtn);
-        dom.introActions.appendChild(resetBtn);
       }
       dom.introModal.classList.remove('hidden');
     }
