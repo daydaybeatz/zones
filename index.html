@@ -2198,6 +2198,13 @@
         offerState.poolIds=offerState.poolIds.slice(0,pool);
       }
       offerState.ids=(offerState.ids || []).filter(id=>offerState.poolIds.includes(id));
+      if(offerState.ids.length>visible){
+        const overflow=offerState.ids.slice(visible);
+        offerState.ids=offerState.ids.slice(0,visible);
+        const reserveSeed=offerState.reserve || [];
+        const overflowUnique=overflow.filter(id=>!reserveSeed.includes(id));
+        offerState.reserve=[...reserveSeed,...overflowUnique];
+      }
       offerState.reserve=(offerState.reserve || []).filter(id=>offerState.poolIds.includes(id) && !offerState.ids.includes(id));
       if(offerState.ids.length<visible){
         if(!offerState.reserve.length){
