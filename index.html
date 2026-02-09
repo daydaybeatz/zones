@@ -2179,7 +2179,9 @@
       }
       return arr;
     };
+    const normalizeOfferList=(value)=>Array.isArray(value) ? value.filter(Boolean) : [];
     function getMissionOffers(zoneId,missions){
+      if(!Array.isArray(missions)) return [];
       const available=missions.filter(isMissionRelationAllowed);
       const {visible,pool}=getMissionOfferCount(available);
       if(!zoneId){
@@ -2190,6 +2192,9 @@
         state.missionOffers[zoneId]={ids:[],reserve:[],poolIds:[],lastCompleted:null};
       }
       const offerState=state.missionOffers[zoneId];
+      offerState.ids=normalizeOfferList(offerState.ids);
+      offerState.reserve=normalizeOfferList(offerState.reserve);
+      offerState.poolIds=normalizeOfferList(offerState.poolIds);
       const availableIds=available.map(m=>m.id);
       offerState.poolIds=(offerState.poolIds || []).filter(id=>availableIds.includes(id));
       if(offerState.poolIds.length<pool){
@@ -2224,7 +2229,8 @@
       }
       return offerState.ids
         .map(id=>available.find(m=>m.id===id))
-        .filter(Boolean);
+        .filter(Boolean)
+        .slice(0,visible);
     }
     function recordMissionOfferCompletion(zoneId,missionId){
       if(!zoneId || !missionId || !state.missionOffers?.[zoneId]) return;
