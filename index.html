@@ -1478,7 +1478,7 @@
       marketAccess:{active:false,zoneId:null},
       shopDeals:hydrateShopDeals(),
       mercs:0,
-      idleOps:[createIdleSlot()],
+      idleOps:[],
       idleRewards:[],
       flags:new Set(['safehouse-funds-offer']),
       factions:{military:0,gang:0},
@@ -1500,13 +1500,21 @@
       stashScreen:'vault',
       selected:{source:null,item:null}
     });
+    const getIdleSlotLimitFor=(flags,mercs=0)=>{
+      const mercCount=Number(mercs || 0);
+      if(!mercCount) return 0;
+      return mercCount+(flags.has('ganglands-telecom') ? 1 : 0);
+    };
     const hydrateIdleOps=(savedIdleOps,flags,mercs=0)=>{
       const slots=Array.isArray(savedIdleOps)
         ? savedIdleOps.map(slot=>({ ...createIdleSlot(), ...slot }))
         : savedIdleOps && typeof savedIdleOps==='object'
           ? [{ ...createIdleSlot(), ...savedIdleOps }]
-          : [createIdleSlot()];
-      const limit=Math.max(1,1+(flags.has('ganglands-telecom') ? 1 : 0)+Number(mercs || 0));
+          : [];
+      const limit=getIdleSlotLimitFor(flags,mercs);
+      if(!limit){
+        return [];
+      }
       while(slots.length<limit){
         slots.push(createIdleSlot());
       }
@@ -3945,7 +3953,7 @@ once:true`
       }
       renderCodex();
     };
-    const getIdleSlotLimit=()=>Math.max(1,1+(state.flags.has('ganglands-telecom') ? 1 : 0)+Number(state.mercs || 0));
+    const getIdleSlotLimit=()=>getIdleSlotLimitFor(state.flags,state.mercs);
     const getIdleSlotsAvailable=()=>{
       const activeCount=Array.isArray(state.idleOps)
         ? state.idleOps.filter(slot=>slot.active && !slot.completed).length
@@ -3954,9 +3962,13 @@ once:true`
     };
     const syncIdleSlots=()=>{
       if(!Array.isArray(state.idleOps)){
-        state.idleOps=[createIdleSlot()];
+        state.idleOps=[];
       }
       const limit=getIdleSlotLimit();
+      if(!limit){
+        state.idleOps=[];
+        return;
+      }
       while(state.idleOps.length<limit){
         state.idleOps.push(createIdleSlot());
       }
@@ -4726,6 +4738,10 @@ once:true`
         setCodex('Resolve idle rewards before dispatching a new operation.');
         return;
       }
+      if(!Number(state.mercs || 0)){
+        setCodex('Hire mercs at the bar to run idle dispatches.');
+        return;
+      }
       const op=idleOperations.find(entry=>entry.id===opId);
       if(!op) return;
       if(op.unlockFlag && !state.flags.has(op.unlockFlag)){
@@ -4883,7 +4899,7 @@ once:true`
       dom.meta.innerHTML=
         `<div class="meta-group">${formatSubStats([`credits: ${state.credits}`,`scrap: ${state.scrap}`,`keys: ${state.keys}`])}</div>`+
         `<div class="meta-sep"></div>`+
-        `<div class="meta-group">${formatSubStats([`mercs: ${idleCapacity}`,`idle: ${idleAvailable}`])}</div>`+
+        `<div class="meta-group">${formatSubStats([`mercs: ${state.mercs}`,`idle: ${idleAvailable}`])}</div>`+
         `<div class="meta-sep"></div>`+
         `<div class="meta-group">${formatSubStats([`abernathy: ${getFactionRelation('gang')}`,`rmg: ${getFactionRelation('military')}`])}</div>`+
         `<div class="meta-sep"></div>`+
@@ -5672,6 +5688,13 @@ once:true`
       const gearMods=getGearMods();
       const vaultAccess=canAccessVault();
       syncIdleSlots();
+      const hasMercs=Number(state.mercs || 0) > 0;
+      if(!hasMercs){
+        const hireMessage=document.createElement('div');
+        hireMessage.className='muted-box';
+        hireMessage.textContent='Idle dispatches require mercs. Hire mercs at the bar to send crews out.';
+        dom.idleOps.appendChild(hireMessage);
+      }
       const idleRewards=state.idleRewards || [];
       const activeSlots=state.idleOps.filter(slot=>slot.active);
       const completedSlots=state.idleOps.filter(slot=>slot.completed);
@@ -5797,7 +5820,7 @@ once:true`
       }
       const availableIdleOps=idleOperations.filter(op=>!op.unlockFlag || state.flags.has(op.unlockFlag));
       const hasOpenSlot=state.idleOps.some(slot=>!slot.active && !slot.completed);
-      const blockedDispatch=idleRewards.length>0 || !hasOpenSlot;
+      const blockedDispatch=idleRewards.length>0 || !hasOpenSlot || !hasMercs;
       if(!availableIdleOps.length){
         const locked=document.createElement('div');
         locked.className='muted-box';
@@ -5826,6 +5849,8 @@ once:true`
         if(blockedDispatch || !canAfford(op.cost)) btn.disabled=true;
         if(idleRewards.length>0){
           btn.title='Resolve idle rewards before dispatching again.';
+        }else if(!hasMercs){
+          btn.title='Hire mercs at the bar to dispatch idle operations.';
         }else if(!hasOpenSlot){
           btn.title='All idle dispatch slots are in use.';
         }
@@ -6147,7 +6172,7 @@ once:true`
       const hubZone=isHubZone();
       if(hubZone){
         const hubMissionPool=getUnlockedMissions(exp?.missions || []).filter(isHubMission);
-        const hubMissions=getMissionOffers(state.zone.id,hubMissionPool);
+        const hubMissions=getMissionOffers(state.zone.id,hubMissionPool).slice(0,MISSION_OFFER_VISIBLE);
         if(hubMissions.length){
           hubMissions.forEach(raid=>{
             const btn=document.createElement('button');
@@ -6193,7 +6218,7 @@ once:true`
       }
       if(!hubZone){
         const missionPool=(exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES;
-        const missions=getMissionOffers(state.zone.id,missionPool);
+        const missions=getMissionOffers(state.zone.id,missionPool).slice(0,MISSION_OFFER_VISIBLE);
         missions.forEach(raid=>{
           const btn=document.createElement('button');
           const meta=buildMissionMeta({
@@ -6306,7 +6331,7 @@ once:true`
         });
       }
       const hubMissionPool=getUnlockedMissions(exp.missions || []).filter(isHubMission);
-      const hubMissions=getMissionOffers(hubZone.id,hubMissionPool);
+      const hubMissions=getMissionOffers(hubZone.id,hubMissionPool).slice(0,MISSION_OFFER_VISIBLE);
       if(hubMissions.length){
         hubMissions.forEach(raid=>{
           const btn=document.createElement('button');
@@ -8728,8 +8753,12 @@ once:true`
       }
     }
 
-    function addDoor(){
+    function addDoor(exp){
       renderDoors();
+      if(exp && state.zone?.id===exp.meta?.id){
+        renderZone();
+        renderRaidActions();
+      }
     }
 
     function parseOption(str){
