@@ -1692,7 +1692,7 @@
       }
     };
     const savedState=loadSavedState();
-    let state=createDefaultState();
+    let state=savedState || createDefaultState();
     let allowAutosave=!savedState;
     const isHubMission=(raid)=>raid?.hub===true || raid?.hub==='true';
     const isMissionUnlocked=(raid)=>{
@@ -4861,6 +4861,7 @@ once:true`
         const percent=clamp(pct(val,max),0,200);
         return `<div class="statline"><div>${label}</div><div class="bar ${cls}"><span style="width:${percent}%;"></span></div><div>${Math.round(val)}/${max}</div></div>`;
       }).join('');
+      const idleCapacity=getIdleSlotLimit();
       const idleAvailable=getIdleSlotsAvailable();
       if(dom.statusTitleMeta){
         dom.statusTitleMeta.textContent=`level ${state.level} · xp ${state.xp}/${state.nextLevelXp}`;
@@ -4868,7 +4869,7 @@ once:true`
       dom.meta.innerHTML=
         `<div class="meta-group">${formatSubStats([`credits: ${state.credits}`,`scrap: ${state.scrap}`,`keys: ${state.keys}`])}</div>`+
         `<div class="meta-sep"></div>`+
-        `<div class="meta-group">${formatSubStats([`mercs: ${state.mercs}`,`idle: ${idleAvailable}`])}</div>`+
+        `<div class="meta-group">${formatSubStats([`mercs: ${idleCapacity}`,`idle: ${idleAvailable}`])}</div>`+
         `<div class="meta-sep"></div>`+
         `<div class="meta-group">${formatSubStats([`abernathy: ${getFactionRelation('gang')}`,`rmg: ${getFactionRelation('military')}`])}</div>`+
         `<div class="meta-sep"></div>`+
