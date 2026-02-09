@@ -2180,14 +2180,16 @@
       return arr;
     };
     function getMissionOffers(zoneId,missions){
-      if(!zoneId) return missions;
-      if(!state.missionOffers) state.missionOffers={};
-      if(!state.missionOffers[zoneId]){
-        state.missionOffers[zoneId]={ids:[],reserve:[],poolIds:[]};
-      }
-      const offerState=state.missionOffers[zoneId];
       const available=missions.filter(isMissionRelationAllowed);
       const {visible,pool}=getMissionOfferCount(available);
+      if(!zoneId){
+        return shuffleList(available).slice(0,visible);
+      }
+      if(!state.missionOffers) state.missionOffers={};
+      if(!state.missionOffers[zoneId]){
+        state.missionOffers[zoneId]={ids:[],reserve:[],poolIds:[],lastCompleted:null};
+      }
+      const offerState=state.missionOffers[zoneId];
       const availableIds=available.map(m=>m.id);
       offerState.poolIds=(offerState.poolIds || []).filter(id=>availableIds.includes(id));
       if(offerState.poolIds.length<pool){
@@ -2212,7 +2214,12 @@
           offerState.reserve=shuffleList(offerState.poolIds.filter(id=>!offerState.ids.includes(id)));
         }
         while(offerState.ids.length<visible && offerState.reserve.length){
-          offerState.ids.push(offerState.reserve.shift());
+          const nextId=offerState.reserve.shift();
+          if(offerState.lastCompleted && nextId===offerState.lastCompleted && offerState.reserve.length){
+            offerState.reserve.push(nextId);
+            continue;
+          }
+          offerState.ids.push(nextId);
         }
       }
       return offerState.ids
@@ -2226,6 +2233,7 @@
       if(offerState.poolIds?.includes(missionId) && !offerState.reserve?.includes(missionId)){
         offerState.reserve=[...(offerState.reserve || []),missionId];
       }
+      offerState.lastCompleted=missionId;
     }
     const getDoorLootScore=(exp)=>{
       const missionLoot=Array.isArray(exp?.missions) ? exp.missions.map(m=>Number(m.loot || 0)) : [];
