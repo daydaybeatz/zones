@@ -2179,6 +2179,7 @@
       const pool=missions.length>=MISSION_OFFER_POOL_MIN ? Math.max(MISSION_OFFER_POOL_MIN,capped) : capped;
       return {visible:Math.min(MISSION_OFFER_VISIBLE,pool),pool};
     };
+    const limitMissionOffers=(missions=[])=>missions.slice(0,MISSION_OFFER_VISIBLE);
     const shuffleList=(list)=>{
       const arr=[...list];
       for(let i=arr.length-1;i>0;i--){
@@ -6172,7 +6173,7 @@ once:true`
       const hubZone=isHubZone();
       if(hubZone){
         const hubMissionPool=getUnlockedMissions(exp?.missions || []).filter(isHubMission);
-        const hubMissions=getMissionOffers(state.zone.id,hubMissionPool).slice(0,MISSION_OFFER_VISIBLE);
+        const hubMissions=limitMissionOffers(getMissionOffers(state.zone.id,hubMissionPool));
         if(hubMissions.length){
           hubMissions.forEach(raid=>{
             const btn=document.createElement('button');
@@ -6218,7 +6219,7 @@ once:true`
       }
       if(!hubZone){
         const missionPool=(exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES;
-        const missions=getMissionOffers(state.zone.id,missionPool).slice(0,MISSION_OFFER_VISIBLE);
+        const missions=limitMissionOffers(getMissionOffers(state.zone.id,missionPool));
         missions.forEach(raid=>{
           const btn=document.createElement('button');
           const meta=buildMissionMeta({
