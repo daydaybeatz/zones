@@ -6183,9 +6183,10 @@ once:true`
         if(state.mission.active || state.travel.active) barBtn.disabled=true;
         dom.raidActions.appendChild(barBtn);
       }
-      let renderedQuests=0;
+      let renderedOffers=0;
       if(exp && exp.quests && exp.quests.length){
         exp.quests.forEach(quest=>{
+          if(renderedOffers>=MISSION_OFFER_VISIBLE) return;
           const btn=document.createElement('button');
           const questFlag=quest.flag || quest.id;
           const completed=quest.once && questFlag && state.flags.has(questFlag);
@@ -6219,10 +6220,10 @@ once:true`
           }
           if(risk==='high') btn.classList.add('danger');
           dom.raidActions.appendChild(btn);
-          renderedQuests+=1;
+          renderedOffers+=1;
         });
       }
-      const missionSlotsRemaining=Math.max(0,MISSION_OFFER_VISIBLE-renderedQuests);
+      let missionSlotsRemaining=Math.max(0,MISSION_OFFER_VISIBLE-renderedOffers);
       const hubZone=isHubZone();
       if(hubZone){
         const hubMissionPool=getUnlockedMissions(exp?.missions || []).filter(isHubMission);
@@ -6253,6 +6254,7 @@ once:true`
             }
             if(raid.risk==='high') btn.classList.add('danger');
             dom.raidActions.appendChild(btn);
+            renderedOffers+=1;
           });
         }
         if(state.zone.id==='safehouse' && zoneHasShop()){
@@ -6271,6 +6273,7 @@ once:true`
         return;
       }
       if(!hubZone){
+        missionSlotsRemaining=Math.max(0,MISSION_OFFER_VISIBLE-renderedOffers);
         const missionPool=(exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES;
         const missions=getMissionOffers(state.zone.id,missionPool).slice(0,missionSlotsRemaining);
         missions.forEach(raid=>{
@@ -6292,7 +6295,9 @@ once:true`
           if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})) btn.disabled=true;
           if(raid.risk==='high') btn.classList.add('danger');
           dom.raidActions.appendChild(btn);
+          renderedOffers+=1;
         });
+        if(renderedOffers>=MISSION_OFFER_VISIBLE) return;
         const combatBtn=document.createElement('button');
         const combatProfile=getCombatProfile(state.zone.risk);
         const combatMeta=buildMissionMeta({
