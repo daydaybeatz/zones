@@ -2259,7 +2259,15 @@
       offerState.reserve=(offerState.reserve || []).filter(id=>offerState.poolIds.includes(id) && !offerState.ids.includes(id));
       if(offerState.ids.length<visible){
         if(!offerState.reserve.length){
-          offerState.reserve=shuffleList(offerState.poolIds.filter(id=>!offerState.ids.includes(id)));
+          const replacementPool=offerState.poolIds.filter(id=>!offerState.ids.includes(id));
+          const lastCompletedId=offerState.lastCompleted;
+          const prioritized=lastCompletedId
+            ? replacementPool.filter(id=>id!==lastCompletedId)
+            : replacementPool;
+          const fallback=lastCompletedId
+            ? replacementPool.filter(id=>id===lastCompletedId)
+            : [];
+          offerState.reserve=[...shuffleList(prioritized),...shuffleList(fallback)];
         }
         while(offerState.ids.length<visible && offerState.reserve.length){
           const nextId=offerState.reserve.shift();
