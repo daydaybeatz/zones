@@ -2193,8 +2193,9 @@
       if(!Array.isArray(missions)) return [];
       const available=missions.filter(isMissionRelationAllowed);
       const {visible,pool}=getMissionOfferCount(available);
+      const limitVisible=(list)=>list.slice(0,visible);
       if(!zoneId){
-        return shuffleList(available).slice(0,visible);
+        return limitVisible(shuffleList(available));
       }
       if(!state.missionOffers) state.missionOffers={};
       if(!state.missionOffers[zoneId]){
@@ -2236,10 +2237,11 @@
           offerState.ids.push(nextId);
         }
       }
-      return offerState.ids
+      offerState.ids=limitVisible(offerState.ids);
+      return limitVisible(offerState.ids
         .map(id=>available.find(m=>m.id===id))
         .filter(Boolean)
-        .slice(0,visible);
+      );
     }
     function recordMissionOfferCompletion(zoneId,missionId){
       if(!zoneId || !missionId || !state.missionOffers?.[zoneId]) return;
