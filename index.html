@@ -240,6 +240,18 @@
     gap:12px;
     flex-wrap:wrap;
   }
+  .title-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .title-actions button{
+    padding:6px 10px;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
   .pause-toggle{
     padding:6px 12px;
     font-size:12px;
@@ -1178,6 +1190,10 @@
       <div>
         <div class="title-row">
           <div class="title">Zones - fight, loot, survive.</div>
+          <div class="title-actions">
+            <button id="headerSaveBtn" type="button">Save</button>
+            <button id="headerLoadBtn" type="button">Load last save</button>
+          </div>
         </div>
         <div class="tagline">Pick zones, run salvage loops, and sort rewards into gear, stash, or scrap.</div>
       </div>
@@ -1744,6 +1760,24 @@
         saveGame();
       },delay);
     };
+    const loadLastSave=({notify=true}={})=>{
+      const latestState=loadSavedState();
+      if(!latestState){
+        if(notify){
+          logMsg('No save file found to load.');
+          setCodex('No autosave found. Keep pushing and save again.');
+        }
+        return false;
+      }
+      state=latestState;
+      allowAutosave=true;
+      renderAll();
+      if(notify){
+        logMsg('Loaded latest autosave.');
+        setCodex('Last save loaded. Ready to redeploy.');
+      }
+      return true;
+    };
 
     const updateVisualViewportOffset=()=>{
       const shouldApplyVisualViewportOffset=window.visualViewport
@@ -2179,7 +2213,6 @@
       const pool=missions.length>=MISSION_OFFER_POOL_MIN ? Math.max(MISSION_OFFER_POOL_MIN,capped) : capped;
       return {visible:Math.min(MISSION_OFFER_VISIBLE,pool),pool};
     };
-    const limitMissionOffers=(missions=[])=>missions.slice(0,MISSION_OFFER_VISIBLE);
     const shuffleList=(list)=>{
       const arr=[...list];
       for(let i=arr.length-1;i>0;i--){
@@ -3758,6 +3791,8 @@ once:true`
       statusTitleMeta:document.getElementById('statusTitleMeta'),
       meta:document.getElementById('meta'),
       pauseToggle:document.getElementById('pauseToggle'),
+      headerSaveBtn:document.getElementById('headerSaveBtn'),
+      headerLoadBtn:document.getElementById('headerLoadBtn'),
       doors:document.getElementById('doors'),
       doorsHint:document.getElementById('doorsHint'),
       doorsPanel:document.getElementById('doorsPanel'),
@@ -6044,6 +6079,19 @@ once:true`
         renderDoors();
       };
     }
+    if(dom.headerSaveBtn){
+      dom.headerSaveBtn.onclick=()=>{
+        allowAutosave=true;
+        queueSave({force:true});
+        logMsg('Manual save complete.');
+        setCodex('Manual save stamped into local storage.');
+      };
+    }
+    if(dom.headerLoadBtn){
+      dom.headerLoadBtn.onclick=()=>{
+        loadLastSave();
+      };
+    }
 
     function renderPauseToggle(){
       if(!dom.pauseToggle) return;
@@ -6135,6 +6183,7 @@ once:true`
         if(state.mission.active || state.travel.active) barBtn.disabled=true;
         dom.raidActions.appendChild(barBtn);
       }
+      let renderedQuests=0;
       if(exp && exp.quests && exp.quests.length){
         exp.quests.forEach(quest=>{
           const btn=document.createElement('button');
@@ -6170,12 +6219,14 @@ once:true`
           }
           if(risk==='high') btn.classList.add('danger');
           dom.raidActions.appendChild(btn);
+          renderedQuests+=1;
         });
       }
+      const missionSlotsRemaining=Math.max(0,MISSION_OFFER_VISIBLE-renderedQuests);
       const hubZone=isHubZone();
       if(hubZone){
         const hubMissionPool=getUnlockedMissions(exp?.missions || []).filter(isHubMission);
-        const hubMissions=limitMissionOffers(getMissionOffers(state.zone.id,hubMissionPool));
+        const hubMissions=getMissionOffers(state.zone.id,hubMissionPool).slice(0,missionSlotsRemaining);
         if(hubMissions.length){
           hubMissions.forEach(raid=>{
             const btn=document.createElement('button');
@@ -6221,7 +6272,7 @@ once:true`
       }
       if(!hubZone){
         const missionPool=(exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES;
-        const missions=limitMissionOffers(getMissionOffers(state.zone.id,missionPool));
+        const missions=getMissionOffers(state.zone.id,missionPool).slice(0,missionSlotsRemaining);
         missions.forEach(raid=>{
           const btn=document.createElement('button');
           const meta=buildMissionMeta({
@@ -8984,8 +9035,7 @@ once:true`
         const continueBtn=document.createElement('button');
         continueBtn.textContent='Continue';
         continueBtn.onclick=()=>{
-          const latestState=loadSavedState();
-          if(latestState) state=latestState;
+          loadLastSave({notify:false});
           allowAutosave=true;
           hideIntroModal();
           renderAll();
@@ -9009,7 +9059,9 @@ once:true`
         const continueBtn=document.createElement('button');
         continueBtn.textContent='Continue';
         continueBtn.onclick=()=>{
+          loadLastSave({notify:false});
           allowAutosave=true;
+          renderAll();
           queueSave({force:true});
           hideIntroModal();
         };
