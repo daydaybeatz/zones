@@ -1579,8 +1579,26 @@
         sceneId:targetScene
       };
     };
+    const isExpansionRelationAllowed=(exp)=>{
+      const relationMin=Number(exp?.meta?.relationMin || exp?.meta?.relationmin || 0);
+      const relationFaction=exp?.meta?.relationFaction || exp?.meta?.relationfaction || '';
+      if(!relationFaction || !relationMin) return true;
+      return getFactionRelation(relationFaction)>=relationMin;
+    };
+    const isExpansionRespawnAccessible=(exp)=>{
+      if(!exp?.meta?.id) return false;
+      if(!isExpansionRelationAllowed(exp)) return false;
+      const minLevel=Number(exp.meta?.minLevel || exp.meta?.minlevel || 0);
+      if(minLevel && state.level<minLevel) return false;
+      const requiredTelecoms=Number(exp.meta?.requiresTelecoms || exp.meta?.requirestelecoms || 0);
+      if(requiredTelecoms && getConnectedTelecomCount(exp.meta.id)<requiredTelecoms) return false;
+      const unlockCost=Number(exp.meta?.unlockCost || exp.meta?.unlockcost || 0);
+      const unlockFlag=`unlock-${exp.meta.id}`;
+      if(unlockCost && !state.flags.has(unlockFlag)) return false;
+      return true;
+    };
     const getNearestRestZone=(originId=state.zone?.id)=>{
-      const candidates=Object.entries(expansions).filter(([,exp])=>hasRestOption(exp));
+      const candidates=Object.entries(expansions).filter(([,exp])=>hasRestOption(exp) && isExpansionRespawnAccessible(exp));
       if(!candidates.length) return getMainHubZone();
       let best=null;
       let bestDistance=Number.POSITIVE_INFINITY;
@@ -2123,8 +2141,7 @@
     const riskLevels=['low','medium','high','deadly'];
     const riskClassList=['risk-low','risk-medium','risk-high','risk-deadly'];
     const MISSION_OFFER_VISIBLE=5;
-    const MISSION_OFFER_POOL_MIN=5;
-    const MISSION_OFFER_POOL_MAX=10;
+    const MISSION_OFFER_RESERVE=5;
     const lowerRisk=(risk)=>{
       const idx=riskLevels.indexOf(risk);
       if(idx<=0) return riskLevels[0];
@@ -2207,11 +2224,27 @@
       if(Number.isFinite(raid.relationMax) && relation>raid.relationMax) return false;
       return true;
     };
+    const selectMissionPool=(missions,poolSize)=>{
+      if(!Array.isArray(missions) || poolSize<=0) return [];
+      const hardMissions=shuffleList(missions.filter(m=>['high','deadly'].includes(String(m?.risk||'').toLowerCase())));
+      const selected=[];
+      hardMissions.forEach(mission=>{
+        if(selected.length>=poolSize) return;
+        if(selected.includes(mission.id)) return;
+        selected.push(mission.id);
+      });
+      const remaining=shuffleList(missions.filter(m=>!selected.includes(m.id)));
+      remaining.forEach(mission=>{
+        if(selected.length>=poolSize) return;
+        selected.push(mission.id);
+      });
+      return selected.slice(0,poolSize);
+    };
     const getMissionOfferCount=(missions=[])=>{
       if(!missions.length) return {visible:0,pool:0};
-      const capped=Math.min(missions.length,MISSION_OFFER_POOL_MAX);
-      const pool=missions.length>=MISSION_OFFER_POOL_MIN ? Math.max(MISSION_OFFER_POOL_MIN,capped) : capped;
-      return {visible:Math.min(MISSION_OFFER_VISIBLE,pool),pool};
+      const visible=Math.min(MISSION_OFFER_VISIBLE,missions.length);
+      const pool=Math.min(missions.length,visible+MISSION_OFFER_RESERVE);
+      return {visible,pool};
     };
     const shuffleList=(list)=>{
       const arr=[...list];
@@ -2242,8 +2275,9 @@
       offerState.poolIds=(offerState.poolIds || []).filter(id=>availableIds.includes(id));
       if(offerState.poolIds.length<pool){
         const missing=available.filter(m=>!offerState.poolIds.includes(m.id));
-        const picks=shuffleList(missing).slice(0,pool-offerState.poolIds.length);
-        offerState.poolIds.push(...picks.map(pick=>pick.id));
+        const needed=pool-offerState.poolIds.length;
+        const picks=selectMissionPool(missing,needed);
+        offerState.poolIds.push(...picks);
       }
       if(offerState.poolIds.length>pool){
         offerState.poolIds=offerState.poolIds.slice(0,pool);
@@ -4508,17 +4542,17 @@ once:true`
       const usage=getEquipmentSlotUsage();
       const limit=EQUIPMENT_SLOTS[data.slot] || 0;
       if((usage[data.slot]||0) >= limit){
+        const equippedItem=getEquippedItemBySlot(data.slot);
+        if(!equippedItem){
+          return {ok:false,reason:`${slotLabel(data.slot)} slot full.`};
+        }
         if(data.slot==='backpack'){
-          const equippedBackpack=getEquippedItemBySlot('backpack');
-          if(equippedBackpack){
-            const removeFromInventory=source==='inventory';
-            if(canSwapBackpack(equippedBackpack,item,removeFromInventory)){
-              return {ok:true,reason:'',requiresSwap:true,swapItem:equippedBackpack};
-            }
+          const removeFromInventory=source==='inventory';
+          if(!canSwapBackpack(equippedItem,item,removeFromInventory)){
             return {ok:false,reason:'Backpack too full to swap.'};
           }
         }
-        return {ok:false,reason:`${slotLabel(data.slot)} slot full.`};
+        return {ok:true,reason:'',requiresSwap:true,swapItem:equippedItem};
       }
       return {ok:true,reason:'',requiresSwap:false};
     };
@@ -5138,14 +5172,18 @@ once:true`
         return;
       }
       if(check.requiresSwap){
-        const equippedBackpack=check.swapItem || getEquippedItemBySlot('backpack');
-        if(!equippedBackpack){
+        const swappedItem=check.swapItem || getEquippedItemBySlot(data.slot);
+        if(!swappedItem){
           setCodex('No open slots for that item.');
           return;
         }
+        if(!hasCapacityFor(state.inventory,getBackpackLimit(),swappedItem,1)){
+          setCodex('Backpack full. Make room before swapping equipment.');
+          return;
+        }
         if(!removeRewardItem(source,item)) return;
-        removeItem(state.equipped,equippedBackpack);
-        state.inventory.push(equippedBackpack);
+        removeItem(state.equipped,swappedItem);
+        state.inventory.push(swappedItem);
         state.equipped.push(item);
         state.selected={source:'equipped',item};
         setCodex(`${item} equipped from rewards.`);
