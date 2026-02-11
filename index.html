@@ -58,6 +58,7 @@
   ::selection{background:rgba(255,0,51,0.28); color:#fff;}
 
   html, body{height:100%;}
+  html{overflow-y:scroll;}
   body{
     margin:0;
     min-height:100vh;
@@ -620,7 +621,7 @@
     box-shadow: var(--shadow), var(--inner), var(--glow);
     padding-bottom:calc(10px + env(safe-area-inset-bottom));
     transform:translateY(calc(-1 * var(--visual-viewport-offset)));
-    will-change:opacity;
+    will-change:transform;
   }
   .tab-buttons button{
     flex:0 0 auto;
@@ -796,7 +797,7 @@
   }
   .zone-map-svg{
     width:100%;
-    min-height:170px;
+    min-height:250px;
     border:1px solid rgba(57,255,20,0.2);
     border-radius:10px;
     background:
@@ -807,7 +808,8 @@
   .zone-map-zone{cursor:pointer;}
   .zone-map-zone text{
     fill:rgba(184,255,207,0.82);
-    font-size:20px;
+    font-size:16px;
+    pointer-events:none;
   }
   .zone-map-zone.current circle{
     stroke:#dbffe8;
@@ -823,7 +825,8 @@
   }
   .zone-map-distance{
     fill:rgba(184,255,207,0.58);
-    font-size:18px;
+    font-size:13px;
+    pointer-events:none;
   }
   .zone-map-path{
     stroke:rgba(255,255,255,0.8);
@@ -1140,6 +1143,11 @@
   }
   .command-title{font-size:13px;font-weight:900;letter-spacing:1.1px;text-transform:uppercase;}
   .command-hint{font-size:11px;color:rgba(184,255,207,0.68);}
+  #itemDetail,
+  #stashDetail,
+  #shopDetail{
+    min-height:220px;
+  }
 
   .combat-hud{
     border:1px solid rgba(255,0,51,0.22);
@@ -1224,6 +1232,11 @@
     .tab-buttons button[data-tab="field"],
     .tab-buttons #pauseToggle{
       min-width:88px;
+    }
+    #itemDetail,
+    #stashDetail,
+    #shopDetail{
+      min-height:180px;
     }
   }
 
@@ -1911,7 +1924,9 @@
       document.documentElement.style.setProperty('--visual-viewport-offset',`${offset}px`);
     };
 
-    if(window.visualViewport){
+    const watchVisualViewport=window.visualViewport
+      && window.matchMedia('(pointer: coarse)').matches;
+    if(watchVisualViewport){
       window.visualViewport.addEventListener('resize', updateVisualViewportOffset);
       window.visualViewport.addEventListener('scroll', updateVisualViewportOffset);
     }
@@ -8873,20 +8888,21 @@ once:true`
 
       const svgNS='http://www.w3.org/2000/svg';
       const svg=document.createElementNS(svgNS,'svg');
-      svg.setAttribute('viewBox','0 0 1000 220');
+      svg.setAttribute('viewBox','0 0 1000 300');
       svg.setAttribute('class','zone-map-svg');
 
       const unique=[state.zone.id,...doors.map(exp=>exp.meta.id)].filter((id,idx,arr)=>id && arr.indexOf(id)===idx);
       const positions={};
-      const yBands={low:62,medium:102,high:142,deadly:182};
+      const yBands={low:70,medium:126,high:182,deadly:238};
       const maxDistance=Math.max(1,...unique.map(id=>Math.max(1,getZoneDistance(id))));
-      unique.forEach(id=>{
+      unique.forEach((id,index)=>{
         const ratio=Math.max(0.02,getZoneDistance(id)/maxDistance);
         const exp=expansions[id];
         const risk=getZoneRiskForExp(exp || {},exp?.door?.risk || 'low');
         const x=80+ratio*840;
-        const wave=Math.sin(ratio*9)*9;
-        const y=(yBands[risk] || yBands.low)+wave;
+        const wave=Math.sin((ratio*9)+(index*0.7))*14;
+        const stagger=(index%2===0 ? -10 : 10);
+        const y=(yBands[risk] || yBands.low)+wave+stagger;
         positions[id]={x,y};
       });
       positions[state.zone.id]={x:80,y:yBands.low};
@@ -8920,18 +8936,19 @@ once:true`
         dot.setAttribute('stroke','rgba(0,0,0,0.85)');
         dot.setAttribute('stroke-width','1.2');
         const label=document.createElementNS(svgNS,'text');
-        label.setAttribute('x',String(point.x+12));
-        label.setAttribute('y',String(point.y-4));
+        const labelOffset=(unique.indexOf(id)%2===0 ? -12 : 12);
+        label.setAttribute('x',String(point.x+14));
+        label.setAttribute('y',String(point.y+labelOffset));
         label.textContent=exp.meta.name;
         const distance=document.createElementNS(svgNS,'text');
-        distance.setAttribute('x',String(point.x+12));
-        distance.setAttribute('y',String(point.y+14));
+        distance.setAttribute('x',String(point.x+14));
+        distance.setAttribute('y',String(point.y+labelOffset+16));
         distance.setAttribute('class','zone-map-distance');
         distance.textContent=`${info.distance} km`; 
         g.appendChild(dot);
         g.appendChild(label);
         g.appendChild(distance);
-        g.addEventListener('click',()=>{
+        dot.addEventListener('click',()=>{
           state.mapSelectedZoneId=id;
           renderDoors();
         });
