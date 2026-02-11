@@ -9,7 +9,7 @@
     color-scheme: dark;
     --tab-bar-height:52px;
     --tab-buffer:24px;
-    --tab-page-buffer:72px;
+    --tab-page-buffer:20px;
 
     /* CORE TERMINAL PALETTE */
     --bg:#020202;
@@ -62,7 +62,7 @@
   body{
     margin:0;
     min-height:100vh;
-    padding:12px 12px calc(12px + var(--tab-bar-height) + var(--tab-buffer) + env(safe-area-inset-bottom) + var(--visual-viewport-offset));
+    padding:12px 12px calc(12px + env(safe-area-inset-bottom));
     color:var(--ink);
     font-family:var(--mono);
     letter-spacing:0.2px;
@@ -166,7 +166,7 @@
     flex-direction:column;
     gap:12px;
     position:relative;
-    padding-bottom:calc(72px + var(--tab-buffer) + var(--visual-viewport-offset));
+    padding-bottom:24px;
   }
 
   /* HEADER = main terminal bar */
@@ -612,17 +612,13 @@
     overflow-x:auto;
     background:
       linear-gradient(180deg, rgba(10,12,10,0.70), rgba(0,0,0,0.60));
-    position:fixed;
+    position:sticky;
     bottom:0;
-    left:0;
-    right:0;
     min-height:var(--tab-bar-height);
-    z-index:5;
+    z-index:15;
     border-radius:var(--radius) var(--radius) 0 0;
     box-shadow: var(--shadow), var(--inner), var(--glow);
     padding-bottom:calc(10px + env(safe-area-inset-bottom));
-    transform:translateY(calc(-1 * var(--visual-viewport-offset)));
-    will-change:transform;
   }
   .tab-buttons button{
     flex:0 0 auto;
@@ -643,9 +639,7 @@
   .tab-content{display:none;padding:12px 12px calc(12px + var(--tab-page-buffer));}
   .tab-content.active{display:block;}
 
-  .tab-dock{
-    height:var(--tab-buffer);
-  }
+  .tab-dock{height:0;}
 
   .subtabs{
     display:flex;
@@ -1327,12 +1321,6 @@
     <div id="tabDock" class="tab-dock" aria-hidden="true"></div>
 
     <div class="tabs">
-      <div class="tab-buttons">
-        <button data-tab="hub" class="active">Operations</button>
-        <button data-tab="inventory">Inventory</button>
-        <button data-tab="field">Stash</button>
-        <button id="pauseToggle" class="pause-toggle" type="button" aria-pressed="false">Pause</button>
-      </div>
       <div id="tab-hub" class="tab-content active">
         <div class="stack">
           <div class="screen-nav" id="screenNav">
@@ -1453,6 +1441,12 @@
           </div>
           <p class="small">Move rewards into long-term storage, or liquidate overflow for credits.</p>
         </section>
+      </div>
+      <div class="tab-buttons">
+        <button data-tab="hub" class="active">Operations</button>
+        <button data-tab="inventory">Inventory</button>
+        <button data-tab="field">Stash</button>
+        <button id="pauseToggle" class="pause-toggle" type="button" aria-pressed="false">Pause</button>
       </div>
     </div>
     <div class="signal-log" id="codexPanel">
