@@ -785,13 +785,13 @@
     gap:3px;
   }
   .zone-map-title{
-    font-size:12px;
+    font-size:21px;
     text-transform:uppercase;
     letter-spacing:0.9px;
     color:#dcffe9;
   }
   .zone-map-subtitle{
-    font-size:11px;
+    font-size:19px;
     color:rgba(184,255,207,0.74);
   }
   .zone-map-svg{
@@ -807,7 +807,7 @@
   .zone-map-zone{cursor:pointer;}
   .zone-map-zone text{
     fill:rgba(184,255,207,0.82);
-    font-size:11px;
+    font-size:20px;
   }
   .zone-map-zone.current circle{
     stroke:#dbffe8;
@@ -823,7 +823,7 @@
   }
   .zone-map-distance{
     fill:rgba(184,255,207,0.58);
-    font-size:10px;
+    font-size:18px;
   }
   .zone-map-path{
     stroke:rgba(255,255,255,0.8);
@@ -851,11 +851,11 @@
   }
   .zone-map-selected-title{
     text-transform:uppercase;
-    font-size:12px;
+    font-size:21px;
     letter-spacing:0.8px;
   }
   .zone-map-selected-desc{
-    font-size:11px;
+    font-size:19px;
     color:rgba(184,255,207,0.72);
   }
   .zone-map-selected-actions{
@@ -2461,7 +2461,9 @@
       {id:'abandoned_mall',name:'Abandoned Mall',file:'expansions/abandoned_mall.txt'},
       {id:'sunken_refinery',name:'Sunken Refinery',file:'expansions/sunken_refinery.txt'},
       {id:'stormglass_citadel',name:'Stormglass Citadel',file:'expansions/stormglass_citadel.txt'},
-      {id:'rift_complex',name:'Rift Complex',file:'expansions/rift_complex.txt'}
+      {id:'rift_complex',name:'Rift Complex',file:'expansions/rift_complex.txt'},
+      {id:'refurbished_cave_hideaway',name:'Refurbished Cave Hideaway',file:'expansions/refurbished_cave_hideaway.txt'},
+      {id:'abandoned_school_bus_safehouse',name:'Abandoned School Bus Safe House',file:'expansions/abandoned_school_bus_safehouse.txt'}
     ];
     let travelDistanceMap=new Map();
     const initializeTravelDistances=(manifest=EXPANSION_MANIFEST)=>{
@@ -8742,6 +8744,7 @@ once:true`
     function getDoorTravelState(exp){
       const minLevel=Number(exp.meta?.minLevel || exp.meta?.minlevel || 0);
       const unlockCost=Number(exp.meta?.unlockCost || exp.meta?.unlockcost || 0);
+      const unlockCurrency=String(exp.meta?.unlockCurrency || exp.meta?.unlockcurrency || exp.meta?.unlockResource || exp.meta?.unlockresource || 'credits').toLowerCase();
       const requiredTelecoms=Number(exp.meta?.requiresTelecoms || exp.meta?.requirestelecoms || 0);
       const relationMin=Number(exp.meta?.relationMin || exp.meta?.relationmin || 0);
       const relationFaction=exp.meta?.relationFaction || exp.meta?.relationfaction || '';
@@ -8764,10 +8767,10 @@ once:true`
           : telecomLocked
             ? `Requires ${requiredTelecoms} connected telecoms (${telecomCount}/${requiredTelecoms})`
             : (unlockCost && !isUnlocked)
-              ? `Unlock required (${unlockCost} credits)`
+              ? `Unlock required (${unlockCost} ${unlockCurrency})`
               : '';
       return {
-        minLevel,unlockCost,requiredTelecoms,relationMin,relationFaction,unlockFlag,isUnlocked,
+        minLevel,unlockCost,unlockCurrency,requiredTelecoms,relationMin,relationFaction,unlockFlag,isUnlocked,
         telecomCount,telecomLocked,relationValue,relationLocked,levelLocked,zoneRisk,distance,
         travelDurationMs,travelEta,locked,lockReason
       };
@@ -8775,13 +8778,16 @@ once:true`
 
     function unlockZone(exp,stateInfo){
       if(!stateInfo?.unlockCost || stateInfo.isUnlocked) return true;
-      if(state.credits<stateInfo.unlockCost){
-        setCodex(`Need ${stateInfo.unlockCost} credits to unlock ${exp.meta.name}.`);
+      const currency=stateInfo.unlockCurrency || 'credits';
+      const wallet=currency==='scrap' ? Number(state.scrap || 0) : Number(state.credits || 0);
+      if(wallet<stateInfo.unlockCost){
+        setCodex(`Need ${stateInfo.unlockCost} ${currency} to unlock ${exp.meta.name}.`);
         return false;
       }
-      state.credits-=stateInfo.unlockCost;
+      if(currency==='scrap') state.scrap=Math.max(0,Number(state.scrap || 0)-stateInfo.unlockCost);
+      else state.credits=Math.max(0,Number(state.credits || 0)-stateInfo.unlockCost);
       state.flags.add(stateInfo.unlockFlag);
-      logMsg(`${exp.meta.name} unlocked for ${stateInfo.unlockCost} credits.`);
+      logMsg(`${exp.meta.name} unlocked for ${stateInfo.unlockCost} ${currency}.`);
       setCodex(`${exp.meta.name} unlocked. Transit cleared.`);
       return true;
     }
@@ -8872,20 +8878,28 @@ once:true`
 
       const unique=[state.zone.id,...doors.map(exp=>exp.meta.id)].filter((id,idx,arr)=>id && arr.indexOf(id)===idx);
       const positions={};
+      const yBands={low:62,medium:102,high:142,deadly:182};
       const maxDistance=Math.max(1,...unique.map(id=>Math.max(1,getZoneDistance(id))));
       unique.forEach(id=>{
         const ratio=Math.max(0.02,getZoneDistance(id)/maxDistance);
-        positions[id]=80+ratio*840;
+        const exp=expansions[id];
+        const risk=getZoneRiskForExp(exp || {},exp?.door?.risk || 'low');
+        const x=80+ratio*840;
+        const wave=Math.sin(ratio*9)*9;
+        const y=(yBands[risk] || yBands.low)+wave;
+        positions[id]={x,y};
       });
-      positions[state.zone.id]=80;
+      positions[state.zone.id]={x:80,y:yBands.low};
 
       const selectedId=selectedExp.meta.id;
       if(selectedId!==state.zone.id){
         const path=document.createElementNS(svgNS,'line');
-        path.setAttribute('x1',String(positions[state.zone.id] || 80));
-        path.setAttribute('y1','110');
-        path.setAttribute('x2',String(positions[selectedId] || 80));
-        path.setAttribute('y2','110');
+        const currentPos=positions[state.zone.id] || {x:80,y:110};
+        const selectedPos=positions[selectedId] || {x:80,y:110};
+        path.setAttribute('x1',String(currentPos.x));
+        path.setAttribute('y1',String(currentPos.y));
+        path.setAttribute('x2',String(selectedPos.x));
+        path.setAttribute('y2',String(selectedPos.y));
         path.setAttribute('class','zone-map-path');
         svg.appendChild(path);
       }
@@ -8897,20 +8911,21 @@ once:true`
         const isSelected=id===selectedId;
         const g=document.createElementNS(svgNS,'g');
         g.setAttribute('class',`zone-map-zone${isCurrent?' current':''}${isSelected?' selected':''}${info.locked?' locked':''}`);
+        const point=positions[id] || {x:80,y:110};
         const dot=document.createElementNS(svgNS,'circle');
-        dot.setAttribute('cx',String(positions[id] || 80));
-        dot.setAttribute('cy','110');
+        dot.setAttribute('cx',String(point.x));
+        dot.setAttribute('cy',String(point.y));
         dot.setAttribute('r','9');
         dot.setAttribute('fill',getRiskColor(info.zoneRisk));
         dot.setAttribute('stroke','rgba(0,0,0,0.85)');
         dot.setAttribute('stroke-width','1.2');
         const label=document.createElementNS(svgNS,'text');
-        label.setAttribute('x',String((positions[id] || 80)+12));
-        label.setAttribute('y','106');
+        label.setAttribute('x',String(point.x+12));
+        label.setAttribute('y',String(point.y-4));
         label.textContent=exp.meta.name;
         const distance=document.createElementNS(svgNS,'text');
-        distance.setAttribute('x',String((positions[id] || 80)+12));
-        distance.setAttribute('y','122');
+        distance.setAttribute('x',String(point.x+12));
+        distance.setAttribute('y',String(point.y+14));
         distance.setAttribute('class','zone-map-distance');
         distance.textContent=`${info.distance} km`; 
         g.appendChild(dot);
@@ -8939,7 +8954,7 @@ once:true`
       actions.appendChild(travelBtn);
       if(selectedInfo.unlockCost && !selectedInfo.isUnlocked){
         const unlockBtn=document.createElement('button');
-        unlockBtn.textContent=`Unlock (${selectedInfo.unlockCost} credits)`;
+        unlockBtn.textContent=`Unlock (${selectedInfo.unlockCost} ${selectedInfo.unlockCurrency || 'credits'})`;
         unlockBtn.onclick=()=>{
           if(unlockZone(selectedExp,selectedInfo)) renderAll();
         };

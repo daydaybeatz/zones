@@ -54,6 +54,16 @@
       "id": "rift_complex",
       "name": "Rift Complex",
       "file": "expansions/rift_complex.txt"
+    },
+    {
+      "id": "refurbished_cave_hideaway",
+      "name": "Refurbished Cave Hideaway",
+      "file": "expansions/refurbished_cave_hideaway.txt"
+    },
+    {
+      "id": "abandoned_school_bus_safehouse",
+      "name": "Abandoned School Bus Safe House",
+      "file": "expansions/abandoned_school_bus_safehouse.txt"
     }
   ]
 }
