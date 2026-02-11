@@ -769,6 +769,100 @@
     gap:8px;
     margin-top:6px;
   }
+  .zone-map-wrap{
+    border:1px solid rgba(57,255,20,0.28);
+    border-radius:12px;
+    padding:10px;
+    background:linear-gradient(180deg, rgba(10,12,10,0.82), rgba(0,0,0,0.68));
+    box-shadow: inset 0 0 0 1px rgba(57,255,20,0.06);
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .zone-map-header{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+  }
+  .zone-map-title{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.9px;
+    color:#dcffe9;
+  }
+  .zone-map-subtitle{
+    font-size:11px;
+    color:rgba(184,255,207,0.74);
+  }
+  .zone-map-svg{
+    width:100%;
+    min-height:170px;
+    border:1px solid rgba(57,255,20,0.2);
+    border-radius:10px;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(57,255,20,0.08), transparent 45%),
+      radial-gradient(circle at 80% 75%, rgba(0,183,255,0.06), transparent 48%),
+      linear-gradient(180deg, rgba(5,8,5,0.82), rgba(0,0,0,0.72));
+  }
+  .zone-map-zone{cursor:pointer;}
+  .zone-map-zone text{
+    fill:rgba(184,255,207,0.82);
+    font-size:11px;
+  }
+  .zone-map-zone.current circle{
+    stroke:#dbffe8;
+    stroke-width:2;
+  }
+  .zone-map-zone.selected circle{
+    stroke:#ffffff;
+    stroke-width:2;
+    filter:drop-shadow(0 0 6px rgba(255,255,255,0.5));
+  }
+  .zone-map-zone.locked{
+    opacity:0.55;
+  }
+  .zone-map-distance{
+    fill:rgba(184,255,207,0.58);
+    font-size:10px;
+  }
+  .zone-map-path{
+    stroke:rgba(255,255,255,0.8);
+    stroke-width:2;
+    stroke-dasharray:5 5;
+    fill:none;
+    animation: travelDash 1.05s linear infinite;
+  }
+  .zone-map-selected{
+    border:1px solid rgba(57,255,20,0.24);
+    border-radius:10px;
+    padding:9px 10px;
+    background:rgba(0,0,0,0.48);
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .zone-map-selected-meta{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    min-width:170px;
+  }
+  .zone-map-selected-title{
+    text-transform:uppercase;
+    font-size:12px;
+    letter-spacing:0.8px;
+  }
+  .zone-map-selected-desc{
+    font-size:11px;
+    color:rgba(184,255,207,0.72);
+  }
+  .zone-map-selected-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
   .door-panel.is-collapsed{
     display:none;
   }
@@ -1167,6 +1261,9 @@
     50%{transform:translateY(-1px); filter:saturate(1.25);}
     100%{transform:translateY(0); filter:saturate(1.0);}
   }
+  @keyframes travelDash{
+    to{stroke-dashoffset:-20;}
+  }
 </style>
 
 </head>
@@ -1240,6 +1337,7 @@
                 <span class="badge" id="zoneBadge">Low risk</span>
               </div>
               <div id="doorsPanel" class="door-panel">
+                <div id="zoneMap"></div>
                 <div id="doors"></div>
                 <div class="door-pagination" id="doorsPagination"></div>
                 <div class="small" id="doorsHint">Loading expansions…</div>
@@ -1507,6 +1605,7 @@
       lastHpWarningAt:null,
       doorsPage:0,
       doorsCollapsed:true,
+      mapSelectedZoneId:'',
       zone:{...FALLBACK_HUB_ZONE},
       screen:'locations',
       travel:getDefaultTravelState(),
@@ -1667,6 +1766,7 @@
       const doorsPage=Number(merged.doorsPage);
       merged.doorsPage=Number.isFinite(doorsPage) && doorsPage>=0 ? doorsPage : 0;
       merged.doorsCollapsed=Boolean(merged.doorsCollapsed);
+      merged.mapSelectedZoneId=typeof merged.mapSelectedZoneId==='string' ? merged.mapSelectedZoneId : '';
       if(!merged.flags.has('safehouse-funds-offer') && !merged.flags.has('safehouse-funds-complete')){
         merged.flags.add('safehouse-funds-offer');
       }
@@ -2140,6 +2240,7 @@
     const riskRank={low:1,medium:2,high:3,deadly:4};
     const riskLevels=['low','medium','high','deadly'];
     const riskClassList=['risk-low','risk-medium','risk-high','risk-deadly'];
+    const riskColorMap={low:'#39ff14',medium:'#ffb000',high:'#ff6a00',deadly:'#ff0033'};
     const MISSION_OFFER_VISIBLE=5;
     const MISSION_OFFER_RESERVE=5;
     const lowerRisk=(risk)=>{
@@ -2154,6 +2255,7 @@
       const target=riskClassList.includes(`risk-${normalized}`) ? `risk-${normalized}` : 'risk-low';
       el.classList.add(target);
     };
+    const getRiskColor=(risk)=>riskColorMap[String(risk || 'low').toLowerCase()] || riskColorMap.low;
     const getZoneRiskForExp=(exp,baseRisk)=>{
       if(exp?.meta?.id==='abandoned_mall' && state.flags.has('mall-power')){
         return lowerRisk(baseRisk);
@@ -3841,6 +3943,7 @@ once:true`
       doorsPagination:document.getElementById('doorsPagination'),
       doorsToggle:document.getElementById('doorsToggle'),
       doorsCurrent:document.getElementById('doorsCurrent'),
+      zoneMap:document.getElementById('zoneMap'),
       zoneDesc:document.getElementById('zoneDesc'),
       zoneBadge:document.getElementById('zoneBadge'),
       raidActions:document.getElementById('raidActions'),
@@ -6008,6 +6111,7 @@ once:true`
       renderStash();
       renderMissionStatus();
       renderIdleOps();
+      renderShop();
     }
 
     function selectItem(source,item){
@@ -6017,6 +6121,7 @@ once:true`
       renderStash();
       renderMissionStatus();
       renderIdleOps();
+      renderShop();
     }
 
     function isMissionBlockingTravel(){
@@ -8634,154 +8739,216 @@ once:true`
       }).length;
     };
 
-    function createDoorCard(exp){
-      const card=document.createElement('div');
-      const info=document.createElement('div');
-      const actions=document.createElement('div');
-      const travelBtn=document.createElement('button');
+    function getDoorTravelState(exp){
       const minLevel=Number(exp.meta?.minLevel || exp.meta?.minlevel || 0);
       const unlockCost=Number(exp.meta?.unlockCost || exp.meta?.unlockcost || 0);
       const requiredTelecoms=Number(exp.meta?.requiresTelecoms || exp.meta?.requirestelecoms || 0);
       const relationMin=Number(exp.meta?.relationMin || exp.meta?.relationmin || 0);
       const relationFaction=exp.meta?.relationFaction || exp.meta?.relationfaction || '';
       const unlockFlag=`unlock-${exp.meta.id}`;
-      let isUnlocked=!unlockCost || state.flags.has(unlockFlag);
+      const isUnlocked=!unlockCost || state.flags.has(unlockFlag);
       const telecomCount=getConnectedTelecomCount(exp.meta.id);
       const telecomLocked=requiredTelecoms && telecomCount<requiredTelecoms;
       const relationValue=relationFaction ? getFactionRelation(relationFaction) : 0;
       const relationLocked=relationFaction && relationMin && relationValue<relationMin;
+      const levelLocked=minLevel && state.level<minLevel;
       const zoneRisk=getZoneRiskForExp(exp,exp.door?.risk || 'low');
       const distance=getZoneDistance(exp.meta.id);
       const travelDurationMs=getTravelDurationMs(distance);
       const travelEta=formatTravelEta(travelDurationMs);
-
-      card.className='door-card';
-      applyRiskClasses(card,zoneRisk);
-      info.className='door-info';
-      actions.className='door-actions';
-      travelBtn.textContent='Set course';
-      travelBtn.dataset.action='travel';
-
-      const getHintText=()=>{
-        if(minLevel && state.level<minLevel){
-          return `Requires level ${minLevel}`;
-        }
-        if(relationLocked){
-          return `Requires ${getFactionLabel(relationFaction)} relation ${relationMin} (${relationValue}/${relationMin})`;
-        }
-        if(telecomLocked){
-          return `Requires ${requiredTelecoms} connected telecoms (${telecomCount}/${requiredTelecoms})`;
-        }
-        return exp.door?.hint || 'Unknown contact';
+      const locked=(unlockCost && !isUnlocked) || telecomLocked || relationLocked || levelLocked;
+      const lockReason=levelLocked
+        ? `Requires level ${minLevel}`
+        : relationLocked
+          ? `Requires ${getFactionLabel(relationFaction)} relation ${relationMin} (${relationValue}/${relationMin})`
+          : telecomLocked
+            ? `Requires ${requiredTelecoms} connected telecoms (${telecomCount}/${requiredTelecoms})`
+            : (unlockCost && !isUnlocked)
+              ? `Unlock required (${unlockCost} credits)`
+              : '';
+      return {
+        minLevel,unlockCost,requiredTelecoms,relationMin,relationFaction,unlockFlag,isUnlocked,
+        telecomCount,telecomLocked,relationValue,relationLocked,levelLocked,zoneRisk,distance,
+        travelDurationMs,travelEta,locked,lockReason
       };
-      const setDoorLabel=()=>{
-        const distanceMeta=`${distance} km · ETA ${travelEta}`;
-        info.innerHTML=`
-          <div class="door-title">${exp.door?.label || exp.meta.name}</div>
-          <div class="door-meta">${getHintText()} · ${distanceMeta}</div>
-        `;
-      };
+    }
 
-      const refreshLockState=()=>{
-        const levelLocked=minLevel && state.level<minLevel;
-        const locked=(unlockCost && !isUnlocked) || telecomLocked || relationLocked;
-        card.classList.toggle('locked',locked);
-        travelBtn.dataset.locked=(locked || levelLocked) ? 'true' : 'false';
-        travelBtn.disabled=locked || levelLocked;
-        travelBtn.title=locked
-          ? (telecomLocked ? `Requires ${requiredTelecoms} connected telecoms` : (relationLocked ? `Requires ${getFactionLabel(relationFaction)} relation ${relationMin}` : 'Unlock required'))
-          : levelLocked
-            ? `Requires level ${minLevel}`
-            : 'Plot a route to this location';
-      };
+    function unlockZone(exp,stateInfo){
+      if(!stateInfo?.unlockCost || stateInfo.isUnlocked) return true;
+      if(state.credits<stateInfo.unlockCost){
+        setCodex(`Need ${stateInfo.unlockCost} credits to unlock ${exp.meta.name}.`);
+        return false;
+      }
+      state.credits-=stateInfo.unlockCost;
+      state.flags.add(stateInfo.unlockFlag);
+      logMsg(`${exp.meta.name} unlocked for ${stateInfo.unlockCost} credits.`);
+      setCodex(`${exp.meta.name} unlocked. Transit cleared.`);
+      return true;
+    }
 
-      const unlockBtn=document.createElement('button');
-      if(unlockCost && !isUnlocked){
-        unlockBtn.textContent=`Unlock (${unlockCost} credits)`;
-        unlockBtn.dataset.action='unlock';
+    function travelToExpansion(exp,stateInfo){
+      if(isMissionBlockingTravel()){
+        setCodex('Mission in progress. Cannot change locations.');
+        return;
+      }
+      if(isRewardBlockingTravel()){
+        setCodex('Resolve mission rewards before changing locations.');
+        return;
+      }
+      if(state.travel.active){
+        setCodex('Already rerouting. Stand by.');
+        return;
+      }
+      if(stateInfo.levelLocked){
+        setCodex(`Access denied. Reach level ${stateInfo.minLevel} to enter ${exp.meta.name}.`);
+        return;
+      }
+      if(stateInfo.relationLocked){
+        setCodex(`Access denied. Raise ${getFactionLabel(stateInfo.relationFaction)} relation to ${stateInfo.relationMin} to enter ${exp.meta.name}.`);
+        return;
+      }
+      if(stateInfo.telecomLocked){
+        setCodex(`Access denied. Connect ${stateInfo.requiredTelecoms} telecoms to enter ${exp.meta.name}.`);
+        return;
+      }
+      if(stateInfo.unlockCost && !stateInfo.isUnlocked){
+        if(!unlockZone(exp,stateInfo)) return;
+      }
+      const targetScene=exp.door?.target || Object.keys(exp.scenes || {})[0] || null;
+      const target={
+        id:exp.meta.id,
+        name:exp.meta.name,
+        risk:stateInfo.zoneRisk,
+        desc:exp.door?.desc || exp.door?.hint || 'Salvage zone marked by strange chatter.',
+        sceneId:targetScene
+      };
+      const distance=getZoneDistance(target.id);
+      const durationMs=getTravelDurationMs(distance);
+      const combatChance=getTravelCombatChance(distance);
+      state.travel={
+        active:true,
+        endsAt:Date.now()+durationMs,
+        target,
+        distance,
+        durationMs,
+        interruptAt:Date.now()+Math.round(durationMs*0.45),
+        paused:false,
+        remainingMs:null,
+        combatChance,
+        origin:{...state.zone}
+      };
+      state.doorsCollapsed=true;
+      logMsg(`Routing to ${target.name}… ${distance} km out, ETA ${formatTravelEta(durationMs)}.`);
+      if(exp.door?.note) setCodex(exp.door.note);
+      setActiveTab('hub');
+      setScreen('mission');
+      renderAll();
+    }
+
+    function renderZoneMap(doors){
+      if(!dom.zoneMap) return;
+      dom.zoneMap.innerHTML='';
+      if(!doors.length) return;
+      if(!state.mapSelectedZoneId || !doors.find(exp=>exp.meta?.id===state.mapSelectedZoneId)){
+        state.mapSelectedZoneId=doors[0].meta.id;
+      }
+      const selectedExp=doors.find(exp=>exp.meta?.id===state.mapSelectedZoneId) || doors[0];
+      const selectedInfo=getDoorTravelState(selectedExp);
+      const currentExp=expansions[state.zone.id];
+      const currentName=currentExp?.meta?.name || state.zone.name;
+      const currentDesc=currentExp?.door?.hint || currentExp?.meta?.summary || state.zone.desc;
+
+      const wrap=document.createElement('div');
+      wrap.className='zone-map-wrap';
+      const header=document.createElement('div');
+      header.className='zone-map-header';
+      header.innerHTML=`<div class="zone-map-title">Current location: ${currentName}</div><div class="zone-map-subtitle">${currentDesc}</div>`;
+      wrap.appendChild(header);
+
+      const svgNS='http://www.w3.org/2000/svg';
+      const svg=document.createElementNS(svgNS,'svg');
+      svg.setAttribute('viewBox','0 0 1000 220');
+      svg.setAttribute('class','zone-map-svg');
+
+      const unique=[state.zone.id,...doors.map(exp=>exp.meta.id)].filter((id,idx,arr)=>id && arr.indexOf(id)===idx);
+      const positions={};
+      const maxDistance=Math.max(1,...unique.map(id=>Math.max(1,getZoneDistance(id))));
+      unique.forEach(id=>{
+        const ratio=Math.max(0.02,getZoneDistance(id)/maxDistance);
+        positions[id]=80+ratio*840;
+      });
+      positions[state.zone.id]=80;
+
+      const selectedId=selectedExp.meta.id;
+      if(selectedId!==state.zone.id){
+        const path=document.createElementNS(svgNS,'line');
+        path.setAttribute('x1',String(positions[state.zone.id] || 80));
+        path.setAttribute('y1','110');
+        path.setAttribute('x2',String(positions[selectedId] || 80));
+        path.setAttribute('y2','110');
+        path.setAttribute('class','zone-map-path');
+        svg.appendChild(path);
+      }
+
+      doors.forEach(exp=>{
+        const info=getDoorTravelState(exp);
+        const id=exp.meta.id;
+        const isCurrent=id===state.zone.id;
+        const isSelected=id===selectedId;
+        const g=document.createElementNS(svgNS,'g');
+        g.setAttribute('class',`zone-map-zone${isCurrent?' current':''}${isSelected?' selected':''}${info.locked?' locked':''}`);
+        const dot=document.createElementNS(svgNS,'circle');
+        dot.setAttribute('cx',String(positions[id] || 80));
+        dot.setAttribute('cy','110');
+        dot.setAttribute('r','9');
+        dot.setAttribute('fill',getRiskColor(info.zoneRisk));
+        dot.setAttribute('stroke','rgba(0,0,0,0.85)');
+        dot.setAttribute('stroke-width','1.2');
+        const label=document.createElementNS(svgNS,'text');
+        label.setAttribute('x',String((positions[id] || 80)+12));
+        label.setAttribute('y','106');
+        label.textContent=exp.meta.name;
+        const distance=document.createElementNS(svgNS,'text');
+        distance.setAttribute('x',String((positions[id] || 80)+12));
+        distance.setAttribute('y','122');
+        distance.setAttribute('class','zone-map-distance');
+        distance.textContent=`${info.distance} km`; 
+        g.appendChild(dot);
+        g.appendChild(label);
+        g.appendChild(distance);
+        g.addEventListener('click',()=>{
+          state.mapSelectedZoneId=id;
+          renderDoors();
+        });
+        svg.appendChild(g);
+      });
+      wrap.appendChild(svg);
+
+      const selectedBox=document.createElement('div');
+      selectedBox.className='zone-map-selected';
+      const detail=document.createElement('div');
+      detail.className='zone-map-selected-meta';
+      const hint=selectedInfo.lockReason || selectedExp.door?.hint || selectedExp.meta?.summary || 'Route available.';
+      detail.innerHTML=`<div class="zone-map-selected-title">${selectedExp.meta.name}</div><div class="zone-map-selected-desc">${hint} · ${selectedInfo.distance} km · ETA ${selectedInfo.travelEta}</div>`;
+      const actions=document.createElement('div');
+      actions.className='zone-map-selected-actions';
+      const travelBtn=document.createElement('button');
+      travelBtn.textContent=selectedExp.meta.id===state.zone.id ? 'Current location' : 'Travel';
+      travelBtn.disabled=selectedExp.meta.id===state.zone.id;
+      travelBtn.onclick=()=>travelToExpansion(selectedExp,selectedInfo);
+      actions.appendChild(travelBtn);
+      if(selectedInfo.unlockCost && !selectedInfo.isUnlocked){
+        const unlockBtn=document.createElement('button');
+        unlockBtn.textContent=`Unlock (${selectedInfo.unlockCost} credits)`;
         unlockBtn.onclick=()=>{
-          if(state.credits<unlockCost){
-            setCodex(`Need ${unlockCost} credits to unlock ${exp.meta.name}.`);
-            return;
-          }
-          state.credits-=unlockCost;
-          state.flags.add(unlockFlag);
-          isUnlocked=true;
-          logMsg(`${exp.meta.name} unlocked for ${unlockCost} credits.`);
-          setCodex(`${exp.meta.name} unlocked. Transit cleared.`);
-          if(unlockBtn.parentElement) unlockBtn.parentElement.removeChild(unlockBtn);
-          refreshLockState();
-          renderAll();
+          if(unlockZone(selectedExp,selectedInfo)) renderAll();
         };
         actions.appendChild(unlockBtn);
       }
-
-      travelBtn.onclick=()=>{
-        if(isMissionBlockingTravel()){
-          setCodex('Mission in progress. Cannot change locations.');
-          return;
-        }
-        if(isRewardBlockingTravel()){
-          setCodex('Resolve mission rewards before changing locations.');
-          return;
-        }
-        if(state.travel.active){
-          setCodex('Already rerouting. Stand by.');
-          return;
-        }
-        if(minLevel && state.level<minLevel){
-          setCodex(`Access denied. Reach level ${minLevel} to enter ${exp.meta.name}.`);
-          return;
-        }
-        if(relationLocked){
-          setCodex(`Access denied. Raise ${getFactionLabel(relationFaction)} relation to ${relationMin} to enter ${exp.meta.name}.`);
-          return;
-        }
-        if(telecomLocked){
-          setCodex(`Access denied. Connect ${requiredTelecoms} telecoms to enter ${exp.meta.name}.`);
-          return;
-        }
-        if(unlockCost && !isUnlocked){
-          setCodex(`Unlock ${exp.meta.name} to travel.`);
-          return;
-        }
-        const targetScene=exp.door?.target || Object.keys(exp.scenes || {})[0] || null;
-        const target={
-          id:exp.meta.id,
-          name:exp.meta.name,
-          risk:zoneRisk,
-          desc:exp.door?.desc || exp.door?.hint || 'Salvage zone marked by strange chatter.',
-          sceneId:targetScene
-        };
-        const distance=getZoneDistance(target.id);
-        const durationMs=getTravelDurationMs(distance);
-        const combatChance=getTravelCombatChance(distance);
-        state.travel={
-          active:true,
-          endsAt:Date.now()+durationMs,
-          target,
-          distance,
-          durationMs,
-          interruptAt:Date.now()+Math.round(durationMs*0.45),
-          paused:false,
-          remainingMs:null,
-          combatChance,
-          origin:{...state.zone}
-        };
-        state.doorsCollapsed=true;
-        logMsg(`Routing to ${target.name}… ${distance} km out, ETA ${formatTravelEta(durationMs)}.`);
-        if(exp.door?.note) setCodex(exp.door.note);
-        setActiveTab('hub');
-        setScreen('mission');
-        renderAll();
-      };
-
-      setDoorLabel();
-      refreshLockState();
-      actions.appendChild(travelBtn);
-      card.appendChild(info);
-      card.appendChild(actions);
-      return card;
+      selectedBox.appendChild(detail);
+      selectedBox.appendChild(actions);
+      wrap.appendChild(selectedBox);
+      dom.zoneMap.appendChild(wrap);
     }
 
     function renderDoorCurrent(){
@@ -8809,40 +8976,10 @@ once:true`
     }
 
     function renderDoors(){
-      if(!dom.doors) return;
-      const list=getSortedDoors().filter(exp=>exp?.meta?.id!==state.zone.id);
-      const totalPages=Math.max(1,Math.ceil(list.length/DOORS_PAGE_SIZE));
-      state.doorsPage=clamp(state.doorsPage,0,totalPages-1);
-      const start=state.doorsPage*DOORS_PAGE_SIZE;
-      const pageItems=list.slice(start,start+DOORS_PAGE_SIZE);
-      dom.doors.innerHTML='';
-      pageItems.forEach(exp=>dom.doors.appendChild(createDoorCard(exp)));
-
-      if(dom.doorsPagination){
-        dom.doorsPagination.innerHTML='';
-        if(list.length>0 && totalPages>1){
-          const prev=document.createElement('button');
-          prev.textContent='Prev';
-          prev.disabled=state.doorsPage===0;
-          prev.onclick=()=>{
-            state.doorsPage=clamp(state.doorsPage-1,0,totalPages-1);
-            renderDoors();
-          };
-          const next=document.createElement('button');
-          next.textContent='Next';
-          next.disabled=state.doorsPage>=totalPages-1;
-          next.onclick=()=>{
-            state.doorsPage=clamp(state.doorsPage+1,0,totalPages-1);
-            renderDoors();
-          };
-          const label=document.createElement('span');
-          label.textContent=`Page ${state.doorsPage+1} / ${totalPages}`;
-          dom.doorsPagination.appendChild(prev);
-          dom.doorsPagination.appendChild(label);
-          dom.doorsPagination.appendChild(next);
-        }
-      }
-
+      const list=getSortedDoors();
+      if(dom.doors) dom.doors.innerHTML='';
+      if(dom.doorsPagination) dom.doorsPagination.innerHTML='';
+      renderZoneMap(list);
       if(dom.doorsHint){
         if(expansionsLoaded<expansionsExpected){
           dom.doorsHint.textContent='Loading expansions…';
