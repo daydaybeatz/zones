@@ -1,0 +1,21 @@
+@expansion
+id:refurbished_cave_hideaway
+name:Refurbished Cave Hideaway
+summary:A rest-friendly cave checkpoint with reinforced bunks and a filtered drip line, positioned closer to the original Safe House while still shortening runs to the farther zones.
+unlockCost:15
+unlockResource:scrap
+shop:false
+
+@door
+label:Cave Blast Door
+hint:rest checkpoint, closer to deep zones
+risk:low
+note:You squeeze through the reinforced cave entrance and catch your breath at a reliable checkpoint.
+target:cave-bunks
+
+@scene cave-bunks
+title:Cave Bunks
+desc:Canvas cots, scrap-braced walls, and a condensation collector make this hideaway a practical rest stop.
+tags:Safe / Checkpoint
+option:Rest near the ember drums => cave-bunks | risk:low | time:6 | reward:rest | success:hp+10,energy+12,log:The cave warmth settles your pulse before the next push. | fail:energy-2,log:Dripping water keeps sleep light.
+option:Patch support braces => cave-bunks | risk:low | time:5 | reward:stability | success:credits+4,scrap+2,log:The braces hold and you salvage a little scrap from old framing. | fail:hp-2,log:A loose beam clips your shoulder.
