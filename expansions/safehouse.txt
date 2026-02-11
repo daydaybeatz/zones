@@ -356,3 +356,78 @@ event:Dispatch broker demands proof you can make command decisions | chance:1 | 
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 10,item:field compass mk10,credits+5,log:The broker certifies node 10 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+
+@mission
+id:safehouse-faction-sweep-1
+title:RMG Liaison Sweep 1
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+risk:low
+time:6
+energy:7
+loot:2
+reward:+1 RMG relation
+faction:military
+relationSuccess:1
+relationFail:0
+success:credits+7,log:Your report lands cleanly and RMG trust ticks up.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+
+@mission
+id:safehouse-faction-sweep-2
+title:AM Liaison Sweep 2
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+risk:medium
+time:7
+energy:8
+loot:2
+reward:+1 AM relation
+faction:gang
+relationSuccess:1
+relationFail:0
+success:credits+8,log:Your report lands cleanly and AM trust ticks up.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+
+@mission
+id:safehouse-faction-sweep-3
+title:RMG Liaison Sweep 3
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+risk:medium
+time:8
+energy:9
+loot:3
+reward:+1 RMG relation
+faction:military
+relationSuccess:1
+relationFail:0
+success:credits+9,log:Your report lands cleanly and RMG trust ticks up.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+
+@mission
+id:safehouse-faction-sweep-4
+title:AM Liaison Sweep 4
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+risk:high
+time:9
+energy:10
+loot:3
+reward:+1 AM relation
+faction:gang
+relationSuccess:1
+relationFail:0
+success:credits+10,log:Your report lands cleanly and AM trust ticks up.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+
+@mission
+id:safehouse-faction-sweep-5
+title:RMG Liaison Sweep 5
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+risk:high
+time:10
+energy:11
+loot:4
+reward:+1 RMG relation
+faction:military
+relationSuccess:1
+relationFail:0
+success:credits+11,log:Your report lands cleanly and RMG trust ticks up.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
