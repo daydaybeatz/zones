@@ -1303,6 +1303,7 @@
           <div class="title-actions">
             <button id="headerSaveBtn" type="button">Save</button>
             <button id="headerLoadBtn" type="button">Load last save</button>
+            <button id="headerCheatBtn" type="button">Enter cheat</button>
           </div>
         </div>
         <div class="tagline">Pick zones, run salvage loops, and sort rewards into gear, stash, or scrap.</div>
@@ -1554,6 +1555,9 @@
       virus:{id:'virus',label:'Virus outbreak',flag:'pandemic-virus',missionId:'safehouse-virus'},
       food:{id:'food',label:'Food shortage',flag:'pandemic-food',missionId:'safehouse-food'}
     };
+    const CHEAT_MISSION_FLAGS=['mall-power','facility-telecom','medical-telecom','ganglands-telecom'];
+    const CHEAT_SAVE_SPEC='Z + [LLL][CCC][MMM][GGG][SS][PPP][KK][R][XXX] + checksum';
+    const CHEAT_DIGIT_LENGTH=23;
     const rollRange=({min,max})=>Math.floor(Math.random()*(max-min+1))+min;
     const createPandemicState=(day=1)=>({
       active:false,
@@ -3954,6 +3958,7 @@ once:true`
       pauseToggle:document.getElementById('pauseToggle'),
       headerSaveBtn:document.getElementById('headerSaveBtn'),
       headerLoadBtn:document.getElementById('headerLoadBtn'),
+      headerCheatBtn:document.getElementById('headerCheatBtn'),
       doors:document.getElementById('doors'),
       doorsHint:document.getElementById('doorsHint'),
       doorsPanel:document.getElementById('doorsPanel'),
@@ -6260,6 +6265,106 @@ once:true`
         loadLastSave();
       };
     }
+    if(dom.headerCheatBtn){
+      dom.headerCheatBtn.onclick=()=>{
+        openCheatPrompt();
+      };
+    }
+
+    const buildCheatChecksum=(digits)=>{
+      const sum=String(digits || '').split('').reduce((acc,ch,idx)=>acc+(Number(ch)*(idx+3)),0);
+      return (sum%36).toString(36).toUpperCase();
+    };
+
+    const parseCheatCode=(raw)=>{
+      if(typeof raw!=='string') return {ok:false,error:'Cheat code entry cancelled.'};
+      const compact=raw.toUpperCase().replace(/[^A-Z0-9]/g,'');
+      if(!compact) return {ok:false,error:'Cheat code entry cancelled.'};
+      const body=compact.startsWith('Z') ? compact.slice(1) : compact;
+      if(body.length<2) return {ok:false,error:`Invalid cheat format. Use ${CHEAT_SAVE_SPEC}.`};
+      const checksum=body.slice(-1);
+      const digits=body.slice(0,-1);
+      if(!/^\d+$/.test(digits) || digits.length!==CHEAT_DIGIT_LENGTH){
+        return {ok:false,error:`Cheat payload must contain ${CHEAT_DIGIT_LENGTH} digits. Format: ${CHEAT_SAVE_SPEC}.`};
+      }
+      if(buildCheatChecksum(digits)!==checksum){
+        return {ok:false,error:'Checksum mismatch. Recheck the code and try again.'};
+      }
+      const safeSlice=(start,end)=>Number(digits.slice(start,end));
+      return {
+        ok:true,
+        values:{
+          level:clamp(safeSlice(0,3),1,999),
+          credits:clamp(safeSlice(3,6),0,999),
+          military:clamp(safeSlice(6,9),0,200)-100,
+          gang:clamp(safeSlice(9,12),0,200)-100,
+          specialCompletions:clamp(safeSlice(12,14),0,99),
+          scrap:clamp(safeSlice(14,17),0,999),
+          keys:clamp(safeSlice(17,19),0,99),
+          mercs:clamp(safeSlice(19,20),0,9),
+          xpRaw:clamp(safeSlice(20,23),0,999)
+        }
+      };
+    };
+
+    const applyCheatState=(values)=>{
+      const targetLevel=clamp(Number(values.level)||1,1,999);
+      state.level=1;
+      state.xp=0;
+      state.nextLevelXp=xpToNextLevel(1);
+      state.maxHp=100;
+      state.maxEnergy=100;
+      while(state.level<targetLevel){
+        state.level+=1;
+        state.maxHp+=6;
+        state.maxEnergy+=4;
+        state.nextLevelXp=xpToNextLevel(state.level);
+      }
+      state.hp=clamp(state.hp,1,state.maxHp);
+      state.energy=clamp(state.energy,0,state.maxEnergy);
+      state.credits=clamp(Number(values.credits)||0,0,999);
+      state.scrap=clamp(Number(values.scrap)||0,0,999);
+      state.keys=clamp(Number(values.keys)||0,0,99);
+      state.mercs=clamp(Number(values.mercs)||0,0,9);
+      state.factions.military=clamp(Number(values.military)||0,-100,100);
+      state.factions.gang=clamp(Number(values.gang)||0,-100,100);
+      const specials=clamp(Number(values.specialCompletions)||0,0,99);
+      if(specials>0){
+        state.flags.add('safehouse-funds-complete');
+        state.flags.delete('safehouse-funds-offer');
+      }
+      CHEAT_MISSION_FLAGS.forEach((flag,idx)=>{
+        if(specials>idx) state.flags.add(flag);
+      });
+      const relBoost=Math.floor(specials/10);
+      state.factions.military=clamp(state.factions.military+relBoost,-100,100);
+      state.factions.gang=clamp(state.factions.gang+relBoost,-100,100);
+      syncIdleSlots();
+      state.xp=clamp(Number(values.xpRaw)||0,0,Math.max(0,state.nextLevelXp-1));
+      if(state.travel.active || state.mission.active){
+        state.travel=getDefaultTravelState();
+        state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null,travelCombat:false};
+      }
+      queueSave({force:true});
+      logMsg(`Cheat accepted: L${state.level} | C${state.credits} | M${state.factions.military} | G${state.factions.gang} | S${specials}.`);
+      setCodex('Cheat state loaded. Progress variables synchronized.');
+      renderAll();
+    };
+
+    const openCheatPrompt=()=>{
+      const entry=window.prompt(
+        `Enter cheat code:\n${CHEAT_SAVE_SPEC}\nExample blocks: level 001-999, credits 000-999, faction 000-200.`
+      );
+      const parsed=parseCheatCode(entry);
+      if(!parsed.ok){
+        if(entry!==null){
+          logMsg(`Cheat rejected: ${parsed.error}`);
+          setCodex(parsed.error);
+        }
+        return;
+      }
+      applyCheatState(parsed.values);
+    };
 
     function renderPauseToggle(){
       if(!dom.pauseToggle) return;
