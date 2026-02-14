@@ -417,6 +417,16 @@
     text-transform:lowercase;
     letter-spacing:0.4px;
   }
+  .status-collapse-toggle{
+    padding:4px 9px;
+    min-height:unset;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+  .status-board-content.is-collapsed{
+    display:none;
+  }
 
   /* META LINES */
   .meta{
@@ -786,13 +796,15 @@
     gap:3px;
   }
   .zone-map-title{
-    font-size:21px;
+    font-size:18px;
+    font-weight:500;
     text-transform:uppercase;
     letter-spacing:0.9px;
     color:#dcffe9;
   }
   .zone-map-subtitle{
-    font-size:19px;
+    font-size:16px;
+    font-weight:400;
     color:rgba(184,255,207,0.74);
   }
   .zone-map-svg{
@@ -808,7 +820,8 @@
   .zone-map-zone{cursor:pointer;}
   .zone-map-zone text{
     fill:rgba(184,255,207,0.82);
-    font-size:16px;
+    font-size:17px;
+    font-weight:500;
     pointer-events:none;
   }
   .zone-map-zone.current circle{
@@ -854,13 +867,25 @@
   }
   .zone-map-selected-title{
     text-transform:uppercase;
-    font-size:21px;
+    font-size:18px;
+    font-weight:500;
     letter-spacing:0.8px;
   }
   .zone-map-selected-desc{
-    font-size:19px;
+    font-size:16px;
+    font-weight:400;
     color:rgba(184,255,207,0.72);
   }
+  .mission-reward-summary{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    width:100%;
+  }
+  .mission-reward-line{font-size:13px;}
+  .mission-reward-line.positive{color:#7bff8b;}
+  .mission-reward-line.negative{color:#ff758a;}
+  .mission-reward-line.neutral{color:#8fdcff;}
   .zone-map-selected-actions{
     display:flex;
     gap:8px;
@@ -956,8 +981,15 @@
   }
   .signal-log__controls{
     display:flex;
-    justify-content:flex-end;
+    justify-content:space-between;
+    align-items:center;
     padding:6px 6px 0;
+  }
+  .signal-log__health{
+    font-size:12px;
+    color:#dbffe8;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
   }
   .signal-log__controls button{
     padding:6px 10px;
@@ -1316,10 +1348,15 @@
         <div>
           <div class="status-title">
             <h3>status board</h3>
-            <div class="status-title-meta" id="statusTitleMeta"></div>
+            <div class="inline" style="gap:8px;align-items:center;">
+              <div class="status-title-meta" id="statusTitleMeta"></div>
+              <button id="statusBoardToggle" class="btn-secondary status-collapse-toggle" type="button" aria-expanded="false">Expand</button>
+            </div>
           </div>
-          <div id="stats"></div>
-          <div class="meta" id="meta"></div>
+          <div id="statusBoardContent" class="status-board-content is-collapsed">
+            <div id="stats"></div>
+            <div class="meta" id="meta"></div>
+          </div>
         </div>
         <div class="rows"></div>
       </div>
@@ -1458,6 +1495,7 @@
     </div>
     <div class="signal-log" id="codexPanel">
       <div class="signal-log__controls">
+        <div class="signal-log__health" id="codexHealth">HP 92/100</div>
         <button class="btn-secondary" id="codexToggle" type="button">Show last 20</button>
       </div>
       <div class="signal-log__location" id="codexLocation">Current location: Safe House (low risk)</div>
@@ -1616,6 +1654,7 @@
       missionOffers:{},
       elderAdviceIndex:0,
       paused:false,
+      statusBoardExpanded:false,
       pausedAt:null,
       lastHungerDamageAt:null,
       lastThirstDamageAt:null,
@@ -1626,7 +1665,8 @@
       zone:{...FALLBACK_HUB_ZONE},
       screen:'locations',
       travel:getDefaultTravelState(),
-      mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null,travelCombat:false},
+      mission:{active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],
+        nonItemRewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null,travelCombat:false},
       pandemic:createPandemicState(),
       inventoryScreen:'backpack',
       stashScreen:'vault',
@@ -2347,12 +2387,18 @@
     };
     const selectMissionPool=(missions,poolSize)=>{
       if(!Array.isArray(missions) || poolSize<=0) return [];
-      const hardMissions=shuffleList(missions.filter(m=>['high','deadly'].includes(String(m?.risk||'').toLowerCase())));
       const selected=[];
-      hardMissions.forEach(mission=>{
-        if(selected.length>=poolSize) return;
-        if(selected.includes(mission.id)) return;
-        selected.push(mission.id);
+      const riskBuckets={
+        low:shuffleList(missions.filter(m=>String(m?.risk||'').toLowerCase()==='low')),
+        medium:shuffleList(missions.filter(m=>String(m?.risk||'').toLowerCase()==='medium')),
+        high:shuffleList(missions.filter(m=>String(m?.risk||'').toLowerCase()==='high')),
+        deadly:shuffleList(missions.filter(m=>String(m?.risk||'').toLowerCase()==='deadly'))
+      };
+      const seedOrder=['low','medium','high','deadly'];
+      seedOrder.forEach(risk=>{
+        const pick=riskBuckets[risk].shift();
+        if(!pick || selected.length>=poolSize || selected.includes(pick.id)) return;
+        selected.push(pick.id);
       });
       const remaining=shuffleList(missions.filter(m=>!selected.includes(m.id)));
       remaining.forEach(mission=>{
@@ -3953,6 +3999,8 @@ once:true`
       barMessage:document.getElementById('barMessage'),
       barActions:document.getElementById('barActions'),
       stats:document.getElementById('stats'),
+      statusBoardContent:document.getElementById('statusBoardContent'),
+      statusBoardToggle:document.getElementById('statusBoardToggle'),
       statusTitleMeta:document.getElementById('statusTitleMeta'),
       meta:document.getElementById('meta'),
       pauseToggle:document.getElementById('pauseToggle'),
@@ -3975,6 +4023,7 @@ once:true`
       backpackCount:document.getElementById('backpackCount'),
       loadoutCount:document.getElementById('loadoutCount'),
       codex:document.getElementById('codex'),
+      codexHealth:document.getElementById('codexHealth'),
       codexLocation:document.getElementById('codexLocation'),
       codexPinned:document.getElementById('codexPinned'),
       idleOps:document.getElementById('idleOps'),
@@ -4106,6 +4155,9 @@ once:true`
       const zoneName=state.zone?.name || 'Unknown';
       const zoneRisk=state.zone?.risk || 'low';
       dom.codexLocation.textContent=`Current location: ${zoneName} (${zoneRisk} risk)`;
+      if(dom.codexHealth){
+        dom.codexHealth.textContent=`HP ${Math.round(state.hp)}/${state.maxHp}`;
+      }
     };
     function renderCodex(){
       if(!dom.codex) return;
@@ -4504,6 +4556,29 @@ once:true`
         }
         return token;
       });
+    };
+    const parseNonItemRewardLines=(effect)=>{
+      if(!effect) return [];
+      const lines=[];
+      effect.split(',').map(token=>token.trim()).filter(Boolean).forEach(token=>{
+        const lower=token.toLowerCase();
+        if(lower.startsWith('item:') || lower.startsWith('log:') || lower.startsWith('note:') || lower.startsWith('flag:')) return;
+        if(lower==='temp=normal'){
+          lines.push({tone:'positive',text:'+ Body temperature normalized'});
+          return;
+        }
+        const match=token.match(/([a-zA-Z]+)([+-]\d+)/);
+        if(!match) return;
+        const rawStat=match[1];
+        const value=Number(match[2]);
+        if(!Number.isFinite(value) || rawStat==='item') return;
+        const tone=value===0 ? 'neutral' : (value>0 ? 'positive' : 'negative');
+        const sign=value>0 ? '+' : '';
+        const labelMap={hp:'Health',energy:'Energy',credits:'Credits',xp:'XP',scrap:'Scrap',hunger:'Hunger',thirst:'Hydration',temp:'Body temp',rads:'Radiation',merc:'Merc'};
+        const label=labelMap[rawStat] || `${rawStat[0].toUpperCase()}${rawStat.slice(1)}`;
+        lines.push({tone,text:`${sign}${value} ${label}`});
+      });
+      return lines;
     };
     const groupItems=(items)=>{
       const tally=items.reduce((acc,item)=>{
@@ -6106,6 +6181,22 @@ once:true`
         renderCodex();
       };
     }
+    if(dom.statusBoardToggle){
+      dom.statusBoardToggle.onclick=()=>{
+        state.statusBoardExpanded=!state.statusBoardExpanded;
+        renderStatusBoard();
+      };
+    }
+
+    function renderStatusBoard(){
+      if(dom.statusBoardContent){
+        dom.statusBoardContent.classList.toggle('is-collapsed',!state.statusBoardExpanded);
+      }
+      if(dom.statusBoardToggle){
+        dom.statusBoardToggle.textContent=state.statusBoardExpanded ? 'Minimize' : 'Expand';
+        dom.statusBoardToggle.setAttribute('aria-expanded',state.statusBoardExpanded ? 'true' : 'false');
+      }
+    }
 
     function setInventoryScreen(screen){
       const changed=state.inventoryScreen!==screen;
@@ -6343,7 +6434,8 @@ once:true`
       state.xp=clamp(Number(values.xpRaw)||0,0,Math.max(0,state.nextLevelXp-1));
       if(state.travel.active || state.mission.active){
         state.travel=getDefaultTravelState();
-        state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null,travelCombat:false};
+        state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],
+        nonItemRewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null,travelCombat:false};
       }
       queueSave({force:true});
       logMsg(`Cheat accepted: L${state.level} | C${state.credits} | M${state.factions.military} | G${state.factions.gang} | S${specials}.`);
@@ -6876,6 +6968,7 @@ once:true`
         success:null,
         summary:'',
         rewards:[],
+        nonItemRewards:[],
         statusMessage:`Action underway: ${label}.`,
         location:{...state.zone},
         fleeing:false,
@@ -6943,6 +7036,7 @@ once:true`
         success:null,
         summary:'',
         rewards:[],
+        nonItemRewards:[],
         statusMessage:`Action underway: ${label}.`,
         location:{...zone},
         fleeing:false,
@@ -7046,6 +7140,7 @@ once:true`
         success:null,
         summary:`Transit ambush: ${profile.enemyName}. ${describeCombatState(combatState)}`,
         rewards:[],
+        nonItemRewards:[],
         statusMessage:`Transit ambush: ${profile.enemyName}. ${describeCombatState(combatState)}`,
         location:{...state.zone},
         fleeing:false,
@@ -7164,11 +7259,8 @@ once:true`
       dom.missionLog.textContent=liveMessage || (eventActive ? 'Incoming event: choose your approach.' : 'Stay sharp. Watch the feed for extraction clearance.');
       dom.missionActions.innerHTML='';
       const rewards=state.mission.rewards || [];
+      const nonItemRewards=state.mission.nonItemRewards || [];
       const rewardsReady=state.mission.completed && rewards.length>0;
-      if(state.mission.completed && rewards.length===0){
-        autoCloseMissionIfResolved();
-        if(!state.mission.active) return;
-      }
       if(dom.missionRewardsCard){
         dom.missionRewardsCard.style.display=state.mission.completed ? 'flex' : 'none';
       }
@@ -7183,11 +7275,23 @@ once:true`
           });
           dom.missionRewardList.appendChild(grid);
         }else if(state.mission.completed){
-          if(dom.missionRewardHint) dom.missionRewardHint.textContent='Rewards resolved.';
-          const empty=document.createElement('div');
-          empty.className='muted-box';
-          empty.textContent=state.mission.success ? 'No rewards remaining. Mission will close automatically.' : 'Mission failed. Mission will close automatically.';
-          dom.missionRewardList.appendChild(empty);
+          if(dom.missionRewardHint) dom.missionRewardHint.textContent='Mission summary';
+          const summary=document.createElement('div');
+          summary.className='mission-reward-summary';
+          if(nonItemRewards.length){
+            nonItemRewards.forEach(entry=>{
+              const line=document.createElement('div');
+              line.className=`mission-reward-line ${entry.tone || 'neutral'}`;
+              line.textContent=entry.text;
+              summary.appendChild(line);
+            });
+          }else{
+            const line=document.createElement('div');
+            line.className='mission-reward-line neutral';
+            line.textContent=state.mission.success ? 'No item drops this run.' : 'No reward items recovered.';
+            summary.appendChild(line);
+          }
+          dom.missionRewardList.appendChild(summary);
         }
       }
       if(eventActive){
@@ -7290,7 +7394,7 @@ once:true`
           dom.missionActions.appendChild(leaveAll);
         }
         const closeBtn=document.createElement('button');
-        closeBtn.textContent='Close mission';
+        closeBtn.textContent='Continue';
         closeBtn.disabled=rewards.length>0;
         closeBtn.onclick=closeMission;
         dom.missionActions.appendChild(closeBtn);
@@ -7966,6 +8070,7 @@ once:true`
         success:null,
         summary:`Combat engaged: ${combatProfile.enemyName}. ${describeCombatState(combatState)}`,
         rewards:[],
+        nonItemRewards:[],
         statusMessage:`Combat engaged: ${combatProfile.enemyName}. ${describeCombatState(combatState)}`,
         fleeing:false,
         fleeEndsAt:null,
@@ -7986,12 +8091,15 @@ once:true`
       const rewards=pending.rewards || [];
       const outcome=outcomeOverride || (pending.success ? 'success' : 'fail');
       const effects=outcome==='success' ? pending.successEffects : pending.failEffects;
+      const nonItemRewards=[];
       if(effects){
         if(outcome==='success') applyEffects(effects,outcome,{deferItemsTo:rewards});
         else applyEffects(effects,outcome);
+        nonItemRewards.push(...parseNonItemRewardLines(effects));
       }
       if(outcome==='success' && pending.xpReward){
         awardXp(pending.xpReward,pending.label);
+        nonItemRewards.push({tone:'positive',text:`+${pending.xpReward} XP`});
       }
       if(outcome==='success' && pending.flag && pending.once){
         state.flags.add(pending.flag);
@@ -8006,12 +8114,18 @@ once:true`
         const relationDelta=outcome==='success' ? pending.relationSuccess : pending.relationFail;
         if(Number.isFinite(relationDelta)){
           updateFactionRelation(pending.factionId,relationDelta);
+          const sign=relationDelta>0 ? '+' : '';
+          const tone=relationDelta>=0 ? 'positive' : 'negative';
+          nonItemRewards.push({tone,text:`${sign}${relationDelta} ${getFactionLabel(pending.factionId)} relation`});
         }
       }
       if(pending.oppositionFactionId){
         const relationDelta=outcome==='success' ? pending.oppositionRelationSuccess : pending.oppositionRelationFail;
         if(Number.isFinite(relationDelta)){
           updateFactionRelation(pending.oppositionFactionId,relationDelta);
+          const sign=relationDelta>0 ? '+' : '';
+          const tone=relationDelta>=0 ? 'positive' : 'negative';
+          nonItemRewards.push({tone,text:`${sign}${relationDelta} ${getFactionLabel(pending.oppositionFactionId)} relation`});
         }
       }
       if(pending.sourceId){
@@ -8020,6 +8134,7 @@ once:true`
       state.mission.completed=true;
       state.mission.success=outcome==='success';
       state.mission.rewards=rewards;
+      state.mission.nonItemRewards=nonItemRewards;
       const failDetail=pending.failReason ? ` Cause: ${pending.failReason}.` : '';
       state.mission.summary=outcome==='success'
         ? 'Extraction secured. Review rewards before closing the mission.'
@@ -8231,6 +8346,7 @@ once:true`
         success:null,
         summary:`Combat engaged: ${profile.enemyName}. ${describeCombatState(combatState)}`,
         rewards:[],
+        nonItemRewards:[],
         statusMessage:`Combat engaged: ${profile.enemyName}. ${describeCombatState(combatState)}`,
         location:{...state.zone},
         fleeing:false,
@@ -8294,6 +8410,7 @@ once:true`
         success:null,
         summary:'',
         rewards:[],
+        nonItemRewards:[],
         statusMessage:`Contract launched: ${raidLike.label}.`,
         location:{...state.zone},
         fleeing:false,
@@ -8359,6 +8476,7 @@ once:true`
         success:null,
         summary:'',
         rewards:[],
+        nonItemRewards:[],
         statusMessage:`Contract launched: ${raidLike.label}.`,
         location:{...zone},
         fleeing:false,
@@ -8385,7 +8503,8 @@ once:true`
     }
 
     function resetMissionState(){
-      state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null,travelCombat:false};
+      state.mission={active:false,type:null,raid:null,startedAt:null,endsAt:null,completed:false,success:null,summary:'',rewards:[],
+        nonItemRewards:[],statusMessage:'',location:null,fleeing:false,fleeEndsAt:null,pendingResolution:null,xpReward:0,rewardEffects:{success:'',fail:''},questMeta:null,combat:null,sceneTarget:null,event:null,eventRewards:[],eventHoldRemainingMs:null,eventHoldProgress:null,eventHoldTotalMs:null,travelCombat:false};
     }
     function closeMission({auto=false}={}){
       const lastLocation=state.mission.location ? {...state.mission.location} : null;
@@ -8464,6 +8583,7 @@ once:true`
         success:null,
         summary:'',
         rewards:[],
+        nonItemRewards:[],
         statusMessage:`Mission launched: ${raid.label}.`,
         location:{...state.zone},
         fleeing:false,
@@ -8526,6 +8646,7 @@ once:true`
         success:null,
         summary:'',
         rewards:[],
+        nonItemRewards:[],
         statusMessage:`Mission launched: ${raid.label}.`,
         location:{...zone},
         fleeing:false,
@@ -8998,19 +9119,28 @@ once:true`
 
       const unique=[state.zone.id,...doors.map(exp=>exp.meta.id)].filter((id,idx,arr)=>id && arr.indexOf(id)===idx);
       const positions={};
-      const yBands={low:70,medium:126,high:182,deadly:238};
+      const yBands={low:58,medium:126,high:194,deadly:262};
       const maxDistance=Math.max(1,...unique.map(id=>Math.max(1,getZoneDistance(id))));
       unique.forEach((id,index)=>{
         const ratio=Math.max(0.02,getZoneDistance(id)/maxDistance);
         const exp=expansions[id];
         const risk=getZoneRiskForExp(exp || {},exp?.door?.risk || 'low');
         const x=80+ratio*840;
-        const wave=Math.sin((ratio*9)+(index*0.7))*14;
-        const stagger=(index%2===0 ? -10 : 10);
+        const wave=Math.sin((ratio*9)+(index*0.7))*22;
+        const stagger=(index%2===0 ? -18 : 18);
         const y=(yBands[risk] || yBands.low)+wave+stagger;
         positions[id]={x,y};
       });
       positions[state.zone.id]={x:80,y:yBands.low};
+      const sortedIds=Object.keys(positions).sort((a,b)=>positions[a].x-positions[b].x);
+      sortedIds.forEach((id,idx)=>{
+        if(idx===0) return;
+        const prev=positions[sortedIds[idx-1]];
+        const current=positions[id];
+        if(Math.abs(current.y-prev.y)<34 && Math.abs(current.x-prev.x)<165){
+          current.y=clamp(current.y + (idx%2===0 ? 24 : -24),32,280);
+        }
+      });
 
       const selectedId=selectedExp.meta.id;
       if(selectedId!==state.zone.id){
@@ -9041,7 +9171,7 @@ once:true`
         dot.setAttribute('stroke','rgba(0,0,0,0.85)');
         dot.setAttribute('stroke-width','1.2');
         const label=document.createElementNS(svgNS,'text');
-        const labelOffset=(unique.indexOf(id)%2===0 ? -12 : 12);
+        const labelOffset=(unique.indexOf(id)%2===0 ? -16 : 16);
         label.setAttribute('x',String(point.x+14));
         label.setAttribute('y',String(point.y+labelOffset));
         label.textContent=exp.meta.name;
@@ -9326,6 +9456,7 @@ once:true`
     function renderAll(){
       renderPauseToggle();
       renderBars();
+      renderStatusBoard();
       renderInventory();
       renderCrafting();
       renderTravelStatus();
