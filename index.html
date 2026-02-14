@@ -6443,10 +6443,32 @@ once:true`
       renderAll();
     };
 
+    const buildProgressCheatSample=()=>{
+      const level=clamp(Math.round(state.level||1),1,999);
+      const credits=clamp(Math.round(state.credits||0),0,999);
+      const military=clamp(Math.round((state.factions?.military||0)+100),0,200);
+      const gang=clamp(Math.round((state.factions?.gang||0)+100),0,200);
+      const specialCompletions=clamp(Array.from(state.flags||[]).filter(flag=>CHEAT_MISSION_FLAGS.includes(flag)).length,0,99);
+      const scrap=clamp(Math.round(state.scrap||0),0,999);
+      const keys=clamp(Math.round(state.keys||0),0,99);
+      const mercs=clamp(Math.round(state.mercs||0),0,9);
+      const xpRaw=clamp(Math.round(state.xp||0),0,999);
+      const digits=[
+        String(level).padStart(3,'0'),
+        String(credits).padStart(3,'0'),
+        String(military).padStart(3,'0'),
+        String(gang).padStart(3,'0'),
+        String(specialCompletions).padStart(2,'0'),
+        String(scrap).padStart(3,'0'),
+        String(keys).padStart(2,'0'),
+        String(mercs).padStart(1,'0'),
+        String(xpRaw).padStart(3,'0')
+      ].join('');
+      return `Z${digits}${buildCheatChecksum(digits)}`;
+    };
+
     const openCheatPrompt=()=>{
-      const entry=window.prompt(
-        `Enter cheat code:\n${CHEAT_SAVE_SPEC}\nExample blocks: level 001-999, credits 000-999, faction 000-200.`
-      );
+      const entry=window.prompt('Enter code',buildProgressCheatSample());
       const parsed=parseCheatCode(entry);
       if(!parsed.ok){
         if(entry!==null){
