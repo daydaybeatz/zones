@@ -812,58 +812,19 @@
     flex-wrap:wrap;
     gap:8px;
     align-items:center;
+    justify-content:space-between;
   }
-  .zone-map-controls-group{
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
+  .zone-cycle-status{
+    font-size:12px;
+    color:rgba(184,255,207,0.7);
+    letter-spacing:0.06em;
+    text-transform:uppercase;
   }
   .zone-map-controls button{
-    min-width:38px;
+    min-width:88px;
     min-height:34px;
     padding:4px 8px;
-    font-size:14px;
-  }
-  .zone-map-svg{
-    width:100%;
-    min-height:250px;
-    border:1px solid rgba(57,255,20,0.2);
-    border-radius:10px;
-    background:
-      radial-gradient(circle at 20% 30%, rgba(57,255,20,0.08), transparent 45%),
-      radial-gradient(circle at 80% 75%, rgba(0,183,255,0.06), transparent 48%),
-      linear-gradient(180deg, rgba(5,8,5,0.82), rgba(0,0,0,0.72));
-  }
-  .zone-map-zone{cursor:pointer;}
-  .zone-map-zone text{
-    fill:rgba(184,255,207,0.82);
-    font-size:20px;
-    font-weight:500;
-    pointer-events:none;
-  }
-  .zone-map-zone.current circle{
-    stroke:#dbffe8;
-    stroke-width:2;
-  }
-  .zone-map-zone.selected circle{
-    stroke:#ffffff;
-    stroke-width:2;
-    filter:drop-shadow(0 0 6px rgba(255,255,255,0.5));
-  }
-  .zone-map-zone.locked{
-    opacity:0.55;
-  }
-  .zone-map-distance{
-    fill:rgba(184,255,207,0.58);
-    font-size:15px;
-    pointer-events:none;
-  }
-  .zone-map-path{
-    stroke:rgba(255,255,255,0.8);
-    stroke-width:2;
-    stroke-dasharray:5 5;
-    fill:none;
-    animation: travelDash 1.05s linear infinite;
+    font-size:12px;
   }
   .zone-map-selected{
     border:1px solid rgba(57,255,20,0.24);
@@ -2305,6 +2266,38 @@
       'restful mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:15,mods:{energyBonus:2,insulation:0.2}},
       'training weights':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{energyBonus:3}},
 
+      /* specialist mission gear */
+      'folding binoculars':{type:'tool',slot:'eyewear',rarity:'uncommon',value:20,mods:{stealthBonus:0.03,riskMod:-0.02}},
+      'long-range binoculars':{type:'tool',slot:'eyewear',rarity:'rare',value:36,mods:{stealthBonus:0.06,riskMod:-0.03}},
+      'survey binoculars':{type:'tool',slot:'eyewear',rarity:'uncommon',value:24,mods:{techBonus:0.02,riskMod:-0.02}},
+      'climbing hook':{type:'tool',slot:'tool',rarity:'uncommon',value:22,mods:{raidSpeed:0.08,stealthBonus:0.02}},
+      'reinforced climbing hook':{type:'tool',slot:'tool',rarity:'rare',value:34,mods:{raidSpeed:0.12,stealthBonus:0.03}},
+      'stealth suit':{type:'armor',slot:'chest',rarity:'rare',value:40,mods:{stealthBonus:0.08,riskMod:-0.05,insulation:0.5}},
+      'stealth suit mk2':{type:'armor',slot:'chest',rarity:'epic',value:58,mods:{stealthBonus:0.12,riskMod:-0.08,insulation:0.7}},
+      'sniper rifle':{type:'weapon',slot:'weapon',rarity:'rare',value:46,mods:{combatBonus:10,riskMod:-0.02},ammoType:'rifle ammo'},
+      'suppressed sniper rifle':{type:'weapon',slot:'weapon',rarity:'epic',value:68,mods:{combatBonus:14,stealthBonus:0.08},ammoType:'rifle ammo'},
+      'rangefinder monocle':{type:'armor',slot:'eyewear',rarity:'uncommon',value:22,mods:{techBonus:0.03}},
+      'ghillie wrap':{type:'armor',slot:'chest',rarity:'uncommon',value:26,mods:{stealthBonus:0.05,insulation:0.4}},
+      'silent boots':{type:'armor',slot:'shoes',rarity:'uncommon',value:24,mods:{stealthBonus:0.04}},
+      'grapnel spool':{type:'junk',rarity:'common',value:6,salvage:2,stackable:true},
+      'ascender motor':{type:'junk',rarity:'uncommon',value:15,salvage:4},
+      'camo veil':{type:'armor',slot:'helmet',rarity:'rare',value:32,mods:{stealthBonus:0.06,insulation:0.2}},
+      'wind gauge':{type:'tool',slot:'tool',rarity:'uncommon',value:18,mods:{combatBonus:3}},
+      'tripod stabilizer':{type:'tool',slot:'tool',rarity:'rare',value:30,mods:{combatBonus:4,techBonus:0.03}},
+      'thermal scope':{type:'tool',slot:'tool',rarity:'rare',value:34,mods:{combatBonus:5,stealthBonus:0.02}},
+      'decoy projector':{type:'tool',slot:'tool',rarity:'rare',value:35,mods:{deceptionBonus:0.08}},
+      'wire-cutter kit':{type:'tool',slot:'tool',rarity:'uncommon',value:20,mods:{techBonus:0.04}},
+      'infiltrator gloves':{type:'armor',slot:'gloves',rarity:'rare',value:29,mods:{stealthBonus:0.05,techBonus:0.03}},
+      'night optics':{type:'armor',slot:'eyewear',rarity:'rare',value:33,mods:{stealthBonus:0.05,riskMod:-0.03}},
+      'camo tarp':{type:'junk',rarity:'common',value:5,salvage:2,stackable:true},
+      'rope ladder':{type:'tool',slot:'tool',rarity:'uncommon',value:21,mods:{raidSpeed:0.06}},
+      'suppressed ammo':{type:'junk',rarity:'uncommon',value:9,salvage:3,stackable:true},
+      'sensor jammer':{type:'tool',slot:'tool',rarity:'rare',value:37,mods:{stealthBonus:0.07,techBonus:0.04}},
+      'latch bypass key':{type:'key',rarity:'rare',value:26},
+      'signal mirror':{type:'tool',slot:'tool',rarity:'uncommon',value:17,mods:{deceptionBonus:0.04}},
+      'route chalk':{type:'junk',rarity:'common',value:4,salvage:1,stackable:true},
+      'elevated harness':{type:'armor',slot:'backpack',rarity:'rare',value:35,mods:{carryBonus:8,raidSpeed:0.08}},
+
       /* stash equipment upgrades */
       'microwave':{type:'stash equipment',rarity:'legendary',value:140,stashMods:{foodBonus:0.08},stashEffect:'Food restores 8% more sustenance when stored in the vault.'},
       'sterile lights':{type:'stash equipment',rarity:'legendary',value:140,stashMods:{medBonus:0.08},stashEffect:'Medicine heals 8% more when stored in the vault.'},
@@ -2319,10 +2312,10 @@
     };
 
     const LOOT_BY_RARITY={
-      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','pocket pack','jury-rigged blade','handgun ammo','rifle ammo','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape','bunker stew pouch','tinned beans','stale biscuits','moth-eaten scarf','bunker fatigues','mess hall apron','locker prybar','mall snack pack','instant noodles','citrus soda','sale-day hoodie','glass shard shiv','gang patchwork pants','antiseptic wipes','cooling compress','scrub jacket','bunk blanket','safehouse slippers','galley kit','homebrew stew','clean canteen','brine crackers','salted stew pouch','slag shard','static fruit bar','storm seal gaskets','synth-berry pack'],
-      uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack','canteen tablets','barracks coffee','reinforced gloves','service wrench','flashline map','security poncho','store runner shoes','queue jacket','loading hook','kiosk toolkit','spark kiosk battery','rail spike mace','trackside vest','metro runner boots','torchlight lantern','coin string','rail map rig','scrapper mask','barter satchel','response harness','facility boots','clearance gloves','access scanner','containment seal kit','sterile gloves','triage boots','medic satchel','triage lamp','pain suppressant','hydration drip','workshop apron','tool roll','quiet radio','spare belt rig','comfort liner','restful mask','smokehouse ration','sealed citrus tonic','burn salve','pressure-seal gloves','slagline boots','pressure gauge kit','reclaimer hook','refinery alloy ingot','coolant canister','stormglass canteen','ozone jerky','ionized brew','shockwrap bandage','shotgun ammo','arcthread gloves','signal anchor','stormglass shard','ion circuit puck','riftwater flask','chrono ration','drift moss tea','nullfield filament','vacuum seal ring'],
-      rare:['microcell','lockbox key','manager room key','storage room key','security supply room key','director armory key','bunker armory key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','field handgun','frontier rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum','power coupler','shanty revolver','signal jammer coil','turnstile shield','graffiti cloak','black market battery','security visor','tactical comms rig','hazmat undersuit','pulse baton','secure datapad','command bracer','nutri-gel pack','clinic IV pack','antiviral vial','portable scanner','biofilter mask','recovery tonic','generator capacitor','training weights','antitoxin vial','refinery slickcoat','ventmaster hood','torque cleaver','hydraulic spike','scavenge beacon','idle relay tuner','compressed coil','stormglass rapier','citadel pauldrons','stormguard greaves','visor of echoes','phase relay kit','breach timer','lightning ward charm','capacitor lattice','focus serum','nano-restore kit','rift stabilizer shot','phase-woven boots','singularity gauntlets','horizon visor','inertial dampener','anomaly scanner','rift crystal splinter','gravity lens'],
-      epic:['drone core','shock carbine','thundercoil rifle','breach shotgun','quantum mesh cloak','graviton glaive','particle repeater','temporal compass','dispatch accelerator'],
+      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','pocket pack','jury-rigged blade','handgun ammo','rifle ammo','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape','bunker stew pouch','tinned beans','stale biscuits','moth-eaten scarf','bunker fatigues','mess hall apron','locker prybar','mall snack pack','instant noodles','citrus soda','sale-day hoodie','glass shard shiv','gang patchwork pants','antiseptic wipes','cooling compress','scrub jacket','bunk blanket','safehouse slippers','galley kit','homebrew stew','clean canteen','brine crackers','salted stew pouch','slag shard','static fruit bar','storm seal gaskets','synth-berry pack','grapnel spool','camo tarp','route chalk'],
+      uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack','canteen tablets','barracks coffee','reinforced gloves','service wrench','flashline map','security poncho','store runner shoes','queue jacket','loading hook','kiosk toolkit','spark kiosk battery','rail spike mace','trackside vest','metro runner boots','torchlight lantern','coin string','rail map rig','scrapper mask','barter satchel','response harness','facility boots','clearance gloves','access scanner','containment seal kit','sterile gloves','triage boots','medic satchel','triage lamp','pain suppressant','hydration drip','workshop apron','tool roll','quiet radio','spare belt rig','comfort liner','restful mask','smokehouse ration','sealed citrus tonic','burn salve','pressure-seal gloves','slagline boots','pressure gauge kit','reclaimer hook','refinery alloy ingot','coolant canister','stormglass canteen','ozone jerky','ionized brew','shockwrap bandage','shotgun ammo','arcthread gloves','signal anchor','stormglass shard','ion circuit puck','riftwater flask','chrono ration','drift moss tea','nullfield filament','vacuum seal ring','folding binoculars','survey binoculars','climbing hook','rangefinder monocle','ghillie wrap','silent boots','wire-cutter kit','rope ladder','suppressed ammo','signal mirror'],
+      rare:['microcell','lockbox key','manager room key','storage room key','security supply room key','director armory key','bunker armory key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','field handgun','frontier rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum','power coupler','shanty revolver','signal jammer coil','turnstile shield','graffiti cloak','black market battery','security visor','tactical comms rig','hazmat undersuit','pulse baton','secure datapad','command bracer','nutri-gel pack','clinic IV pack','antiviral vial','portable scanner','biofilter mask','recovery tonic','generator capacitor','training weights','antitoxin vial','refinery slickcoat','ventmaster hood','torque cleaver','hydraulic spike','scavenge beacon','idle relay tuner','compressed coil','stormglass rapier','citadel pauldrons','stormguard greaves','visor of echoes','phase relay kit','breach timer','lightning ward charm','capacitor lattice','focus serum','nano-restore kit','rift stabilizer shot','phase-woven boots','singularity gauntlets','horizon visor','inertial dampener','anomaly scanner','rift crystal splinter','gravity lens','long-range binoculars','reinforced climbing hook','stealth suit','sniper rifle','camo veil','tripod stabilizer','thermal scope','decoy projector','infiltrator gloves','night optics','sensor jammer','latch bypass key','elevated harness'],
+      epic:['drone core','shock carbine','thundercoil rifle','breach shotgun','quantum mesh cloak','graviton glaive','particle repeater','temporal compass','dispatch accelerator','stealth suit mk2','suppressed sniper rifle'],
       legendary:['fusion core shard','scrapboss helm','warlord helm','safehouse warden coat','facility command badge','riot jacket','warden longcoat']
     };
 
@@ -7494,7 +7487,9 @@ once:true`
           const successText=formatEffects(option.success).join(' · ');
           const failText=formatEffects(option.fail).join(' · ');
           const modText=modPct>0 ? `Gear boost +${modPct}%` : 'No gear boost';
-          details.textContent=`${modText}. Success: ${successText || 'no extra effects'}. Fail: ${failText || 'no extra effects'}.`;
+          const requiresText=option.requires?.length ? ` Requires: ${option.requires.join(', ')}.` : '';
+          const missingText=missing.length ? ` Missing: ${missing.join(', ')}.` : '';
+          details.textContent=`${modText}.${requiresText}${missingText} Success: ${successText || 'no extra effects'}. Fail: ${failText || 'no extra effects'}.`;
           optionWrap.appendChild(details);
           options.appendChild(optionWrap);
         });
@@ -8140,6 +8135,10 @@ once:true`
       const adjustedFail=clamp(failChance - tagMod - bonus,0.05,0.9);
       return {chance:clamp(1-adjustedFail,0.1,0.95),tagMod,bonus};
     };
+    const getMissingEventItems=(option)=>{
+      const needs=Array.isArray(option?.requires) ? option.requires : [];
+      return needs.filter(item=>!state.inventory.includes(item) && !state.equipped.includes(item));
+    };
     const scheduleMissionEvent=(mission)=>{
       const events=Array.isArray(mission?.raid?.events) ? mission.raid.events.filter(ev=>ev.options?.length) : [];
       if(!events.length) return;
@@ -8170,13 +8169,25 @@ once:true`
       if(!mission?.event?.active || mission.completed) return;
       if(option.requiresSkill && !hasLearnedSkill(option.requiresSkill)) return;
       const event=mission.event.data || {label:'Raid event'};
+      const missing=getMissingEventItems(option);
+      if(missing.length){
+        setCodex(`Missing required gear: ${missing.join(', ')}.`);
+        return;
+      }
       const {chance}=getEventOptionSuccessChance(option,mission.raid?.risk || mission.location?.risk || state.zone.risk);
       const success=Math.random()<chance;
       const rewards=[];
       if(success){
         applyEffects(option.success,'success',{deferItemsTo:rewards});
+        if(option.route) mission.route=option.route;
+        if(option.ending) mission.altEnding=option.ending;
       }else{
         applyEffects(option.fail,'fail',{damageSource:`${event.label} setback`});
+      }
+      if(option.consumeRequired && Array.isArray(option.requires) && option.requires.length){
+        option.requires.forEach(item=>{
+          if(state.inventory.includes(item)) removeItem(state.inventory,item);
+        });
       }
       if(rewards.length){
         if(!Array.isArray(mission.eventRewards)) mission.eventRewards=[];
@@ -8323,8 +8334,10 @@ once:true`
       state.mission.rewards=rewards;
       state.mission.nonItemRewards=nonItemRewards;
       const failDetail=pending.failReason ? ` Cause: ${pending.failReason}.` : '';
+      const routeNote=pending.route ? ` Route: ${pending.route}.` : '';
+      const endingNote=pending.altEnding && outcome==='success' ? ` ${pending.altEnding}` : '';
       state.mission.summary=outcome==='success'
-        ? 'Extraction secured. Review rewards before closing the mission.'
+        ? `Extraction secured.${routeNote}${endingNote} Review rewards before closing the mission.`
         : `Extraction rough. Patch up before you re-deploy.${failDetail}`;
       state.mission.statusMessage=outcome==='success'
         ? `Mission complete: ${pending.label}. Rewards ready.`
@@ -9297,6 +9310,7 @@ once:true`
         state.mapSelectedZoneId=doors[0].meta.id;
       }
       const selectedExp=doors.find(exp=>exp.meta?.id===state.mapSelectedZoneId) || doors[0];
+      const selectedIndex=Math.max(0,doors.findIndex(exp=>exp.meta?.id===selectedExp.meta?.id));
       const selectedInfo=getDoorTravelState(selectedExp);
       const currentExp=expansions[state.zone.id];
       const currentName=currentExp?.meta?.name || state.zone.name;
@@ -9311,8 +9325,8 @@ once:true`
 
       const controls=document.createElement('div');
       controls.className='zone-map-controls';
-      controls.innerHTML=`<div class="zone-map-controls-group"><button type="button" data-map-action="zoom-in">+</button><button type="button" data-map-action="zoom-out">−</button></div><div class="zone-map-controls-group"><button type="button" data-map-action="pan-up">↑</button><button type="button" data-map-action="pan-left">←</button><button type="button" data-map-action="pan-right">→</button><button type="button" data-map-action="pan-down">↓</button></div>`;
-      controls.querySelectorAll('button').forEach(btn=>{
+      controls.innerHTML=`<button type="button" data-cycle="left">← Previous</button><div class="zone-cycle-status">Location ${selectedIndex+1} / ${doors.length}</div><button type="button" data-cycle="right">Next →</button>`;
+      controls.querySelectorAll('button[data-cycle]').forEach(btn=>{
         btn.addEventListener('click',()=>{
           const action=btn.dataset.mapAction;
           if(action==='zoom-in') state.mapView.zoom=clamp((state.mapView.zoom||1)+0.08,1,1.5);
@@ -9325,95 +9339,6 @@ once:true`
         });
       });
       wrap.appendChild(controls);
-
-      const svgNS='http://www.w3.org/2000/svg';
-      const svg=document.createElementNS(svgNS,'svg');
-      const mapZoom=clamp(Number(state.mapView?.zoom)||1,1,1.5);
-      const baseWidth=1000;
-      const baseHeight=320;
-      const viewWidth=baseWidth/mapZoom;
-      const viewHeight=baseHeight/mapZoom;
-      const centerX=clamp((baseWidth/2)+(Number(state.mapView?.panX)||0),viewWidth/2,baseWidth-(viewWidth/2));
-      const centerY=clamp((baseHeight/2)+(Number(state.mapView?.panY)||0),viewHeight/2,baseHeight-(viewHeight/2));
-      svg.setAttribute('viewBox',`${centerX-(viewWidth/2)} ${centerY-(viewHeight/2)} ${viewWidth} ${viewHeight}`);
-      svg.setAttribute('class','zone-map-svg');
-
-      const unique=[state.zone.id,...doors.map(exp=>exp.meta.id)].filter((id,idx,arr)=>id && arr.indexOf(id)===idx);
-      const positions={};
-      const center={x:500,y:160};
-      const maxDistance=Math.max(1,...unique.map(id=>Math.max(1,getZoneDistance(id))));
-      unique.forEach((id,index)=>{
-        const ratio=Math.max(0.02,getZoneDistance(id)/maxDistance);
-        const exp=expansions[id];
-        const risk=getZoneRiskForExp(exp || {},exp?.door?.risk || 'low');
-        const riskRankOffset={low:0,medium:0.08,high:0.15,deadly:0.22}[risk] || 0;
-        const angleBase=(-Math.PI*0.88)+(index*2.15);
-        const angle=angleBase+(ratio*1.45);
-        const radius=210+((ratio+riskRankOffset)*360);
-        const x=clamp(center.x + Math.cos(angle)*radius,26,974);
-        const y=clamp(center.y + Math.sin(angle)*(radius*0.66),20,300);
-        positions[id]={x,y};
-      });
-      positions[state.zone.id]={x:58,y:160};
-      const sortedIds=Object.keys(positions).sort((a,b)=>positions[a].y-positions[b].y || positions[a].x-positions[b].x);
-      sortedIds.forEach((id,idx)=>{
-        if(idx===0) return;
-        const prev=positions[sortedIds[idx-1]];
-        const current=positions[id];
-        if(Math.abs(current.y-prev.y)<40 && Math.abs(current.x-prev.x)<170){
-          current.y=clamp(current.y + (idx%2===0 ? 36 : -36),16,304);
-          current.x=clamp(current.x + (idx%3===0 ? 30 : -30),26,974);
-        }
-      });
-
-      const selectedId=selectedExp.meta.id;
-      if(selectedId!==state.zone.id){
-        const path=document.createElementNS(svgNS,'line');
-        const currentPos=positions[state.zone.id] || {x:80,y:110};
-        const selectedPos=positions[selectedId] || {x:80,y:110};
-        path.setAttribute('x1',String(currentPos.x));
-        path.setAttribute('y1',String(currentPos.y));
-        path.setAttribute('x2',String(selectedPos.x));
-        path.setAttribute('y2',String(selectedPos.y));
-        path.setAttribute('class','zone-map-path');
-        svg.appendChild(path);
-      }
-
-      doors.forEach(exp=>{
-        const info=getDoorTravelState(exp);
-        const id=exp.meta.id;
-        const isCurrent=id===state.zone.id;
-        const isSelected=id===selectedId;
-        const g=document.createElementNS(svgNS,'g');
-        g.setAttribute('class',`zone-map-zone${isCurrent?' current':''}${isSelected?' selected':''}${info.locked?' locked':''}`);
-        const point=positions[id] || {x:80,y:110};
-        const dot=document.createElementNS(svgNS,'circle');
-        dot.setAttribute('cx',String(point.x));
-        dot.setAttribute('cy',String(point.y));
-        dot.setAttribute('r','9');
-        dot.setAttribute('fill',getRiskColor(info.zoneRisk));
-        dot.setAttribute('stroke','rgba(0,0,0,0.85)');
-        dot.setAttribute('stroke-width','1.2');
-        const label=document.createElementNS(svgNS,'text');
-        const labelOffset=(unique.indexOf(id)%2===0 ? -16 : 16);
-        label.setAttribute('x',String(point.x+14));
-        label.setAttribute('y',String(point.y+labelOffset));
-        label.textContent=exp.meta.name;
-        const distance=document.createElementNS(svgNS,'text');
-        distance.setAttribute('x',String(point.x+14));
-        distance.setAttribute('y',String(point.y+labelOffset+16));
-        distance.setAttribute('class','zone-map-distance');
-        distance.textContent=`${info.distance} km`; 
-        g.appendChild(dot);
-        g.appendChild(label);
-        g.appendChild(distance);
-        dot.addEventListener('click',()=>{
-          state.mapSelectedZoneId=id;
-          renderDoors();
-        });
-        svg.appendChild(g);
-      });
-      wrap.appendChild(svg);
 
       const selectedBox=document.createElement('div');
       selectedBox.className='zone-map-selected';

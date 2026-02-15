@@ -170,6 +170,20 @@ eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:s
 eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. Broken cameras still pivot like they remember faces.| fail:hp-7,log:Backup lights trigger mid-run. Nobody here mistakes kindness for weakness anymore.
 
 @mission
+id:safehouse-ops-ghost-perch
+label:Lantern Ghost Perch
+desc:Infiltrate a watchtower and choose a high-risk route that only works with specialist gear. Broken cameras still pivot like they remember faces.
+risk:high
+time:12
+energy:15
+loot:4
+lootType:precision salvage
+event:Tower sentries rotate every ninety seconds | chance:1 | prompt:Three routes open at once. Pick based on your kit. Nobody here mistakes kindness for weakness anymore.
+eventOption:Recon from a distant rooftop with binoculars => risk:medium | tag:stealth | requires:folding binoculars | route:Perimeter recon route | ending:You mark a silent exfil route and your team leaves unseen. | success:item:rangefinder monocle,item:route chalk,credits+9,log:You plot sentry arcs before the breach. Trust is currency, and everyone is short on it.| fail:hp-5,log:A shimmer gives away your silhouette. Even the quiet sounds engineered.
+eventOption:Scale the service wall with a climbing hook => risk:high | tag:tech | requires:climbing hook | route:Vertical breach route | ending:The rooftop anchor holds and unlocks a secure shortcut for future crews. | success:item:reinforced climbing hook,item:elevated harness,credits+11,log:You climb clean and drop into the relay booth. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,log:The hook slips and you hit the decking hard. The skyline glows like a wound after dark.
+eventOption:Settle into a stealth suit and line up a sniper shot => risk:deadly | tag:combat | requires:stealth suit,sniper rifle | route:Overwatch strike route | ending:Your overwatch shot breaks command, turning the raid into a legendary clean sweep. | success:item:suppressed sniper rifle,item:thermal scope,credits+15,log:One silent round collapses their chain of command. Broken cameras still pivot like they remember faces.| fail:hp-10,credits-6,log:Counter-snipers triangulate your perch. Static hums through every bad decision.
+
+@mission
 id:safehouse-ops-deep-vault
 label:Lantern Vault Breach
 desc:High-risk push into a sealed vault loaded with specialized mission tools. Nobody here mistakes kindness for weakness anymore.
