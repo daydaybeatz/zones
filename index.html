@@ -9136,31 +9136,34 @@ once:true`
 
       const svgNS='http://www.w3.org/2000/svg';
       const svg=document.createElementNS(svgNS,'svg');
-      svg.setAttribute('viewBox','0 0 1000 300');
+      svg.setAttribute('viewBox','0 0 1000 320');
       svg.setAttribute('class','zone-map-svg');
 
       const unique=[state.zone.id,...doors.map(exp=>exp.meta.id)].filter((id,idx,arr)=>id && arr.indexOf(id)===idx);
       const positions={};
-      const yBands={low:58,medium:126,high:194,deadly:262};
+      const center={x:500,y:160};
       const maxDistance=Math.max(1,...unique.map(id=>Math.max(1,getZoneDistance(id))));
       unique.forEach((id,index)=>{
         const ratio=Math.max(0.02,getZoneDistance(id)/maxDistance);
         const exp=expansions[id];
         const risk=getZoneRiskForExp(exp || {},exp?.door?.risk || 'low');
-        const x=80+ratio*840;
-        const wave=Math.sin((ratio*9)+(index*0.7))*22;
-        const stagger=(index%2===0 ? -18 : 18);
-        const y=(yBands[risk] || yBands.low)+wave+stagger;
+        const riskRankOffset={low:0,medium:0.08,high:0.15,deadly:0.22}[risk] || 0;
+        const angleBase=(-Math.PI*0.88)+(index*2.15);
+        const angle=angleBase+(ratio*1.45);
+        const radius=120+((ratio+riskRankOffset)*260);
+        const x=clamp(center.x + Math.cos(angle)*radius,64,936);
+        const y=clamp(center.y + Math.sin(angle)*(radius*0.63),36,286);
         positions[id]={x,y};
       });
-      positions[state.zone.id]={x:80,y:yBands.low};
-      const sortedIds=Object.keys(positions).sort((a,b)=>positions[a].x-positions[b].x);
+      positions[state.zone.id]={x:120,y:148};
+      const sortedIds=Object.keys(positions).sort((a,b)=>positions[a].y-positions[b].y || positions[a].x-positions[b].x);
       sortedIds.forEach((id,idx)=>{
         if(idx===0) return;
         const prev=positions[sortedIds[idx-1]];
         const current=positions[id];
-        if(Math.abs(current.y-prev.y)<34 && Math.abs(current.x-prev.x)<165){
-          current.y=clamp(current.y + (idx%2===0 ? 24 : -24),32,280);
+        if(Math.abs(current.y-prev.y)<40 && Math.abs(current.x-prev.x)<170){
+          current.y=clamp(current.y + (idx%2===0 ? 34 : -34),32,288);
+          current.x=clamp(current.x + (idx%3===0 ? 26 : -26),64,936);
         }
       });
 
