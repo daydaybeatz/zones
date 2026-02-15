@@ -4962,9 +4962,13 @@ once:true`
       .filter(([,v])=>v>0)
       .map(([k,v])=>`${v} ${k}`)
       .join(' · ');
-    const canAfford=(cost)=>Object.entries(cost).every(([k,v])=>state[k]>=v);
+    const canAfford=(cost)=>Object.entries(cost).every(([k,v])=>{
+      if(k==='energy') return true;
+      return state[k]>=v;
+    });
     const applyCost=(cost)=>{
       Object.entries(cost).forEach(([k,v])=>{
+        if(k==='energy') return;
         state[k]=Math.max(0,state[k]-v);
       });
     };
@@ -5289,7 +5293,6 @@ once:true`
     function renderBars(){
       const rows=[
         ['HP','hp','maxHp','hp'],
-        ['Energy','energy','maxEnergy','energy'],
         ['Radiation','rads',100,'rads'],
         ['Hunger','hunger','maxHunger','hunger'],
         ['Hydration','thirst','maxThirst','thirst'],
@@ -6681,7 +6684,7 @@ once:true`
       return parts.length ? `Rewards ${parts.join(' · ')}` : '';
     }
 
-    function buildMissionMeta({risk='low',time=8,energy,key,loot=0,lootType='',reward='',xp,combatChance,failChance}={}){
+    function buildMissionMeta({risk='low',time=8,key,loot=0,lootType='',reward='',xp,combatChance,failChance}={}){
       const parts=[`${risk} · ${formatDisplayMinutes(time)} min`];
       const rewardLabel=formatRewardEstimate({loot,lootType,reward,risk,time,xp});
       if(rewardLabel) parts.push(rewardLabel);
@@ -6694,9 +6697,8 @@ once:true`
         : computeCombatChance(risk);
       const combatPercent=Math.round(resolvedCombatChance*100);
       parts.push(`combat risk ${combatPercent}%`);
-      if(Number.isFinite(energy)){
-        const costParts=[`${energy} energy`];
-        if(key) costParts.push(`${key} key`);
+      if(key){
+        const costParts=[`${key} key`];
         parts.push(costParts.join(' · '));
       }
       return parts.join(' · ');
@@ -8560,7 +8562,7 @@ once:true`
       const profile=getCombatProfile(state.zone.risk);
       const cost={energy:10};
       if(!canAfford(cost)){
-        setCodex('Not enough energy to pick a fight.');
+        setCodex('You cannot pick a fight right now.');
         return;
       }
       applyCost(cost);
