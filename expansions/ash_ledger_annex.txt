@@ -29,7 +29,6 @@ label:Security sweep
 desc:Room-to-room sweep for mid-tier weapons and tools the RMG and Abernathy Militia both covet. Trust is currency, and everyone is short on it.
 risk:medium
 time:12
-energy:16
 loot:3
 lootType:weapons & tools
 event:Checkpoint console lock | chance:0.55 | prompt:A security checkpoint seals the corridor. Choose your approach. Even the quiet sounds engineered.
@@ -42,7 +41,6 @@ label:Hardline extraction
 desc:Push through hard combatants for high-tier clothing. The skyline glows like a wound after dark.
 risk:high
 time:14
-energy:18
 loot:4
 lootType:reinforced clothing
 event:Locker team begs for a ride | chance:0.6 | prompt:A pinned logistics team begs for escort out of the wing. Even the quiet sounds engineered.
@@ -55,7 +53,6 @@ label:Assist RMG patrol
 desc:Run a logistics escort for the Redtech Military Group (RMG). Requires high standing (+8); success improves military relations (+2) and reduces combat risk on allied runs. The skyline glows like a wound after dark.
 risk:medium
 time:11
-energy:14
 loot:2
 lootType:military rations
 reward:RMG favor
@@ -74,7 +71,6 @@ label:Infiltrate RMG briefing
 desc:Slip into a RMG briefing to undermine them (-2 relation). Only possible with low standing (≤ -5); combat risk spikes when relations are bad. The skyline glows like a wound after dark.
 risk:high
 time:13
-energy:16
 loot:3
 lootType:classified intel
 reward:stolen orders
@@ -93,7 +89,6 @@ label:Director armory lock
 desc:Use the director armory key to enter the restricted weapons vault. Broken cameras still pivot like they remember faces.
 risk:high
 time:15
-energy:20
 loot:5
 lootType:high-tier tactical gear
 key:1
@@ -108,7 +103,6 @@ label:Cold archive recovery
 desc:Recover purge logs from the sealed archive stacks. The skyline glows like a wound after dark.
 risk:medium
 time:12
-energy:15
 loot:3
 lootType:archival intel
 event:Frozen archive terminal | chance:0.6 | prompt:The terminal is iced over, but the purge logs are inside. Trust is currency, and everyone is short on it.
@@ -121,7 +115,6 @@ label:Drone bay salvage
 desc:Strip disabled security drones for parts and tools. Broken cameras still pivot like they remember faces.
 risk:high
 time:13
-energy:17
 loot:4
 lootType:drone parts
 event:Bay power surge | chance:0.55 | prompt:The drone racks whine to life in a power surge. Trust is currency, and everyone is short on it.
@@ -134,7 +127,6 @@ label:Briefing room sweep
 desc:Search the sealed briefing room for emergency caches and officer kits. Even the quiet sounds engineered.
 risk:medium
 time:11
-energy:14
 loot:3
 lootType:officer kits
 event:Whistleblower tape | chance:1 | prompt:A taped confession implicates the RMG. What do you do? Static hums through every bad decision.
@@ -147,7 +139,6 @@ title:Reconnect the facility telecom grid
 desc:Bring the facility telecom backbone online to accelerate idle dispatches. Trust is currency, and everyone is short on it.
 risk:high
 time:13
-energy:18
 loot:3
 lootType:signal crates
 reward:dispatch acceleration
@@ -162,7 +153,6 @@ label:Ledger Scoutline
 desc:Low-risk recon through the government facility fringe to chart safe lanes for rookies. Broken cameras still pivot like they remember faces.
 risk:low
 time:8
-energy:10
 loot:2
 lootType:route scraps
 event:Elder mapkeeper shares old chalk routes | chance:1 | prompt:The elder warns that loud routes wake dormant threats. Which route do you follow? Even the quiet sounds engineered.
@@ -175,7 +165,6 @@ label:Ledger Barter Circuit
 desc:Negotiate with fringe traders for utility gear and survival items. Trust is currency, and everyone is short on it.
 risk:low
 time:9
-energy:11
 loot:3
 lootType:barter goods
 event:Blackout market opens for one hour | chance:0.9 | prompt:A trader offers rare tools if you settle a dispute. Nobody here mistakes kindness for weakness anymore.
@@ -188,7 +177,6 @@ label:Ledger Shadow Lift
 desc:Pull crates from a contested block where stealth gear matters more than firepower. Broken cameras still pivot like they remember faces.
 risk:medium
 time:10
-energy:13
 loot:3
 lootType:stealth salvage
 event:Floodlights sweep the loading lane | chance:0.75 | prompt:You can move slowly under cover or rush the lift. Nobody here mistakes kindness for weakness anymore.
@@ -201,7 +189,6 @@ label:Ledger Vault Breach
 desc:High-risk push into a sealed vault loaded with specialized mission tools. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:13
-energy:17
 loot:5
 lootType:specialized gear
 event:Old vault AI demands a pledge to local survivors | chance:1 | prompt:The AI asks whether you will share findings with the settlement elders. The skyline glows like a wound after dark.
@@ -214,7 +201,6 @@ label:Ledger Legend Contract
 desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:16
-energy:20
 loot:6
 lootType:legend contract cache
 reward:mercenary recruitment
@@ -229,7 +215,6 @@ label:Idle network contract 1
 desc:Secure route node 1 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:7
-energy:9
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -245,7 +230,6 @@ label:Idle network contract 2
 desc:Secure route node 2 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:8
-energy:10
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -261,7 +245,6 @@ label:Idle network contract 3
 desc:Secure route node 3 so handlers can launch automated idle missions in this region. Even the quiet sounds engineered.
 risk:medium
 time:9
-energy:11
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -277,7 +260,6 @@ label:Idle network contract 4
 desc:Secure route node 4 so handlers can launch automated idle missions in this region. The skyline glows like a wound after dark.
 risk:medium
 time:10
-energy:12
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -293,7 +275,6 @@ label:Idle network contract 5
 desc:Secure route node 5 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:medium
 time:11
-energy:13
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -309,7 +290,6 @@ label:Idle network contract 6
 desc:Secure route node 6 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
 time:12
-energy:15
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -325,7 +305,6 @@ label:Idle network contract 7
 desc:Secure route node 7 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:high
 time:13
-energy:16
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -341,7 +320,6 @@ label:Idle network contract 8
 desc:Secure route node 8 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
 time:14
-energy:17
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -357,7 +335,6 @@ label:Idle network contract 9
 desc:Secure route node 9 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
 time:15
-energy:18
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -373,7 +350,6 @@ label:Idle network contract 10
 desc:Secure route node 10 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
 time:16
-energy:20
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -389,14 +365,13 @@ title:Ledger RMG Sweep 1
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:low
 time:6
-energy:7
 loot:2
 reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
 success:credits+7,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government-facility-faction-sweep-2
@@ -404,14 +379,13 @@ title:Ledger Abernathy Sweep 2
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:7
-energy:8
 loot:2
 reward:+1 AM relation
 faction:gang
 relationSuccess:1
 relationFail:0
 success:credits+8,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government-facility-faction-sweep-3
@@ -419,14 +393,13 @@ title:Ledger RMG Sweep 3
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:8
-energy:9
 loot:3
 reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
 success:credits+9,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government-facility-faction-sweep-4
@@ -434,14 +407,13 @@ title:Ledger Abernathy Sweep 4
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:9
-energy:10
 loot:3
 reward:+1 AM relation
 faction:gang
 relationSuccess:1
 relationFail:0
 success:credits+10,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government-facility-faction-sweep-5
@@ -449,14 +421,13 @@ title:Ledger RMG Sweep 5
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:10
-energy:11
 loot:4
 reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
 success:credits+11,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 # autogenerated expansion missions pack
 @mission
@@ -465,7 +436,6 @@ label:Frontline contract 1
 desc:Take on contract 1 to secure routes, salvage intel, and keep the government facility network operating. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:7
-energy:8
 loot:1
 reward:sector stabilization
 combatChance:0.15
@@ -478,11 +448,10 @@ label:Frontline contract 2
 desc:Take on contract 2 to secure routes, salvage intel, and keep the government facility network operating. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:8
-energy:9
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+success:credits+9,hp+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
 fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
@@ -491,11 +460,10 @@ label:Frontline contract 3
 desc:Take on contract 3 to secure routes, salvage intel, and keep the government facility network operating. Trust is currency, and everyone is short on it.
 risk:medium
 time:9
-energy:10
 loot:1
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+success:credits+10,xp+6,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
 fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
@@ -504,7 +472,6 @@ label:Frontline contract 4
 desc:Take on contract 4 to secure routes, salvage intel, and keep the government facility network operating. Static hums through every bad decision.
 risk:high
 time:10
-energy:11
 loot:2
 reward:sector stabilization
 combatChance:0.15
@@ -517,11 +484,10 @@ label:Frontline contract 5
 desc:Take on contract 5 to secure routes, salvage intel, and keep the government facility network operating. The skyline glows like a wound after dark.
 risk:low
 time:11
-energy:12
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+15,hp+3,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+success:credits+15,hp+3,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
 fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
@@ -530,11 +496,10 @@ label:Frontline contract 6
 desc:Take on contract 6 to secure routes, salvage intel, and keep the government facility network operating. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:12
-energy:13
 loot:2
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+success:credits+16,xp+9,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
 fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
@@ -543,7 +508,6 @@ label:Frontline contract 7
 desc:Take on contract 7 to secure routes, salvage intel, and keep the government facility network operating. The skyline glows like a wound after dark.
 risk:deadly
 time:13
-energy:14
 loot:3
 reward:sector stabilization
 combatChance:0.15
@@ -556,11 +520,10 @@ label:Frontline contract 8
 desc:Take on contract 8 to secure routes, salvage intel, and keep the government facility network operating. Trust is currency, and everyone is short on it.
 risk:medium
 time:14
-energy:15
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+21,hp+2,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+success:credits+21,hp+2,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
 fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
@@ -569,11 +532,10 @@ label:Frontline contract 9
 desc:Take on contract 9 to secure routes, salvage intel, and keep the government facility network operating. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:15
-energy:16
 loot:1
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+success:credits+22,xp+12,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
 fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
@@ -582,7 +544,6 @@ label:Frontline contract 10
 desc:Take on contract 10 to secure routes, salvage intel, and keep the government facility network operating. Even the quiet sounds engineered.
 risk:high
 time:16
-energy:17
 loot:2
 reward:sector stabilization
 combatChance:0.15
@@ -595,7 +556,6 @@ label:Retro salvage stockpile
 desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones. The skyline glows like a wound after dark.
 risk:high
 time:15
-energy:18
 loot:8
 lootType:retro cache trove
 event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run? Nobody here mistakes kindness for weakness anymore.
@@ -608,7 +568,6 @@ label:Extract silver catalyst mesh from Lab Archive C
 desc:Ledger scientists hid a silver catalyst mesh in Lab Archive C when the water riots started.
 risk:high
 time:12
-energy:14
 loot:2
 lootType:research cache
 reward:filtration component

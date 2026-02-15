@@ -29,7 +29,6 @@ label:Anomaly sweep
 desc:Thread the rift corridors for advanced tools and supplies. Broken cameras still pivot like they remember faces.
 risk:high
 time:16
-energy:22
 loot:5
 lootType:rift supplies
 event:Rift anomaly shear | chance:0.5 | prompt:A shear opens in the corridor. Choose your path. Nobody here mistakes kindness for weakness anymore.
@@ -42,7 +41,6 @@ label:Temporal lab breach
 desc:Break into the time labs for elite gear and weapons. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:18
-energy:24
 loot:6
 lootType:rift armory
 event:Temporal researcher offers a deal | chance:1 | prompt:A researcher offers their stash for safe passage. What's your move? Trust is currency, and everyone is short on it.
@@ -55,7 +53,6 @@ label:Singularity vault
 desc:Use the rift vault key to access the sealed singularity cache. Broken cameras still pivot like they remember faces.
 risk:deadly
 time:21
-energy:26
 loot:7
 lootType:singularity cache
 key:1
@@ -70,7 +67,6 @@ label:Anomaly whisper survey
 desc:Chase a faint whisper across the rift lattice for hidden caches. Static hums through every bad decision.
 risk:deadly
 time:17
-energy:23
 loot:5
 lootType:rift salvage
 unlockFlag:secret-rift-mission
@@ -85,7 +81,6 @@ label:Orbiting observatory raid
 desc:Climb the floating observatory for anomaly data and rare tools. Trust is currency, and everyone is short on it.
 risk:deadly
 time:18
-energy:24
 loot:6
 lootType:rift research cache
 event:Observation lens misaligns | chance:0.6 | prompt:The observation lens spins out of alignment mid-run. Trust is currency, and everyone is short on it.
@@ -98,7 +93,6 @@ label:Lattice relay run
 desc:Run the rift lattice to recover signal nodes and sealed water. Broken cameras still pivot like they remember faces.
 risk:high
 time:16
-energy:22
 loot:5
 lootType:rift signal nodes
 event:Lattice echo offers a trade | chance:1 | prompt:A lattice echo offers coordinates in exchange for a sample. Nobody here mistakes kindness for weakness anymore.
@@ -111,7 +105,6 @@ label:Anomaly garden sweep
 desc:Harvest anomaly growths and rare provisions from the rift garden. Even the quiet sounds engineered.
 risk:high
 time:15
-energy:21
 loot:5
 lootType:rift provisions
 event:Garden guardian blocks the path | chance:0.55 | prompt:A guardian entity blocks the growths you need. Nobody here mistakes kindness for weakness anymore.
@@ -124,7 +117,6 @@ title:Connect rift telecoms (part 1/2)
 desc:Find the missing stabilizers and trace the broken signal lattice. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:14
-energy:22
 loot:2
 lootType:signal parts
 reward:signal stabilizers
@@ -139,7 +131,6 @@ title:Connect rift telecoms (part 2/2)
 desc:Install the stabilizers and lock the uplink into the rift core. Trust is currency, and everyone is short on it.
 risk:deadly
 time:16
-energy:24
 loot:3
 lootType:signal crates
 reward:idle dispatch uplink
@@ -155,7 +146,6 @@ label:Riftworks Scoutline
 desc:Low-risk recon through the rift complex fringe to chart safe lanes for rookies. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:8
-energy:10
 loot:2
 lootType:route scraps
 event:Elder mapkeeper shares old chalk routes | chance:1 | prompt:The elder warns that loud routes wake dormant threats. Which route do you follow? Even the quiet sounds engineered.
@@ -168,7 +158,6 @@ label:Riftworks Barter Circuit
 desc:Negotiate with fringe traders for utility gear and survival items. Trust is currency, and everyone is short on it.
 risk:low
 time:9
-energy:11
 loot:3
 lootType:barter goods
 event:Blackout market opens for one hour | chance:0.9 | prompt:A trader offers rare tools if you settle a dispute. Nobody here mistakes kindness for weakness anymore.
@@ -181,7 +170,6 @@ label:Riftworks Shadow Lift
 desc:Pull crates from a contested block where stealth gear matters more than firepower. Broken cameras still pivot like they remember faces.
 risk:medium
 time:10
-energy:13
 loot:3
 lootType:stealth salvage
 event:Floodlights sweep the loading lane | chance:0.75 | prompt:You can move slowly under cover or rush the lift. Nobody here mistakes kindness for weakness anymore.
@@ -194,7 +182,6 @@ label:Riftworks Vault Breach
 desc:High-risk push into a sealed vault loaded with specialized mission tools. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:13
-energy:17
 loot:5
 lootType:specialized gear
 event:Old vault AI demands a pledge to local survivors | chance:1 | prompt:The AI asks whether you will share findings with the settlement elders. The skyline glows like a wound after dark.
@@ -207,7 +194,6 @@ label:Riftworks Legend Contract
 desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:16
-energy:20
 loot:6
 lootType:legend contract cache
 reward:mercenary recruitment
@@ -222,7 +208,6 @@ label:Idle network contract 1
 desc:Secure route node 1 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:7
-energy:9
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -238,7 +223,6 @@ label:Idle network contract 2
 desc:Secure route node 2 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:8
-energy:10
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -254,7 +238,6 @@ label:Idle network contract 3
 desc:Secure route node 3 so handlers can launch automated idle missions in this region. Even the quiet sounds engineered.
 risk:medium
 time:9
-energy:11
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -270,7 +253,6 @@ label:Idle network contract 4
 desc:Secure route node 4 so handlers can launch automated idle missions in this region. The skyline glows like a wound after dark.
 risk:medium
 time:10
-energy:12
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -286,7 +268,6 @@ label:Idle network contract 5
 desc:Secure route node 5 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:medium
 time:11
-energy:13
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -302,7 +283,6 @@ label:Idle network contract 6
 desc:Secure route node 6 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
 time:12
-energy:15
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -318,7 +298,6 @@ label:Idle network contract 7
 desc:Secure route node 7 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:high
 time:13
-energy:16
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -334,7 +313,6 @@ label:Idle network contract 8
 desc:Secure route node 8 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
 time:14
-energy:17
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -350,7 +328,6 @@ label:Idle network contract 9
 desc:Secure route node 9 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
 time:15
-energy:18
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -366,7 +343,6 @@ label:Idle network contract 10
 desc:Secure route node 10 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
 time:16
-energy:20
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
@@ -382,14 +358,13 @@ title:Riftworks RMG Sweep 1
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:low
 time:6
-energy:7
 loot:2
 reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
 success:credits+7,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:rift-complex-faction-sweep-2
@@ -397,14 +372,13 @@ title:Riftworks Abernathy Sweep 2
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:7
-energy:8
 loot:2
 reward:+1 AM relation
 faction:gang
 relationSuccess:1
 relationFail:0
 success:credits+8,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:rift-complex-faction-sweep-3
@@ -412,14 +386,13 @@ title:Riftworks RMG Sweep 3
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:8
-energy:9
 loot:3
 reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
 success:credits+9,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:rift-complex-faction-sweep-4
@@ -427,14 +400,13 @@ title:Riftworks Abernathy Sweep 4
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:9
-energy:10
 loot:3
 reward:+1 AM relation
 faction:gang
 relationSuccess:1
 relationFail:0
 success:credits+10,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:rift-complex-faction-sweep-5
@@ -442,14 +414,13 @@ title:Riftworks RMG Sweep 5
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:10
-energy:11
 loot:4
 reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
 success:credits+11,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 # autogenerated expansion missions pack
 @mission
@@ -458,7 +429,6 @@ label:Frontline contract 1
 desc:Take on contract 1 to secure routes, salvage intel, and keep the rift complex network operating. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:7
-energy:8
 loot:1
 reward:sector stabilization
 combatChance:0.15
@@ -471,11 +441,10 @@ label:Frontline contract 2
 desc:Take on contract 2 to secure routes, salvage intel, and keep the rift complex network operating. The skyline glows like a wound after dark.
 risk:medium
 time:8
-energy:9
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+success:credits+9,hp+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
 fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
@@ -484,11 +453,10 @@ label:Frontline contract 3
 desc:Take on contract 3 to secure routes, salvage intel, and keep the rift complex network operating. Even the quiet sounds engineered.
 risk:medium
 time:9
-energy:10
 loot:1
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+success:credits+10,xp+6,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
 fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
@@ -497,7 +465,6 @@ label:Frontline contract 4
 desc:Take on contract 4 to secure routes, salvage intel, and keep the rift complex network operating. Even the quiet sounds engineered.
 risk:high
 time:10
-energy:11
 loot:2
 reward:sector stabilization
 combatChance:0.15
@@ -510,11 +477,10 @@ label:Frontline contract 5
 desc:Take on contract 5 to secure routes, salvage intel, and keep the rift complex network operating. Broken cameras still pivot like they remember faces.
 risk:low
 time:11
-energy:12
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+15,hp+3,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+success:credits+15,hp+3,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
 fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
@@ -523,11 +489,10 @@ label:Frontline contract 6
 desc:Take on contract 6 to secure routes, salvage intel, and keep the rift complex network operating. The skyline glows like a wound after dark.
 risk:high
 time:12
-energy:13
 loot:2
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+success:credits+16,xp+9,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
 fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
@@ -536,7 +501,6 @@ label:Frontline contract 7
 desc:Take on contract 7 to secure routes, salvage intel, and keep the rift complex network operating. Even the quiet sounds engineered.
 risk:deadly
 time:13
-energy:14
 loot:3
 reward:sector stabilization
 combatChance:0.15
@@ -549,11 +513,10 @@ label:Frontline contract 8
 desc:Take on contract 8 to secure routes, salvage intel, and keep the rift complex network operating. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:14
-energy:15
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+21,hp+2,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+success:credits+21,hp+2,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
 fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
@@ -562,11 +525,10 @@ label:Frontline contract 9
 desc:Take on contract 9 to secure routes, salvage intel, and keep the rift complex network operating. The skyline glows like a wound after dark.
 risk:low
 time:15
-energy:16
 loot:1
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+success:credits+22,xp+12,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
 fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
@@ -575,7 +537,6 @@ label:Frontline contract 10
 desc:Take on contract 10 to secure routes, salvage intel, and keep the rift complex network operating. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:16
-energy:17
 loot:2
 reward:sector stabilization
 combatChance:0.15
@@ -588,10 +549,513 @@ label:Retro salvage stockpile
 desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones. The skyline glows like a wound after dark.
 risk:high
 time:15
-energy:18
 loot:8
 lootType:retro cache trove
 event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run? Nobody here mistakes kindness for weakness anymore.
 eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:rift-complex cram tin,item:rift-complex blamco mac can,item:rift-complex sunset fizz bottle,item:rift-complex dusty nuka cola,item:rift-complex instamash pouch,item:rift-complex preserved pie slice,item:rift-complex sugar bombs box,item:rift-complex fancy lad snack cake,item:rift-complex old world coffee tin,item:rift-complex molded iguana bits,item:rift-complex military ration slab,item:rift-complex dehydrated mutfruit brick,item:rift-complex vault jerky strip,item:rift-complex stale gum drops,item:rift-complex salisbury steak tray,item:rift-complex cold pork n beans can,item:rift-complex combat helmet liner,item:rift-complex flak web harness,item:rift-complex service rifle stock,item:rift-complex pipe rifle receiver,item:rift-complex riot control visor,item:rift-complex trench shovel blade,item:rift-complex bayonet training sheath,item:rift-complex war map tube,item:rift-complex fatigue field jacket,item:rift-complex army canteen shell,item:rift-complex dog tag bundle,item:rift-complex entrenching tool head,item:rift-complex laser musket coil,item:rift-complex handmade shotgun frame,item:rift-complex atom-age pulse pistol,item:rift-complex retro raygun grip,item:rift-complex vacuum tube scope,item:rift-complex mr handy actuator,item:rift-complex fusion battery shell,item:rift-complex plasma torch nozzle,item:rift-complex geiger wristwatch,item:rift-complex pip-dial circuit board,item:rift-complex rocket car lunchbox,item:rift-complex chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
 eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:rift-complex cram tin,item:rift-complex blamco mac can,item:rift-complex sunset fizz bottle,item:rift-complex dusty nuka cola,item:rift-complex instamash pouch,item:rift-complex preserved pie slice,item:rift-complex sugar bombs box,item:rift-complex fancy lad snack cake,item:rift-complex old world coffee tin,item:rift-complex molded iguana bits,item:rift-complex military ration slab,item:rift-complex dehydrated mutfruit brick,item:rift-complex vault jerky strip,item:rift-complex stale gum drops,item:rift-complex salisbury steak tray,item:rift-complex cold pork n beans can,item:rift-complex combat helmet liner,item:rift-complex flak web harness,item:rift-complex service rifle stock,item:rift-complex pipe rifle receiver,item:rift-complex riot control visor,item:rift-complex trench shovel blade,item:rift-complex bayonet training sheath,item:rift-complex war map tube,item:rift-complex fatigue field jacket,item:rift-complex army canteen shell,item:rift-complex dog tag bundle,item:rift-complex entrenching tool head,item:rift-complex laser musket coil,item:rift-complex handmade shotgun frame,item:rift-complex atom-age pulse pistol,item:rift-complex retro raygun grip,item:rift-complex vacuum tube scope,item:rift-complex mr handy actuator,item:rift-complex fusion battery shell,item:rift-complex plasma torch nozzle,item:rift-complex geiger wristwatch,item:rift-complex pip-dial circuit board,item:rift-complex rocket car lunchbox,item:rift-complex chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
 
+@mission
+id:rift-deceit-01
+label:Contract Echo 01
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:medium
+time:9
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-02
+label:Contract Echo 02
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:medium
+time:10
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-03
+label:Contract Echo 03
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:medium
+time:11
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-04
+label:Contract Echo 04
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:medium
+time:12
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-05
+label:Contract Echo 05
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:medium
+time:13
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-06
+label:Contract Echo 06
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:medium
+time:8
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-07
+label:Contract Echo 07
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:medium
+time:9
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-08
+label:Contract Echo 08
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:medium
+time:10
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-09
+label:Contract Echo 09
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:medium
+time:11
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-10
+label:Contract Echo 10
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:high
+time:12
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-11
+label:Contract Echo 11
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:high
+time:13
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-12
+label:Contract Echo 12
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:high
+time:8
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-13
+label:Contract Echo 13
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:high
+time:9
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-14
+label:Contract Echo 14
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:high
+time:10
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-15
+label:Contract Echo 15
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:high
+time:11
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-16
+label:Contract Echo 16
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:high
+time:12
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-17
+label:Contract Echo 17
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:high
+time:13
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-18
+label:Contract Echo 18
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:high
+time:8
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-19
+label:Contract Echo 19
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:high
+time:9
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-20
+label:Contract Echo 20
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:deadly
+time:10
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-21
+label:Contract Echo 21
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:deadly
+time:11
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-22
+label:Contract Echo 22
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:deadly
+time:12
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-23
+label:Contract Echo 23
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:deadly
+time:13
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-24
+label:Contract Echo 24
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:deadly
+time:8
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-deceit-25
+label:Contract Echo 25
+desc:A calm fixer offers a clean shortcut through the rift fringe, but their details never quite line up.
+risk:deadly
+time:9
+loot:4
+lootType:misdirection cache
+event:Polite handler shares a 'verified' map | chance:1 | prompt:The handler swears their companion can guide you safely if you split your payout up front. Do you trust them?
+eventOption:Trust the handler and pay the advance => risk:high | tag:betrayal | success:credits+12,item:forged waypoint tag,log:The guide walks you into a mugging lane; you fight through and salvage the tag.| fail:credits-18,hp-8,log:The crew is jumped and your advance is gone before backup arrives.
+eventOption:Refuse politely and verify the route yourself => risk:low | tag:tech | success:credits+16,item:auth route seal,log:You spot forged timestamps and recover a safer route plus a bonus crate.| fail:credits-4,log:You lose time cross-checking route stamps, but avoid the ambush lane.
+event:Companion asks for a detour to 'help a contact' | chance:0.8 | prompt:The detour could be genuine, or a sidetrack to strip your packs. Choose a route.
+eventOption:Take the detour with the companion => risk:high | tag:moral | success:item:patched sidearm,credits+8,log:The contact was bait; hostiles rush in and you fight out with a sidearm.| fail:credits-12,hp-7,log:The sidetrack crew mugs your team and vanishes into maintenance shafts.
+eventOption:Hold mission discipline and stay on objective => risk:medium | tag:stealth | success:item:signal docket,credits+10,xp+4,log:Skipping the detour keeps the team safe and unlocks an efficient extraction route.| fail:hp-4,log:A roaming drone catches your trail, but the lane is still cleaner than the detour.
+
+@mission
+id:rift-lore-signal-01
+label:Decode Signal Log 01
+desc:Collect civilian chatter, abandoned service pings, and old command logs that hide practical survival advice.
+risk:low
+time:6
+loot:1
+lootType:signal fragments
+reward:world lore
+event:Recovered chatter packet | chance:1 | prompt:Which transcript do you prioritize?
+eventOption:Read transit-worker warnings => risk:low | tag:mercy | success:credits+6,flag:unlock-transit-routes,log:Workers warn that smiling couriers often mark victims with chalk circles; avoid marked gates for safe passage.| fail:log:The packet is corrupted and only half the warning survives.
+eventOption:Read scavenger guild rumors => risk:low | tag:tech | success:item:unlock ledger shard,credits+8,log:Guild rumors point to mission unlock terminals hidden behind coolant murals in three zones.| fail:credits-2,log:A fake rumor sends you to an empty relay.
+
+@mission
+id:rift-lore-signal-02
+label:Decode Signal Log 02
+desc:Collect civilian chatter, abandoned service pings, and old command logs that hide practical survival advice.
+risk:low
+time:6
+loot:1
+lootType:signal fragments
+reward:world lore
+event:Recovered chatter packet | chance:1 | prompt:Which transcript do you prioritize?
+eventOption:Read transit-worker warnings => risk:low | tag:mercy | success:credits+6,flag:unlock-transit-routes,log:Workers warn that smiling couriers often mark victims with chalk circles; avoid marked gates for safe passage.| fail:log:The packet is corrupted and only half the warning survives.
+eventOption:Read scavenger guild rumors => risk:low | tag:tech | success:item:unlock ledger shard,credits+8,log:Guild rumors point to mission unlock terminals hidden behind coolant murals in three zones.| fail:credits-2,log:A fake rumor sends you to an empty relay.
+
+@mission
+id:rift-lore-signal-03
+label:Decode Signal Log 03
+desc:Collect civilian chatter, abandoned service pings, and old command logs that hide practical survival advice.
+risk:low
+time:6
+loot:1
+lootType:signal fragments
+reward:world lore
+event:Recovered chatter packet | chance:1 | prompt:Which transcript do you prioritize?
+eventOption:Read transit-worker warnings => risk:low | tag:mercy | success:credits+6,flag:unlock-transit-routes,log:Workers warn that smiling couriers often mark victims with chalk circles; avoid marked gates for safe passage.| fail:log:The packet is corrupted and only half the warning survives.
+eventOption:Read scavenger guild rumors => risk:low | tag:tech | success:item:unlock ledger shard,credits+8,log:Guild rumors point to mission unlock terminals hidden behind coolant murals in three zones.| fail:credits-2,log:A fake rumor sends you to an empty relay.
+
+@mission
+id:rift-lore-signal-04
+label:Decode Signal Log 04
+desc:Collect civilian chatter, abandoned service pings, and old command logs that hide practical survival advice.
+risk:low
+time:6
+loot:1
+lootType:signal fragments
+reward:world lore
+event:Recovered chatter packet | chance:1 | prompt:Which transcript do you prioritize?
+eventOption:Read transit-worker warnings => risk:low | tag:mercy | success:credits+6,flag:unlock-transit-routes,log:Workers warn that smiling couriers often mark victims with chalk circles; avoid marked gates for safe passage.| fail:log:The packet is corrupted and only half the warning survives.
+eventOption:Read scavenger guild rumors => risk:low | tag:tech | success:item:unlock ledger shard,credits+8,log:Guild rumors point to mission unlock terminals hidden behind coolant murals in three zones.| fail:credits-2,log:A fake rumor sends you to an empty relay.
+
+@mission
+id:rift-lore-signal-05
+label:Decode Signal Log 05
+desc:Collect civilian chatter, abandoned service pings, and old command logs that hide practical survival advice.
+risk:low
+time:6
+loot:1
+lootType:signal fragments
+reward:world lore
+event:Recovered chatter packet | chance:1 | prompt:Which transcript do you prioritize?
+eventOption:Read transit-worker warnings => risk:low | tag:mercy | success:credits+6,flag:unlock-transit-routes,log:Workers warn that smiling couriers often mark victims with chalk circles; avoid marked gates for safe passage.| fail:log:The packet is corrupted and only half the warning survives.
+eventOption:Read scavenger guild rumors => risk:low | tag:tech | success:item:unlock ledger shard,credits+8,log:Guild rumors point to mission unlock terminals hidden behind coolant murals in three zones.| fail:credits-2,log:A fake rumor sends you to an empty relay.
+
+@mission
+id:rift-lore-signal-06
+label:Decode Signal Log 06
+desc:Collect civilian chatter, abandoned service pings, and old command logs that hide practical survival advice.
+risk:low
+time:6
+loot:1
+lootType:signal fragments
+reward:world lore
+event:Recovered chatter packet | chance:1 | prompt:Which transcript do you prioritize?
+eventOption:Read transit-worker warnings => risk:low | tag:mercy | success:credits+6,flag:unlock-transit-routes,log:Workers warn that smiling couriers often mark victims with chalk circles; avoid marked gates for safe passage.| fail:log:The packet is corrupted and only half the warning survives.
+eventOption:Read scavenger guild rumors => risk:low | tag:tech | success:item:unlock ledger shard,credits+8,log:Guild rumors point to mission unlock terminals hidden behind coolant murals in three zones.| fail:credits-2,log:A fake rumor sends you to an empty relay.
+
+@mission
+id:rift-lore-signal-07
+label:Decode Signal Log 07
+desc:Collect civilian chatter, abandoned service pings, and old command logs that hide practical survival advice.
+risk:low
+time:6
+loot:1
+lootType:signal fragments
+reward:world lore
+event:Recovered chatter packet | chance:1 | prompt:Which transcript do you prioritize?
+eventOption:Read transit-worker warnings => risk:low | tag:mercy | success:credits+6,flag:unlock-transit-routes,log:Workers warn that smiling couriers often mark victims with chalk circles; avoid marked gates for safe passage.| fail:log:The packet is corrupted and only half the warning survives.
+eventOption:Read scavenger guild rumors => risk:low | tag:tech | success:item:unlock ledger shard,credits+8,log:Guild rumors point to mission unlock terminals hidden behind coolant murals in three zones.| fail:credits-2,log:A fake rumor sends you to an empty relay.
+
+@mission
+id:rift-lore-signal-08
+label:Decode Signal Log 08
+desc:Collect civilian chatter, abandoned service pings, and old command logs that hide practical survival advice.
+risk:low
+time:6
+loot:1
+lootType:signal fragments
+reward:world lore
+event:Recovered chatter packet | chance:1 | prompt:Which transcript do you prioritize?
+eventOption:Read transit-worker warnings => risk:low | tag:mercy | success:credits+6,flag:unlock-transit-routes,log:Workers warn that smiling couriers often mark victims with chalk circles; avoid marked gates for safe passage.| fail:log:The packet is corrupted and only half the warning survives.
+eventOption:Read scavenger guild rumors => risk:low | tag:tech | success:item:unlock ledger shard,credits+8,log:Guild rumors point to mission unlock terminals hidden behind coolant murals in three zones.| fail:credits-2,log:A fake rumor sends you to an empty relay.
+
+@mission
+id:rift-lore-signal-09
+label:Decode Signal Log 09
+desc:Collect civilian chatter, abandoned service pings, and old command logs that hide practical survival advice.
+risk:low
+time:6
+loot:1
+lootType:signal fragments
+reward:world lore
+event:Recovered chatter packet | chance:1 | prompt:Which transcript do you prioritize?
+eventOption:Read transit-worker warnings => risk:low | tag:mercy | success:credits+6,flag:unlock-transit-routes,log:Workers warn that smiling couriers often mark victims with chalk circles; avoid marked gates for safe passage.| fail:log:The packet is corrupted and only half the warning survives.
+eventOption:Read scavenger guild rumors => risk:low | tag:tech | success:item:unlock ledger shard,credits+8,log:Guild rumors point to mission unlock terminals hidden behind coolant murals in three zones.| fail:credits-2,log:A fake rumor sends you to an empty relay.
+
+@mission
+id:rift-lore-signal-10
+label:Decode Signal Log 10
+desc:Collect civilian chatter, abandoned service pings, and old command logs that hide practical survival advice.
+risk:low
+time:6
+loot:1
+lootType:signal fragments
+reward:world lore
+event:Recovered chatter packet | chance:1 | prompt:Which transcript do you prioritize?
+eventOption:Read transit-worker warnings => risk:low | tag:mercy | success:credits+6,flag:unlock-transit-routes,log:Workers warn that smiling couriers often mark victims with chalk circles; avoid marked gates for safe passage.| fail:log:The packet is corrupted and only half the warning survives.
+eventOption:Read scavenger guild rumors => risk:low | tag:tech | success:item:unlock ledger shard,credits+8,log:Guild rumors point to mission unlock terminals hidden behind coolant murals in three zones.| fail:credits-2,log:A fake rumor sends you to an empty relay.
