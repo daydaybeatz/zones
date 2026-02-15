@@ -1,139 +1,164 @@
 @expansion
-id:safehouse
-name:Wastelander: The Last Lantern
-summary:The Last Lantern is a welded refuge where scouts trade rumors, patch armor, and decide which danger is worth tomorrow. No loot runs begin here—only hard choices and harder recoveries.
-arrivalDialog:Steward Lyra: Lantern walls hold because everyone pays in labor, not promises. Even the quiet sounds engineered.
-missionStartDialog:Quartermaster Nix: Bring back what keeps people alive—water seals, meds, and proof we can still trust each other. Even the quiet sounds engineered.
-missionEndDialog:Medic Hale: Every crate you drag home buys one more sunrise for someone who almost gave up. Broken cameras still pivot like they remember faces.
+id:metro_ganglands
+name:Neon Gutline
+summary:A rail maze turned black-market artery where gang brokers, masked zealots, and hungry scav crews trade in steel, blood, and favors.
+temp:hot
+arrivalDialog:Lookout Jax: Flash the wrong sign and the tracks become your grave. Nobody here mistakes kindness for weakness anymore.
+missionStartDialog:Fixer Sera: Every deal here has a knife hidden in it. Nobody here mistakes kindness for weakness anymore.
+missionEndDialog:Courier Pax: You made it out loaded. That means someone else did not. Nobody here mistakes kindness for weakness anymore.
+unlockCost:50
 shop:true
+bar:true
+barHireCost:35
 
 @door
-label:Safe House Airlock
-hint:rest, shop, recovery
-risk:low
-note:The airlock seals and the bunker hum steadies your breathing. Static hums through every bad decision.
-target:commons
-
-@scene commons
-title:Safe House Commons. Even the quiet sounds engineered.
-desc:Warm lights, clean water, and the trade counter keep the crew steady between runs. Trust is currency, and everyone is short on it.
-tags:Safe / Hub
-option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,energy+14,credits+6,temp=normal,log:The bunk warmth sinks into your bones. Trust is currency, and everyone is short on it.| fail:credits-2,log:Sleep won't come tonight. Nobody here mistakes kindness for weakness anymore.
-option:Repack the supply crates => commons | risk:low | time:5 | reward:prep | success:energy+6,credits+4,log:You sort fresh crates and restock the outbound packs. Trust is currency, and everyone is short on it.| fail:energy-2,log:The crate seals jam and slow you down. Even the quiet sounds engineered.
-
-@mission
-id:safehouse-elders
-label:Talk to the bunker elders for advice
-desc:Sit with the bunker elders to trade stories and learn hard-won survival wisdom. Nobody here mistakes kindness for weakness anymore.
-risk:low
-time:6
-energy:6
-loot:0
-reward:elder advice
-combatChance:0
-hub:true
-event:Elders share vault upgrade lore | chance:0.6 | prompt:The elders whisper about stash equipment upgrades hidden behind locked doors. What do you ask about? Broken cameras still pivot like they remember faces.
-eventOption:Ask about food upgrades => risk:low | tag:mercy | success:log:They mention a microwave, spice locker, and ration heater array that make rations stretch further. Even the quiet sounds engineered.| fail:log:The elder waves you off with a tired sigh. The skyline glows like a wound after dark.
-eventOption:Ask about medical upgrades => risk:low | tag:mercy | success:log:They recall sterile lights, autoclaves, and medbay analyzers that make medicine hit harder. Broken cameras still pivot like they remember faces.| fail:log:They tell you to come back with fresh tea. Nobody here mistakes kindness for weakness anymore.
-eventOption:Ask about rest upgrades => risk:low | tag:mercy | success:log:They describe expensive bedding and recovery recliners that cut rest time and restore more. Trust is currency, and everyone is short on it.| fail:log:They fall silent, lost in memory. Trust is currency, and everyone is short on it.
-event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice about dodging RMG patrols and Abernathy Militia recruiters. How do you respond? Nobody here mistakes kindness for weakness anymore.
-eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. Trust is currency, and everyone is short on it.| fail:credits-3,log:The runner panics and bolts. Broken cameras still pivot like they remember faces.
-eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. The skyline glows like a wound after dark.| fail:credits-5,log:The elders hear about the rumor sale. Static hums through every bad decision.
-
-@mission
-id:safehouse-ledger
-label:Audit the ration ledger
-desc:Cross-check the ration ledger with the vault shelves to catch any gaps in supply. Nobody here mistakes kindness for weakness anymore.
-risk:low
-time:6
-energy:6
-loot:0
-reward:ration audit
-combatChance:0
-hub:true
-success:credits+6,log:You reconcile the ledger and recover a few forgotten credits. Broken cameras still pivot like they remember faces.
-fail:credits-3,log:Numbers blur together and the audit stalls out. Even the quiet sounds engineered.
-
-@mission
-id:safehouse-watch
-label:Walk the outer watch
-desc:Circle the perimeter checkpoints and confirm the signal lamps still burn. The skyline glows like a wound after dark.
-risk:low
-time:7
-energy:7
-loot:0
-reward:perimeter check
-combatChance:0
-hub:true
-success:energy+4,credits+4,log:The lamps are steady and the watch captain slips you a token. Static hums through every bad decision.
-fail:hp-2,log:A slick rung sends you down a few steps. Broken cameras still pivot like they remember faces.
-
-@mission
-id:safehouse-welds
-label:Reinforce the generator welds
-desc:Help the engineers keep the generator wall stable with a quick weld pass. Broken cameras still pivot like they remember faces.
-risk:low
-time:6
-energy:8
-loot:0
-reward:generator stability
-combatChance:0
-hub:true
-success:energy+6,log:The welds hold and the humming wall steadies. Even the quiet sounds engineered.
-fail:hp-2,log:A spark bites your glove and ends the shift early. Nobody here mistakes kindness for weakness anymore.
-
-@mission
-id:safehouse-hush
-label:Trace the quiet signal
-desc:Follow a faint relay ping to recover whispered intel for the elders. Even the quiet sounds engineered.
-risk:low
-time:7
-energy:8
-loot:1
-lootType:signal scraps
-reward:quiet intel
-hub:true
-unlockFlag:secret-safehouse-ops
-consumeFlag:secret-safehouse-ops
-event:Relay shadow crossing | chance:0.6 | prompt:A patrol cuts across the whispering line. Choose your approach. Trust is currency, and everyone is short on it.
-eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. Trust is currency, and everyone is short on it.| fail:hp-3,credits-2,log:A clang gives you away. Trust is currency, and everyone is short on it.
-eventOption:Confront the patrol => risk:medium | tag:combat | success:item:coil battery,log:You overpower the patrol and seize their battery. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:A scuffle leaves you bruised. The skyline glows like a wound after dark.
-
-@quest
-id:safehouse-firing-range
-title:Go to the firing range. Even the quiet sounds engineered.
-desc:A bunker elder walks you through the firing range and drills you on recoil control. Static hums through every bad decision.
-risk:low
-time:8
-energy:8
-loot:0
-reward:training session
-minLevel:3
-once:true
-flag:safehouse-firing-range
-hideWhenComplete:true
-success:item:field handgun,item:handgun ammo,item:handgun ammo,log:The elder approves your stance and hands you a field handgun with two rounds. Even the quiet sounds engineered.
-fail:log:Your grouping is off today. The elder sends you back to rest. Even the quiet sounds engineered.
-
-@quest
-id:safehouse-vents
-title:Fix the ventilation system. Nobody here mistakes kindness for weakness anymore.
-desc:Patch the corroded vent intake so the bunker can cycle clean air again. Static hums through every bad decision.
+label:Ganglands Turnstile
+hint:mid-tier gear, hot tunnel air, weapons, telecom job
 risk:medium
-time:9
+note:Graffiti and torchlight guide you into the rail shanty. Nobody here mistakes kindness for weakness anymore.
+target:concourse
+
+@scene concourse
+title:Shanty Concourse
+desc:Ticket booths are barricaded into gang posts and scrap stalls, and the tunnel air runs hot. Nobody here mistakes kindness for weakness anymore.
+tags:Metro / Hostile
+option:Pay for a safe route => concourse | risk:low | time:6 | reward:safe passage | success:credits-6,log:A toll buys a quieter lane. Nobody here mistakes kindness for weakness anymore.| fail:hp-4,log:A lookout tags you on the way through. Even the quiet sounds engineered.
+option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:trackside vest,item:torchlight lantern,log:You nab mid-tier tools before the guards return. Even the quiet sounds engineered.| fail:hp-5,credits-2,log:A sentry clips you on the exit. Static hums through every bad decision.
+
+@mission
+id:gangland-supply
+label:Shanty supply pull
+desc:Run the tunnels for mid-tier clothing and weapons. Static hums through every bad decision.
+risk:medium
+time:11
+energy:14
+loot:3
+lootType:mid-tier gear
+event:Rail patrol crossing | chance:0.5 | prompt:A Abernathy Militia patrol blocks the rail spur. Decide how to clear it. Nobody here mistakes kindness for weakness anymore.
+eventOption:Sneak along the service duct => risk:medium | tag:stealth | success:item:rail map rig,credits+6,log:You slip by and snag a route rig. The skyline glows like a wound after dark.| fail:hp-5,credits-2,log:Boots scrape metal and draw fire. Static hums through every bad decision.
+eventOption:Charge through head-on => risk:high | tag:combat | success:item:rail spike mace,log:You smash through and claim a heavy mace. Static hums through every bad decision.| fail:hp-8,log:The patrol drives you back hard. The skyline glows like a wound after dark.
+
+@mission
+id:tunnel-sweep
+label:Rail line sweep
+desc:Search maintenance shafts for weapons and equipment. Nobody here mistakes kindness for weakness anymore.
+risk:medium
+time:10
+energy:13
+loot:3
+lootType:weapons & gear
+event:Runner swaps crate tags | chance:1 | prompt:A runner offers to flip tags on a crate mid-raid. Take the risk? Static hums through every bad decision.
+eventOption:Honor the exchange => risk:medium | tag:mercy | success:item:trackside vest,credits+5,log:The runner keeps their word and slips you a vest. Trust is currency, and everyone is short on it.| fail:credits-3,log:The runner vanishes before the swap finishes. Nobody here mistakes kindness for weakness anymore.
+eventOption:Double-cross the runner => risk:high | tag:betrayal | success:credits+14,item:coin string,log:You keep the crate and lift a coin string. Broken cameras still pivot like they remember faces.| fail:hp-6,credits-4,log:The runner's crew retaliates. Even the quiet sounds engineered.
+
+@mission
+id:gang-assist
+label:Assist Abernathy Militia runners
+desc:Escort Abernathy Militia runners and return tagged crates to the gang. High standing (+8) required; success boosts Abernathy Militia relations (+2) and keeps combat risk lower. The skyline glows like a wound after dark.
+risk:medium
+time:10
 energy:12
-loot:1
-lootType:maintenance cache
-reward:ventilation restored
-success:item:spare filter,item:tool roll,credits+8,credits+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online. The skyline glows like a wound after dark.
-fail:temp-3,credits-4
-flag:safehouse-vents
+loot:2
+lootType:gang stock
+reward:Abernathy Militia favor
+combatChance:0.25
+faction:gang
+relationMin:8
+relationSuccess:2
+relationFail:-1
+event:Militia runner asks for restraint | chance:0.7 | prompt:A runner asks you to keep bystanders safe during the escort. Do you agree? Static hums through every bad decision.
+eventOption:Shield the civilians => risk:medium | tag:mercy | success:credits+6,item:rail map rig,log:The escort stays clean and the runner shares a route rig. Static hums through every bad decision.| fail:credits-3,log:The crowd panics and slows the convoy. Static hums through every bad decision.
+eventOption:Push through no matter what => risk:high | tag:betrayal | success:item:coin string,credits+12,log:You keep the pace and pocket a coin string. Trust is currency, and everyone is short on it.| fail:hp-6,credits-4,log:The rush sparks a skirmish. Static hums through every bad decision.
+
+@mission
+id:gang-sabotage
+label:Sabotage Abernathy Militia caches
+desc:Poison the gang’s supply line to hurt the Abernathy Militia (-2 relation). Only crews with low standing (≤ -5) can pull this; combat risk rises when relations are bad. Trust is currency, and everyone is short on it.
+risk:high
+time:12
+energy:15
+loot:3
+lootType:stolen stock
+reward:sabotage intel
+combatChance:0.55
+faction:gang
+relationMax:-5
+relationSuccess:-2
+relationFail:-1
+event:Cache guard offers a bribe | chance:0.65 | prompt:A guard offers to look away if you spare their family stash. Nobody here mistakes kindness for weakness anymore.
+eventOption:Take the bribe and spare it => risk:medium | tag:mercy | success:credits+10,item:gang patchwork pants,log:You take the bribe and leave the family stash alone. Broken cameras still pivot like they remember faces.| fail:credits-4,log:The guard backs out and raises an alarm. Static hums through every bad decision.
+eventOption:Take everything anyway => risk:high | tag:betrayal | success:item:rail spike mace,credits+16,log:You clear the cache and leave no supplies behind. Static hums through every bad decision.| fail:hp-7,credits-5,log:The guard's squad corners you. Even the quiet sounds engineered.
+
+@mission
+id:ganglands-security-cache
+label:Security supply room raid
+desc:Use the security supply room key to access the guarded arsenal cage. Static hums through every bad decision.
+risk:high
+time:14
+energy:18
+loot:5
+lootType:weapons & armored gear
+key:1
+combatChance:0.5
+
+@mission
+id:ganglands-market-tax
+label:Market tax run
+desc:Collect scrap taxes from the bazaar stalls without starting a riot. Broken cameras still pivot like they remember faces.
+risk:medium
+time:11
+energy:14
+loot:3
+lootType:gang taxes
+event:Stall owner refuses to pay | chance:0.6 | prompt:A stall owner refuses to pay the tax and calls for help. Trust is currency, and everyone is short on it.
+eventOption:Offer a smaller cut => risk:medium | tag:mercy | success:credits+8,item:cloth scraps,log:They pay a reduced toll and toss extra cloth. Nobody here mistakes kindness for weakness anymore.| fail:credits-4,log:The stall owner stalls you until lookouts arrive. Static hums through every bad decision.
+eventOption:Enforce the tax by force => risk:high | tag:combat | success:item:stun baton,credits+10,log:You grab a baton and collect the tax. Even the quiet sounds engineered.| fail:hp-7,log:A brawl breaks out and you retreat. Even the quiet sounds engineered.
+
+@mission
+id:ganglands-switchyard
+label:Switchyard stash run
+desc:Slip into the switchyard to pull weapons and tools from rail crates. The skyline glows like a wound after dark.
+risk:high
+time:13
+energy:17
+loot:4
+lootType:rail crate weapons
+event:Overheated rail line | chance:0.55 | prompt:The rail line sparks and throws hot debris. Trust is currency, and everyone is short on it.
+eventOption:Cut power and wait => risk:medium | tag:tech | success:item:signal jammer,credits+8,log:You cut the power and grab a jammer. Static hums through every bad decision.| fail:credits-5,log:Downtime costs you supply access. The skyline glows like a wound after dark.
+eventOption:Dash through the sparks => risk:high | tag:stealth | success:item:riot shield,log:You sprint through and snag a riot shield. Even the quiet sounds engineered.| fail:hp-8,log:The sparks burn your arms. Even the quiet sounds engineered.
+
+@mission
+id:ganglands-tunnel-rescue
+label:Tunnel rescue sweep
+desc:Search a collapsed spur for survivors and hidden caches. Trust is currency, and everyone is short on it.
+risk:medium
+time:12
+energy:15
+loot:3
+lootType:survival caches
+event:Trapped runner calls out | chance:1 | prompt:A runner is pinned under a beam and begs for help. The skyline glows like a wound after dark.
+eventOption:Lift the beam and help them out => risk:medium | tag:mercy | success:credits+6,item:rail map rig,log:The runner shares a route rig in thanks. Trust is currency, and everyone is short on it.| fail:hp-5,log:The beam shifts and bruises you. Trust is currency, and everyone is short on it.
+eventOption:Take their pack and move on => risk:high | tag:betrayal | success:item:trackside vest,credits+12,log:You take the pack and slip away. The skyline glows like a wound after dark.| fail:hp-7,credits-4,log:The runner's crew catches up fast. Trust is currency, and everyone is short on it.
+
+@quest
+id:ganglands-telecom
+title:Reconnect the ganglands telecoms
+desc:Splice the shattered fiber lines and bring the relay back online. The skyline glows like a wound after dark.
+risk:medium
+time:12
+energy:16
+loot:3
+lootType:signal crates
+reward:mercenary contract
+success:item:signal jammer coil,credits+18,flag:ganglands-telecom,log:The relay hums to life. A mercenary answers the call, opening a second idle dispatch slot. Static hums through every bad decision.
+fail:hp-6,credits-4
+flag:ganglands-telecom
 once:true
 
 @mission
-id:safehouse-ops-scoutline
-label:Scoutline warm-up
-desc:Low-risk recon through the safehouse fringe to chart safe lanes for rookies. Trust is currency, and everyone is short on it.
+id:metro_ganglands-ops-scoutline
+label:Gutline Scoutline
+desc:Low-risk recon through the metro ganglands fringe to chart safe lanes for rookies. Even the quiet sounds engineered.
 risk:low
 time:8
 energy:10
@@ -144,8 +169,8 @@ eventOption:Follow the elder's silent route => risk:low | tag:mercy | success:it
 eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | success:item:impact baton,credits+7,log:You force a shorter route and grab a baton cache. Even the quiet sounds engineered.| fail:hp-5,log:An ambush bruises your squad. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-ops-supply-barter
-label:Supply barter circuit
+id:metro_ganglands-ops-supply-barter
+label:Gutline Barter Circuit
 desc:Negotiate with fringe traders for utility gear and survival items. Trust is currency, and everyone is short on it.
 risk:low
 time:9
@@ -157,8 +182,8 @@ eventOption:Mediate the dispute and keep order => risk:low | tag:mercy | success
 eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | success:item:metal detector,item:sealed ration tin,credits+9,log:You intimidate the traders and seize premium stock. The skyline glows like a wound after dark.| fail:hp-4,credits-3,log:Hidden guards push you out. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-ops-shadow-lift
-label:Shadow-lift extraction
+id:metro_ganglands-ops-shadow-lift
+label:Gutline Shadow Lift
 desc:Pull crates from a contested block where stealth gear matters more than firepower. Broken cameras still pivot like they remember faces.
 risk:medium
 time:10
@@ -170,8 +195,8 @@ eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:s
 eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. Broken cameras still pivot like they remember faces.| fail:hp-7,log:Backup lights trigger mid-run. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-ops-deep-vault
-label:Deep vault breach
+id:metro_ganglands-ops-deep-vault
+label:Gutline Vault Breach
 desc:High-risk push into a sealed vault loaded with specialized mission tools. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:13
@@ -183,8 +208,8 @@ eventOption:Promise a fair split and honor it => risk:high | tag:mercy | success
 eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betrayal | success:item:precision metal detector,item:shock weave armor,credits+17,log:You crack every locker before alarms cycle. Trust is currency, and everyone is short on it.| fail:hp-10,credits-6,log:The countermeasure grid fires. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-legend-merc-contract
-label:Legend contract: One-shot rescue
+id:metro_ganglands-legend-merc-contract
+label:Gutline Legend Contract
 desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:16
@@ -198,7 +223,7 @@ eventOption:Commit and hold the line for the veteran => risk:deadly | tag:mercy 
 eventOption:Abandon the call and loot the perimeter => risk:high | tag:betrayal | success:item:salvage satchel,credits+11,log:You skip the rescue and strip the perimeter. Trust is currency, and everyone is short on it.| fail:credits-6,log:Word spreads that you broke contract. Broken cameras still pivot like they remember faces.
 
 @mission
-id:safehouse-idle-unlock-1
+id:metro_ganglands-idle-unlock-1
 label:Idle network contract 1
 desc:Secure route node 1 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
@@ -207,14 +232,14 @@ energy:9
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:safehouse-idle-route-1
+unlockFlag:metro_ganglands-idle-route-1
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 1 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 1,item:field compass mk1,credits+5,log:The broker certifies node 1 for reliable idle runs. Static hums through every bad decision.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 1,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 1,item:survey binoculars 1,credits+10,log:You lock node 1 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-idle-unlock-2
+id:metro_ganglands-idle-unlock-2
 label:Idle network contract 2
 desc:Secure route node 2 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
@@ -223,14 +248,14 @@ energy:10
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:safehouse-idle-route-2
+unlockFlag:metro_ganglands-idle-route-2
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 2 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 2,item:field compass mk2,credits+5,log:The broker certifies node 2 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 2,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 2,item:survey binoculars 2,credits+10,log:You lock node 2 with premium payoff data. Even the quiet sounds engineered.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-idle-unlock-3
+id:metro_ganglands-idle-unlock-3
 label:Idle network contract 3
 desc:Secure route node 3 so handlers can launch automated idle missions in this region. Even the quiet sounds engineered.
 risk:medium
@@ -239,14 +264,14 @@ energy:11
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:safehouse-idle-route-3
+unlockFlag:metro_ganglands-idle-route-3
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 3 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 3,item:field compass mk3,credits+5,log:The broker certifies node 3 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 3,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 3,item:survey binoculars 3,credits+10,log:You lock node 3 with premium payoff data. Static hums through every bad decision.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-idle-unlock-4
+id:metro_ganglands-idle-unlock-4
 label:Idle network contract 4
 desc:Secure route node 4 so handlers can launch automated idle missions in this region. The skyline glows like a wound after dark.
 risk:medium
@@ -255,14 +280,14 @@ energy:12
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:safehouse-idle-route-4
+unlockFlag:metro_ganglands-idle-route-4
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 4 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 4,item:field compass mk4,credits+5,log:The broker certifies node 4 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 4,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 4,item:survey binoculars 4,credits+10,log:You lock node 4 with premium payoff data. The skyline glows like a wound after dark.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-idle-unlock-5
+id:metro_ganglands-idle-unlock-5
 label:Idle network contract 5
 desc:Secure route node 5 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:medium
@@ -271,14 +296,14 @@ energy:13
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:safehouse-idle-route-5
+unlockFlag:metro_ganglands-idle-route-5
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 5 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 5,item:field compass mk5,credits+5,log:The broker certifies node 5 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 5,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 5,item:survey binoculars 5,credits+10,log:You lock node 5 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-idle-unlock-6
+id:metro_ganglands-idle-unlock-6
 label:Idle network contract 6
 desc:Secure route node 6 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
@@ -287,14 +312,14 @@ energy:15
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:safehouse-idle-route-6
+unlockFlag:metro_ganglands-idle-route-6
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 6 forks into three lanes: safe, fast, and lucrative. Choose your call. The skyline glows like a wound after dark.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 6,item:field compass mk6,credits+5,log:The broker certifies node 6 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 6,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 6,item:survey binoculars 6,credits+10,log:You lock node 6 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-idle-unlock-7
+id:metro_ganglands-idle-unlock-7
 label:Idle network contract 7
 desc:Secure route node 7 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:high
@@ -303,14 +328,14 @@ energy:16
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:safehouse-idle-route-7
+unlockFlag:metro_ganglands-idle-route-7
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 7 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 7,item:field compass mk7,credits+5,log:The broker certifies node 7 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 7,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 7,item:survey binoculars 7,credits+10,log:You lock node 7 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-idle-unlock-8
+id:metro_ganglands-idle-unlock-8
 label:Idle network contract 8
 desc:Secure route node 8 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
@@ -319,14 +344,14 @@ energy:17
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:safehouse-idle-route-8
+unlockFlag:metro_ganglands-idle-route-8
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 8 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 8,item:field compass mk8,credits+5,log:The broker certifies node 8 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 8,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 8,item:survey binoculars 8,credits+10,log:You lock node 8 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-idle-unlock-9
+id:metro_ganglands-idle-unlock-9
 label:Idle network contract 9
 desc:Secure route node 9 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
@@ -335,14 +360,14 @@ energy:18
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:safehouse-idle-route-9
+unlockFlag:metro_ganglands-idle-route-9
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 9 forks into three lanes: safe, fast, and lucrative. Choose your call. Nobody here mistakes kindness for weakness anymore.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 9,item:field compass mk9,credits+5,log:The broker certifies node 9 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 9,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 9,item:survey binoculars 9,credits+10,log:You lock node 9 with premium payoff data. Trust is currency, and everyone is short on it.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-idle-unlock-10
+id:metro_ganglands-idle-unlock-10
 label:Idle network contract 10
 desc:Secure route node 10 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
@@ -351,15 +376,15 @@ energy:20
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:safehouse-idle-route-10
+unlockFlag:metro_ganglands-idle-route-10
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 10 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 10,item:field compass mk10,credits+5,log:The broker certifies node 10 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:safehouse-faction-sweep-1
-title:RMG Liaison Sweep 1. Even the quiet sounds engineered.
+id:metro-ganglands-faction-sweep-1
+title:Gutline RMG Sweep 1
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:low
 time:6
@@ -373,8 +398,8 @@ success:credits+7,log:Your report lands cleanly and RMG trust ticks up. Static h
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-faction-sweep-2
-title:AM Liaison Sweep 2. Trust is currency, and everyone is short on it.
+id:metro-ganglands-faction-sweep-2
+title:Gutline Abernathy Sweep 2
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:7
@@ -388,8 +413,8 @@ success:credits+8,log:Your report lands cleanly and AM trust ticks up. The skyli
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-faction-sweep-3
-title:RMG Liaison Sweep 3. Static hums through every bad decision.
+id:metro-ganglands-faction-sweep-3
+title:Gutline RMG Sweep 3
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:8
@@ -403,8 +428,8 @@ success:credits+9,log:Your report lands cleanly and RMG trust ticks up. Static h
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-faction-sweep-4
-title:AM Liaison Sweep 4. The skyline glows like a wound after dark.
+id:metro-ganglands-faction-sweep-4
+title:Gutline Abernathy Sweep 4
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:9
@@ -418,8 +443,8 @@ success:credits+10,log:Your report lands cleanly and AM trust ticks up. The skyl
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-faction-sweep-5
-title:RMG Liaison Sweep 5. Broken cameras still pivot like they remember faces.
+id:metro-ganglands-faction-sweep-5
+title:Gutline RMG Sweep 5
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:10
@@ -434,9 +459,9 @@ fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody her
 
 # autogenerated expansion missions pack
 @mission
-id:safehouse-new-01
+id:metro_ganglands-new-01
 label:Frontline contract 1
-desc:Take on contract 1 to secure routes, salvage intel, and keep the safehouse network operating. The skyline glows like a wound after dark.
+desc:Take on contract 1 to secure routes, salvage intel, and keep the metro ganglands network operating. Trust is currency, and everyone is short on it.
 risk:low
 time:7
 energy:8
@@ -447,9 +472,9 @@ success:credits+8,scrap+2,temp=normal,log:You stabilize the sector and recover t
 fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-new-02
+id:metro_ganglands-new-02
 label:Frontline contract 2
-desc:Take on contract 2 to secure routes, salvage intel, and keep the safehouse network operating. Trust is currency, and everyone is short on it.
+desc:Take on contract 2 to secure routes, salvage intel, and keep the metro ganglands network operating. Broken cameras still pivot like they remember faces.
 risk:medium
 time:8
 energy:9
@@ -460,9 +485,9 @@ success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals
 fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-new-03
+id:metro_ganglands-new-03
 label:Frontline contract 3
-desc:Take on contract 3 to secure routes, salvage intel, and keep the safehouse network operating. Broken cameras still pivot like they remember faces.
+desc:Take on contract 3 to secure routes, salvage intel, and keep the metro ganglands network operating. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:9
 energy:10
@@ -473,9 +498,9 @@ success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and 
 fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
-id:safehouse-new-04
+id:metro_ganglands-new-04
 label:Frontline contract 4
-desc:Take on contract 4 to secure routes, salvage intel, and keep the safehouse network operating. Trust is currency, and everyone is short on it.
+desc:Take on contract 4 to secure routes, salvage intel, and keep the metro ganglands network operating. Static hums through every bad decision.
 risk:high
 time:10
 energy:11
@@ -486,9 +511,9 @@ success:credits+14,scrap+2,temp=normal,log:You stabilize the sector and recover 
 fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-new-05
+id:metro_ganglands-new-05
 label:Frontline contract 5
-desc:Take on contract 5 to secure routes, salvage intel, and keep the safehouse network operating. The skyline glows like a wound after dark.
+desc:Take on contract 5 to secure routes, salvage intel, and keep the metro ganglands network operating. Broken cameras still pivot like they remember faces.
 risk:low
 time:11
 energy:12
@@ -499,9 +524,9 @@ success:credits+15,hp+3,energy+4,log:You complete the objective and escort local
 fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-new-06
+id:metro_ganglands-new-06
 label:Frontline contract 6
-desc:Take on contract 6 to secure routes, salvage intel, and keep the safehouse network operating. Nobody here mistakes kindness for weakness anymore.
+desc:Take on contract 6 to secure routes, salvage intel, and keep the metro ganglands network operating. Even the quiet sounds engineered.
 risk:high
 time:12
 energy:13
@@ -512,9 +537,9 @@ success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and 
 fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
-id:safehouse-new-07
+id:metro_ganglands-new-07
 label:Frontline contract 7
-desc:Take on contract 7 to secure routes, salvage intel, and keep the safehouse network operating. The skyline glows like a wound after dark.
+desc:Take on contract 7 to secure routes, salvage intel, and keep the metro ganglands network operating. Even the quiet sounds engineered.
 risk:deadly
 time:13
 energy:14
@@ -525,9 +550,9 @@ success:credits+20,scrap+2,temp=normal,log:You stabilize the sector and recover 
 fail:credits-3,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-new-08
+id:metro_ganglands-new-08
 label:Frontline contract 8
-desc:Take on contract 8 to secure routes, salvage intel, and keep the safehouse network operating. Nobody here mistakes kindness for weakness anymore.
+desc:Take on contract 8 to secure routes, salvage intel, and keep the metro ganglands network operating. Static hums through every bad decision.
 risk:medium
 time:14
 energy:15
@@ -538,9 +563,9 @@ success:credits+21,hp+2,energy+4,log:You complete the objective and escort local
 fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:safehouse-new-09
+id:metro_ganglands-new-09
 label:Frontline contract 9
-desc:Take on contract 9 to secure routes, salvage intel, and keep the safehouse network operating. Trust is currency, and everyone is short on it.
+desc:Take on contract 9 to secure routes, salvage intel, and keep the metro ganglands network operating. Static hums through every bad decision.
 risk:low
 time:15
 energy:16
@@ -551,9 +576,9 @@ success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and
 fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
-id:safehouse-new-10
+id:metro_ganglands-new-10
 label:Frontline contract 10
-desc:Take on contract 10 to secure routes, salvage intel, and keep the safehouse network operating. Nobody here mistakes kindness for weakness anymore.
+desc:Take on contract 10 to secure routes, salvage intel, and keep the metro ganglands network operating. Even the quiet sounds engineered.
 risk:high
 time:16
 energy:17
@@ -564,7 +589,7 @@ success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover 
 fail:credits-5,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:loot-safehouse-retro-salvage
+id:loot-metro_ganglands-retro-salvage
 label:Retro salvage stockpile
 desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones. The skyline glows like a wound after dark.
 risk:high
@@ -573,6 +598,6 @@ energy:18
 loot:8
 lootType:retro cache trove
 event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run? Nobody here mistakes kindness for weakness anymore.
-eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:safehouse cram tin,item:safehouse blamco mac can,item:safehouse sunset fizz bottle,item:safehouse dusty nuka cola,item:safehouse instamash pouch,item:safehouse preserved pie slice,item:safehouse sugar bombs box,item:safehouse fancy lad snack cake,item:safehouse old world coffee tin,item:safehouse molded iguana bits,item:safehouse military ration slab,item:safehouse dehydrated mutfruit brick,item:safehouse vault jerky strip,item:safehouse stale gum drops,item:safehouse salisbury steak tray,item:safehouse cold pork n beans can,item:safehouse combat helmet liner,item:safehouse flak web harness,item:safehouse service rifle stock,item:safehouse pipe rifle receiver,item:safehouse riot control visor,item:safehouse trench shovel blade,item:safehouse bayonet training sheath,item:safehouse war map tube,item:safehouse fatigue field jacket,item:safehouse army canteen shell,item:safehouse dog tag bundle,item:safehouse entrenching tool head,item:safehouse laser musket coil,item:safehouse handmade shotgun frame,item:safehouse atom-age pulse pistol,item:safehouse retro raygun grip,item:safehouse vacuum tube scope,item:safehouse mr handy actuator,item:safehouse fusion battery shell,item:safehouse plasma torch nozzle,item:safehouse geiger wristwatch,item:safehouse pip-dial circuit board,item:safehouse rocket car lunchbox,item:safehouse chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
-eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:safehouse cram tin,item:safehouse blamco mac can,item:safehouse sunset fizz bottle,item:safehouse dusty nuka cola,item:safehouse instamash pouch,item:safehouse preserved pie slice,item:safehouse sugar bombs box,item:safehouse fancy lad snack cake,item:safehouse old world coffee tin,item:safehouse molded iguana bits,item:safehouse military ration slab,item:safehouse dehydrated mutfruit brick,item:safehouse vault jerky strip,item:safehouse stale gum drops,item:safehouse salisbury steak tray,item:safehouse cold pork n beans can,item:safehouse combat helmet liner,item:safehouse flak web harness,item:safehouse service rifle stock,item:safehouse pipe rifle receiver,item:safehouse riot control visor,item:safehouse trench shovel blade,item:safehouse bayonet training sheath,item:safehouse war map tube,item:safehouse fatigue field jacket,item:safehouse army canteen shell,item:safehouse dog tag bundle,item:safehouse entrenching tool head,item:safehouse laser musket coil,item:safehouse handmade shotgun frame,item:safehouse atom-age pulse pistol,item:safehouse retro raygun grip,item:safehouse vacuum tube scope,item:safehouse mr handy actuator,item:safehouse fusion battery shell,item:safehouse plasma torch nozzle,item:safehouse geiger wristwatch,item:safehouse pip-dial circuit board,item:safehouse rocket car lunchbox,item:safehouse chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
+eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:metro-ganglands cram tin,item:metro-ganglands blamco mac can,item:metro-ganglands sunset fizz bottle,item:metro-ganglands dusty nuka cola,item:metro-ganglands instamash pouch,item:metro-ganglands preserved pie slice,item:metro-ganglands sugar bombs box,item:metro-ganglands fancy lad snack cake,item:metro-ganglands old world coffee tin,item:metro-ganglands molded iguana bits,item:metro-ganglands military ration slab,item:metro-ganglands dehydrated mutfruit brick,item:metro-ganglands vault jerky strip,item:metro-ganglands stale gum drops,item:metro-ganglands salisbury steak tray,item:metro-ganglands cold pork n beans can,item:metro-ganglands combat helmet liner,item:metro-ganglands flak web harness,item:metro-ganglands service rifle stock,item:metro-ganglands pipe rifle receiver,item:metro-ganglands riot control visor,item:metro-ganglands trench shovel blade,item:metro-ganglands bayonet training sheath,item:metro-ganglands war map tube,item:metro-ganglands fatigue field jacket,item:metro-ganglands army canteen shell,item:metro-ganglands dog tag bundle,item:metro-ganglands entrenching tool head,item:metro-ganglands laser musket coil,item:metro-ganglands handmade shotgun frame,item:metro-ganglands atom-age pulse pistol,item:metro-ganglands retro raygun grip,item:metro-ganglands vacuum tube scope,item:metro-ganglands mr handy actuator,item:metro-ganglands fusion battery shell,item:metro-ganglands plasma torch nozzle,item:metro-ganglands geiger wristwatch,item:metro-ganglands pip-dial circuit board,item:metro-ganglands rocket car lunchbox,item:metro-ganglands chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
+eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:metro-ganglands cram tin,item:metro-ganglands blamco mac can,item:metro-ganglands sunset fizz bottle,item:metro-ganglands dusty nuka cola,item:metro-ganglands instamash pouch,item:metro-ganglands preserved pie slice,item:metro-ganglands sugar bombs box,item:metro-ganglands fancy lad snack cake,item:metro-ganglands old world coffee tin,item:metro-ganglands molded iguana bits,item:metro-ganglands military ration slab,item:metro-ganglands dehydrated mutfruit brick,item:metro-ganglands vault jerky strip,item:metro-ganglands stale gum drops,item:metro-ganglands salisbury steak tray,item:metro-ganglands cold pork n beans can,item:metro-ganglands combat helmet liner,item:metro-ganglands flak web harness,item:metro-ganglands service rifle stock,item:metro-ganglands pipe rifle receiver,item:metro-ganglands riot control visor,item:metro-ganglands trench shovel blade,item:metro-ganglands bayonet training sheath,item:metro-ganglands war map tube,item:metro-ganglands fatigue field jacket,item:metro-ganglands army canteen shell,item:metro-ganglands dog tag bundle,item:metro-ganglands entrenching tool head,item:metro-ganglands laser musket coil,item:metro-ganglands handmade shotgun frame,item:metro-ganglands atom-age pulse pistol,item:metro-ganglands retro raygun grip,item:metro-ganglands vacuum tube scope,item:metro-ganglands mr handy actuator,item:metro-ganglands fusion battery shell,item:metro-ganglands plasma torch nozzle,item:metro-ganglands geiger wristwatch,item:metro-ganglands pip-dial circuit board,item:metro-ganglands rocket car lunchbox,item:metro-ganglands chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
 

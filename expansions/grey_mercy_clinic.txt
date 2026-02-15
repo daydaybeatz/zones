@@ -1,160 +1,152 @@
 @expansion
-id:sunken_refinery
-name:Drowned Furnace Works
-summary:A half-submerged fuel complex where toxic runoff, salvage crews, and machine cultists all hunt the same burning core.
-temp:hot
-arrivalDialog:Foreman Dree: Step wrong and the water strips skin before you can scream. Even the quiet sounds engineered.
-missionStartDialog:Tech Nara: Filter first, loot second, ego never. Nobody here mistakes kindness for weakness anymore.
-missionEndDialog:Rigger Sol: Fuel secured. Maybe the generators keep singing tonight. Even the quiet sounds engineered.
-minLevel:12
-shop:false
-bar:true
-barHireCost:80
+id:medical_center
+name:Grey Mercy Clinic
+summary:A stripped medical wing where underlit triage rooms still hold life-saving stock beside records of impossible triage calls.
+temp:cold
+arrivalDialog:Nurse Kett: We learned to count hope in bandages, not speeches. Trust is currency, and everyone is short on it.
+missionStartDialog:Dr. Osei: Prioritize antiseptics, antivirals, and whoever can still be saved. Even the quiet sounds engineered.
+missionEndDialog:Orderly Finch: These supplies mean fewer names on tomorrow's memorial board. Static hums through every bad decision.
+shop:true
 
 @door
-label:Refinery Floodgate
-hint:deadly salvage, hot pressure halls, telecom job
-risk:deadly
-note:Brine drips from corroded bulkheads as the floodgate yawns open. The skyline glows like a wound after dark.
-target:pressure-dock
+label:Clinic Access Bay
+hint:medical salvage, cold wards, mid-risk patrols, telecom job
+risk:medium
+note:Sterile lights flicker as you enter the medical wing. Nobody here mistakes kindness for weakness anymore.
+target:triage
 
-@scene pressure-dock
-title:Pressure Dock. Broken cameras still pivot like they remember faces.
-desc:Steam hisses through cracked pipes, and the floor trembles in the hot pressure dock. Nobody here mistakes kindness for weakness anymore.
-tags:Industrial / Deadly
-option:Stabilize the intake valves => pressure-dock | risk:high | time:8 | reward:pressure salvage | success:item:pressure gauge kit,item:brine crackers,log:You throttle the valves and reclaim a sealed kit. Even the quiet sounds engineered.| fail:hp-6,temp+2,log:A pressure burst scorches your hands. Static hums through every bad decision.
-option:Strip the pump rig => pressure-dock | risk:deadly | time:9 | reward:weapon salvage | success:item:torque cleaver,item:slag shard,log:You wrench a brutal tool free before the rig collapses. Static hums through every bad decision.| fail:hp-8,credits-4,log:A pump chain snaps and forces a retreat. Even the quiet sounds engineered.
+@scene triage
+title:Triage Bay
+desc:Empty gurneys line the bay, and the ward stays cold as cabinets rattle with leftover kits. Even the quiet sounds engineered.
+tags:Medical / Hazard
+option:Check the triage lockers => triage | risk:low | time:6 | reward:basic medical | success:item:antiseptic wipes,item:painkillers,log:You gather intact wraps and meds. Even the quiet sounds engineered.| fail:hp-3,log:A drawer slams on your fingers. Even the quiet sounds engineered.
+option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:electro bandage,item:compact medkit,log:You recover a sealed med case. Trust is currency, and everyone is short on it.| fail:hp-5,credits-2,log:A patrol forces a hasty exit. Static hums through every bad decision.
 
 @mission
-id:refinery-sweep
-label:Boiler hall sweep
-desc:Hard push through the boiler stacks for refinery gear and food. Trust is currency, and everyone is short on it.
+id:clinic-errands
+label:Doctor's errand run
+desc:Help the local doctor ferry patient kits through cleared corridors. No fail risk, no combat risk, and rewards 2 medical items. Static hums through every bad decision.
+risk:low
+time:6
+energy:6
+loot:0
+reward:2 medical items
+combatChance:0
+failChance:0
+fixedRewards:item:antiseptic wipes,item:bandage,log:Dr. Osei thanks you for the calm delivery run. Even the quiet sounds engineered.
+fixedRewardsOnly:true
+
+@mission
+id:clinic-supply
+label:Supply closet sweep
+desc:Low-risk sweep for basic medical items. The skyline glows like a wound after dark.
+risk:low
+time:9
+energy:10
+loot:2
+lootType:medical basics
+event:Injured survivor blocks the hall | chance:0.6 | prompt:A wounded survivor begs for antiseptic. Your call? Even the quiet sounds engineered.
+eventOption:Patch them up => risk:low | tag:mercy | success:credits+5,item:sterile gloves,log:The survivor hands over spare gloves in thanks. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The survivor panics and slows you down. Static hums through every bad decision.
+eventOption:Strip their kit => risk:medium | tag:betrayal | success:item:antiviral vial,credits+6,log:You pocket their kit and move on. The skyline glows like a wound after dark.| fail:credits-4,log:The survivor's cries draw a patrol. The skyline glows like a wound after dark.
+
+@mission
+id:clinic-ward
+label:Ward salvage run
+desc:Push deeper for mid-tier medical packs. Static hums through every bad decision.
+risk:medium
+time:12
+energy:14
+loot:3
+lootType:medical packs
+event:Autoclave cart rattles | chance:0.2 | prompt:A powered autoclave cart flickers in the ward. Salvage it? Broken cameras still pivot like they remember faces.
+eventOption:Wheel it out quietly => risk:medium | tag:stealth | success:item:triage autoclave,credits+10,log:You guide the cart out and secure a triage autoclave upgrade. Trust is currency, and everyone is short on it.| fail:hp-5,log:The cart tips and crashes loud. Even the quiet sounds engineered.
+eventOption:Cut the cart free => risk:high | tag:combat | success:item:triage autoclave,credits+14,log:You cut the cart loose and haul out the triage autoclave upgrade. The skyline glows like a wound after dark.| fail:hp-8,log:The cart sparks and scorches you. Broken cameras still pivot like they remember faces.
+event:Silent drone sweep | chance:1 | prompt:A drone sweep glides through the ward. Pick a response. The skyline glows like a wound after dark.
+eventOption:Ghost through the shadowed ward => risk:medium | tag:stealth | success:item:clinic IV pack,log:You slip through and grab a sealed IV pack. Static hums through every bad decision.| fail:hp-6,log:A scanner tags you on the way out. The skyline glows like a wound after dark.
+eventOption:Stand and fight => risk:high | tag:combat | success:item:portable scanner,credits+8,log:You knock the drone down and salvage its scanner. Trust is currency, and everyone is short on it.| fail:hp-9,log:The drone's shock pulse sends you reeling. Static hums through every bad decision.
+
+@mission
+id:clinic-storage
+label:Storage room breach
+desc:Use the storage room key to crack the locked supply vault for premium medical stock. Trust is currency, and everyone is short on it.
 risk:high
 time:14
 energy:18
-loot:4
-lootType:refinery gear & rations
-event:Valve line failure | chance:0.5 | prompt:A pressure line buckles mid-run. Decide how to respond. Static hums through every bad decision.
-eventOption:Patch it with quick diagnostics => risk:high | tag:tech | success:item:pressure gauge kit,credits+10,log:You stabilize the line and recover a gauge kit. The skyline glows like a wound after dark.| fail:hp-6,temp+2,log:The line bursts and scalds you. Static hums through every bad decision.
-eventOption:Muscle through the steam => risk:deadly | tag:combat | success:item:hydraulic spike,log:You force through and claim a hydraulic spike. Broken cameras still pivot like they remember faces.| fail:hp-10,log:The steam blast drives you back. The skyline glows like a wound after dark.
-
-@mission
-id:refinery-core
-label:Cracking the core line
-desc:Traverse the deepest stacks for rare tools and weapon caches. Even the quiet sounds engineered.
-risk:deadly
-time:16
-energy:20
 loot:5
-lootType:refinery tools & weapons
-event:Scav crew at the core walkway | chance:1 | prompt:A scav crew offers to split the core cache. Do you trust them? Trust is currency, and everyone is short on it.
-eventOption:Hold the alliance => risk:high | tag:mercy | success:item:sealed citrus tonic,credits+8,log:The crew splits the cache and leaves you a tonic. Even the quiet sounds engineered.| fail:credits-4,log:The crew panics and ruins the split. Broken cameras still pivot like they remember faces.
-eventOption:Betray the crew => risk:deadly | tag:betrayal | success:item:torque cleaver,credits+18,log:You seize the cache in the chaos. Broken cameras still pivot like they remember faces.| fail:hp-9,credits-5,log:The crew turns on you. Nobody here mistakes kindness for weakness anymore.
-
-@mission
-id:refinery-vault
-label:Pressure vault breach
-desc:Use the refinery vault key to access the sealed pressure bay. Broken cameras still pivot like they remember faces.
-risk:deadly
-time:18
-energy:22
-loot:6
-lootType:elite refinery cache
+lootType:advanced medical stock
 key:1
-combatChance:0.6
-event:Nutrient grow rack hums | chance:0.2 | prompt:A sealed bay holds a hydroponic rack. Do you risk the pressure lock? Nobody here mistakes kindness for weakness anymore.
-eventOption:Bleed the pressure lock => risk:deadly | tag:tech | success:item:hydroponic rack,credits+16,log:You bleed the lock and secure a hydroponic rack upgrade. Static hums through every bad decision.| fail:hp-10,temp+2,log:The lock blows hot steam in your face. Nobody here mistakes kindness for weakness anymore.
-eventOption:Force the hatch open => risk:deadly | tag:combat | success:item:hydroponic rack,credits+20,log:You force the hatch and haul out the hydroponic rack upgrade. Static hums through every bad decision.| fail:hp-12,log:The hatch snaps shut and crushes your shoulder. The skyline glows like a wound after dark.
+combatChance:0.5
+event:Sterile light rig hums | chance:0.2 | prompt:A sterilization rig still glows in the vault. Try to secure it? Nobody here mistakes kindness for weakness anymore.
+eventOption:Disconnect it carefully => risk:high | tag:tech | success:item:sterile lights,credits+12,log:You cut power and pack the sterile lights upgrade. Static hums through every bad decision.| fail:hp-6,log:The rig arcs and burns your gloves. Even the quiet sounds engineered.
+eventOption:Rip it from the mount => risk:deadly | tag:combat | success:item:sterile lights,credits+16,log:You rip free the sterile lights upgrade and bolt. Broken cameras still pivot like they remember faces.| fail:hp-9,log:The rig collapses on you. Static hums through every bad decision.
+event:Orderly begs for a crate | chance:0.6 | prompt:An orderly pleads for one crate to keep their ward running. Trust is currency, and everyone is short on it.
+eventOption:Leave a crate behind => risk:medium | tag:mercy | success:item:burn salve,credits+6,log:The orderly thanks you with burn salve. Even the quiet sounds engineered.| fail:credits-4,log:The orderly panics and the alarm escalates. The skyline glows like a wound after dark.
+eventOption:Take everything => risk:high | tag:betrayal | success:item:clinic IV pack,credits+12,log:You clear the vault and pocket an IV pack. Even the quiet sounds engineered.| fail:hp-6,credits-5,log:The orderly fights back and slows you down. Broken cameras still pivot like they remember faces.
 
 @mission
-id:refinery-hush
-label:Ghost pressure ping
-desc:Investigate a pressure ping from the drowned refinery subfloor. The skyline glows like a wound after dark.
-risk:high
-time:15
-energy:19
-loot:4
-lootType:pressure salvage
-unlockFlag:secret-refinery-mission
-consumeFlag:secret-refinery-mission
-event:Subfloor diver signals | chance:0.6 | prompt:A diver signals from a flooded catwalk, asking for a tow line. Broken cameras still pivot like they remember faces.
-eventOption:Pull them to safety => risk:high | tag:mercy | success:item:coolant canister,credits+10,log:The diver shares a coolant canister before slipping away. Broken cameras still pivot like they remember faces.| fail:credits-4,log:The line snaps and you lose time. The skyline glows like a wound after dark.
-eventOption:Cut the line and take the cache => risk:deadly | tag:betrayal | success:item:refinery alloy ingot,credits+16,log:You cut the line and pocket a rare ingot. Trust is currency, and everyone is short on it.| fail:hp-9,credits-6,log:The line whips back and injures you. Static hums through every bad decision.
+id:clinic-lab-coldcase
+label:Cold lab specimen run
+desc:Collect sealed specimens from the chilled research lab. Trust is currency, and everyone is short on it.
+risk:medium
+time:12
+energy:15
+loot:3
+lootType:lab specimens
+event:Analyzer bench flickers | chance:0.2 | prompt:A medbay analyzer bench pulses with power. Salvage it? Static hums through every bad decision.
+eventOption:Stabilize the bench => risk:medium | tag:tech | success:item:medbay analyzer,credits+10,log:You stabilize the bench and recover a medbay analyzer upgrade. Nobody here mistakes kindness for weakness anymore.| fail:hp-5,log:The bench overloads and sparks. Broken cameras still pivot like they remember faces.
+eventOption:Drag it out fast => risk:high | tag:combat | success:item:medbay analyzer,credits+14,log:You yank the analyzer free and rush out. Trust is currency, and everyone is short on it.| fail:hp-8,log:The analyzer frame cuts you as it falls. Even the quiet sounds engineered.
+event:Lab freezer alarm | chance:0.6 | prompt:The freezer alarm wails and draws attention. Static hums through every bad decision.
+eventOption:Shut off the breaker => risk:medium | tag:tech | success:item:filtered water pack,credits+8,log:You silence the alarm and grab clean packs. Static hums through every bad decision.| fail:temp-2,log:The breaker sparks and the lab chills fast. Broken cameras still pivot like they remember faces.
+eventOption:Grab and bolt => risk:high | tag:combat | success:item:compact medkit,log:You snatch a medkit and sprint out. The skyline glows like a wound after dark.| fail:hp-6,log:You take a hit fleeing the ward. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:refinery-slag-run
-label:Slag chute run
-desc:Descend the slag chutes for heavy salvage and sealed rations. Broken cameras still pivot like they remember faces.
-risk:high
-time:14
-energy:18
-loot:4
-lootType:slag salvage
-event:Chute chain slip | chance:0.6 | prompt:A chain slips on the chute rig, threatening to drop you. The skyline glows like a wound after dark.
-eventOption:Re-seat the chain => risk:high | tag:tech | success:item:slag shard,credits+10,log:You fix the chain and claim a slag shard. Static hums through every bad decision.| fail:hp-7,log:The rig lurches and bruises you. The skyline glows like a wound after dark.
-eventOption:Jump to a side ladder => risk:deadly | tag:stealth | success:item:ember ration,credits+12,log:You leap clear and snag a hot ration. Nobody here mistakes kindness for weakness anymore.| fail:hp-9,log:The jump goes wide and you crash hard. Broken cameras still pivot like they remember faces.
+id:clinic-inpatient-ward
+label:Inpatient ward sweep
+desc:Search patient rooms for emergency care kits and rations. Static hums through every bad decision.
+risk:medium
+time:11
+energy:14
+loot:3
+lootType:care kits
+event:Family refuses evacuation | chance:1 | prompt:A family refuses to leave without their missing sibling. Broken cameras still pivot like they remember faces.
+eventOption:Help search the ward => risk:medium | tag:mercy | success:credits+6,item:bandage,log:You find them and earn a bandage stash. Nobody here mistakes kindness for weakness anymore.| fail:credits-4,log:The search wastes time and draws patrols. The skyline glows like a wound after dark.
+eventOption:Take the kits and leave => risk:high | tag:betrayal | success:item:shock gel,credits+10,log:You take the kits and grab shock gel. Static hums through every bad decision.| fail:hp-6,log:The family lashes out as you leave. Trust is currency, and everyone is short on it.
 
 @mission
-id:refinery-duct-scout
-label:Vent duct scout
-desc:Follow the hot vent duct to find tool crates and coolant packs. Static hums through every bad decision.
+id:clinic-oxygen-line
+label:Oxygen line repair
+desc:Stabilize the oxygen line to reach sealed cabinets. Trust is currency, and everyone is short on it.
 risk:high
 time:13
 energy:17
 loot:4
-lootType:coolant kits
-event:Vent flare-up | chance:0.55 | prompt:A vent flare-up roars toward you. Nobody here mistakes kindness for weakness anymore.
-eventOption:Seal the duct and wait => risk:high | tag:tech | success:item:foam canister,credits+8,log:You seal the duct and grab a foam canister. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,temp+2,log:The flare scorches your sleeves. The skyline glows like a wound after dark.
-eventOption:Dash through the heat => risk:deadly | tag:combat | success:item:payload crate,log:You push through and pull a crate. The skyline glows like a wound after dark.| fail:hp-10,log:The heat overwhelms you. Trust is currency, and everyone is short on it.
-
-@mission
-id:refinery-brine-locker
-label:Brine locker breach
-desc:Crack a brine locker with sealed water and parts. Nobody here mistakes kindness for weakness anymore.
-risk:high
-time:12
-energy:16
-loot:3
-lootType:brine supplies
-event:Locker guardian offers a deal | chance:1 | prompt:A lone guardian offers access for a cut. Decide. Even the quiet sounds engineered.
-eventOption:Pay the cut and share => risk:high | tag:mercy | success:item:hardened canteen,credits+6,log:They unlock the locker and share a canteen. Static hums through every bad decision.| fail:credits-4,log:They take your cut and vanish. Even the quiet sounds engineered.
-eventOption:Force the locker open => risk:deadly | tag:betrayal | success:item:reactor shard,credits+14,log:You force it open and snag a shard. Trust is currency, and everyone is short on it.| fail:hp-9,credits-6,log:The guardian fights you off. Even the quiet sounds engineered.
+lootType:respiratory supplies
+event:Supply cabinet seal | chance:0.2 | prompt:A sealed supply cabinet is wedged behind the oxygen line. Try to pry it free? Even the quiet sounds engineered.
+eventOption:Bleed the line and pry it loose => risk:high | tag:tech | success:item:sterile supply cabinet,credits+12,log:You bleed the line and recover a sterile supply cabinet upgrade. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,log:The line bursts and knocks you back. Broken cameras still pivot like they remember faces.
+eventOption:Break the hinges fast => risk:deadly | tag:combat | success:item:sterile supply cabinet,credits+16,log:You smash the hinges and drag out the sterile supply cabinet upgrade. Trust is currency, and everyone is short on it.| fail:hp-10,log:The hinge snaps and slices you. Static hums through every bad decision.
+event:Oxygen flare burst | chance:0.55 | prompt:A flare ignites near the oxygen line. Broken cameras still pivot like they remember faces.
+eventOption:Vent the corridor => risk:high | tag:tech | success:item:anti-rad serum,credits+10,log:You vent the line and recover a serum case. Broken cameras still pivot like they remember faces.| fail:hp-7,log:The flare scorches your gear. Even the quiet sounds engineered.
+eventOption:Duck into a side room => risk:medium | tag:stealth | success:item:hardened canteen,log:You avoid the blast and grab a canteen. The skyline glows like a wound after dark.| fail:credits-5,log:The blast rattles your pack. Nobody here mistakes kindness for weakness anymore.
 
 @quest
-id:refinery-telecom-1
-title:Connect refinery telecoms (part 1/2). Even the quiet sounds engineered.
-desc:Find the missing relay components and map the broken conduit path. The skyline glows like a wound after dark.
-risk:high
-time:12
-energy:18
+id:medical-telecom
+title:Reconnect the clinic telecoms
+desc:Restore the clinic relay so vendors can source better medical stock. Nobody here mistakes kindness for weakness anymore.
+risk:medium
+time:11
+energy:15
 loot:2
-lootType:signal parts
-reward:relay components
-success:item:compressed coil,credits+16,flag:refinery-telecom-1,log:You recover the missing relays and mark the conduit run. Even the quiet sounds engineered.
-fail:hp-8,credits-5
-flag:refinery-telecom-1
-once:true
-
-@quest
-id:refinery-telecom-2
-title:Connect refinery telecoms (part 2/2). Static hums through every bad decision.
-desc:Install the replacement components and re-seat the flooded uplink. The skyline glows like a wound after dark.
-risk:deadly
-time:14
-energy:20
-loot:3
 lootType:signal crates
-reward:idle dispatch uplink
-success:item:idle relay tuner,credits+24,flag:refinery-telecom-2,log:The uplink sparks alive. A new idle dispatch channel opens. Trust is currency, and everyone is short on it.
-fail:hp-10,credits-6
-flag:refinery-telecom-2
-requires:refinery-telecom-1
+reward:expanded medical stock
+success:item:portable scanner,credits+14,flag:medical-telecom,log:The relay comes online. More medical supplies reach the shop. Nobody here mistakes kindness for weakness anymore.
+fail:hp-6,credits-3
+flag:medical-telecom
 once:true
 
 @mission
-id:sunken_refinery-ops-scoutline
-label:Scoutline warm-up
-desc:Low-risk recon through the sunken refinery fringe to chart safe lanes for rookies. Static hums through every bad decision.
+id:medical_center-ops-scoutline
+label:Mercy Scoutline
+desc:Low-risk recon through the medical center fringe to chart safe lanes for rookies. Even the quiet sounds engineered.
 risk:low
 time:8
 energy:10
@@ -165,8 +157,8 @@ eventOption:Follow the elder's silent route => risk:low | tag:mercy | success:it
 eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | success:item:impact baton,credits+7,log:You force a shorter route and grab a baton cache. Even the quiet sounds engineered.| fail:hp-5,log:An ambush bruises your squad. The skyline glows like a wound after dark.
 
 @mission
-id:sunken_refinery-ops-supply-barter
-label:Supply barter circuit
+id:medical_center-ops-supply-barter
+label:Mercy Barter Circuit
 desc:Negotiate with fringe traders for utility gear and survival items. Trust is currency, and everyone is short on it.
 risk:low
 time:9
@@ -178,8 +170,8 @@ eventOption:Mediate the dispute and keep order => risk:low | tag:mercy | success
 eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | success:item:metal detector,item:sealed ration tin,credits+9,log:You intimidate the traders and seize premium stock. The skyline glows like a wound after dark.| fail:hp-4,credits-3,log:Hidden guards push you out. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken_refinery-ops-shadow-lift
-label:Shadow-lift extraction
+id:medical_center-ops-shadow-lift
+label:Mercy Shadow Lift
 desc:Pull crates from a contested block where stealth gear matters more than firepower. Broken cameras still pivot like they remember faces.
 risk:medium
 time:10
@@ -191,8 +183,8 @@ eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:s
 eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. Broken cameras still pivot like they remember faces.| fail:hp-7,log:Backup lights trigger mid-run. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken_refinery-ops-deep-vault
-label:Deep vault breach
+id:medical_center-ops-deep-vault
+label:Mercy Vault Breach
 desc:High-risk push into a sealed vault loaded with specialized mission tools. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:13
@@ -204,8 +196,8 @@ eventOption:Promise a fair split and honor it => risk:high | tag:mercy | success
 eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betrayal | success:item:precision metal detector,item:shock weave armor,credits+17,log:You crack every locker before alarms cycle. Trust is currency, and everyone is short on it.| fail:hp-10,credits-6,log:The countermeasure grid fires. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken_refinery-legend-merc-contract
-label:Legend contract: One-shot rescue
+id:medical_center-legend-merc-contract
+label:Mercy Legend Contract
 desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:16
@@ -219,7 +211,7 @@ eventOption:Commit and hold the line for the veteran => risk:deadly | tag:mercy 
 eventOption:Abandon the call and loot the perimeter => risk:high | tag:betrayal | success:item:salvage satchel,credits+11,log:You skip the rescue and strip the perimeter. Trust is currency, and everyone is short on it.| fail:credits-6,log:Word spreads that you broke contract. Broken cameras still pivot like they remember faces.
 
 @mission
-id:sunken_refinery-idle-unlock-1
+id:medical_center-idle-unlock-1
 label:Idle network contract 1
 desc:Secure route node 1 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
@@ -228,14 +220,14 @@ energy:9
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:sunken_refinery-idle-route-1
+unlockFlag:medical_center-idle-route-1
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 1 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 1,item:field compass mk1,credits+5,log:The broker certifies node 1 for reliable idle runs. Static hums through every bad decision.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 1,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 1,item:survey binoculars 1,credits+10,log:You lock node 1 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:sunken_refinery-idle-unlock-2
+id:medical_center-idle-unlock-2
 label:Idle network contract 2
 desc:Secure route node 2 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
@@ -244,14 +236,14 @@ energy:10
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:sunken_refinery-idle-route-2
+unlockFlag:medical_center-idle-route-2
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 2 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 2,item:field compass mk2,credits+5,log:The broker certifies node 2 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 2,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 2,item:survey binoculars 2,credits+10,log:You lock node 2 with premium payoff data. Even the quiet sounds engineered.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:sunken_refinery-idle-unlock-3
+id:medical_center-idle-unlock-3
 label:Idle network contract 3
 desc:Secure route node 3 so handlers can launch automated idle missions in this region. Even the quiet sounds engineered.
 risk:medium
@@ -260,14 +252,14 @@ energy:11
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:sunken_refinery-idle-route-3
+unlockFlag:medical_center-idle-route-3
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 3 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 3,item:field compass mk3,credits+5,log:The broker certifies node 3 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 3,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 3,item:survey binoculars 3,credits+10,log:You lock node 3 with premium payoff data. Static hums through every bad decision.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:sunken_refinery-idle-unlock-4
+id:medical_center-idle-unlock-4
 label:Idle network contract 4
 desc:Secure route node 4 so handlers can launch automated idle missions in this region. The skyline glows like a wound after dark.
 risk:medium
@@ -276,14 +268,14 @@ energy:12
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:sunken_refinery-idle-route-4
+unlockFlag:medical_center-idle-route-4
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 4 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 4,item:field compass mk4,credits+5,log:The broker certifies node 4 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 4,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 4,item:survey binoculars 4,credits+10,log:You lock node 4 with premium payoff data. The skyline glows like a wound after dark.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:sunken_refinery-idle-unlock-5
+id:medical_center-idle-unlock-5
 label:Idle network contract 5
 desc:Secure route node 5 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:medium
@@ -292,14 +284,14 @@ energy:13
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:sunken_refinery-idle-route-5
+unlockFlag:medical_center-idle-route-5
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 5 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 5,item:field compass mk5,credits+5,log:The broker certifies node 5 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 5,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 5,item:survey binoculars 5,credits+10,log:You lock node 5 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:sunken_refinery-idle-unlock-6
+id:medical_center-idle-unlock-6
 label:Idle network contract 6
 desc:Secure route node 6 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
@@ -308,14 +300,14 @@ energy:15
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:sunken_refinery-idle-route-6
+unlockFlag:medical_center-idle-route-6
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 6 forks into three lanes: safe, fast, and lucrative. Choose your call. The skyline glows like a wound after dark.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 6,item:field compass mk6,credits+5,log:The broker certifies node 6 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 6,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 6,item:survey binoculars 6,credits+10,log:You lock node 6 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:sunken_refinery-idle-unlock-7
+id:medical_center-idle-unlock-7
 label:Idle network contract 7
 desc:Secure route node 7 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:high
@@ -324,14 +316,14 @@ energy:16
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:sunken_refinery-idle-route-7
+unlockFlag:medical_center-idle-route-7
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 7 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 7,item:field compass mk7,credits+5,log:The broker certifies node 7 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 7,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 7,item:survey binoculars 7,credits+10,log:You lock node 7 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:sunken_refinery-idle-unlock-8
+id:medical_center-idle-unlock-8
 label:Idle network contract 8
 desc:Secure route node 8 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
@@ -340,14 +332,14 @@ energy:17
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:sunken_refinery-idle-route-8
+unlockFlag:medical_center-idle-route-8
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 8 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 8,item:field compass mk8,credits+5,log:The broker certifies node 8 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 8,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 8,item:survey binoculars 8,credits+10,log:You lock node 8 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:sunken_refinery-idle-unlock-9
+id:medical_center-idle-unlock-9
 label:Idle network contract 9
 desc:Secure route node 9 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
@@ -356,14 +348,14 @@ energy:18
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:sunken_refinery-idle-route-9
+unlockFlag:medical_center-idle-route-9
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 9 forks into three lanes: safe, fast, and lucrative. Choose your call. Nobody here mistakes kindness for weakness anymore.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 9,item:field compass mk9,credits+5,log:The broker certifies node 9 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 9,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 9,item:survey binoculars 9,credits+10,log:You lock node 9 with premium payoff data. Trust is currency, and everyone is short on it.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:sunken_refinery-idle-unlock-10
+id:medical_center-idle-unlock-10
 label:Idle network contract 10
 desc:Secure route node 10 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
@@ -372,15 +364,15 @@ energy:20
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:sunken_refinery-idle-route-10
+unlockFlag:medical_center-idle-route-10
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 10 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 10,item:field compass mk10,credits+5,log:The broker certifies node 10 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:sunken-refinery-faction-sweep-1
-title:RMG Liaison Sweep 1. Even the quiet sounds engineered.
+id:medical-center-faction-sweep-1
+title:Mercy RMG Sweep 1
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:low
 time:6
@@ -394,8 +386,8 @@ success:credits+7,log:Your report lands cleanly and RMG trust ticks up. Static h
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken-refinery-faction-sweep-2
-title:AM Liaison Sweep 2. Trust is currency, and everyone is short on it.
+id:medical-center-faction-sweep-2
+title:Mercy Abernathy Sweep 2
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:7
@@ -409,8 +401,8 @@ success:credits+8,log:Your report lands cleanly and AM trust ticks up. The skyli
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken-refinery-faction-sweep-3
-title:RMG Liaison Sweep 3. Static hums through every bad decision.
+id:medical-center-faction-sweep-3
+title:Mercy RMG Sweep 3
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:8
@@ -424,8 +416,8 @@ success:credits+9,log:Your report lands cleanly and RMG trust ticks up. Static h
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken-refinery-faction-sweep-4
-title:AM Liaison Sweep 4. The skyline glows like a wound after dark.
+id:medical-center-faction-sweep-4
+title:Mercy Abernathy Sweep 4
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:9
@@ -439,8 +431,8 @@ success:credits+10,log:Your report lands cleanly and AM trust ticks up. The skyl
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken-refinery-faction-sweep-5
-title:RMG Liaison Sweep 5. Broken cameras still pivot like they remember faces.
+id:medical-center-faction-sweep-5
+title:Mercy RMG Sweep 5
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:10
@@ -455,9 +447,9 @@ fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody her
 
 # autogenerated expansion missions pack
 @mission
-id:sunken_refinery-new-01
+id:medical_center-new-01
 label:Frontline contract 1
-desc:Take on contract 1 to secure routes, salvage intel, and keep the sunken refinery network operating. Broken cameras still pivot like they remember faces.
+desc:Take on contract 1 to secure routes, salvage intel, and keep the medical center network operating. Broken cameras still pivot like they remember faces.
 risk:low
 time:7
 energy:8
@@ -468,9 +460,9 @@ success:credits+8,scrap+2,temp=normal,log:You stabilize the sector and recover t
 fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken_refinery-new-02
+id:medical_center-new-02
 label:Frontline contract 2
-desc:Take on contract 2 to secure routes, salvage intel, and keep the sunken refinery network operating. Even the quiet sounds engineered.
+desc:Take on contract 2 to secure routes, salvage intel, and keep the medical center network operating. The skyline glows like a wound after dark.
 risk:medium
 time:8
 energy:9
@@ -481,9 +473,9 @@ success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals
 fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken_refinery-new-03
+id:medical_center-new-03
 label:Frontline contract 3
-desc:Take on contract 3 to secure routes, salvage intel, and keep the sunken refinery network operating. Static hums through every bad decision.
+desc:Take on contract 3 to secure routes, salvage intel, and keep the medical center network operating. The skyline glows like a wound after dark.
 risk:medium
 time:9
 energy:10
@@ -494,9 +486,9 @@ success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and 
 fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
-id:sunken_refinery-new-04
+id:medical_center-new-04
 label:Frontline contract 4
-desc:Take on contract 4 to secure routes, salvage intel, and keep the sunken refinery network operating. Even the quiet sounds engineered.
+desc:Take on contract 4 to secure routes, salvage intel, and keep the medical center network operating. Even the quiet sounds engineered.
 risk:high
 time:10
 energy:11
@@ -507,9 +499,9 @@ success:credits+14,scrap+2,temp=normal,log:You stabilize the sector and recover 
 fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken_refinery-new-05
+id:medical_center-new-05
 label:Frontline contract 5
-desc:Take on contract 5 to secure routes, salvage intel, and keep the sunken refinery network operating. Trust is currency, and everyone is short on it.
+desc:Take on contract 5 to secure routes, salvage intel, and keep the medical center network operating. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:11
 energy:12
@@ -520,9 +512,9 @@ success:credits+15,hp+3,energy+4,log:You complete the objective and escort local
 fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken_refinery-new-06
+id:medical_center-new-06
 label:Frontline contract 6
-desc:Take on contract 6 to secure routes, salvage intel, and keep the sunken refinery network operating. The skyline glows like a wound after dark.
+desc:Take on contract 6 to secure routes, salvage intel, and keep the medical center network operating. Broken cameras still pivot like they remember faces.
 risk:high
 time:12
 energy:13
@@ -533,9 +525,9 @@ success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and 
 fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
-id:sunken_refinery-new-07
+id:medical_center-new-07
 label:Frontline contract 7
-desc:Take on contract 7 to secure routes, salvage intel, and keep the sunken refinery network operating. Nobody here mistakes kindness for weakness anymore.
+desc:Take on contract 7 to secure routes, salvage intel, and keep the medical center network operating. Trust is currency, and everyone is short on it.
 risk:deadly
 time:13
 energy:14
@@ -546,9 +538,9 @@ success:credits+20,scrap+2,temp=normal,log:You stabilize the sector and recover 
 fail:credits-3,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken_refinery-new-08
+id:medical_center-new-08
 label:Frontline contract 8
-desc:Take on contract 8 to secure routes, salvage intel, and keep the sunken refinery network operating. Even the quiet sounds engineered.
+desc:Take on contract 8 to secure routes, salvage intel, and keep the medical center network operating. Broken cameras still pivot like they remember faces.
 risk:medium
 time:14
 energy:15
@@ -559,9 +551,9 @@ success:credits+21,hp+2,energy+4,log:You complete the objective and escort local
 fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:sunken_refinery-new-09
+id:medical_center-new-09
 label:Frontline contract 9
-desc:Take on contract 9 to secure routes, salvage intel, and keep the sunken refinery network operating. Nobody here mistakes kindness for weakness anymore.
+desc:Take on contract 9 to secure routes, salvage intel, and keep the medical center network operating. Broken cameras still pivot like they remember faces.
 risk:low
 time:15
 energy:16
@@ -572,9 +564,9 @@ success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and
 fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
-id:sunken_refinery-new-10
+id:medical_center-new-10
 label:Frontline contract 10
-desc:Take on contract 10 to secure routes, salvage intel, and keep the sunken refinery network operating. Static hums through every bad decision.
+desc:Take on contract 10 to secure routes, salvage intel, and keep the medical center network operating. Trust is currency, and everyone is short on it.
 risk:high
 time:16
 energy:17
@@ -585,7 +577,7 @@ success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover 
 fail:credits-5,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:loot-sunken_refinery-retro-salvage
+id:loot-medical_center-retro-salvage
 label:Retro salvage stockpile
 desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones. The skyline glows like a wound after dark.
 risk:high
@@ -594,6 +586,6 @@ energy:18
 loot:8
 lootType:retro cache trove
 event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run? Nobody here mistakes kindness for weakness anymore.
-eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:sunken-refinery cram tin,item:sunken-refinery blamco mac can,item:sunken-refinery sunset fizz bottle,item:sunken-refinery dusty nuka cola,item:sunken-refinery instamash pouch,item:sunken-refinery preserved pie slice,item:sunken-refinery sugar bombs box,item:sunken-refinery fancy lad snack cake,item:sunken-refinery old world coffee tin,item:sunken-refinery molded iguana bits,item:sunken-refinery military ration slab,item:sunken-refinery dehydrated mutfruit brick,item:sunken-refinery vault jerky strip,item:sunken-refinery stale gum drops,item:sunken-refinery salisbury steak tray,item:sunken-refinery cold pork n beans can,item:sunken-refinery combat helmet liner,item:sunken-refinery flak web harness,item:sunken-refinery service rifle stock,item:sunken-refinery pipe rifle receiver,item:sunken-refinery riot control visor,item:sunken-refinery trench shovel blade,item:sunken-refinery bayonet training sheath,item:sunken-refinery war map tube,item:sunken-refinery fatigue field jacket,item:sunken-refinery army canteen shell,item:sunken-refinery dog tag bundle,item:sunken-refinery entrenching tool head,item:sunken-refinery laser musket coil,item:sunken-refinery handmade shotgun frame,item:sunken-refinery atom-age pulse pistol,item:sunken-refinery retro raygun grip,item:sunken-refinery vacuum tube scope,item:sunken-refinery mr handy actuator,item:sunken-refinery fusion battery shell,item:sunken-refinery plasma torch nozzle,item:sunken-refinery geiger wristwatch,item:sunken-refinery pip-dial circuit board,item:sunken-refinery rocket car lunchbox,item:sunken-refinery chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
-eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:sunken-refinery cram tin,item:sunken-refinery blamco mac can,item:sunken-refinery sunset fizz bottle,item:sunken-refinery dusty nuka cola,item:sunken-refinery instamash pouch,item:sunken-refinery preserved pie slice,item:sunken-refinery sugar bombs box,item:sunken-refinery fancy lad snack cake,item:sunken-refinery old world coffee tin,item:sunken-refinery molded iguana bits,item:sunken-refinery military ration slab,item:sunken-refinery dehydrated mutfruit brick,item:sunken-refinery vault jerky strip,item:sunken-refinery stale gum drops,item:sunken-refinery salisbury steak tray,item:sunken-refinery cold pork n beans can,item:sunken-refinery combat helmet liner,item:sunken-refinery flak web harness,item:sunken-refinery service rifle stock,item:sunken-refinery pipe rifle receiver,item:sunken-refinery riot control visor,item:sunken-refinery trench shovel blade,item:sunken-refinery bayonet training sheath,item:sunken-refinery war map tube,item:sunken-refinery fatigue field jacket,item:sunken-refinery army canteen shell,item:sunken-refinery dog tag bundle,item:sunken-refinery entrenching tool head,item:sunken-refinery laser musket coil,item:sunken-refinery handmade shotgun frame,item:sunken-refinery atom-age pulse pistol,item:sunken-refinery retro raygun grip,item:sunken-refinery vacuum tube scope,item:sunken-refinery mr handy actuator,item:sunken-refinery fusion battery shell,item:sunken-refinery plasma torch nozzle,item:sunken-refinery geiger wristwatch,item:sunken-refinery pip-dial circuit board,item:sunken-refinery rocket car lunchbox,item:sunken-refinery chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
+eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:medical-center cram tin,item:medical-center blamco mac can,item:medical-center sunset fizz bottle,item:medical-center dusty nuka cola,item:medical-center instamash pouch,item:medical-center preserved pie slice,item:medical-center sugar bombs box,item:medical-center fancy lad snack cake,item:medical-center old world coffee tin,item:medical-center molded iguana bits,item:medical-center military ration slab,item:medical-center dehydrated mutfruit brick,item:medical-center vault jerky strip,item:medical-center stale gum drops,item:medical-center salisbury steak tray,item:medical-center cold pork n beans can,item:medical-center combat helmet liner,item:medical-center flak web harness,item:medical-center service rifle stock,item:medical-center pipe rifle receiver,item:medical-center riot control visor,item:medical-center trench shovel blade,item:medical-center bayonet training sheath,item:medical-center war map tube,item:medical-center fatigue field jacket,item:medical-center army canteen shell,item:medical-center dog tag bundle,item:medical-center entrenching tool head,item:medical-center laser musket coil,item:medical-center handmade shotgun frame,item:medical-center atom-age pulse pistol,item:medical-center retro raygun grip,item:medical-center vacuum tube scope,item:medical-center mr handy actuator,item:medical-center fusion battery shell,item:medical-center plasma torch nozzle,item:medical-center geiger wristwatch,item:medical-center pip-dial circuit board,item:medical-center rocket car lunchbox,item:medical-center chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
+eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:medical-center cram tin,item:medical-center blamco mac can,item:medical-center sunset fizz bottle,item:medical-center dusty nuka cola,item:medical-center instamash pouch,item:medical-center preserved pie slice,item:medical-center sugar bombs box,item:medical-center fancy lad snack cake,item:medical-center old world coffee tin,item:medical-center molded iguana bits,item:medical-center military ration slab,item:medical-center dehydrated mutfruit brick,item:medical-center vault jerky strip,item:medical-center stale gum drops,item:medical-center salisbury steak tray,item:medical-center cold pork n beans can,item:medical-center combat helmet liner,item:medical-center flak web harness,item:medical-center service rifle stock,item:medical-center pipe rifle receiver,item:medical-center riot control visor,item:medical-center trench shovel blade,item:medical-center bayonet training sheath,item:medical-center war map tube,item:medical-center fatigue field jacket,item:medical-center army canteen shell,item:medical-center dog tag bundle,item:medical-center entrenching tool head,item:medical-center laser musket coil,item:medical-center handmade shotgun frame,item:medical-center atom-age pulse pistol,item:medical-center retro raygun grip,item:medical-center vacuum tube scope,item:medical-center mr handy actuator,item:medical-center fusion battery shell,item:medical-center plasma torch nozzle,item:medical-center geiger wristwatch,item:medical-center pip-dial circuit board,item:medical-center rocket car lunchbox,item:medical-center chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
 
