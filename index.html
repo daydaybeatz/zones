@@ -1373,7 +1373,7 @@
           <div id="screen-locations" class="screen active">
             <section class="panel">
               <div class="inline" style="justify-content:space-between;align-items:center;">
-                <h3>Zone Gates</h3>
+                <h3 id="zoneTitle">Current location: Safe House</h3>
                 <button id="doorsToggle" type="button" aria-expanded="false">Change location</button>
               </div>
               <div class="zone-summary" style="margin-top:6px;">
@@ -4146,6 +4146,7 @@ once:true`
       doorsPagination:document.getElementById('doorsPagination'),
       doorsToggle:document.getElementById('doorsToggle'),
       zoneMap:document.getElementById('zoneMap'),
+      zoneTitle:document.getElementById('zoneTitle'),
       zoneDesc:document.getElementById('zoneDesc'),
       zoneBadge:document.getElementById('zoneBadge'),
       raidActions:document.getElementById('raidActions'),
@@ -4289,6 +4290,8 @@ once:true`
       const zoneName=state.zone?.name || 'Unknown';
       const zoneRisk=state.zone?.risk || 'low';
       dom.codexLocation.textContent=`Current location: ${zoneName} (${zoneRisk} risk)`;
+      const showLocationSummary=!(activeTab==='hub' && state.screen==='locations');
+      dom.codexLocation.classList.toggle('hidden',!showLocationSummary);
       if(dom.codexHealth){
         dom.codexHealth.textContent=`HP ${Math.round(state.hp)}/${state.maxHp}`;
       }
@@ -6640,6 +6643,9 @@ once:true`
         dom.zoneBadge.textContent=`${state.zone.risk} risk`;
         applyRiskClasses(dom.zoneBadge,state.zone.risk);
       }
+      if(dom.zoneTitle){
+        dom.zoneTitle.textContent=`Current location: ${state.zone.name}`;
+      }
     }
 
     function formatRewardEstimate({loot=0,lootType='',reward='',risk='low',time=8,xp}={}){
@@ -7238,7 +7244,7 @@ once:true`
       if(state.travel.paused) return false;
       if(!state.travel.target || !state.travel.endsAt){
         resetTravelState();
-        setCodex('Transit data lost. Select a zone gate to reroute.');
+        setCodex('Transit data lost. Select a location to reroute.');
         logMsg('Transit data lost. Zone selection reset.');
         if(travelResolveTimer){
           clearTimeout(travelResolveTimer);
@@ -9320,7 +9326,7 @@ once:true`
       wrap.className='zone-map-wrap';
       const header=document.createElement('div');
       header.className='zone-map-header';
-      header.innerHTML=`<div class="zone-map-title">Current location: ${currentName}</div><div class="zone-map-subtitle">${currentDesc}</div>`;
+      header.innerHTML=`<div class="zone-map-title">${currentName}</div><div class="zone-map-subtitle">${currentDesc}</div>`;
       wrap.appendChild(header);
 
       const controls=document.createElement('div');
@@ -9328,13 +9334,10 @@ once:true`
       controls.innerHTML=`<button type="button" data-cycle="left">← Previous</button><div class="zone-cycle-status">Location ${selectedIndex+1} / ${doors.length}</div><button type="button" data-cycle="right">Next →</button>`;
       controls.querySelectorAll('button[data-cycle]').forEach(btn=>{
         btn.addEventListener('click',()=>{
-          const action=btn.dataset.mapAction;
-          if(action==='zoom-in') state.mapView.zoom=clamp((state.mapView.zoom||1)+0.08,1,1.5);
-          if(action==='zoom-out') state.mapView.zoom=clamp((state.mapView.zoom||1)-0.08,1,1.5);
-          if(action==='pan-left') state.mapView.panX=clamp((state.mapView.panX||0)-18,-260,260);
-          if(action==='pan-right') state.mapView.panX=clamp((state.mapView.panX||0)+18,-260,260);
-          if(action==='pan-up') state.mapView.panY=clamp((state.mapView.panY||0)-12,-180,180);
-          if(action==='pan-down') state.mapView.panY=clamp((state.mapView.panY||0)+12,-180,180);
+          if(!doors.length) return;
+          const delta=btn.dataset.cycle==='left' ? -1 : 1;
+          const nextIndex=(selectedIndex+delta+doors.length)%doors.length;
+          state.mapSelectedZoneId=doors[nextIndex].meta.id;
           renderDoors();
         });
       });
