@@ -1,11 +1,11 @@
 @expansion
 id:government_facility
-name:Abandoned Government Facility
-summary:A sealed agency compound with broken scanners and hardened patrols. Mid-tier risk with hard combatants and better gear.
+name:Ash Ledger Annex
+summary:A ruined civil complex full of sealed archives, panic bunkers, and evidence of choices that doomed whole districts.
 temp:cold
-arrivalDialog:Archivist Venn: The RMG scrubbed this place after the Signal Riots—logs still whisper.
-missionStartDialog:Handler Quill: If you find a black badge, it belongs to the old Compliance chiefs.
-missionEndDialog:Agent Mira: That's proof the purge happened—stash it before patrol drones wake.
+arrivalDialog:Archivist Venn: The doors are heavy because the guilt behind them is heavier. Even the quiet sounds engineered.
+missionStartDialog:Scrivener Pell: Pull files, pull power cells, and leave before the defense loops wake. Broken cameras still pivot like they remember faces.
+missionEndDialog:Courier Dax: Papers like these start wars—or end them. Static hums through every bad decision.
 minLevel:7
 shop:false
 
@@ -13,46 +13,46 @@ shop:false
 label:Facility Security Gate
 hint:hard combatants, cold halls, weapons, tools, telecom job
 risk:high
-note:The security gate grinds open and the halls go quiet.
+note:The security gate grinds open and the halls go quiet. The skyline glows like a wound after dark.
 target:control-hall
 
 @scene control-hall
-title:Control Hall
-desc:Security consoles flicker, and sealed doors hiss with pressure in the cold hall.
+title:Control Hall. Broken cameras still pivot like they remember faces.
+desc:Security consoles flicker, and sealed doors hiss with pressure in the cold hall. Nobody here mistakes kindness for weakness anymore.
 tags:Government / Hazard
-option:Run a diagnostic sweep => control-hall | risk:medium | time:7 | reward:systems intel | success:credits+10,log:You recover a diagnostic snapshot. | fail:temp-2,log:The breaker snaps and the room chills.
-option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gear cache | success:item:response harness,item:access scanner,log:You pry loose a cache of uniforms and tools. | fail:hp-6,log:A security latch bites your hand.
+option:Run a diagnostic sweep => control-hall | risk:medium | time:7 | reward:systems intel | success:credits+10,log:You recover a diagnostic snapshot. Static hums through every bad decision.| fail:temp-2,log:The breaker snaps and the room chills. Trust is currency, and everyone is short on it.
+option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gear cache | success:item:response harness,item:access scanner,log:You pry loose a cache of uniforms and tools. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:A security latch bites your hand. The skyline glows like a wound after dark.
 
 @mission
 id:facility-sweep
 label:Security sweep
-desc:Room-to-room sweep for mid-tier weapons and tools the RMG and Abernathy Militia both covet.
+desc:Room-to-room sweep for mid-tier weapons and tools the RMG and Abernathy Militia both covet. Trust is currency, and everyone is short on it.
 risk:medium
 time:12
 energy:16
 loot:3
 lootType:weapons & tools
-event:Checkpoint console lock | chance:0.55 | prompt:A security checkpoint seals the corridor. Choose your approach.
-eventOption:Spoof the clearance codes => risk:medium | tag:tech | success:item:containment seal kit,credits+8,log:You spoof the codes and lift a seal kit. | fail:hp-4,credits-2,log:The console blares and draws fire.
-eventOption:Break through head-on => risk:high | tag:combat | success:item:pulse baton,log:You smash through and seize a pulse baton. | fail:hp-8,log:The patrol overwhelms you.
+event:Checkpoint console lock | chance:0.55 | prompt:A security checkpoint seals the corridor. Choose your approach. Even the quiet sounds engineered.
+eventOption:Spoof the clearance codes => risk:medium | tag:tech | success:item:containment seal kit,credits+8,log:You spoof the codes and lift a seal kit. Even the quiet sounds engineered.| fail:hp-4,credits-2,log:The console blares and draws fire. Even the quiet sounds engineered.
+eventOption:Break through head-on => risk:high | tag:combat | success:item:pulse baton,log:You smash through and seize a pulse baton. Static hums through every bad decision.| fail:hp-8,log:The patrol overwhelms you. Static hums through every bad decision.
 
 @mission
 id:facility-deep
 label:Hardline extraction
-desc:Push through hard combatants for high-tier clothing.
+desc:Push through hard combatants for high-tier clothing. The skyline glows like a wound after dark.
 risk:high
 time:14
 energy:18
 loot:4
 lootType:reinforced clothing
-event:Locker team begs for a ride | chance:0.6 | prompt:A pinned logistics team begs for escort out of the wing.
-eventOption:Escort them to the access stair => risk:medium | tag:mercy | success:item:security poncho,credits+8,log:They gift a poncho and slip away. | fail:credits-4,log:The detour draws a patrol.
-eventOption:Strip their supplies and move on => risk:high | tag:betrayal | success:item:response harness,credits+12,log:You strip their supplies and keep moving. | fail:hp-7,credits-5,log:The team fights back and slows you down.
+event:Locker team begs for a ride | chance:0.6 | prompt:A pinned logistics team begs for escort out of the wing. Even the quiet sounds engineered.
+eventOption:Escort them to the access stair => risk:medium | tag:mercy | success:item:security poncho,credits+8,log:They gift a poncho and slip away. Broken cameras still pivot like they remember faces.| fail:credits-4,log:The detour draws a patrol. Nobody here mistakes kindness for weakness anymore.
+eventOption:Strip their supplies and move on => risk:high | tag:betrayal | success:item:response harness,credits+12,log:You strip their supplies and keep moving. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The team fights back and slows you down. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:military-assist
 label:Assist RMG patrol
-desc:Run a logistics escort for the Redtech Military Group (RMG). Requires high standing (+8); success improves military relations (+2) and reduces combat risk on allied runs.
+desc:Run a logistics escort for the Redtech Military Group (RMG). Requires high standing (+8); success improves military relations (+2) and reduces combat risk on allied runs. The skyline glows like a wound after dark.
 risk:medium
 time:11
 energy:14
@@ -64,14 +64,14 @@ faction:military
 relationMin:8
 relationSuccess:2
 relationFail:-1
-event:RMG lieutenant requests discipline | chance:0.7 | prompt:A lieutenant orders you to make an example of a deserter mid-escort.
-eventOption:Spare the deserter and cover them => risk:medium | tag:mercy | success:credits+6,item:filtered water pack,log:The deserter slips you supplies and disappears. | fail:credits-4,log:The lieutenant notices the delay.
-eventOption:Follow orders without question => risk:high | tag:betrayal | success:item:command bracer,credits+12,log:The patrol rewards your obedience with a bracer. | fail:hp-6,credits-4,log:The deserter's friends ambush the convoy.
+event:RMG lieutenant requests discipline | chance:0.7 | prompt:A lieutenant orders you to make an example of a deserter mid-escort. The skyline glows like a wound after dark.
+eventOption:Spare the deserter and cover them => risk:medium | tag:mercy | success:credits+6,item:filtered water pack,log:The deserter slips you supplies and disappears. Trust is currency, and everyone is short on it.| fail:credits-4,log:The lieutenant notices the delay. Even the quiet sounds engineered.
+eventOption:Follow orders without question => risk:high | tag:betrayal | success:item:command bracer,credits+12,log:The patrol rewards your obedience with a bracer. The skyline glows like a wound after dark.| fail:hp-6,credits-4,log:The deserter's friends ambush the convoy. Static hums through every bad decision.
 
 @mission
 id:military-infiltrate
 label:Infiltrate RMG briefing
-desc:Slip into a RMG briefing to undermine them (-2 relation). Only possible with low standing (≤ -5); combat risk spikes when relations are bad.
+desc:Slip into a RMG briefing to undermine them (-2 relation). Only possible with low standing (≤ -5); combat risk spikes when relations are bad. The skyline glows like a wound after dark.
 risk:high
 time:13
 energy:16
@@ -83,14 +83,14 @@ faction:military
 relationMax:-5
 relationSuccess:-2
 relationFail:-1
-event:RMG courier meets you mid-run | chance:1 | prompt:A courier offers you a sealed briefing packet. Do you take the shot?
-eventOption:Expose the courier => risk:high | tag:betrayal | success:credits+18,item:secure datapad,log:You intercept the packet and slip away. | fail:hp-7,credits-4,log:The courier's escorts pin you down.
-eventOption:Let them pass => risk:medium | tag:mercy | success:credits+4,item:nutri-gel pack,log:The courier leaves you a ration as thanks. | fail:credits-3,log:The courier brands you soft and walks off.
+event:RMG courier meets you mid-run | chance:1 | prompt:A courier offers you a sealed briefing packet. Do you take the shot? Even the quiet sounds engineered.
+eventOption:Expose the courier => risk:high | tag:betrayal | success:credits+18,item:secure datapad,log:You intercept the packet and slip away. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The courier's escorts pin you down. Static hums through every bad decision.
+eventOption:Let them pass => risk:medium | tag:mercy | success:credits+4,item:nutri-gel pack,log:The courier leaves you a ration as thanks. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The courier brands you soft and walks off. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:facility-armory
 label:Director armory lock
-desc:Use the director armory key to enter the restricted weapons vault.
+desc:Use the director armory key to enter the restricted weapons vault. Broken cameras still pivot like they remember faces.
 risk:high
 time:15
 energy:20
@@ -98,60 +98,60 @@ loot:5
 lootType:high-tier tactical gear
 key:1
 combatChance:0.5
-event:Executive ration lab | chance:0.2 | prompt:A locked lab stores an experimental ration heater array. Take the risk?
-eventOption:Spoof the executive lock => risk:high | tag:tech | success:item:ration heater array,credits+14,log:You spoof the lock and secure a ration heater array upgrade. | fail:hp-7,log:The lock alarms and stuns you.
-eventOption:Cut through the vault bars => risk:deadly | tag:combat | success:item:ration heater array,credits+18,log:You cut the bars and drag out the ration heater array upgrade. | fail:hp-10,log:The bars snap back and slash your arm.
+event:Executive ration lab | chance:0.2 | prompt:A locked lab stores an experimental ration heater array. Take the risk? Even the quiet sounds engineered.
+eventOption:Spoof the executive lock => risk:high | tag:tech | success:item:ration heater array,credits+14,log:You spoof the lock and secure a ration heater array upgrade. Broken cameras still pivot like they remember faces.| fail:hp-7,log:The lock alarms and stuns you. Nobody here mistakes kindness for weakness anymore.
+eventOption:Cut through the vault bars => risk:deadly | tag:combat | success:item:ration heater array,credits+18,log:You cut the bars and drag out the ration heater array upgrade. Trust is currency, and everyone is short on it.| fail:hp-10,log:The bars snap back and slash your arm. Even the quiet sounds engineered.
 
 @mission
 id:facility-archives
 label:Cold archive recovery
-desc:Recover purge logs from the sealed archive stacks.
+desc:Recover purge logs from the sealed archive stacks. The skyline glows like a wound after dark.
 risk:medium
 time:12
 energy:15
 loot:3
 lootType:archival intel
-event:Frozen archive terminal | chance:0.6 | prompt:The terminal is iced over, but the purge logs are inside.
-eventOption:Warm the lines carefully => risk:medium | tag:tech | success:item:data cartridge,credits+10,log:The terminal thaws and you copy the logs. | fail:temp-2,credits-3,log:The circuits freeze solid.
-eventOption:Smash the panel and grab drives => risk:high | tag:combat | success:item:signal jammer,log:You crack the panel and yank a jammer. | fail:hp-7,log:The housing snaps back and cuts you.
+event:Frozen archive terminal | chance:0.6 | prompt:The terminal is iced over, but the purge logs are inside. Trust is currency, and everyone is short on it.
+eventOption:Warm the lines carefully => risk:medium | tag:tech | success:item:data cartridge,credits+10,log:The terminal thaws and you copy the logs. Even the quiet sounds engineered.| fail:temp-2,credits-3,log:The circuits freeze solid. Trust is currency, and everyone is short on it.
+eventOption:Smash the panel and grab drives => risk:high | tag:combat | success:item:signal jammer,log:You crack the panel and yank a jammer. Trust is currency, and everyone is short on it.| fail:hp-7,log:The housing snaps back and cuts you. Broken cameras still pivot like they remember faces.
 
 @mission
 id:facility-drone-bay
 label:Drone bay salvage
-desc:Strip disabled security drones for parts and tools.
+desc:Strip disabled security drones for parts and tools. Broken cameras still pivot like they remember faces.
 risk:high
 time:13
 energy:17
 loot:4
 lootType:drone parts
-event:Bay power surge | chance:0.55 | prompt:The drone racks whine to life in a power surge.
-eventOption:Jam the bay controls => risk:high | tag:tech | success:item:drone core,credits+12,log:The surge dies and you claim a core. | fail:hp-8,log:The bay locks you in with an active drone.
-eventOption:Trigger the fire suppression => risk:medium | tag:stealth | success:item:flashbang,log:The foam blinds the drones while you grab a flashbang. | fail:credits-5,log:The foam clogs your pack and slows you down.
+event:Bay power surge | chance:0.55 | prompt:The drone racks whine to life in a power surge. Trust is currency, and everyone is short on it.
+eventOption:Jam the bay controls => risk:high | tag:tech | success:item:drone core,credits+12,log:The surge dies and you claim a core. Nobody here mistakes kindness for weakness anymore.| fail:hp-8,log:The bay locks you in with an active drone. Trust is currency, and everyone is short on it.
+eventOption:Trigger the fire suppression => risk:medium | tag:stealth | success:item:flashbang,log:The foam blinds the drones while you grab a flashbang. Broken cameras still pivot like they remember faces.| fail:credits-5,log:The foam clogs your pack and slows you down. Static hums through every bad decision.
 
 @mission
 id:facility-briefing-room
 label:Briefing room sweep
-desc:Search the sealed briefing room for emergency caches and officer kits.
+desc:Search the sealed briefing room for emergency caches and officer kits. Even the quiet sounds engineered.
 risk:medium
 time:11
 energy:14
 loot:3
 lootType:officer kits
-event:Whistleblower tape | chance:1 | prompt:A taped confession implicates the RMG. What do you do?
-eventOption:Send it to the resistance => risk:medium | tag:mercy | success:credits+8,item:wire spool,log:The resistance pays for the evidence. | fail:credits-4,log:The signal gets traced and you bail.
-eventOption:Sell it back to the RMG => risk:high | tag:betrayal | success:credits+16,item:painkillers,log:The RMG pays for silence. | fail:hp-6,credits-5,log:A handler tries to double-cross you.
+event:Whistleblower tape | chance:1 | prompt:A taped confession implicates the RMG. What do you do? Static hums through every bad decision.
+eventOption:Send it to the resistance => risk:medium | tag:mercy | success:credits+8,item:wire spool,log:The resistance pays for the evidence. Trust is currency, and everyone is short on it.| fail:credits-4,log:The signal gets traced and you bail. Even the quiet sounds engineered.
+eventOption:Sell it back to the RMG => risk:high | tag:betrayal | success:credits+16,item:painkillers,log:The RMG pays for silence. Even the quiet sounds engineered.| fail:hp-6,credits-5,log:A handler tries to double-cross you. Nobody here mistakes kindness for weakness anymore.
 
 @quest
 id:facility-telecom
-title:Reconnect the facility telecom grid
-desc:Bring the facility telecom backbone online to accelerate idle dispatches.
+title:Reconnect the facility telecom grid. The skyline glows like a wound after dark.
+desc:Bring the facility telecom backbone online to accelerate idle dispatches. Trust is currency, and everyone is short on it.
 risk:high
 time:13
 energy:18
 loot:3
 lootType:signal crates
 reward:dispatch acceleration
-success:item:secure datapad,credits+20,flag:facility-telecom,log:The telecom grid stabilizes. Idle dispatches now complete faster.
+success:item:secure datapad,credits+20,flag:facility-telecom,log:The telecom grid stabilizes. Idle dispatches now complete faster. The skyline glows like a wound after dark.
 fail:hp-8,credits-5
 flag:facility-telecom
 once:true
@@ -159,59 +159,59 @@ once:true
 @mission
 id:government_facility-ops-scoutline
 label:Scoutline warm-up
-desc:Low-risk recon through the government facility fringe to chart safe lanes for rookies.
+desc:Low-risk recon through the government facility fringe to chart safe lanes for rookies. Broken cameras still pivot like they remember faces.
 risk:low
 time:8
 energy:10
 loot:2
 lootType:route scraps
-event:Elder mapkeeper shares old chalk routes | chance:1 | prompt:The elder warns that loud routes wake dormant threats. Which route do you follow?
-eventOption:Follow the elder's silent route => risk:low | tag:mercy | success:item:trail compass,item:folding binoculars,credits+5,log:You follow old marks and recover navigation tools. | fail:credits-3,log:A dead-end slows the team.
-eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | success:item:impact baton,credits+7,log:You force a shorter route and grab a baton cache. | fail:hp-5,log:An ambush bruises your squad.
+event:Elder mapkeeper shares old chalk routes | chance:1 | prompt:The elder warns that loud routes wake dormant threats. Which route do you follow? Even the quiet sounds engineered.
+eventOption:Follow the elder's silent route => risk:low | tag:mercy | success:item:trail compass,item:folding binoculars,credits+5,log:You follow old marks and recover navigation tools. Static hums through every bad decision.| fail:credits-3,log:A dead-end slows the team. Nobody here mistakes kindness for weakness anymore.
+eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | success:item:impact baton,credits+7,log:You force a shorter route and grab a baton cache. Even the quiet sounds engineered.| fail:hp-5,log:An ambush bruises your squad. The skyline glows like a wound after dark.
 
 @mission
 id:government_facility-ops-supply-barter
 label:Supply barter circuit
-desc:Negotiate with fringe traders for utility gear and survival items.
+desc:Negotiate with fringe traders for utility gear and survival items. Trust is currency, and everyone is short on it.
 risk:low
 time:9
 energy:11
 loot:3
 lootType:barter goods
-event:Blackout market opens for one hour | chance:0.9 | prompt:A trader offers rare tools if you settle a dispute.
-eventOption:Mediate the dispute and keep order => risk:low | tag:mercy | success:item:field compass,item:insulated gloves,credits+6,log:The market stays calm and you leave with tools. | fail:credits-3,log:The deal collapses.
-eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | success:item:metal detector,item:sealed ration tin,credits+9,log:You intimidate the traders and seize premium stock. | fail:hp-4,credits-3,log:Hidden guards push you out.
+event:Blackout market opens for one hour | chance:0.9 | prompt:A trader offers rare tools if you settle a dispute. Nobody here mistakes kindness for weakness anymore.
+eventOption:Mediate the dispute and keep order => risk:low | tag:mercy | success:item:field compass,item:insulated gloves,credits+6,log:The market stays calm and you leave with tools. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The deal collapses. Static hums through every bad decision.
+eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | success:item:metal detector,item:sealed ration tin,credits+9,log:You intimidate the traders and seize premium stock. The skyline glows like a wound after dark.| fail:hp-4,credits-3,log:Hidden guards push you out. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government_facility-ops-shadow-lift
 label:Shadow-lift extraction
-desc:Pull crates from a contested block where stealth gear matters more than firepower.
+desc:Pull crates from a contested block where stealth gear matters more than firepower. Broken cameras still pivot like they remember faces.
 risk:medium
 time:10
 energy:13
 loot:3
 lootType:stealth salvage
-event:Floodlights sweep the loading lane | chance:0.75 | prompt:You can move slowly under cover or rush the lift.
-eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:stealth | success:item:stealth-wear,item:smoke capsule,credits+8,log:Careful pacing gets the full crate out. | fail:hp-5,log:A spotlight catches you.
-eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. | fail:hp-7,log:Backup lights trigger mid-run.
+event:Floodlights sweep the loading lane | chance:0.75 | prompt:You can move slowly under cover or rush the lift. Nobody here mistakes kindness for weakness anymore.
+eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:stealth | success:item:stealth-wear,item:smoke capsule,credits+8,log:Careful pacing gets the full crate out. Nobody here mistakes kindness for weakness anymore.| fail:hp-5,log:A spotlight catches you. The skyline glows like a wound after dark.
+eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. Broken cameras still pivot like they remember faces.| fail:hp-7,log:Backup lights trigger mid-run. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government_facility-ops-deep-vault
 label:Deep vault breach
-desc:High-risk push into a sealed vault loaded with specialized mission tools.
+desc:High-risk push into a sealed vault loaded with specialized mission tools. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:13
 energy:17
 loot:5
 lootType:specialized gear
-event:Old vault AI demands a pledge to local survivors | chance:1 | prompt:The AI asks whether you will share findings with the settlement elders.
-eventOption:Promise a fair split and honor it => risk:high | tag:mercy | success:item:long-range binoculars,item:terrain scanner,item:reinforced stealth cloak,credits+12,log:The AI opens side lockers after your pledge. | fail:credits-5,log:The AI distrusts your oath and throttles access.
-eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betrayal | success:item:precision metal detector,item:shock weave armor,credits+17,log:You crack every locker before alarms cycle. | fail:hp-10,credits-6,log:The countermeasure grid fires.
+event:Old vault AI demands a pledge to local survivors | chance:1 | prompt:The AI asks whether you will share findings with the settlement elders. The skyline glows like a wound after dark.
+eventOption:Promise a fair split and honor it => risk:high | tag:mercy | success:item:long-range binoculars,item:terrain scanner,item:reinforced stealth cloak,credits+12,log:The AI opens side lockers after your pledge. Broken cameras still pivot like they remember faces.| fail:credits-5,log:The AI distrusts your oath and throttles access. The skyline glows like a wound after dark.
+eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betrayal | success:item:precision metal detector,item:shock weave armor,credits+17,log:You crack every locker before alarms cycle. Trust is currency, and everyone is short on it.| fail:hp-10,credits-6,log:The countermeasure grid fires. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government_facility-legend-merc-contract
 label:Legend contract: One-shot rescue
-desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean.
+desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:16
 energy:20
@@ -219,14 +219,14 @@ loot:6
 lootType:legend contract cache
 reward:mercenary recruitment
 once:true
-event:Downed veteran calls for extraction near collapsing cover | chance:1 | prompt:You only get one run at this. Commit to the rescue?
-eventOption:Commit and hold the line for the veteran => risk:deadly | tag:mercy | success:merc+1,item:veteran contract badge,item:command whistle,credits+20,log:The veteran joins your roster after extraction. | fail:hp-12,credits-8,log:The rescue fails under heavy pressure.
-eventOption:Abandon the call and loot the perimeter => risk:high | tag:betrayal | success:item:salvage satchel,credits+11,log:You skip the rescue and strip the perimeter. | fail:credits-6,log:Word spreads that you broke contract.
+event:Downed veteran calls for extraction near collapsing cover | chance:1 | prompt:You only get one run at this. Commit to the rescue? Trust is currency, and everyone is short on it.
+eventOption:Commit and hold the line for the veteran => risk:deadly | tag:mercy | success:merc+1,item:veteran contract badge,item:command whistle,credits+20,log:The veteran joins your roster after extraction. Trust is currency, and everyone is short on it.| fail:hp-12,credits-8,log:The rescue fails under heavy pressure. The skyline glows like a wound after dark.
+eventOption:Abandon the call and loot the perimeter => risk:high | tag:betrayal | success:item:salvage satchel,credits+11,log:You skip the rescue and strip the perimeter. Trust is currency, and everyone is short on it.| fail:credits-6,log:Word spreads that you broke contract. Broken cameras still pivot like they remember faces.
 
 @mission
 id:government_facility-idle-unlock-1
 label:Idle network contract 1
-desc:Secure route node 1 so handlers can launch automated idle missions in this region.
+desc:Secure route node 1 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:7
 energy:9
@@ -234,15 +234,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:government_facility-idle-route-1
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 1 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 1,item:field compass mk1,credits+5,log:The broker certifies node 1 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 1,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 1,item:survey binoculars 1,credits+10,log:You lock node 1 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 1 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 1,item:field compass mk1,credits+5,log:The broker certifies node 1 for reliable idle runs. Static hums through every bad decision.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 1,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 1,item:survey binoculars 1,credits+10,log:You lock node 1 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:government_facility-idle-unlock-2
 label:Idle network contract 2
-desc:Secure route node 2 so handlers can launch automated idle missions in this region.
+desc:Secure route node 2 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:8
 energy:10
@@ -250,15 +250,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:government_facility-idle-route-2
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 2 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 2,item:field compass mk2,credits+5,log:The broker certifies node 2 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 2,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 2,item:survey binoculars 2,credits+10,log:You lock node 2 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 2 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 2,item:field compass mk2,credits+5,log:The broker certifies node 2 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 2,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 2,item:survey binoculars 2,credits+10,log:You lock node 2 with premium payoff data. Even the quiet sounds engineered.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:government_facility-idle-unlock-3
 label:Idle network contract 3
-desc:Secure route node 3 so handlers can launch automated idle missions in this region.
+desc:Secure route node 3 so handlers can launch automated idle missions in this region. Even the quiet sounds engineered.
 risk:medium
 time:9
 energy:11
@@ -266,15 +266,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:government_facility-idle-route-3
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 3 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 3,item:field compass mk3,credits+5,log:The broker certifies node 3 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 3,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 3,item:survey binoculars 3,credits+10,log:You lock node 3 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 3 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 3,item:field compass mk3,credits+5,log:The broker certifies node 3 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 3,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 3,item:survey binoculars 3,credits+10,log:You lock node 3 with premium payoff data. Static hums through every bad decision.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:government_facility-idle-unlock-4
 label:Idle network contract 4
-desc:Secure route node 4 so handlers can launch automated idle missions in this region.
+desc:Secure route node 4 so handlers can launch automated idle missions in this region. The skyline glows like a wound after dark.
 risk:medium
 time:10
 energy:12
@@ -282,15 +282,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:government_facility-idle-route-4
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 4 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 4,item:field compass mk4,credits+5,log:The broker certifies node 4 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 4,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 4,item:survey binoculars 4,credits+10,log:You lock node 4 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 4 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 4,item:field compass mk4,credits+5,log:The broker certifies node 4 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 4,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 4,item:survey binoculars 4,credits+10,log:You lock node 4 with premium payoff data. The skyline glows like a wound after dark.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:government_facility-idle-unlock-5
 label:Idle network contract 5
-desc:Secure route node 5 so handlers can launch automated idle missions in this region.
+desc:Secure route node 5 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:medium
 time:11
 energy:13
@@ -298,15 +298,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:government_facility-idle-route-5
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 5 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 5,item:field compass mk5,credits+5,log:The broker certifies node 5 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 5,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 5,item:survey binoculars 5,credits+10,log:You lock node 5 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 5 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 5,item:field compass mk5,credits+5,log:The broker certifies node 5 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 5,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 5,item:survey binoculars 5,credits+10,log:You lock node 5 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:government_facility-idle-unlock-6
 label:Idle network contract 6
-desc:Secure route node 6 so handlers can launch automated idle missions in this region.
+desc:Secure route node 6 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
 time:12
 energy:15
@@ -314,15 +314,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:government_facility-idle-route-6
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 6 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 6,item:field compass mk6,credits+5,log:The broker certifies node 6 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 6,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 6,item:survey binoculars 6,credits+10,log:You lock node 6 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 6 forks into three lanes: safe, fast, and lucrative. Choose your call. The skyline glows like a wound after dark.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 6,item:field compass mk6,credits+5,log:The broker certifies node 6 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 6,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 6,item:survey binoculars 6,credits+10,log:You lock node 6 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:government_facility-idle-unlock-7
 label:Idle network contract 7
-desc:Secure route node 7 so handlers can launch automated idle missions in this region.
+desc:Secure route node 7 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:high
 time:13
 energy:16
@@ -330,15 +330,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:government_facility-idle-route-7
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 7 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 7,item:field compass mk7,credits+5,log:The broker certifies node 7 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 7,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 7,item:survey binoculars 7,credits+10,log:You lock node 7 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 7 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 7,item:field compass mk7,credits+5,log:The broker certifies node 7 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 7,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 7,item:survey binoculars 7,credits+10,log:You lock node 7 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:government_facility-idle-unlock-8
 label:Idle network contract 8
-desc:Secure route node 8 so handlers can launch automated idle missions in this region.
+desc:Secure route node 8 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
 time:14
 energy:17
@@ -346,15 +346,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:government_facility-idle-route-8
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 8 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 8,item:field compass mk8,credits+5,log:The broker certifies node 8 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 8,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 8,item:survey binoculars 8,credits+10,log:You lock node 8 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 8 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 8,item:field compass mk8,credits+5,log:The broker certifies node 8 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 8,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 8,item:survey binoculars 8,credits+10,log:You lock node 8 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:government_facility-idle-unlock-9
 label:Idle network contract 9
-desc:Secure route node 9 so handlers can launch automated idle missions in this region.
+desc:Secure route node 9 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
 time:15
 energy:18
@@ -362,15 +362,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:government_facility-idle-route-9
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 9 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 9,item:field compass mk9,credits+5,log:The broker certifies node 9 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 9,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 9,item:survey binoculars 9,credits+10,log:You lock node 9 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 9 forks into three lanes: safe, fast, and lucrative. Choose your call. Nobody here mistakes kindness for weakness anymore.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 9,item:field compass mk9,credits+5,log:The broker certifies node 9 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 9,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 9,item:survey binoculars 9,credits+10,log:You lock node 9 with premium payoff data. Trust is currency, and everyone is short on it.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:government_facility-idle-unlock-10
 label:Idle network contract 10
-desc:Secure route node 10 so handlers can launch automated idle missions in this region.
+desc:Secure route node 10 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
 time:16
 energy:20
@@ -378,15 +378,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:government_facility-idle-route-10
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 10 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 10,item:field compass mk10,credits+5,log:The broker certifies node 10 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 10 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 10,item:field compass mk10,credits+5,log:The broker certifies node 10 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:government-facility-faction-sweep-1
-title:RMG Liaison Sweep 1
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:RMG Liaison Sweep 1. Even the quiet sounds engineered.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:low
 time:6
 energy:7
@@ -395,13 +395,13 @@ reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
-success:credits+7,log:Your report lands cleanly and RMG trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+7,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government-facility-faction-sweep-2
-title:AM Liaison Sweep 2
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:AM Liaison Sweep 2. Trust is currency, and everyone is short on it.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:7
 energy:8
@@ -410,13 +410,13 @@ reward:+1 AM relation
 faction:gang
 relationSuccess:1
 relationFail:0
-success:credits+8,log:Your report lands cleanly and AM trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+8,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government-facility-faction-sweep-3
-title:RMG Liaison Sweep 3
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:RMG Liaison Sweep 3. Static hums through every bad decision.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:8
 energy:9
@@ -425,13 +425,13 @@ reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
-success:credits+9,log:Your report lands cleanly and RMG trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+9,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government-facility-faction-sweep-4
-title:AM Liaison Sweep 4
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:AM Liaison Sweep 4. The skyline glows like a wound after dark.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:9
 energy:10
@@ -440,13 +440,13 @@ reward:+1 AM relation
 faction:gang
 relationSuccess:1
 relationFail:0
-success:credits+10,log:Your report lands cleanly and AM trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+10,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government-facility-faction-sweep-5
-title:RMG Liaison Sweep 5
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:RMG Liaison Sweep 5. Broken cameras still pivot like they remember faces.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:10
 energy:11
@@ -455,150 +455,150 @@ reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
-success:credits+11,log:Your report lands cleanly and RMG trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+11,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 # autogenerated expansion missions pack
 @mission
 id:government_facility-new-01
 label:Frontline contract 1
-desc:Take on contract 1 to secure routes, salvage intel, and keep the government facility network operating.
+desc:Take on contract 1 to secure routes, salvage intel, and keep the government facility network operating. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:7
 energy:8
 loot:1
 reward:sector stabilization
 combatChance:0.15
-success:credits+8,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-2,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+8,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government_facility-new-02
 label:Frontline contract 2
-desc:Take on contract 2 to secure routes, salvage intel, and keep the government facility network operating.
+desc:Take on contract 2 to secure routes, salvage intel, and keep the government facility network operating. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:8
 energy:9
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals to safety.
-fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal.
+success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government_facility-new-03
 label:Frontline contract 3
-desc:Take on contract 3 to secure routes, salvage intel, and keep the government facility network operating.
+desc:Take on contract 3 to secure routes, salvage intel, and keep the government facility network operating. Trust is currency, and everyone is short on it.
 risk:medium
 time:9
 energy:10
 loot:1
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and a safer lane map.
-fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered.
+success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
 id:government_facility-new-04
 label:Frontline contract 4
-desc:Take on contract 4 to secure routes, salvage intel, and keep the government facility network operating.
+desc:Take on contract 4 to secure routes, salvage intel, and keep the government facility network operating. Static hums through every bad decision.
 risk:high
 time:10
 energy:11
 loot:2
 reward:sector stabilization
 combatChance:0.15
-success:credits+14,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-2,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+14,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government_facility-new-05
 label:Frontline contract 5
-desc:Take on contract 5 to secure routes, salvage intel, and keep the government facility network operating.
+desc:Take on contract 5 to secure routes, salvage intel, and keep the government facility network operating. The skyline glows like a wound after dark.
 risk:low
 time:11
 energy:12
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+15,hp+3,energy+4,log:You complete the objective and escort locals to safety.
-fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal.
+success:credits+15,hp+3,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government_facility-new-06
 label:Frontline contract 6
-desc:Take on contract 6 to secure routes, salvage intel, and keep the government facility network operating.
+desc:Take on contract 6 to secure routes, salvage intel, and keep the government facility network operating. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:12
 energy:13
 loot:2
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and a safer lane map.
-fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered.
+success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
 id:government_facility-new-07
 label:Frontline contract 7
-desc:Take on contract 7 to secure routes, salvage intel, and keep the government facility network operating.
+desc:Take on contract 7 to secure routes, salvage intel, and keep the government facility network operating. The skyline glows like a wound after dark.
 risk:deadly
 time:13
 energy:14
 loot:3
 reward:sector stabilization
 combatChance:0.15
-success:credits+20,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-3,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+20,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-3,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government_facility-new-08
 label:Frontline contract 8
-desc:Take on contract 8 to secure routes, salvage intel, and keep the government facility network operating.
+desc:Take on contract 8 to secure routes, salvage intel, and keep the government facility network operating. Trust is currency, and everyone is short on it.
 risk:medium
 time:14
 energy:15
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+21,hp+2,energy+4,log:You complete the objective and escort locals to safety.
-fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal.
+success:credits+21,hp+2,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:government_facility-new-09
 label:Frontline contract 9
-desc:Take on contract 9 to secure routes, salvage intel, and keep the government facility network operating.
+desc:Take on contract 9 to secure routes, salvage intel, and keep the government facility network operating. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:15
 energy:16
 loot:1
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and a safer lane map.
-fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered.
+success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
 id:government_facility-new-10
 label:Frontline contract 10
-desc:Take on contract 10 to secure routes, salvage intel, and keep the government facility network operating.
+desc:Take on contract 10 to secure routes, salvage intel, and keep the government facility network operating. Even the quiet sounds engineered.
 risk:high
 time:16
 energy:17
 loot:2
 reward:sector stabilization
 combatChance:0.15
-success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-5,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-5,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:loot-government_facility-retro-salvage
 label:Retro salvage stockpile
-desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones.
+desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones. The skyline glows like a wound after dark.
 risk:high
 time:15
 energy:18
 loot:8
 lootType:retro cache trove
-event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run?
-eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:government-facility cram tin,item:government-facility blamco mac can,item:government-facility sunset fizz bottle,item:government-facility dusty nuka cola,item:government-facility instamash pouch,item:government-facility preserved pie slice,item:government-facility sugar bombs box,item:government-facility fancy lad snack cake,item:government-facility old world coffee tin,item:government-facility molded iguana bits,item:government-facility military ration slab,item:government-facility dehydrated mutfruit brick,item:government-facility vault jerky strip,item:government-facility stale gum drops,item:government-facility salisbury steak tray,item:government-facility cold pork n beans can,item:government-facility combat helmet liner,item:government-facility flak web harness,item:government-facility service rifle stock,item:government-facility pipe rifle receiver,item:government-facility riot control visor,item:government-facility trench shovel blade,item:government-facility bayonet training sheath,item:government-facility war map tube,item:government-facility fatigue field jacket,item:government-facility army canteen shell,item:government-facility dog tag bundle,item:government-facility entrenching tool head,item:government-facility laser musket coil,item:government-facility handmade shotgun frame,item:government-facility atom-age pulse pistol,item:government-facility retro raygun grip,item:government-facility vacuum tube scope,item:government-facility mr handy actuator,item:government-facility fusion battery shell,item:government-facility plasma torch nozzle,item:government-facility geiger wristwatch,item:government-facility pip-dial circuit board,item:government-facility rocket car lunchbox,item:government-facility chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. | fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers.
-eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:government-facility cram tin,item:government-facility blamco mac can,item:government-facility sunset fizz bottle,item:government-facility dusty nuka cola,item:government-facility instamash pouch,item:government-facility preserved pie slice,item:government-facility sugar bombs box,item:government-facility fancy lad snack cake,item:government-facility old world coffee tin,item:government-facility molded iguana bits,item:government-facility military ration slab,item:government-facility dehydrated mutfruit brick,item:government-facility vault jerky strip,item:government-facility stale gum drops,item:government-facility salisbury steak tray,item:government-facility cold pork n beans can,item:government-facility combat helmet liner,item:government-facility flak web harness,item:government-facility service rifle stock,item:government-facility pipe rifle receiver,item:government-facility riot control visor,item:government-facility trench shovel blade,item:government-facility bayonet training sheath,item:government-facility war map tube,item:government-facility fatigue field jacket,item:government-facility army canteen shell,item:government-facility dog tag bundle,item:government-facility entrenching tool head,item:government-facility laser musket coil,item:government-facility handmade shotgun frame,item:government-facility atom-age pulse pistol,item:government-facility retro raygun grip,item:government-facility vacuum tube scope,item:government-facility mr handy actuator,item:government-facility fusion battery shell,item:government-facility plasma torch nozzle,item:government-facility geiger wristwatch,item:government-facility pip-dial circuit board,item:government-facility rocket car lunchbox,item:government-facility chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. | fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat.
+event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run? Nobody here mistakes kindness for weakness anymore.
+eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:government-facility cram tin,item:government-facility blamco mac can,item:government-facility sunset fizz bottle,item:government-facility dusty nuka cola,item:government-facility instamash pouch,item:government-facility preserved pie slice,item:government-facility sugar bombs box,item:government-facility fancy lad snack cake,item:government-facility old world coffee tin,item:government-facility molded iguana bits,item:government-facility military ration slab,item:government-facility dehydrated mutfruit brick,item:government-facility vault jerky strip,item:government-facility stale gum drops,item:government-facility salisbury steak tray,item:government-facility cold pork n beans can,item:government-facility combat helmet liner,item:government-facility flak web harness,item:government-facility service rifle stock,item:government-facility pipe rifle receiver,item:government-facility riot control visor,item:government-facility trench shovel blade,item:government-facility bayonet training sheath,item:government-facility war map tube,item:government-facility fatigue field jacket,item:government-facility army canteen shell,item:government-facility dog tag bundle,item:government-facility entrenching tool head,item:government-facility laser musket coil,item:government-facility handmade shotgun frame,item:government-facility atom-age pulse pistol,item:government-facility retro raygun grip,item:government-facility vacuum tube scope,item:government-facility mr handy actuator,item:government-facility fusion battery shell,item:government-facility plasma torch nozzle,item:government-facility geiger wristwatch,item:government-facility pip-dial circuit board,item:government-facility rocket car lunchbox,item:government-facility chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
+eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:government-facility cram tin,item:government-facility blamco mac can,item:government-facility sunset fizz bottle,item:government-facility dusty nuka cola,item:government-facility instamash pouch,item:government-facility preserved pie slice,item:government-facility sugar bombs box,item:government-facility fancy lad snack cake,item:government-facility old world coffee tin,item:government-facility molded iguana bits,item:government-facility military ration slab,item:government-facility dehydrated mutfruit brick,item:government-facility vault jerky strip,item:government-facility stale gum drops,item:government-facility salisbury steak tray,item:government-facility cold pork n beans can,item:government-facility combat helmet liner,item:government-facility flak web harness,item:government-facility service rifle stock,item:government-facility pipe rifle receiver,item:government-facility riot control visor,item:government-facility trench shovel blade,item:government-facility bayonet training sheath,item:government-facility war map tube,item:government-facility fatigue field jacket,item:government-facility army canteen shell,item:government-facility dog tag bundle,item:government-facility entrenching tool head,item:government-facility laser musket coil,item:government-facility handmade shotgun frame,item:government-facility atom-age pulse pistol,item:government-facility retro raygun grip,item:government-facility vacuum tube scope,item:government-facility mr handy actuator,item:government-facility fusion battery shell,item:government-facility plasma torch nozzle,item:government-facility geiger wristwatch,item:government-facility pip-dial circuit board,item:government-facility rocket car lunchbox,item:government-facility chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
 

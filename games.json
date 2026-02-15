@@ -2,67 +2,67 @@
   "expansions": [
     {
       "id": "safehouse",
-      "name": "Safe House",
+      "name": "Wastelander: The Last Lantern",
       "file": "expansions/safehouse.txt"
     },
     {
       "id": "underground_bunker",
-      "name": "Abandoned Underground Bunker System",
+      "name": "Vaultline Catacombs",
       "file": "expansions/underground_bunker.txt"
     },
     {
       "id": "metro_ganglands",
-      "name": "Ganglands Metro Shanty",
+      "name": "Neon Gutline",
       "file": "expansions/metro_ganglands.txt"
     },
     {
       "id": "abernathy_holdout",
-      "name": "Abernathy Militia Hidden Holdout",
+      "name": "Abernathy Redoubt",
       "file": "expansions/abernathy_holdout.txt"
     },
     {
       "id": "rmg_base",
-      "name": "RMG Base of Operations",
+      "name": "Crown Authority Blacksite",
       "file": "expansions/rmg_base.txt"
     },
     {
       "id": "government_facility",
-      "name": "Abandoned Government Facility",
+      "name": "Ash Ledger Annex",
       "file": "expansions/government_facility.txt"
     },
     {
       "id": "medical_center",
-      "name": "Medical Center",
+      "name": "Grey Mercy Clinic",
       "file": "expansions/medical_center.txt"
     },
     {
       "id": "abandoned_mall",
-      "name": "Abandoned Mall",
+      "name": "Hollowmarket Sprawl",
       "file": "expansions/abandoned_mall.txt"
     },
     {
       "id": "sunken_refinery",
-      "name": "Sunken Refinery",
+      "name": "Drowned Furnace Works",
       "file": "expansions/sunken_refinery.txt"
     },
     {
       "id": "stormglass_citadel",
-      "name": "Stormglass Citadel",
+      "name": "Stormglass Bastion",
       "file": "expansions/stormglass_citadel.txt"
     },
     {
       "id": "rift_complex",
-      "name": "Rift Complex",
+      "name": "The Riftworks",
       "file": "expansions/rift_complex.txt"
     },
     {
       "id": "refurbished_cave_hideaway",
-      "name": "Refurbished Cave Hideaway",
+      "name": "Ember Cavern Enclave",
       "file": "expansions/refurbished_cave_hideaway.txt"
     },
     {
       "id": "abandoned_school_bus_safehouse",
-      "name": "Abandoned School Bus Safe House",
+      "name": "Busline Sanctuary",
       "file": "expansions/abandoned_school_bus_safehouse.txt"
     }
   ]

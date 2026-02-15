@@ -1,57 +1,57 @@
 @expansion
 id:abandoned_mall
-name:Abandoned Mall
-summary:A hollow mall with shuttered storefronts and a quiet food court. Mid-risk runs for low-tier food and supply crates.
+name:Hollowmarket Sprawl
+summary:A dead retail shell reborn as a scavenger maze where barter stalls, ghost lights, and rooftop gangs fight over food and batteries.
 temp:cold
-arrivalDialog:Custodian Rue: This mall went dark on the Winter Blackout; the fountain never came back.
-missionStartDialog:Vendor Lio: The food court ghosts sell to anyone—move fast before they vanish.
-missionEndDialog:Courier Pax: Nice haul—kids in the lower stacks still trade mall sweets as currency.
+arrivalDialog:Custodian Rue: The fountain died, but the hustlers never did. Trust is currency, and everyone is short on it.
+missionStartDialog:Vendor Lio: Buy clean, steal clean, or bleed messy. Trust is currency, and everyone is short on it.
+missionEndDialog:Courier Pax: Nice haul. Kids still trade sugar packs like royal coin. Trust is currency, and everyone is short on it.
 shop:false
 
 @door
 label:Mall Service Entrance
 hint:food runs, cold corridors, power restart
 risk:medium
-note:Neon reflections dance on polished tiles as you step inside.
+note:Neon reflections dance on polished tiles as you step inside. The skyline glows like a wound after dark.
 target:food-court
 
 @scene food-court
-title:Food Court
-desc:Tables are stacked into makeshift barriers. The air is cold and smells of old grease.
+title:Food Court. Broken cameras still pivot like they remember faces.
+desc:Tables are stacked into makeshift barriers. The air is cold and smells of old grease. Broken cameras still pivot like they remember faces.
 tags:Mall / Hazard
-option:Check the kiosk storage => food-court | risk:medium | time:7 | reward:food stash | success:item:mall snack pack,item:field rations,log:You pull sealed meals from a storage bin. | fail:hunger+8,log:The stash is picked clean.
-option:Search the loading dock => food-court | risk:medium | time:8 | reward:food crates | success:item:water canister,item:citrus soda,log:You drag out a pallet of usable supplies. | fail:hp-5,log:A falling shutter clips your shoulder.
+option:Check the kiosk storage => food-court | risk:medium | time:7 | reward:food stash | success:item:mall snack pack,item:field rations,log:You pull sealed meals from a storage bin. The skyline glows like a wound after dark.| fail:hunger+8,log:The stash is picked clean. Nobody here mistakes kindness for weakness anymore.
+option:Search the loading dock => food-court | risk:medium | time:8 | reward:food crates | success:item:water canister,item:citrus soda,log:You drag out a pallet of usable supplies. Nobody here mistakes kindness for weakness anymore.| fail:hp-5,log:A falling shutter clips your shoulder. Static hums through every bad decision.
 
 @mission
 id:mall-snack
 label:Food court sweep
-desc:Low-risk sweep for low-tier food items.
+desc:Low-risk sweep for low-tier food items. The skyline glows like a wound after dark.
 risk:medium
 time:9
 energy:10
 loot:2
 lootType:low-tier food
-event:Food court vendor offers a deal | chance:0.6 | prompt:A scav vendor offers to trade a stash for safe passage.
-eventOption:Trade fairly and escort them => risk:medium | tag:mercy | success:item:brine crackers,credits+6,log:The vendor hands over crackers and waves you through. | fail:credits-3,log:The vendor backs out at the last moment.
-eventOption:Take the stash and bolt => risk:high | tag:betrayal | success:item:mall snack pack,credits+12,log:You grab the stash and disappear into the kiosks. | fail:hp-5,credits-4,log:The vendor's crew clips you on the way out.
+event:Food court vendor offers a deal | chance:0.6 | prompt:A scav vendor offers to trade a stash for safe passage. Static hums through every bad decision.
+eventOption:Trade fairly and escort them => risk:medium | tag:mercy | success:item:brine crackers,credits+6,log:The vendor hands over crackers and waves you through. The skyline glows like a wound after dark.| fail:credits-3,log:The vendor backs out at the last moment. The skyline glows like a wound after dark.
+eventOption:Take the stash and bolt => risk:high | tag:betrayal | success:item:mall snack pack,credits+12,log:You grab the stash and disappear into the kiosks. The skyline glows like a wound after dark.| fail:hp-5,credits-4,log:The vendor's crew clips you on the way out. Broken cameras still pivot like they remember faces.
 
 @mission
 id:mall-stockroom
 label:Backroom stock run
-desc:Push deeper for better food crates.
+desc:Push deeper for better food crates. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:12
 energy:14
 loot:3
 lootType:food crates
-event:Security drone in the backroom | chance:0.55 | prompt:A dormant drone flickers online between the shelves.
-eventOption:Slip past with the shadows => risk:medium | tag:stealth | success:item:mall snack pack,credits+6,log:You ghost by and scoop extra snacks. | fail:hp-5,log:The drone tags you on the exit.
-eventOption:Smash it head-on => risk:high | tag:combat | success:item:loading hook,log:You topple the drone and claim a loading hook. | fail:hp-8,log:The drone's shock rods drive you back.
+event:Security drone in the backroom | chance:0.55 | prompt:A dormant drone flickers online between the shelves. Even the quiet sounds engineered.
+eventOption:Slip past with the shadows => risk:medium | tag:stealth | success:item:mall snack pack,credits+6,log:You ghost by and scoop extra snacks. Trust is currency, and everyone is short on it.| fail:hp-5,log:The drone tags you on the exit. Trust is currency, and everyone is short on it.
+eventOption:Smash it head-on => risk:high | tag:combat | success:item:loading hook,log:You topple the drone and claim a loading hook. Even the quiet sounds engineered.| fail:hp-8,log:The drone's shock rods drive you back. Static hums through every bad decision.
 
 @mission
 id:mall-manager-cache
 label:Manager suite cache
-desc:Use the manager room key to breach the locked office and cold storage stash.
+desc:Use the manager room key to breach the locked office and cold storage stash. Static hums through every bad decision.
 risk:high
 time:14
 energy:18
@@ -59,78 +59,78 @@ loot:5
 lootType:premium food & supplies
 key:1
 combatChance:0.5
-event:Executive kitchenette cache | chance:0.2 | prompt:A kitchenette hums behind a keypad-locked door. Power it up?
-eventOption:Hotwire the keypad => risk:high | tag:tech | success:item:microwave,credits+12,log:The keypad sparks and you carry off a working microwave upgrade. | fail:hp-6,log:The keypad shocks you and locks down.
-eventOption:Pry the door open => risk:deadly | tag:combat | success:item:microwave,credits+16,log:The door buckles and you drag out a microwave upgrade. | fail:hp-9,log:The door snaps back and bruises you.
-event:Lost shopper hides in the office | chance:1 | prompt:A frightened scav begs to share the cache. What do you do?
-eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:credits+6,item:queue jacket,log:They share a warm jacket in gratitude. | fail:credits-4,log:The scav panics and draws attention.
-eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. | fail:hp-6,credits-5,log:The scav slams the door and sets off a chase.
+event:Executive kitchenette cache | chance:0.2 | prompt:A kitchenette hums behind a keypad-locked door. Power it up? Static hums through every bad decision.
+eventOption:Hotwire the keypad => risk:high | tag:tech | success:item:microwave,credits+12,log:The keypad sparks and you carry off a working microwave upgrade. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:The keypad shocks you and locks down. Broken cameras still pivot like they remember faces.
+eventOption:Pry the door open => risk:deadly | tag:combat | success:item:microwave,credits+16,log:The door buckles and you drag out a microwave upgrade. Even the quiet sounds engineered.| fail:hp-9,log:The door snaps back and bruises you. Nobody here mistakes kindness for weakness anymore.
+event:Lost shopper hides in the office | chance:1 | prompt:A frightened scav begs to share the cache. What do you do? The skyline glows like a wound after dark.
+eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:credits+6,item:queue jacket,log:They share a warm jacket in gratitude. Nobody here mistakes kindness for weakness anymore.| fail:credits-4,log:The scav panics and draws attention. The skyline glows like a wound after dark.
+eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. The skyline glows like a wound after dark.| fail:hp-6,credits-5,log:The scav slams the door and sets off a chase. Trust is currency, and everyone is short on it.
 
 @mission
 id:mall-arcade-hunt
 label:Arcade prize hunt
-desc:Scour the arcade cabinets and prize vaults for stashed food and tech.
+desc:Scour the arcade cabinets and prize vaults for stashed food and tech. Trust is currency, and everyone is short on it.
 risk:medium
 time:11
 energy:13
 loot:3
 lootType:mall odds & ends
-event:Prize vault lockout | chance:0.6 | prompt:The prize vault shutters shut with your hand inside. How do you handle it?
-eventOption:Bypass the lock with a thin tool => risk:medium | tag:tech | success:item:flare paint,credits+6,log:You pop the latch and pocket spare flare paint. | fail:hp-4,log:The shutter snaps down on your wrist.
-eventOption:Rip the door open => risk:high | tag:combat | success:item:store runner shoes,log:The door buckles and you grab light shoes. | fail:hp-7,log:The metal edge tears your sleeve and skin.
+event:Prize vault lockout | chance:0.6 | prompt:The prize vault shutters shut with your hand inside. How do you handle it? Static hums through every bad decision.
+eventOption:Bypass the lock with a thin tool => risk:medium | tag:tech | success:item:flare paint,credits+6,log:You pop the latch and pocket spare flare paint. Static hums through every bad decision.| fail:hp-4,log:The shutter snaps down on your wrist. The skyline glows like a wound after dark.
+eventOption:Rip the door open => risk:high | tag:combat | success:item:store runner shoes,log:The door buckles and you grab light shoes. Static hums through every bad decision.| fail:hp-7,log:The metal edge tears your sleeve and skin. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:mall-parking-garage
 label:Parking garage sweep
-desc:Search the dim parking decks for overlooked supply bins.
+desc:Search the dim parking decks for overlooked supply bins. Broken cameras still pivot like they remember faces.
 risk:medium
 time:12
 energy:15
 loot:3
 lootType:parking salvage
-event:Family locks themselves in a van | chance:1 | prompt:A frightened family calls for escort out of the garage.
-eventOption:Escort them to the exit => risk:medium | tag:mercy | success:credits+8,item:sale-day hoodie,log:They thank you with a clean hoodie. | fail:credits-4,log:The detour draws unwanted attention.
-eventOption:Take their fuel and move on => risk:high | tag:betrayal | success:item:water canister,credits+10,log:You siphon fuel and grab their canister. | fail:hp-6,log:The van door slams and clips your knee.
+event:Family locks themselves in a van | chance:1 | prompt:A frightened family calls for escort out of the garage. Nobody here mistakes kindness for weakness anymore.
+eventOption:Escort them to the exit => risk:medium | tag:mercy | success:credits+8,item:sale-day hoodie,log:They thank you with a clean hoodie. Trust is currency, and everyone is short on it.| fail:credits-4,log:The detour draws unwanted attention. The skyline glows like a wound after dark.
+eventOption:Take their fuel and move on => risk:high | tag:betrayal | success:item:water canister,credits+10,log:You siphon fuel and grab their canister. Even the quiet sounds engineered.| fail:hp-6,log:The van door slams and clips your knee. Broken cameras still pivot like they remember faces.
 
 @mission
 id:mall-utility-tunnels
 label:Utility tunnel cache
-desc:Drop into the service tunnels for power parts and locked lockers.
+desc:Drop into the service tunnels for power parts and locked lockers. Static hums through every bad decision.
 risk:high
 time:13
 energy:17
 loot:4
 lootType:power parts
-event:Coolant pipe burst | chance:0.55 | prompt:A coolant line ruptures, flooding the tunnel in freezing mist.
-eventOption:Patch the line and keep moving => risk:high | tag:tech | success:item:spare filter,credits+8,log:You seal the leak and salvage a spare filter. | fail:hp-6,temp-2,log:The chill bites through your gear.
-eventOption:Retreat and reroute => risk:medium | tag:stealth | success:item:coil battery,log:You slip away and find a battery stash. | fail:credits-5,log:The detour costs you supplies.
+event:Coolant pipe burst | chance:0.55 | prompt:A coolant line ruptures, flooding the tunnel in freezing mist. Nobody here mistakes kindness for weakness anymore.
+eventOption:Patch the line and keep moving => risk:high | tag:tech | success:item:spare filter,credits+8,log:You seal the leak and salvage a spare filter. Broken cameras still pivot like they remember faces.| fail:hp-6,temp-2,log:The chill bites through your gear. The skyline glows like a wound after dark.
+eventOption:Retreat and reroute => risk:medium | tag:stealth | success:item:coil battery,log:You slip away and find a battery stash. Even the quiet sounds engineered.| fail:credits-5,log:The detour costs you supplies. The skyline glows like a wound after dark.
 
 @quest
 id:mall-power-1
-title:Trace the power breakers
-desc:Map the breaker panels and identify the dead zones.
+title:Trace the power breakers. Nobody here mistakes kindness for weakness anymore.
+desc:Map the breaker panels and identify the dead zones. Broken cameras still pivot like they remember faces.
 risk:medium
 time:9
 energy:12
 loot:1
 lootType:power parts
 reward:power diagnostics
-success:item:power coupler,credits+8,flag:mall-power-1,log:The breaker layout is mapped. You can reach the main switch.
+success:item:power coupler,credits+8,flag:mall-power-1,log:The breaker layout is mapped. You can reach the main switch. Even the quiet sounds engineered.
 fail:temp-2,credits-3
 flag:mall-power-1
 once:true
 
 @quest
 id:mall-power-2
-title:Bring the mall power online
-desc:Restart the main power feeds. This will lower the mall's risk and improve food finds.
+title:Bring the mall power online. The skyline glows like a wound after dark.
+desc:Restart the main power feeds. This will lower the mall's risk and improve food finds. Static hums through every bad decision.
 risk:medium
 time:12
 energy:16
 loot:2
 lootType:power salvage
 reward:mall power restored
-success:item:spark kiosk battery,credits+12,flag:mall-power,log:The lights blaze back on. Mall risk drops and food supplies are easier to locate.
+success:item:spark kiosk battery,credits+12,flag:mall-power,log:The lights blaze back on. Mall risk drops and food supplies are easier to locate. Broken cameras still pivot like they remember faces.
 fail:hp-6,credits-4
 flag:mall-power
 requires:mall-power-1
@@ -139,59 +139,59 @@ once:true
 @mission
 id:abandoned_mall-ops-scoutline
 label:Scoutline warm-up
-desc:Low-risk recon through the abandoned mall fringe to chart safe lanes for rookies.
+desc:Low-risk recon through the abandoned mall fringe to chart safe lanes for rookies. Even the quiet sounds engineered.
 risk:low
 time:8
 energy:10
 loot:2
 lootType:route scraps
-event:Elder mapkeeper shares old chalk routes | chance:1 | prompt:The elder warns that loud routes wake dormant threats. Which route do you follow?
-eventOption:Follow the elder's silent route => risk:low | tag:mercy | success:item:trail compass,item:folding binoculars,credits+5,log:You follow old marks and recover navigation tools. | fail:credits-3,log:A dead-end slows the team.
-eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | success:item:impact baton,credits+7,log:You force a shorter route and grab a baton cache. | fail:hp-5,log:An ambush bruises your squad.
+event:Elder mapkeeper shares old chalk routes | chance:1 | prompt:The elder warns that loud routes wake dormant threats. Which route do you follow? Even the quiet sounds engineered.
+eventOption:Follow the elder's silent route => risk:low | tag:mercy | success:item:trail compass,item:folding binoculars,credits+5,log:You follow old marks and recover navigation tools. Static hums through every bad decision.| fail:credits-3,log:A dead-end slows the team. Nobody here mistakes kindness for weakness anymore.
+eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | success:item:impact baton,credits+7,log:You force a shorter route and grab a baton cache. Even the quiet sounds engineered.| fail:hp-5,log:An ambush bruises your squad. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned_mall-ops-supply-barter
 label:Supply barter circuit
-desc:Negotiate with fringe traders for utility gear and survival items.
+desc:Negotiate with fringe traders for utility gear and survival items. Trust is currency, and everyone is short on it.
 risk:low
 time:9
 energy:11
 loot:3
 lootType:barter goods
-event:Blackout market opens for one hour | chance:0.9 | prompt:A trader offers rare tools if you settle a dispute.
-eventOption:Mediate the dispute and keep order => risk:low | tag:mercy | success:item:field compass,item:insulated gloves,credits+6,log:The market stays calm and you leave with tools. | fail:credits-3,log:The deal collapses.
-eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | success:item:metal detector,item:sealed ration tin,credits+9,log:You intimidate the traders and seize premium stock. | fail:hp-4,credits-3,log:Hidden guards push you out.
+event:Blackout market opens for one hour | chance:0.9 | prompt:A trader offers rare tools if you settle a dispute. Nobody here mistakes kindness for weakness anymore.
+eventOption:Mediate the dispute and keep order => risk:low | tag:mercy | success:item:field compass,item:insulated gloves,credits+6,log:The market stays calm and you leave with tools. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The deal collapses. Static hums through every bad decision.
+eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | success:item:metal detector,item:sealed ration tin,credits+9,log:You intimidate the traders and seize premium stock. The skyline glows like a wound after dark.| fail:hp-4,credits-3,log:Hidden guards push you out. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned_mall-ops-shadow-lift
 label:Shadow-lift extraction
-desc:Pull crates from a contested block where stealth gear matters more than firepower.
+desc:Pull crates from a contested block where stealth gear matters more than firepower. Broken cameras still pivot like they remember faces.
 risk:medium
 time:10
 energy:13
 loot:3
 lootType:stealth salvage
-event:Floodlights sweep the loading lane | chance:0.75 | prompt:You can move slowly under cover or rush the lift.
-eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:stealth | success:item:stealth-wear,item:smoke capsule,credits+8,log:Careful pacing gets the full crate out. | fail:hp-5,log:A spotlight catches you.
-eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. | fail:hp-7,log:Backup lights trigger mid-run.
+event:Floodlights sweep the loading lane | chance:0.75 | prompt:You can move slowly under cover or rush the lift. Nobody here mistakes kindness for weakness anymore.
+eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:stealth | success:item:stealth-wear,item:smoke capsule,credits+8,log:Careful pacing gets the full crate out. Nobody here mistakes kindness for weakness anymore.| fail:hp-5,log:A spotlight catches you. The skyline glows like a wound after dark.
+eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. Broken cameras still pivot like they remember faces.| fail:hp-7,log:Backup lights trigger mid-run. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned_mall-ops-deep-vault
 label:Deep vault breach
-desc:High-risk push into a sealed vault loaded with specialized mission tools.
+desc:High-risk push into a sealed vault loaded with specialized mission tools. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:13
 energy:17
 loot:5
 lootType:specialized gear
-event:Old vault AI demands a pledge to local survivors | chance:1 | prompt:The AI asks whether you will share findings with the settlement elders.
-eventOption:Promise a fair split and honor it => risk:high | tag:mercy | success:item:long-range binoculars,item:terrain scanner,item:reinforced stealth cloak,credits+12,log:The AI opens side lockers after your pledge. | fail:credits-5,log:The AI distrusts your oath and throttles access.
-eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betrayal | success:item:precision metal detector,item:shock weave armor,credits+17,log:You crack every locker before alarms cycle. | fail:hp-10,credits-6,log:The countermeasure grid fires.
+event:Old vault AI demands a pledge to local survivors | chance:1 | prompt:The AI asks whether you will share findings with the settlement elders. The skyline glows like a wound after dark.
+eventOption:Promise a fair split and honor it => risk:high | tag:mercy | success:item:long-range binoculars,item:terrain scanner,item:reinforced stealth cloak,credits+12,log:The AI opens side lockers after your pledge. Broken cameras still pivot like they remember faces.| fail:credits-5,log:The AI distrusts your oath and throttles access. The skyline glows like a wound after dark.
+eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betrayal | success:item:precision metal detector,item:shock weave armor,credits+17,log:You crack every locker before alarms cycle. Trust is currency, and everyone is short on it.| fail:hp-10,credits-6,log:The countermeasure grid fires. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned_mall-legend-merc-contract
 label:Legend contract: One-shot rescue
-desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean.
+desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:16
 energy:20
@@ -199,14 +199,14 @@ loot:6
 lootType:legend contract cache
 reward:mercenary recruitment
 once:true
-event:Downed veteran calls for extraction near collapsing cover | chance:1 | prompt:You only get one run at this. Commit to the rescue?
-eventOption:Commit and hold the line for the veteran => risk:deadly | tag:mercy | success:merc+1,item:veteran contract badge,item:command whistle,credits+20,log:The veteran joins your roster after extraction. | fail:hp-12,credits-8,log:The rescue fails under heavy pressure.
-eventOption:Abandon the call and loot the perimeter => risk:high | tag:betrayal | success:item:salvage satchel,credits+11,log:You skip the rescue and strip the perimeter. | fail:credits-6,log:Word spreads that you broke contract.
+event:Downed veteran calls for extraction near collapsing cover | chance:1 | prompt:You only get one run at this. Commit to the rescue? Trust is currency, and everyone is short on it.
+eventOption:Commit and hold the line for the veteran => risk:deadly | tag:mercy | success:merc+1,item:veteran contract badge,item:command whistle,credits+20,log:The veteran joins your roster after extraction. Trust is currency, and everyone is short on it.| fail:hp-12,credits-8,log:The rescue fails under heavy pressure. The skyline glows like a wound after dark.
+eventOption:Abandon the call and loot the perimeter => risk:high | tag:betrayal | success:item:salvage satchel,credits+11,log:You skip the rescue and strip the perimeter. Trust is currency, and everyone is short on it.| fail:credits-6,log:Word spreads that you broke contract. Broken cameras still pivot like they remember faces.
 
 @mission
 id:abandoned_mall-idle-unlock-1
 label:Idle network contract 1
-desc:Secure route node 1 so handlers can launch automated idle missions in this region.
+desc:Secure route node 1 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:7
 energy:9
@@ -214,15 +214,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:abandoned_mall-idle-route-1
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 1 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 1,item:field compass mk1,credits+5,log:The broker certifies node 1 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 1,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 1,item:survey binoculars 1,credits+10,log:You lock node 1 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 1 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 1,item:field compass mk1,credits+5,log:The broker certifies node 1 for reliable idle runs. Static hums through every bad decision.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 1,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 1,item:survey binoculars 1,credits+10,log:You lock node 1 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned_mall-idle-unlock-2
 label:Idle network contract 2
-desc:Secure route node 2 so handlers can launch automated idle missions in this region.
+desc:Secure route node 2 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:8
 energy:10
@@ -230,15 +230,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:abandoned_mall-idle-route-2
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 2 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 2,item:field compass mk2,credits+5,log:The broker certifies node 2 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 2,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 2,item:survey binoculars 2,credits+10,log:You lock node 2 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 2 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 2,item:field compass mk2,credits+5,log:The broker certifies node 2 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 2,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 2,item:survey binoculars 2,credits+10,log:You lock node 2 with premium payoff data. Even the quiet sounds engineered.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned_mall-idle-unlock-3
 label:Idle network contract 3
-desc:Secure route node 3 so handlers can launch automated idle missions in this region.
+desc:Secure route node 3 so handlers can launch automated idle missions in this region. Even the quiet sounds engineered.
 risk:medium
 time:9
 energy:11
@@ -246,15 +246,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:abandoned_mall-idle-route-3
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 3 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 3,item:field compass mk3,credits+5,log:The broker certifies node 3 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 3,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 3,item:survey binoculars 3,credits+10,log:You lock node 3 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 3 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 3,item:field compass mk3,credits+5,log:The broker certifies node 3 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 3,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 3,item:survey binoculars 3,credits+10,log:You lock node 3 with premium payoff data. Static hums through every bad decision.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned_mall-idle-unlock-4
 label:Idle network contract 4
-desc:Secure route node 4 so handlers can launch automated idle missions in this region.
+desc:Secure route node 4 so handlers can launch automated idle missions in this region. The skyline glows like a wound after dark.
 risk:medium
 time:10
 energy:12
@@ -262,15 +262,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:abandoned_mall-idle-route-4
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 4 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 4,item:field compass mk4,credits+5,log:The broker certifies node 4 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 4,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 4,item:survey binoculars 4,credits+10,log:You lock node 4 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 4 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 4,item:field compass mk4,credits+5,log:The broker certifies node 4 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 4,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 4,item:survey binoculars 4,credits+10,log:You lock node 4 with premium payoff data. The skyline glows like a wound after dark.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned_mall-idle-unlock-5
 label:Idle network contract 5
-desc:Secure route node 5 so handlers can launch automated idle missions in this region.
+desc:Secure route node 5 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:medium
 time:11
 energy:13
@@ -278,15 +278,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:abandoned_mall-idle-route-5
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 5 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 5,item:field compass mk5,credits+5,log:The broker certifies node 5 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 5,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 5,item:survey binoculars 5,credits+10,log:You lock node 5 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 5 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 5,item:field compass mk5,credits+5,log:The broker certifies node 5 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 5,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 5,item:survey binoculars 5,credits+10,log:You lock node 5 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned_mall-idle-unlock-6
 label:Idle network contract 6
-desc:Secure route node 6 so handlers can launch automated idle missions in this region.
+desc:Secure route node 6 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
 time:12
 energy:15
@@ -294,15 +294,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:abandoned_mall-idle-route-6
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 6 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 6,item:field compass mk6,credits+5,log:The broker certifies node 6 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 6,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 6,item:survey binoculars 6,credits+10,log:You lock node 6 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 6 forks into three lanes: safe, fast, and lucrative. Choose your call. The skyline glows like a wound after dark.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 6,item:field compass mk6,credits+5,log:The broker certifies node 6 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 6,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 6,item:survey binoculars 6,credits+10,log:You lock node 6 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned_mall-idle-unlock-7
 label:Idle network contract 7
-desc:Secure route node 7 so handlers can launch automated idle missions in this region.
+desc:Secure route node 7 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:high
 time:13
 energy:16
@@ -310,15 +310,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:abandoned_mall-idle-route-7
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 7 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 7,item:field compass mk7,credits+5,log:The broker certifies node 7 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 7,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 7,item:survey binoculars 7,credits+10,log:You lock node 7 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 7 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 7,item:field compass mk7,credits+5,log:The broker certifies node 7 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 7,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 7,item:survey binoculars 7,credits+10,log:You lock node 7 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned_mall-idle-unlock-8
 label:Idle network contract 8
-desc:Secure route node 8 so handlers can launch automated idle missions in this region.
+desc:Secure route node 8 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
 time:14
 energy:17
@@ -326,15 +326,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:abandoned_mall-idle-route-8
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 8 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 8,item:field compass mk8,credits+5,log:The broker certifies node 8 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 8,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 8,item:survey binoculars 8,credits+10,log:You lock node 8 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 8 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 8,item:field compass mk8,credits+5,log:The broker certifies node 8 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 8,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 8,item:survey binoculars 8,credits+10,log:You lock node 8 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned_mall-idle-unlock-9
 label:Idle network contract 9
-desc:Secure route node 9 so handlers can launch automated idle missions in this region.
+desc:Secure route node 9 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
 time:15
 energy:18
@@ -342,15 +342,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:abandoned_mall-idle-route-9
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 9 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 9,item:field compass mk9,credits+5,log:The broker certifies node 9 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 9,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 9,item:survey binoculars 9,credits+10,log:You lock node 9 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 9 forks into three lanes: safe, fast, and lucrative. Choose your call. Nobody here mistakes kindness for weakness anymore.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 9,item:field compass mk9,credits+5,log:The broker certifies node 9 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 9,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 9,item:survey binoculars 9,credits+10,log:You lock node 9 with premium payoff data. Trust is currency, and everyone is short on it.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned_mall-idle-unlock-10
 label:Idle network contract 10
-desc:Secure route node 10 so handlers can launch automated idle missions in this region.
+desc:Secure route node 10 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
 time:16
 energy:20
@@ -358,15 +358,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:abandoned_mall-idle-route-10
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 10 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 10,item:field compass mk10,credits+5,log:The broker certifies node 10 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 10 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 10,item:field compass mk10,credits+5,log:The broker certifies node 10 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:abandoned-mall-faction-sweep-1
-title:RMG Liaison Sweep 1
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:RMG Liaison Sweep 1. Even the quiet sounds engineered.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:low
 time:6
 energy:7
@@ -375,13 +375,13 @@ reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
-success:credits+7,log:Your report lands cleanly and RMG trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+7,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned-mall-faction-sweep-2
-title:AM Liaison Sweep 2
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:AM Liaison Sweep 2. Trust is currency, and everyone is short on it.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:7
 energy:8
@@ -390,13 +390,13 @@ reward:+1 AM relation
 faction:gang
 relationSuccess:1
 relationFail:0
-success:credits+8,log:Your report lands cleanly and AM trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+8,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned-mall-faction-sweep-3
-title:RMG Liaison Sweep 3
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:RMG Liaison Sweep 3. Static hums through every bad decision.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:8
 energy:9
@@ -405,13 +405,13 @@ reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
-success:credits+9,log:Your report lands cleanly and RMG trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+9,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned-mall-faction-sweep-4
-title:AM Liaison Sweep 4
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:AM Liaison Sweep 4. The skyline glows like a wound after dark.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:9
 energy:10
@@ -420,13 +420,13 @@ reward:+1 AM relation
 faction:gang
 relationSuccess:1
 relationFail:0
-success:credits+10,log:Your report lands cleanly and AM trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+10,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned-mall-faction-sweep-5
-title:RMG Liaison Sweep 5
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:RMG Liaison Sweep 5. Broken cameras still pivot like they remember faces.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:10
 energy:11
@@ -435,150 +435,150 @@ reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
-success:credits+11,log:Your report lands cleanly and RMG trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+11,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 # autogenerated expansion missions pack
 @mission
 id:abandoned_mall-new-01
 label:Frontline contract 1
-desc:Take on contract 1 to secure routes, salvage intel, and keep the abandoned mall network operating.
+desc:Take on contract 1 to secure routes, salvage intel, and keep the abandoned mall network operating. Even the quiet sounds engineered.
 risk:low
 time:7
 energy:8
 loot:1
 reward:sector stabilization
 combatChance:0.15
-success:credits+8,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-2,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+8,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned_mall-new-02
 label:Frontline contract 2
-desc:Take on contract 2 to secure routes, salvage intel, and keep the abandoned mall network operating.
+desc:Take on contract 2 to secure routes, salvage intel, and keep the abandoned mall network operating. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:8
 energy:9
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals to safety.
-fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal.
+success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned_mall-new-03
 label:Frontline contract 3
-desc:Take on contract 3 to secure routes, salvage intel, and keep the abandoned mall network operating.
+desc:Take on contract 3 to secure routes, salvage intel, and keep the abandoned mall network operating. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:9
 energy:10
 loot:1
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and a safer lane map.
-fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered.
+success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
 id:abandoned_mall-new-04
 label:Frontline contract 4
-desc:Take on contract 4 to secure routes, salvage intel, and keep the abandoned mall network operating.
+desc:Take on contract 4 to secure routes, salvage intel, and keep the abandoned mall network operating. Even the quiet sounds engineered.
 risk:high
 time:10
 energy:11
 loot:2
 reward:sector stabilization
 combatChance:0.15
-success:credits+14,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-2,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+14,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned_mall-new-05
 label:Frontline contract 5
-desc:Take on contract 5 to secure routes, salvage intel, and keep the abandoned mall network operating.
+desc:Take on contract 5 to secure routes, salvage intel, and keep the abandoned mall network operating. The skyline glows like a wound after dark.
 risk:low
 time:11
 energy:12
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+15,hp+3,energy+4,log:You complete the objective and escort locals to safety.
-fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal.
+success:credits+15,hp+3,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned_mall-new-06
 label:Frontline contract 6
-desc:Take on contract 6 to secure routes, salvage intel, and keep the abandoned mall network operating.
+desc:Take on contract 6 to secure routes, salvage intel, and keep the abandoned mall network operating. Static hums through every bad decision.
 risk:high
 time:12
 energy:13
 loot:2
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and a safer lane map.
-fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered.
+success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
 id:abandoned_mall-new-07
 label:Frontline contract 7
-desc:Take on contract 7 to secure routes, salvage intel, and keep the abandoned mall network operating.
+desc:Take on contract 7 to secure routes, salvage intel, and keep the abandoned mall network operating. Static hums through every bad decision.
 risk:deadly
 time:13
 energy:14
 loot:3
 reward:sector stabilization
 combatChance:0.15
-success:credits+20,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-3,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+20,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-3,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned_mall-new-08
 label:Frontline contract 8
-desc:Take on contract 8 to secure routes, salvage intel, and keep the abandoned mall network operating.
+desc:Take on contract 8 to secure routes, salvage intel, and keep the abandoned mall network operating. Even the quiet sounds engineered.
 risk:medium
 time:14
 energy:15
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+21,hp+2,energy+4,log:You complete the objective and escort locals to safety.
-fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal.
+success:credits+21,hp+2,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:abandoned_mall-new-09
 label:Frontline contract 9
-desc:Take on contract 9 to secure routes, salvage intel, and keep the abandoned mall network operating.
+desc:Take on contract 9 to secure routes, salvage intel, and keep the abandoned mall network operating. Even the quiet sounds engineered.
 risk:low
 time:15
 energy:16
 loot:1
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and a safer lane map.
-fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered.
+success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
 id:abandoned_mall-new-10
 label:Frontline contract 10
-desc:Take on contract 10 to secure routes, salvage intel, and keep the abandoned mall network operating.
+desc:Take on contract 10 to secure routes, salvage intel, and keep the abandoned mall network operating. Even the quiet sounds engineered.
 risk:high
 time:16
 energy:17
 loot:2
 reward:sector stabilization
 combatChance:0.15
-success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-5,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-5,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:loot-abandoned_mall-retro-salvage
 label:Retro salvage stockpile
-desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones.
+desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones. The skyline glows like a wound after dark.
 risk:high
 time:15
 energy:18
 loot:8
 lootType:retro cache trove
-event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run?
-eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:abandoned-mall cram tin,item:abandoned-mall blamco mac can,item:abandoned-mall sunset fizz bottle,item:abandoned-mall dusty nuka cola,item:abandoned-mall instamash pouch,item:abandoned-mall preserved pie slice,item:abandoned-mall sugar bombs box,item:abandoned-mall fancy lad snack cake,item:abandoned-mall old world coffee tin,item:abandoned-mall molded iguana bits,item:abandoned-mall military ration slab,item:abandoned-mall dehydrated mutfruit brick,item:abandoned-mall vault jerky strip,item:abandoned-mall stale gum drops,item:abandoned-mall salisbury steak tray,item:abandoned-mall cold pork n beans can,item:abandoned-mall combat helmet liner,item:abandoned-mall flak web harness,item:abandoned-mall service rifle stock,item:abandoned-mall pipe rifle receiver,item:abandoned-mall riot control visor,item:abandoned-mall trench shovel blade,item:abandoned-mall bayonet training sheath,item:abandoned-mall war map tube,item:abandoned-mall fatigue field jacket,item:abandoned-mall army canteen shell,item:abandoned-mall dog tag bundle,item:abandoned-mall entrenching tool head,item:abandoned-mall laser musket coil,item:abandoned-mall handmade shotgun frame,item:abandoned-mall atom-age pulse pistol,item:abandoned-mall retro raygun grip,item:abandoned-mall vacuum tube scope,item:abandoned-mall mr handy actuator,item:abandoned-mall fusion battery shell,item:abandoned-mall plasma torch nozzle,item:abandoned-mall geiger wristwatch,item:abandoned-mall pip-dial circuit board,item:abandoned-mall rocket car lunchbox,item:abandoned-mall chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. | fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers.
-eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:abandoned-mall cram tin,item:abandoned-mall blamco mac can,item:abandoned-mall sunset fizz bottle,item:abandoned-mall dusty nuka cola,item:abandoned-mall instamash pouch,item:abandoned-mall preserved pie slice,item:abandoned-mall sugar bombs box,item:abandoned-mall fancy lad snack cake,item:abandoned-mall old world coffee tin,item:abandoned-mall molded iguana bits,item:abandoned-mall military ration slab,item:abandoned-mall dehydrated mutfruit brick,item:abandoned-mall vault jerky strip,item:abandoned-mall stale gum drops,item:abandoned-mall salisbury steak tray,item:abandoned-mall cold pork n beans can,item:abandoned-mall combat helmet liner,item:abandoned-mall flak web harness,item:abandoned-mall service rifle stock,item:abandoned-mall pipe rifle receiver,item:abandoned-mall riot control visor,item:abandoned-mall trench shovel blade,item:abandoned-mall bayonet training sheath,item:abandoned-mall war map tube,item:abandoned-mall fatigue field jacket,item:abandoned-mall army canteen shell,item:abandoned-mall dog tag bundle,item:abandoned-mall entrenching tool head,item:abandoned-mall laser musket coil,item:abandoned-mall handmade shotgun frame,item:abandoned-mall atom-age pulse pistol,item:abandoned-mall retro raygun grip,item:abandoned-mall vacuum tube scope,item:abandoned-mall mr handy actuator,item:abandoned-mall fusion battery shell,item:abandoned-mall plasma torch nozzle,item:abandoned-mall geiger wristwatch,item:abandoned-mall pip-dial circuit board,item:abandoned-mall rocket car lunchbox,item:abandoned-mall chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. | fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat.
+event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run? Nobody here mistakes kindness for weakness anymore.
+eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:abandoned-mall cram tin,item:abandoned-mall blamco mac can,item:abandoned-mall sunset fizz bottle,item:abandoned-mall dusty nuka cola,item:abandoned-mall instamash pouch,item:abandoned-mall preserved pie slice,item:abandoned-mall sugar bombs box,item:abandoned-mall fancy lad snack cake,item:abandoned-mall old world coffee tin,item:abandoned-mall molded iguana bits,item:abandoned-mall military ration slab,item:abandoned-mall dehydrated mutfruit brick,item:abandoned-mall vault jerky strip,item:abandoned-mall stale gum drops,item:abandoned-mall salisbury steak tray,item:abandoned-mall cold pork n beans can,item:abandoned-mall combat helmet liner,item:abandoned-mall flak web harness,item:abandoned-mall service rifle stock,item:abandoned-mall pipe rifle receiver,item:abandoned-mall riot control visor,item:abandoned-mall trench shovel blade,item:abandoned-mall bayonet training sheath,item:abandoned-mall war map tube,item:abandoned-mall fatigue field jacket,item:abandoned-mall army canteen shell,item:abandoned-mall dog tag bundle,item:abandoned-mall entrenching tool head,item:abandoned-mall laser musket coil,item:abandoned-mall handmade shotgun frame,item:abandoned-mall atom-age pulse pistol,item:abandoned-mall retro raygun grip,item:abandoned-mall vacuum tube scope,item:abandoned-mall mr handy actuator,item:abandoned-mall fusion battery shell,item:abandoned-mall plasma torch nozzle,item:abandoned-mall geiger wristwatch,item:abandoned-mall pip-dial circuit board,item:abandoned-mall rocket car lunchbox,item:abandoned-mall chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
+eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:abandoned-mall cram tin,item:abandoned-mall blamco mac can,item:abandoned-mall sunset fizz bottle,item:abandoned-mall dusty nuka cola,item:abandoned-mall instamash pouch,item:abandoned-mall preserved pie slice,item:abandoned-mall sugar bombs box,item:abandoned-mall fancy lad snack cake,item:abandoned-mall old world coffee tin,item:abandoned-mall molded iguana bits,item:abandoned-mall military ration slab,item:abandoned-mall dehydrated mutfruit brick,item:abandoned-mall vault jerky strip,item:abandoned-mall stale gum drops,item:abandoned-mall salisbury steak tray,item:abandoned-mall cold pork n beans can,item:abandoned-mall combat helmet liner,item:abandoned-mall flak web harness,item:abandoned-mall service rifle stock,item:abandoned-mall pipe rifle receiver,item:abandoned-mall riot control visor,item:abandoned-mall trench shovel blade,item:abandoned-mall bayonet training sheath,item:abandoned-mall war map tube,item:abandoned-mall fatigue field jacket,item:abandoned-mall army canteen shell,item:abandoned-mall dog tag bundle,item:abandoned-mall entrenching tool head,item:abandoned-mall laser musket coil,item:abandoned-mall handmade shotgun frame,item:abandoned-mall atom-age pulse pistol,item:abandoned-mall retro raygun grip,item:abandoned-mall vacuum tube scope,item:abandoned-mall mr handy actuator,item:abandoned-mall fusion battery shell,item:abandoned-mall plasma torch nozzle,item:abandoned-mall geiger wristwatch,item:abandoned-mall pip-dial circuit board,item:abandoned-mall rocket car lunchbox,item:abandoned-mall chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Zones - fight, loot, survive.</title>
+  <title>Wastelander - fight, loot, survive.</title>
 <style>
   :root{
     color-scheme: dark;
@@ -1331,7 +1331,7 @@
     <header>
       <div>
         <div class="title-row">
-          <div class="title">Zones - fight, loot, survive.</div>
+          <div class="title">Wastelander - fight, loot, survive.</div>
           <div class="title-actions">
             <button id="headerSaveBtn" type="button">Save</button>
             <button id="headerLoadBtn" type="button">Load last save</button>
@@ -2516,19 +2516,19 @@
     };
     const expansions={};
     const EXPANSION_MANIFEST=[
-      {id:'safehouse',name:'Safe House',file:'expansions/safehouse.txt'},
-      {id:'underground_bunker',name:'Abandoned Underground Bunker System',file:'expansions/underground_bunker.txt'},
-      {id:'metro_ganglands',name:'Ganglands Metro Shanty',file:'expansions/metro_ganglands.txt'},
-      {id:'abernathy_holdout',name:'Abernathy Militia Hidden Holdout',file:'expansions/abernathy_holdout.txt'},
-      {id:'rmg_base',name:'RMG Base of Operations',file:'expansions/rmg_base.txt'},
-      {id:'government_facility',name:'Abandoned Government Facility',file:'expansions/government_facility.txt'},
-      {id:'medical_center',name:'Medical Center',file:'expansions/medical_center.txt'},
-      {id:'abandoned_mall',name:'Abandoned Mall',file:'expansions/abandoned_mall.txt'},
-      {id:'sunken_refinery',name:'Sunken Refinery',file:'expansions/sunken_refinery.txt'},
-      {id:'stormglass_citadel',name:'Stormglass Citadel',file:'expansions/stormglass_citadel.txt'},
-      {id:'rift_complex',name:'Rift Complex',file:'expansions/rift_complex.txt'},
-      {id:'refurbished_cave_hideaway',name:'Refurbished Cave Hideaway',file:'expansions/refurbished_cave_hideaway.txt'},
-      {id:'abandoned_school_bus_safehouse',name:'Abandoned School Bus Safe House',file:'expansions/abandoned_school_bus_safehouse.txt'}
+      {id:'safehouse',name:'Wastelander: The Last Lantern',file:'expansions/safehouse.txt'},
+      {id:'underground_bunker',name:'Vaultline Catacombs',file:'expansions/underground_bunker.txt'},
+      {id:'metro_ganglands',name:'Neon Gutline',file:'expansions/metro_ganglands.txt'},
+      {id:'abernathy_holdout',name:'Abernathy Redoubt',file:'expansions/abernathy_holdout.txt'},
+      {id:'rmg_base',name:'Crown Authority Blacksite',file:'expansions/rmg_base.txt'},
+      {id:'government_facility',name:'Ash Ledger Annex',file:'expansions/government_facility.txt'},
+      {id:'medical_center',name:'Grey Mercy Clinic',file:'expansions/medical_center.txt'},
+      {id:'abandoned_mall',name:'Hollowmarket Sprawl',file:'expansions/abandoned_mall.txt'},
+      {id:'sunken_refinery',name:'Drowned Furnace Works',file:'expansions/sunken_refinery.txt'},
+      {id:'stormglass_citadel',name:'Stormglass Bastion',file:'expansions/stormglass_citadel.txt'},
+      {id:'rift_complex',name:'The Riftworks',file:'expansions/rift_complex.txt'},
+      {id:'refurbished_cave_hideaway',name:'Ember Cavern Enclave',file:'expansions/refurbished_cave_hideaway.txt'},
+      {id:'abandoned_school_bus_safehouse',name:'Busline Sanctuary',file:'expansions/abandoned_school_bus_safehouse.txt'}
     ];
     let travelDistanceMap=new Map();
     const initializeTravelDistances=(manifest=EXPANSION_MANIFEST)=>{
@@ -2543,31 +2543,31 @@
     const EMBEDDED_EXPANSIONS={
       safehouse:`@expansion
 id:safehouse
-name:Safe House
-summary:A reinforced bunker hub with bunks, a trade counter, and a humming generator wall. No loot runs here—just recovery and planning.
-arrivalDialog:Warden Lyra: The generator wall is a relic from the Blackout Accord—keep its coils clean.
-missionStartDialog:Quartermaster Nix: The elders still trade maps of the old floodline; follow the chalk marks.
-missionEndDialog:Medic Hale: Good haul—every run keeps the south ward fed one more night.
+name:Wastelander: The Last Lantern
+summary:The Last Lantern is a welded refuge where scouts trade rumors, patch armor, and decide which danger is worth tomorrow. No loot runs begin here—only hard choices and harder recoveries.
+arrivalDialog:Steward Lyra: Lantern walls hold because everyone pays in labor, not promises. Even the quiet sounds engineered.
+missionStartDialog:Quartermaster Nix: Bring back what keeps people alive—water seals, meds, and proof we can still trust each other. Even the quiet sounds engineered.
+missionEndDialog:Medic Hale: Every crate you drag home buys one more sunrise for someone who almost gave up. Broken cameras still pivot like they remember faces.
 shop:true
 
 @door
 label:Safe House Airlock
 hint:rest, shop, recovery
 risk:low
-note:The airlock seals and the bunker hum steadies your breathing.
+note:The airlock seals and the bunker hum steadies your breathing. Static hums through every bad decision.
 target:commons
 
 @scene commons
-title:Safe House Commons
-desc:Warm lights, clean water, and the trade counter keep the crew steady between runs.
+title:Safe House Commons. Even the quiet sounds engineered.
+desc:Warm lights, clean water, and the trade counter keep the crew steady between runs. Trust is currency, and everyone is short on it.
 tags:Safe / Hub
-option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,energy+14,credits+6,temp=normal,log:The bunk warmth sinks into your bones. | fail:credits-2,log:Sleep won't come tonight.
-option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. | fail:energy-2,log:The bench clamps fail you.
+option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,energy+14,credits+6,temp=normal,log:The bunk warmth sinks into your bones. Trust is currency, and everyone is short on it.| fail:credits-2,log:Sleep won't come tonight. Nobody here mistakes kindness for weakness anymore.
+option:Reset the loadout bench => commons | risk:low | time:5 | reward:prep | success:energy+6,log:You tighten straps and reset your kit. Static hums through every bad decision.| fail:energy-2,log:The bench clamps fail you. Even the quiet sounds engineered.
 
 @mission
 id:safehouse-elders
 label:Talk to the bunker elders for advice
-desc:Sit with the bunker elders to trade stories and learn hard-won survival wisdom.
+desc:Sit with the bunker elders to trade stories and learn hard-won survival wisdom. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:6
 energy:6
@@ -2575,21 +2575,21 @@ loot:0
 reward:elder advice
 combatChance:0
 hub:true
-event:Elders share vault upgrade lore | chance:0.6 | prompt:The elders whisper about stash equipment upgrades hidden behind locked doors. What do you ask about?
-eventOption:Ask about food upgrades => risk:low | tag:mercy | success:log:They mention a microwave, spice locker, and ration heater array that make rations stretch further. | fail:log:The elder waves you off with a tired sigh.
-eventOption:Ask about medical upgrades => risk:low | tag:mercy | success:log:They recall sterile lights, autoclaves, and medbay analyzers that make medicine hit harder. | fail:log:They tell you to come back with fresh tea.
-eventOption:Ask about rest upgrades => risk:low | tag:mercy | success:log:They describe expensive bedding and recovery recliners that cut rest time and restore more. | fail:log:They fall silent, lost in memory.
-event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice about dodging RMG patrols and Abernathy Militia recruiters. How do you respond?
-eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. | fail:credits-3,log:The runner panics and bolts.
-eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. | fail:credits-5,log:The elders hear about the rumor sale.
-event:Mercenary takes a seat nearby | chance:0.35 | prompt:A mercenary offers to guard the Safe House for 40 credits. Do you hire them?
-eventOption:Hire the mercenary => risk:low | tag:mercy | success:credits-40,mercs+1,log:The merc takes the credits and signs on for bunker duty. | fail:credits-40,mercs+1,log:The merc shrugs and pockets the credits anyway.
-eventOption:Decline the offer => risk:low | tag:stealth | success:log:You decline and the merc fades back into the crowd. | fail:log:The merc laughs it off and melts away.
+event:Elders share vault upgrade lore | chance:0.6 | prompt:The elders whisper about stash equipment upgrades hidden behind locked doors. What do you ask about? Broken cameras still pivot like they remember faces.
+eventOption:Ask about food upgrades => risk:low | tag:mercy | success:log:They mention a microwave, spice locker, and ration heater array that make rations stretch further. Even the quiet sounds engineered.| fail:log:The elder waves you off with a tired sigh. The skyline glows like a wound after dark.
+eventOption:Ask about medical upgrades => risk:low | tag:mercy | success:log:They recall sterile lights, autoclaves, and medbay analyzers that make medicine hit harder. Broken cameras still pivot like they remember faces.| fail:log:They tell you to come back with fresh tea. Nobody here mistakes kindness for weakness anymore.
+eventOption:Ask about rest upgrades => risk:low | tag:mercy | success:log:They describe expensive bedding and recovery recliners that cut rest time and restore more. Trust is currency, and everyone is short on it.| fail:log:They fall silent, lost in memory. Trust is currency, and everyone is short on it.
+event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice about dodging RMG patrols and Abernathy Militia recruiters. How do you respond? Nobody here mistakes kindness for weakness anymore.
+eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. Trust is currency, and everyone is short on it.| fail:credits-3,log:The runner panics and bolts. Broken cameras still pivot like they remember faces.
+eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. The skyline glows like a wound after dark.| fail:credits-5,log:The elders hear about the rumor sale. Static hums through every bad decision.
+event:Mercenary takes a seat nearby | chance:0.35 | prompt:A mercenary offers to guard the Safe House for 40 credits. Do you hire them? Static hums through every bad decision.
+eventOption:Hire the mercenary => risk:low | tag:mercy | success:credits-40,mercs+1,log:The merc takes the credits and signs on for bunker duty. Even the quiet sounds engineered.| fail:credits-40,mercs+1,log:The merc shrugs and pockets the credits anyway. Trust is currency, and everyone is short on it.
+eventOption:Decline the offer => risk:low | tag:stealth | success:log:You decline and the merc fades back into the crowd. Nobody here mistakes kindness for weakness anymore.| fail:log:The merc laughs it off and melts away. Static hums through every bad decision.
 
 @mission
 id:safehouse-hush
 label:Trace the quiet signal
-desc:Follow a faint relay ping to recover whispered intel for the elders.
+desc:Follow a faint relay ping to recover whispered intel for the elders. Even the quiet sounds engineered.
 risk:low
 time:7
 energy:8
@@ -2599,14 +2599,14 @@ reward:quiet intel
 hub:true
 unlockFlag:secret-safehouse-ops
 consumeFlag:secret-safehouse-ops
-event:Relay shadow crossing | chance:0.6 | prompt:A patrol cuts across the whispering line. Choose your approach.
-eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. | fail:hp-3,credits-2,log:A clang gives you away.
-eventOption:Confront the patrol => risk:medium | tag:combat | success:item:coil battery,log:You overpower the patrol and seize their battery. | fail:hp-6,log:A scuffle leaves you bruised.
+event:Relay shadow crossing | chance:0.6 | prompt:A patrol cuts across the whispering line. Choose your approach. Trust is currency, and everyone is short on it.
+eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. Trust is currency, and everyone is short on it.| fail:hp-3,credits-2,log:A clang gives you away. Trust is currency, and everyone is short on it.
+eventOption:Confront the patrol => risk:medium | tag:combat | success:item:coil battery,log:You overpower the patrol and seize their battery. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:A scuffle leaves you bruised. The skyline glows like a wound after dark.
 
 @mission
 id:safehouse-drought
 label:Bolster water supply systems
-desc:Stabilize the pumps and reinforce routing lines to keep the Safe House hydrated.
+desc:Stabilize the pumps and reinforce routing lines to keep the Safe House hydrated. Broken cameras still pivot like they remember faces.
 risk:low
 time:8
 energy:8
@@ -2614,13 +2614,13 @@ loot:0
 reward:water relief
 hub:true
 unlockFlag:pandemic-drought
-fixedRewards:item:water flask,item:water flask,item:water flask,log:You reroute clean water into the Safe House reservoir.
+fixedRewards:item:water flask,item:water flask,item:water flask,log:You reroute clean water into the Safe House reservoir. Nobody here mistakes kindness for weakness anymore.
 fixedRewardsOnly:true
 
 @mission
 id:safehouse-virus
 label:Distribute antiviral kits
-desc:Coordinate the clinic caches and distribute antivirals through the bunks.
+desc:Coordinate the clinic caches and distribute antivirals through the bunks. Static hums through every bad decision.
 risk:low
 time:8
 energy:9
@@ -2628,13 +2628,13 @@ loot:0
 reward:outbreak relief
 hub:true
 unlockFlag:pandemic-virus
-fixedRewards:item:antiviral vial,item:antiviral vial,item:bandage,log:You move antivirals into quarantine and shore up triage lines.
+fixedRewards:item:antiviral vial,item:antiviral vial,item:bandage,log:You move antivirals into quarantine and shore up triage lines. Even the quiet sounds engineered.
 fixedRewardsOnly:true
 
 @mission
 id:safehouse-food
 label:Stabilize ration stockpiles
-desc:Audit the pantry vaults and reinforce ration runs for the next week.
+desc:Audit the pantry vaults and reinforce ration runs for the next week. Static hums through every bad decision.
 risk:low
 time:8
 energy:9
@@ -2642,13 +2642,13 @@ loot:0
 reward:food relief
 hub:true
 unlockFlag:pandemic-food
-fixedRewards:item:ration bar,item:ration bar,item:field rations,log:You rebalance the stockpile and deliver fresh rations.
+fixedRewards:item:ration bar,item:ration bar,item:field rations,log:You rebalance the stockpile and deliver fresh rations. The skyline glows like a wound after dark.
 fixedRewardsOnly:true
 
 @mission
 id:safehouse-missing-funds
 label:Investigate missing bunker funds
-desc:Track missing credits and confront the source of the ledger leak before the bunker collapses into panic.
+desc:Track missing credits and confront the source of the ledger leak before the bunker collapses into panic. The skyline glows like a wound after dark.
 risk:medium
 time:10
 energy:12
@@ -2659,81 +2659,81 @@ hub:true
 unlockFlag:safehouse-funds-offer
 consumeFlag:safehouse-funds-offer
 combatChance:1
-event:Ledger runners dodge your questions | chance:1 | prompt:Wallets are lighter and a corrupt elder's signature repeats in the ledger. How do you proceed?
-eventOption:Press the quartermaster in public => risk:medium | tag:mercy | success:credits+6,log:The crowd backs you and the quartermaster hands over a lead. | fail:credits-3,log:The quartermaster stalls and the crowd scatters.
-eventOption:Shadow the midnight runner => risk:high | tag:stealth | success:item:old coin,log:You tail the runner to a hidden cache of bribe money. | fail:hp-4,log:The runner spots you and bolts into the dark.
-eventOption:Crack the sealed archive in private => risk:medium | tag:tech | success:item:ledger-etched compass,log:The archive coughs up the ledger proof you need. | fail:credits-4,log:The archive locks you out and wipes the trace.
-success:flag:safehouse-funds-conspiracy,flag:safehouse-funds-complete,credits+12,log:The corrupt elder's scheme breaks in the firefight. The ledger is yours.
-fail:flag:safehouse-funds-complete,credits-6,log:The elder's enforcers bury the trail and the bunker loses faith.
+event:Ledger runners dodge your questions | chance:1 | prompt:Wallets are lighter and a corrupt elder's signature repeats in the ledger. How do you proceed? Trust is currency, and everyone is short on it.
+eventOption:Press the quartermaster in public => risk:medium | tag:mercy | success:credits+6,log:The crowd backs you and the quartermaster hands over a lead. Trust is currency, and everyone is short on it.| fail:credits-3,log:The quartermaster stalls and the crowd scatters. Trust is currency, and everyone is short on it.
+eventOption:Shadow the midnight runner => risk:high | tag:stealth | success:item:old coin,log:You tail the runner to a hidden cache of bribe money. Static hums through every bad decision.| fail:hp-4,log:The runner spots you and bolts into the dark. Broken cameras still pivot like they remember faces.
+eventOption:Crack the sealed archive in private => risk:medium | tag:tech | success:item:ledger-etched compass,log:The archive coughs up the ledger proof you need. Static hums through every bad decision.| fail:credits-4,log:The archive locks you out and wipes the trace. Static hums through every bad decision.
+success:flag:safehouse-funds-conspiracy,flag:safehouse-funds-complete,credits+12,log:The corrupt elder's scheme breaks in the firefight. The ledger is yours. Trust is currency, and everyone is short on it.
+fail:flag:safehouse-funds-complete,credits-6,log:The elder's enforcers bury the trail and the bunker loses faith. Static hums through every bad decision.
 
 @quest
 id:safehouse-vents
-title:Fix the ventilation system
-desc:Patch the corroded vent intake so the bunker can cycle clean air again.
+title:Fix the ventilation system. Nobody here mistakes kindness for weakness anymore.
+desc:Patch the corroded vent intake so the bunker can cycle clean air again. Static hums through every bad decision.
 risk:medium
 time:9
 energy:12
 loot:1
 lootType:maintenance cache
 reward:ventilation restored
-success:item:spare filter,item:tool roll,credits+8,credits+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online.
+success:item:spare filter,item:tool roll,credits+8,credits+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online. The skyline glows like a wound after dark.
 fail:temp-3,credits-4
 flag:safehouse-vents
 once:true`,
       underground_bunker:`@expansion
 id:underground_bunker
-name:Abandoned Underground Bunker System
-summary:A low-risk labyrinth of concrete corridors and shuttered barracks. Easy opponents, low-tier food, and worn clothing line the halls.
+name:Vaultline Catacombs
+summary:Collapsed defense tunnels now serve as a proving ground for drifters, raiders, and desperate crews chasing canned food and dry shelter.
 temp:cold
-arrivalDialog:Tunnel Warden Brag: These corridors were sealed after the Iron Ward mutiny—watch for the old warning marks.
-missionStartDialog:Scout Rhea: The water table rose after the quakes; stay above the rust tide.
-missionEndDialog:Mechanic Oru: The bunker council will hear of this—gear like this keeps the pumps alive.
+arrivalDialog:Tunnel Marshal Brag: The old war maps lie, the walls listen, and the quiet usually means a trap. Trust is currency, and everyone is short on it.
+missionStartDialog:Runner Kade: Hit fast, travel light, and never assume a locked hatch is empty. Trust is currency, and everyone is short on it.
+missionEndDialog:Cook Mira: Good pull. The ward kitchen might stay warm tonight. Nobody here mistakes kindness for weakness anymore.
 shop:false
 
 @door
 label:Bunker Access Hatch
 hint:low-risk combat, cold corridors, food runs, clothing caches, telecom job
 risk:low
-note:Condensation beads on the hatch as you descend into the bunker system.
+note:Condensation beads on the hatch as you descend into the bunker system. The skyline glows like a wound after dark.
 target:mess-hall
 
 @scene mess-hall
-title:Mess Hall
-desc:Metal tables and dented lockers sit beneath flickering emergency lights in the cold, drafty hall.
+title:Mess Hall. Even the quiet sounds engineered.
+desc:Metal tables and dented lockers sit beneath flickering emergency lights in the cold, drafty hall. Static hums through every bad decision.
 tags:Bunker / Low risk
-option:Search the ration cages => mess-hall | risk:low | time:6 | reward:low-tier food | success:item:ration bar,item:bunker stew pouch,log:You salvage sealed rations from a rusted cage. | fail:hunger+6,log:Only spoiled tins remain.
-option:Strip the barracks lockers => mess-hall | risk:low | time:7 | reward:clothing scraps | success:item:bunker fatigues,item:moth-eaten scarf,log:You gather worn but usable uniforms. | fail:hp-3,log:A locker door clips your shoulder.
+option:Search the ration cages => mess-hall | risk:low | time:6 | reward:low-tier food | success:item:ration bar,item:bunker stew pouch,log:You salvage sealed rations from a rusted cage. Broken cameras still pivot like they remember faces.| fail:hunger+6,log:Only spoiled tins remain. Nobody here mistakes kindness for weakness anymore.
+option:Strip the barracks lockers => mess-hall | risk:low | time:7 | reward:clothing scraps | success:item:bunker fatigues,item:moth-eaten scarf,log:You gather worn but usable uniforms. Nobody here mistakes kindness for weakness anymore.| fail:hp-3,log:A locker door clips your shoulder. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:bunker-quick
 label:Mess hall sweep
-desc:Low-risk sweep for food packs and basic clothing.
+desc:Low-risk sweep for food packs and basic clothing. Static hums through every bad decision.
 risk:low
 time:9
 energy:10
 loot:2
 lootType:low-tier food & clothing
-event:Service hatch patrol | chance:0.55 | prompt:A patrol blocks the service hatch that hides extra rations.
-eventOption:Crawl through the ventwork => risk:low | tag:stealth | success:item:tinned beans,credits+4,log:You slip past and scoop up sealed tins. | fail:hp-3,credits-2,log:A vent grate clangs and draws attention.
-eventOption:Force the hatch open => risk:medium | tag:combat | success:item:locker prybar,item:ration bar,log:You muscle through and claim the stash. | fail:hp-6,log:The patrol batters you back.
+event:Service hatch patrol | chance:0.55 | prompt:A patrol blocks the service hatch that hides extra rations. Trust is currency, and everyone is short on it.
+eventOption:Crawl through the ventwork => risk:low | tag:stealth | success:item:tinned beans,credits+4,log:You slip past and scoop up sealed tins. Trust is currency, and everyone is short on it.| fail:hp-3,credits-2,log:A vent grate clangs and draws attention. Static hums through every bad decision.
+eventOption:Force the hatch open => risk:medium | tag:combat | success:item:locker prybar,item:ration bar,log:You muscle through and claim the stash. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:The patrol batters you back. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:bunker-deep
 label:Lower tunnel scavenge
-desc:Push deeper for better rations and intact gear.
+desc:Push deeper for better rations and intact gear. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:12
 energy:14
 loot:3
 lootType:sealed kits
-event:Lost tunnel scav | chance:1 | prompt:A starving scav begs to join your run. Decide how to respond.
-eventOption:Share supplies and guide them out => risk:low | tag:mercy | success:credits+5,item:stale biscuits,log:The scav repays you with a hidden snack cache. | fail:credits-3,log:The scav panics and slows you down.
-eventOption:Shake them down for intel => risk:medium | tag:betrayal | success:credits+10,item:old coin,log:You take the intel and a coin for your trouble. | fail:credits-4,log:The scav bolts, cursing your name.
+event:Lost tunnel scav | chance:1 | prompt:A starving scav begs to join your run. Decide how to respond. Broken cameras still pivot like they remember faces.
+eventOption:Share supplies and guide them out => risk:low | tag:mercy | success:credits+5,item:stale biscuits,log:The scav repays you with a hidden snack cache. Even the quiet sounds engineered.| fail:credits-3,log:The scav panics and slows you down. Even the quiet sounds engineered.
+eventOption:Shake them down for intel => risk:medium | tag:betrayal | success:credits+10,item:old coin,log:You take the intel and a coin for your trouble. Nobody here mistakes kindness for weakness anymore.| fail:credits-4,log:The scav bolts, cursing your name. The skyline glows like a wound after dark.
 
 @mission
 id:bunker-armory
 label:Armory annex breach
-desc:Use the bunker armory key to crack the sealed weapons annex for richer loot.
+desc:Use the bunker armory key to crack the sealed weapons annex for richer loot. The skyline glows like a wound after dark.
 risk:medium
 time:13
 energy:16
@@ -2745,7 +2745,7 @@ combatChance:0.5
 @mission
 id:bunker-hush
 label:Whispered tunnel cache
-desc:Respond to a faint relay ping tucked in the lower tunnels.
+desc:Respond to a faint relay ping tucked in the lower tunnels. Broken cameras still pivot like they remember faces.
 risk:medium
 time:11
 energy:13
@@ -2753,75 +2753,75 @@ loot:3
 lootType:sealed caches
 unlockFlag:secret-bunker-mission
 consumeFlag:secret-bunker-mission
-event:Relay whisperer calls out | chance:0.6 | prompt:A lost tech whispers from behind a sealed hatch, offering a cache for safe passage.
-eventOption:Help them reach the ladder => risk:low | tag:mercy | success:item:filtered water pack,credits+6,log:The tech slips you a water pack in gratitude. | fail:credits-3,log:The tech freezes and the moment passes.
-eventOption:Take the cache and leave => risk:medium | tag:betrayal | success:item:locker prybar,credits+10,log:You take the cache and vanish into the dark. | fail:hp-5,credits-4,log:The hatch swings open and clips you.
+event:Relay whisperer calls out | chance:0.6 | prompt:A lost tech whispers from behind a sealed hatch, offering a cache for safe passage. Broken cameras still pivot like they remember faces.
+eventOption:Help them reach the ladder => risk:low | tag:mercy | success:item:filtered water pack,credits+6,log:The tech slips you a water pack in gratitude. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The tech freezes and the moment passes. Static hums through every bad decision.
+eventOption:Take the cache and leave => risk:medium | tag:betrayal | success:item:locker prybar,credits+10,log:You take the cache and vanish into the dark. Trust is currency, and everyone is short on it.| fail:hp-5,credits-4,log:The hatch swings open and clips you. The skyline glows like a wound after dark.
 
 @mission
 id:bunker-waterline
 label:Waterline check
-desc:Inspect the flooded maintenance line for filters and clean water.
+desc:Inspect the flooded maintenance line for filters and clean water. Static hums through every bad decision.
 risk:low
 time:10
 energy:12
 loot:2
 lootType:water supplies
-event:Waterline rupture | chance:0.6 | prompt:A pressure line cracks and water floods the corridor.
-eventOption:Clamp the rupture => risk:low | tag:tech | success:item:canteen tablets,credits+5,log:You stop the leak and find tablets. | fail:temp-2,log:Cold water soaks your gear.
-eventOption:Ride the surge to the cache => risk:medium | tag:stealth | success:item:water canister,credits+6,log:The surge carries you to a canister stash. | fail:hp-5,log:The surge slams you into a bulkhead.
+event:Waterline rupture | chance:0.6 | prompt:A pressure line cracks and water floods the corridor. Even the quiet sounds engineered.
+eventOption:Clamp the rupture => risk:low | tag:tech | success:item:canteen tablets,credits+5,log:You stop the leak and find tablets. Nobody here mistakes kindness for weakness anymore.| fail:temp-2,log:Cold water soaks your gear. Nobody here mistakes kindness for weakness anymore.
+eventOption:Ride the surge to the cache => risk:medium | tag:stealth | success:item:water canister,credits+6,log:The surge carries you to a canister stash. Static hums through every bad decision.| fail:hp-5,log:The surge slams you into a bulkhead. Static hums through every bad decision.
 
 @mission
 id:bunker-barracks
 label:Barracks cleanup
-desc:Clear the old barracks for extra clothing bundles and spare tools.
+desc:Clear the old barracks for extra clothing bundles and spare tools. Broken cameras still pivot like they remember faces.
 risk:low
 time:9
 energy:11
 loot:2
 lootType:clothing bundles
-event:Squatter refuses to leave | chance:1 | prompt:A squatter refuses to leave the barracks without a cut.
-eventOption:Offer a ration and move them on => risk:low | tag:mercy | success:credits+4,item:mess hall apron,log:The squatter hands over a spare apron. | fail:credits-3,log:The squatter wastes time with demands.
-eventOption:Drive them out => risk:medium | tag:combat | success:item:reinforced gloves,credits+6,log:You clear the room and find gloves. | fail:hp-4,log:The squatter swings a pipe and tags you.
+event:Squatter refuses to leave | chance:1 | prompt:A squatter refuses to leave the barracks without a cut. Static hums through every bad decision.
+eventOption:Offer a ration and move them on => risk:low | tag:mercy | success:credits+4,item:mess hall apron,log:The squatter hands over a spare apron. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The squatter wastes time with demands. Nobody here mistakes kindness for weakness anymore.
+eventOption:Drive them out => risk:medium | tag:combat | success:item:reinforced gloves,credits+6,log:You clear the room and find gloves. Static hums through every bad decision.| fail:hp-4,log:The squatter swings a pipe and tags you. The skyline glows like a wound after dark.
 
 @mission
 id:bunker-generator
 label:Generator room haul
-desc:Salvage tools and parts from the silent generator room.
+desc:Salvage tools and parts from the silent generator room. Static hums through every bad decision.
 risk:medium
 time:12
 energy:15
 loot:3
 lootType:power parts
-event:Generator sparkback | chance:0.55 | prompt:A sparkback arcs across the generator coils.
-eventOption:Ground the coils with scrap => risk:medium | tag:tech | success:item:wire spool,credits+8,log:You ground the coils and salvage a spool. | fail:hp-6,log:The arc singes your gear.
-eventOption:Grab what you can and run => risk:high | tag:stealth | success:item:scrap wiring,credits+10,log:You snatch wiring and escape. | fail:credits-5,log:The rush costs you supplies.
+event:Generator sparkback | chance:0.55 | prompt:A sparkback arcs across the generator coils. Broken cameras still pivot like they remember faces.
+eventOption:Ground the coils with scrap => risk:medium | tag:tech | success:item:wire spool,credits+8,log:You ground the coils and salvage a spool. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:The arc singes your gear. The skyline glows like a wound after dark.
+eventOption:Grab what you can and run => risk:high | tag:stealth | success:item:scrap wiring,credits+10,log:You snatch wiring and escape. Static hums through every bad decision.| fail:credits-5,log:The rush costs you supplies. Nobody here mistakes kindness for weakness anymore.
 
 @quest
 id:bunker-telecom-1
-title:Trace the telecom line
-desc:Follow the severed line through the service corridors and map the damage.
+title:Trace the telecom line. Even the quiet sounds engineered.
+desc:Follow the severed line through the service corridors and map the damage. The skyline glows like a wound after dark.
 risk:low
 time:8
 energy:10
 loot:1
 lootType:signal trace
 reward:telecom trace
-success:credits+8,flag:bunker-telecom-1,log:You map the cut and mark a clear path to the relay core.
+success:credits+8,flag:bunker-telecom-1,log:You map the cut and mark a clear path to the relay core. Even the quiet sounds engineered.
 fail:credits-3
 flag:bunker-telecom-1
 once:true
 
 @quest
 id:bunker-telecom-2
-title:Restart the relay core
-desc:Power the relay core back on—expect a guaranteed fight with a pair of bunker hostiles.
+title:Restart the relay core. Nobody here mistakes kindness for weakness anymore.
+desc:Power the relay core back on—expect a guaranteed fight with a pair of bunker hostiles. Broken cameras still pivot like they remember faces.
 risk:medium
 time:12
 energy:16
 loot:2
 lootType:relay salvage
 reward:relay restored
-success:item:coil battery,item:flashline map,credits+12,flag:bunker-telecom-2,log:The relay crackles to life. New idle dispatch options unlock.
+success:item:coil battery,item:flashline map,credits+12,flag:bunker-telecom-2,log:The relay crackles to life. New idle dispatch options unlock. The skyline glows like a wound after dark.
 fail:hp-6,credits-4
 flag:bunker-telecom-2
 requires:bunker-telecom-1
@@ -2829,12 +2829,12 @@ combat:true
 once:true`,
       metro_ganglands:`@expansion
 id:metro_ganglands
-name:Ganglands Metro Shanty
-summary:A mid-risk warren of rail tunnels turned into a shanty bazaar. Mid-tier combatants guard clothing and weapons caches.
+name:Neon Gutline
+summary:A rail maze turned black-market artery where gang brokers, masked zealots, and hungry scav crews trade in steel, blood, and favors.
 temp:hot
-arrivalDialog:Lookout Jax: Abernathy Militia owns these rails since the Truce of Nine—flash their colors or keep your head low.
-missionStartDialog:Fixer Ivo: The Shanty runs on scrap taxes; bring back anything with a serial tag.
-missionEndDialog:Runner Sera: Good work—this keeps the truce payments ahead of the tunnel gangs.
+arrivalDialog:Lookout Jax: Flash the wrong sign and the tracks become your grave. Nobody here mistakes kindness for weakness anymore.
+missionStartDialog:Fixer Sera: Every deal here has a knife hidden in it. Nobody here mistakes kindness for weakness anymore.
+missionEndDialog:Courier Pax: You made it out loaded. That means someone else did not. Nobody here mistakes kindness for weakness anymore.
 unlockCost:50
 shop:true
 bar:true
@@ -2844,46 +2844,46 @@ barHireCost:35
 label:Ganglands Turnstile
 hint:mid-tier gear, hot tunnel air, weapons, telecom job
 risk:medium
-note:Graffiti and torchlight guide you into the rail shanty.
+note:Graffiti and torchlight guide you into the rail shanty. Nobody here mistakes kindness for weakness anymore.
 target:concourse
 
 @scene concourse
-title:Shanty Concourse
-desc:Ticket booths are barricaded into gang posts and scrap stalls, and the tunnel air runs hot.
+title:Shanty Concourse. Trust is currency, and everyone is short on it.
+desc:Ticket booths are barricaded into gang posts and scrap stalls, and the tunnel air runs hot. Nobody here mistakes kindness for weakness anymore.
 tags:Metro / Hostile
-option:Pay for a safe route => concourse | risk:low | time:6 | reward:safe passage | success:credits-6,log:A toll buys a quieter lane. | fail:hp-4,log:A lookout tags you on the way through.
-option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:trackside vest,item:torchlight lantern,log:You nab mid-tier tools before the guards return. | fail:hp-5,credits-2,log:A sentry clips you on the exit.
+option:Pay for a safe route => concourse | risk:low | time:6 | reward:safe passage | success:credits-6,log:A toll buys a quieter lane. Nobody here mistakes kindness for weakness anymore.| fail:hp-4,log:A lookout tags you on the way through. Even the quiet sounds engineered.
+option:Skim the gear cages => concourse | risk:medium | time:7 | reward:gear cache | success:item:trackside vest,item:torchlight lantern,log:You nab mid-tier tools before the guards return. Even the quiet sounds engineered.| fail:hp-5,credits-2,log:A sentry clips you on the exit. Static hums through every bad decision.
 
 @mission
 id:gangland-supply
 label:Shanty supply pull
-desc:Run the tunnels for mid-tier clothing and weapons.
+desc:Run the tunnels for mid-tier clothing and weapons. Static hums through every bad decision.
 risk:medium
 time:11
 energy:14
 loot:3
 lootType:mid-tier gear
-event:Rail patrol crossing | chance:0.5 | prompt:A Abernathy Militia patrol blocks the rail spur. Decide how to clear it.
-eventOption:Sneak along the service duct => risk:medium | tag:stealth | success:item:rail map rig,credits+6,log:You slip by and snag a route rig. | fail:hp-5,credits-2,log:Boots scrape metal and draw fire.
-eventOption:Charge through head-on => risk:high | tag:combat | success:item:rail spike mace,log:You smash through and claim a heavy mace. | fail:hp-8,log:The patrol drives you back hard.
+event:Rail patrol crossing | chance:0.5 | prompt:A Abernathy Militia patrol blocks the rail spur. Decide how to clear it. Nobody here mistakes kindness for weakness anymore.
+eventOption:Sneak along the service duct => risk:medium | tag:stealth | success:item:rail map rig,credits+6,log:You slip by and snag a route rig. The skyline glows like a wound after dark.| fail:hp-5,credits-2,log:Boots scrape metal and draw fire. Static hums through every bad decision.
+eventOption:Charge through head-on => risk:high | tag:combat | success:item:rail spike mace,log:You smash through and claim a heavy mace. Static hums through every bad decision.| fail:hp-8,log:The patrol drives you back hard. The skyline glows like a wound after dark.
 
 @mission
 id:tunnel-sweep
 label:Rail line sweep
-desc:Search maintenance shafts for weapons and equipment.
+desc:Search maintenance shafts for weapons and equipment. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:10
 energy:13
 loot:3
 lootType:weapons & gear
-event:Runner swaps crate tags | chance:1 | prompt:A runner offers to flip tags on a crate mid-raid. Take the risk?
-eventOption:Honor the exchange => risk:medium | tag:mercy | success:item:trackside vest,credits+5,log:The runner keeps their word and slips you a vest. | fail:credits-3,log:The runner vanishes before the swap finishes.
-eventOption:Double-cross the runner => risk:high | tag:betrayal | success:credits+14,item:coin string,log:You keep the crate and lift a coin string. | fail:hp-6,credits-4,log:The runner's crew retaliates.
+event:Runner swaps crate tags | chance:1 | prompt:A runner offers to flip tags on a crate mid-raid. Take the risk? Static hums through every bad decision.
+eventOption:Honor the exchange => risk:medium | tag:mercy | success:item:trackside vest,credits+5,log:The runner keeps their word and slips you a vest. Trust is currency, and everyone is short on it.| fail:credits-3,log:The runner vanishes before the swap finishes. Nobody here mistakes kindness for weakness anymore.
+eventOption:Double-cross the runner => risk:high | tag:betrayal | success:credits+14,item:coin string,log:You keep the crate and lift a coin string. Broken cameras still pivot like they remember faces.| fail:hp-6,credits-4,log:The runner's crew retaliates. Even the quiet sounds engineered.
 
 @mission
 id:gang-assist
 label:Assist Abernathy Militia runners
-desc:Escort Abernathy Militia runners and return tagged crates to the gang. High standing (+8) required; success boosts Abernathy Militia relations (+2) and keeps combat risk lower.
+desc:Escort Abernathy Militia runners and return tagged crates to the gang. High standing (+8) required; success boosts Abernathy Militia relations (+2) and keeps combat risk lower. The skyline glows like a wound after dark.
 risk:medium
 time:10
 energy:12
@@ -2895,14 +2895,14 @@ faction:gang
 relationMin:8
 relationSuccess:2
 relationFail:-1
-event:Militia runner asks for restraint | chance:0.7 | prompt:A runner asks you to keep bystanders safe during the escort. Do you agree?
-eventOption:Shield the civilians => risk:medium | tag:mercy | success:credits+6,item:rail map rig,log:The escort stays clean and the runner shares a route rig. | fail:credits-3,log:The crowd panics and slows the convoy.
-eventOption:Push through no matter what => risk:high | tag:betrayal | success:item:coin string,credits+12,log:You keep the pace and pocket a coin string. | fail:hp-6,credits-4,log:The rush sparks a skirmish.
+event:Militia runner asks for restraint | chance:0.7 | prompt:A runner asks you to keep bystanders safe during the escort. Do you agree? Static hums through every bad decision.
+eventOption:Shield the civilians => risk:medium | tag:mercy | success:credits+6,item:rail map rig,log:The escort stays clean and the runner shares a route rig. Static hums through every bad decision.| fail:credits-3,log:The crowd panics and slows the convoy. Static hums through every bad decision.
+eventOption:Push through no matter what => risk:high | tag:betrayal | success:item:coin string,credits+12,log:You keep the pace and pocket a coin string. Trust is currency, and everyone is short on it.| fail:hp-6,credits-4,log:The rush sparks a skirmish. Static hums through every bad decision.
 
 @mission
 id:gang-sabotage
 label:Sabotage Abernathy Militia caches
-desc:Poison the gang’s supply line to hurt the Abernathy Militia (-2 relation). Only crews with low standing (≤ -5) can pull this; combat risk rises when relations are bad.
+desc:Poison the gang’s supply line to hurt the Abernathy Militia (-2 relation). Only crews with low standing (≤ -5) can pull this; combat risk rises when relations are bad. Trust is currency, and everyone is short on it.
 risk:high
 time:12
 energy:15
@@ -2914,14 +2914,14 @@ faction:gang
 relationMax:-5
 relationSuccess:-2
 relationFail:-1
-event:Cache guard offers a bribe | chance:0.65 | prompt:A guard offers to look away if you spare their family stash.
-eventOption:Take the bribe and spare it => risk:medium | tag:mercy | success:credits+10,item:gang patchwork pants,log:You take the bribe and leave the family stash alone. | fail:credits-4,log:The guard backs out and raises an alarm.
-eventOption:Take everything anyway => risk:high | tag:betrayal | success:item:rail spike mace,credits+16,log:You clear the cache and leave no supplies behind. | fail:hp-7,credits-5,log:The guard's squad corners you.
+event:Cache guard offers a bribe | chance:0.65 | prompt:A guard offers to look away if you spare their family stash. Nobody here mistakes kindness for weakness anymore.
+eventOption:Take the bribe and spare it => risk:medium | tag:mercy | success:credits+10,item:gang patchwork pants,log:You take the bribe and leave the family stash alone. Broken cameras still pivot like they remember faces.| fail:credits-4,log:The guard backs out and raises an alarm. Static hums through every bad decision.
+eventOption:Take everything anyway => risk:high | tag:betrayal | success:item:rail spike mace,credits+16,log:You clear the cache and leave no supplies behind. Static hums through every bad decision.| fail:hp-7,credits-5,log:The guard's squad corners you. Even the quiet sounds engineered.
 
 @mission
 id:ganglands-security-cache
 label:Security supply room raid
-desc:Use the security supply room key to access the guarded arsenal cage.
+desc:Use the security supply room key to access the guarded arsenal cage. Static hums through every bad decision.
 risk:high
 time:14
 energy:18
@@ -2933,64 +2933,64 @@ combatChance:0.5
 @mission
 id:ganglands-market-tax
 label:Market tax run
-desc:Collect scrap taxes from the bazaar stalls without starting a riot.
+desc:Collect scrap taxes from the bazaar stalls without starting a riot. Broken cameras still pivot like they remember faces.
 risk:medium
 time:11
 energy:14
 loot:3
 lootType:gang taxes
-event:Stall owner refuses to pay | chance:0.6 | prompt:A stall owner refuses to pay the tax and calls for help.
-eventOption:Offer a smaller cut => risk:medium | tag:mercy | success:credits+8,item:cloth scraps,log:They pay a reduced toll and toss extra cloth. | fail:credits-4,log:The stall owner stalls you until lookouts arrive.
-eventOption:Enforce the tax by force => risk:high | tag:combat | success:item:stun baton,credits+10,log:You grab a baton and collect the tax. | fail:hp-7,log:A brawl breaks out and you retreat.
+event:Stall owner refuses to pay | chance:0.6 | prompt:A stall owner refuses to pay the tax and calls for help. Trust is currency, and everyone is short on it.
+eventOption:Offer a smaller cut => risk:medium | tag:mercy | success:credits+8,item:cloth scraps,log:They pay a reduced toll and toss extra cloth. Nobody here mistakes kindness for weakness anymore.| fail:credits-4,log:The stall owner stalls you until lookouts arrive. Static hums through every bad decision.
+eventOption:Enforce the tax by force => risk:high | tag:combat | success:item:stun baton,credits+10,log:You grab a baton and collect the tax. Even the quiet sounds engineered.| fail:hp-7,log:A brawl breaks out and you retreat. Even the quiet sounds engineered.
 
 @mission
 id:ganglands-switchyard
 label:Switchyard stash run
-desc:Slip into the switchyard to pull weapons and tools from rail crates.
+desc:Slip into the switchyard to pull weapons and tools from rail crates. The skyline glows like a wound after dark.
 risk:high
 time:13
 energy:17
 loot:4
 lootType:rail crate weapons
-event:Overheated rail line | chance:0.55 | prompt:The rail line sparks and throws hot debris.
-eventOption:Cut power and wait => risk:medium | tag:tech | success:item:signal jammer,credits+8,log:You cut the power and grab a jammer. | fail:credits-5,log:Downtime costs you supply access.
-eventOption:Dash through the sparks => risk:high | tag:stealth | success:item:riot shield,log:You sprint through and snag a riot shield. | fail:hp-8,log:The sparks burn your arms.
+event:Overheated rail line | chance:0.55 | prompt:The rail line sparks and throws hot debris. Trust is currency, and everyone is short on it.
+eventOption:Cut power and wait => risk:medium | tag:tech | success:item:signal jammer,credits+8,log:You cut the power and grab a jammer. Static hums through every bad decision.| fail:credits-5,log:Downtime costs you supply access. The skyline glows like a wound after dark.
+eventOption:Dash through the sparks => risk:high | tag:stealth | success:item:riot shield,log:You sprint through and snag a riot shield. Even the quiet sounds engineered.| fail:hp-8,log:The sparks burn your arms. Even the quiet sounds engineered.
 
 @mission
 id:ganglands-tunnel-rescue
 label:Tunnel rescue sweep
-desc:Search a collapsed spur for survivors and hidden caches.
+desc:Search a collapsed spur for survivors and hidden caches. Trust is currency, and everyone is short on it.
 risk:medium
 time:12
 energy:15
 loot:3
 lootType:survival caches
-event:Trapped runner calls out | chance:1 | prompt:A runner is pinned under a beam and begs for help.
-eventOption:Lift the beam and help them out => risk:medium | tag:mercy | success:credits+6,item:rail map rig,log:The runner shares a route rig in thanks. | fail:hp-5,log:The beam shifts and bruises you.
-eventOption:Take their pack and move on => risk:high | tag:betrayal | success:item:trackside vest,credits+12,log:You take the pack and slip away. | fail:hp-7,credits-4,log:The runner's crew catches up fast.
+event:Trapped runner calls out | chance:1 | prompt:A runner is pinned under a beam and begs for help. The skyline glows like a wound after dark.
+eventOption:Lift the beam and help them out => risk:medium | tag:mercy | success:credits+6,item:rail map rig,log:The runner shares a route rig in thanks. Trust is currency, and everyone is short on it.| fail:hp-5,log:The beam shifts and bruises you. Trust is currency, and everyone is short on it.
+eventOption:Take their pack and move on => risk:high | tag:betrayal | success:item:trackside vest,credits+12,log:You take the pack and slip away. The skyline glows like a wound after dark.| fail:hp-7,credits-4,log:The runner's crew catches up fast. Trust is currency, and everyone is short on it.
 
 @quest
 id:ganglands-telecom
-title:Reconnect the ganglands telecoms
-desc:Splice the shattered fiber lines and bring the relay back online.
+title:Reconnect the ganglands telecoms. Even the quiet sounds engineered.
+desc:Splice the shattered fiber lines and bring the relay back online. The skyline glows like a wound after dark.
 risk:medium
 time:12
 energy:16
 loot:3
 lootType:signal crates
 reward:mercenary contract
-success:item:signal jammer coil,credits+18,flag:ganglands-telecom,log:The relay hums to life. A mercenary answers the call, opening a second idle dispatch slot.
+success:item:signal jammer coil,credits+18,flag:ganglands-telecom,log:The relay hums to life. A mercenary answers the call, opening a second idle dispatch slot. Static hums through every bad decision.
 fail:hp-6,credits-4
 flag:ganglands-telecom
 once:true`,
       government_facility:`@expansion
 id:government_facility
-name:Abandoned Government Facility
-summary:A sealed agency compound with broken scanners and hardened patrols. Mid-tier risk with hard combatants and better gear.
+name:Ash Ledger Annex
+summary:A ruined civil complex full of sealed archives, panic bunkers, and evidence of choices that doomed whole districts.
 temp:cold
-arrivalDialog:Archivist Venn: The RMG scrubbed this place after the Signal Riots—logs still whisper.
-missionStartDialog:Handler Quill: If you find a black badge, it belongs to the old Compliance chiefs.
-missionEndDialog:Agent Mira: That's proof the purge happened—stash it before patrol drones wake.
+arrivalDialog:Archivist Venn: The doors are heavy because the guilt behind them is heavier. Even the quiet sounds engineered.
+missionStartDialog:Scrivener Pell: Pull files, pull power cells, and leave before the defense loops wake. Broken cameras still pivot like they remember faces.
+missionEndDialog:Courier Dax: Papers like these start wars—or end them. Static hums through every bad decision.
 minLevel:7
 shop:false
 
@@ -2998,46 +2998,46 @@ shop:false
 label:Facility Security Gate
 hint:hard combatants, cold halls, weapons, tools, telecom job
 risk:high
-note:The security gate grinds open and the halls go quiet.
+note:The security gate grinds open and the halls go quiet. The skyline glows like a wound after dark.
 target:control-hall
 
 @scene control-hall
-title:Control Hall
-desc:Security consoles flicker, and sealed doors hiss with pressure in the cold hall.
+title:Control Hall. Broken cameras still pivot like they remember faces.
+desc:Security consoles flicker, and sealed doors hiss with pressure in the cold hall. Nobody here mistakes kindness for weakness anymore.
 tags:Government / Hazard
-option:Run a diagnostic sweep => control-hall | risk:medium | time:7 | reward:systems intel | success:credits+10,log:You recover a diagnostic snapshot. | fail:temp-2,log:The breaker snaps and the room chills.
-option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gear cache | success:item:response harness,item:access scanner,log:You pry loose a cache of uniforms and tools. | fail:hp-6,log:A security latch bites your hand.
+option:Run a diagnostic sweep => control-hall | risk:medium | time:7 | reward:systems intel | success:credits+10,log:You recover a diagnostic snapshot. Static hums through every bad decision.| fail:temp-2,log:The breaker snaps and the room chills. Trust is currency, and everyone is short on it.
+option:Crack the sealed locker => control-hall | risk:high | time:8 | reward:gear cache | success:item:response harness,item:access scanner,log:You pry loose a cache of uniforms and tools. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:A security latch bites your hand. The skyline glows like a wound after dark.
 
 @mission
 id:facility-sweep
 label:Security sweep
-desc:Room-to-room sweep for mid-tier weapons and tools the RMG and Abernathy Militia both covet.
+desc:Room-to-room sweep for mid-tier weapons and tools the RMG and Abernathy Militia both covet. Trust is currency, and everyone is short on it.
 risk:medium
 time:12
 energy:16
 loot:3
 lootType:weapons & tools
-event:Checkpoint console lock | chance:0.55 | prompt:A security checkpoint seals the corridor. Choose your approach.
-eventOption:Spoof the clearance codes => risk:medium | tag:tech | success:item:containment seal kit,credits+8,log:You spoof the codes and lift a seal kit. | fail:hp-4,credits-2,log:The console blares and draws fire.
-eventOption:Break through head-on => risk:high | tag:combat | success:item:pulse baton,log:You smash through and seize a pulse baton. | fail:hp-8,log:The patrol overwhelms you.
+event:Checkpoint console lock | chance:0.55 | prompt:A security checkpoint seals the corridor. Choose your approach. Even the quiet sounds engineered.
+eventOption:Spoof the clearance codes => risk:medium | tag:tech | success:item:containment seal kit,credits+8,log:You spoof the codes and lift a seal kit. Even the quiet sounds engineered.| fail:hp-4,credits-2,log:The console blares and draws fire. Even the quiet sounds engineered.
+eventOption:Break through head-on => risk:high | tag:combat | success:item:pulse baton,log:You smash through and seize a pulse baton. Static hums through every bad decision.| fail:hp-8,log:The patrol overwhelms you. Static hums through every bad decision.
 
 @mission
 id:facility-deep
 label:Hardline extraction
-desc:Push through hard combatants for high-tier clothing.
+desc:Push through hard combatants for high-tier clothing. The skyline glows like a wound after dark.
 risk:high
 time:14
 energy:18
 loot:4
 lootType:reinforced clothing
-event:Locker team begs for a ride | chance:0.6 | prompt:A pinned logistics team begs for escort out of the wing.
-eventOption:Escort them to the access stair => risk:medium | tag:mercy | success:item:security poncho,credits+8,log:They gift a poncho and slip away. | fail:credits-4,log:The detour draws a patrol.
-eventOption:Strip their supplies and move on => risk:high | tag:betrayal | success:item:response harness,credits+12,log:You strip their supplies and keep moving. | fail:hp-7,credits-5,log:The team fights back and slows you down.
+event:Locker team begs for a ride | chance:0.6 | prompt:A pinned logistics team begs for escort out of the wing. Even the quiet sounds engineered.
+eventOption:Escort them to the access stair => risk:medium | tag:mercy | success:item:security poncho,credits+8,log:They gift a poncho and slip away. Broken cameras still pivot like they remember faces.| fail:credits-4,log:The detour draws a patrol. Nobody here mistakes kindness for weakness anymore.
+eventOption:Strip their supplies and move on => risk:high | tag:betrayal | success:item:response harness,credits+12,log:You strip their supplies and keep moving. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The team fights back and slows you down. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:military-assist
 label:Assist RMG patrol
-desc:Run a logistics escort for the Redtech Military Group (RMG). Requires high standing (+8); success improves military relations (+2) and reduces combat risk on allied runs.
+desc:Run a logistics escort for the Redtech Military Group (RMG). Requires high standing (+8); success improves military relations (+2) and reduces combat risk on allied runs. The skyline glows like a wound after dark.
 risk:medium
 time:11
 energy:14
@@ -3049,14 +3049,14 @@ faction:military
 relationMin:8
 relationSuccess:2
 relationFail:-1
-event:RMG lieutenant requests discipline | chance:0.7 | prompt:A lieutenant orders you to make an example of a deserter mid-escort.
-eventOption:Spare the deserter and cover them => risk:medium | tag:mercy | success:credits+6,item:filtered water pack,log:The deserter slips you supplies and disappears. | fail:credits-4,log:The lieutenant notices the delay.
-eventOption:Follow orders without question => risk:high | tag:betrayal | success:item:command bracer,credits+12,log:The patrol rewards your obedience with a bracer. | fail:hp-6,credits-4,log:The deserter's friends ambush the convoy.
+event:RMG lieutenant requests discipline | chance:0.7 | prompt:A lieutenant orders you to make an example of a deserter mid-escort. The skyline glows like a wound after dark.
+eventOption:Spare the deserter and cover them => risk:medium | tag:mercy | success:credits+6,item:filtered water pack,log:The deserter slips you supplies and disappears. Trust is currency, and everyone is short on it.| fail:credits-4,log:The lieutenant notices the delay. Even the quiet sounds engineered.
+eventOption:Follow orders without question => risk:high | tag:betrayal | success:item:command bracer,credits+12,log:The patrol rewards your obedience with a bracer. The skyline glows like a wound after dark.| fail:hp-6,credits-4,log:The deserter's friends ambush the convoy. Static hums through every bad decision.
 
 @mission
 id:military-infiltrate
 label:Infiltrate RMG briefing
-desc:Slip into a RMG briefing to undermine them (-2 relation). Only possible with low standing (≤ -5); combat risk spikes when relations are bad.
+desc:Slip into a RMG briefing to undermine them (-2 relation). Only possible with low standing (≤ -5); combat risk spikes when relations are bad. The skyline glows like a wound after dark.
 risk:high
 time:13
 energy:16
@@ -3068,14 +3068,14 @@ faction:military
 relationMax:-5
 relationSuccess:-2
 relationFail:-1
-event:RMG courier meets you mid-run | chance:1 | prompt:A courier offers you a sealed briefing packet. Do you take the shot?
-eventOption:Expose the courier => risk:high | tag:betrayal | success:credits+18,item:secure datapad,log:You intercept the packet and slip away. | fail:hp-7,credits-4,log:The courier's escorts pin you down.
-eventOption:Let them pass => risk:medium | tag:mercy | success:credits+4,item:nutri-gel pack,log:The courier leaves you a ration as thanks. | fail:credits-3,log:The courier brands you soft and walks off.
+event:RMG courier meets you mid-run | chance:1 | prompt:A courier offers you a sealed briefing packet. Do you take the shot? Even the quiet sounds engineered.
+eventOption:Expose the courier => risk:high | tag:betrayal | success:credits+18,item:secure datapad,log:You intercept the packet and slip away. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The courier's escorts pin you down. Static hums through every bad decision.
+eventOption:Let them pass => risk:medium | tag:mercy | success:credits+4,item:nutri-gel pack,log:The courier leaves you a ration as thanks. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The courier brands you soft and walks off. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:facility-armory
 label:Director armory lock
-desc:Use the director armory key to enter the restricted weapons vault.
+desc:Use the director armory key to enter the restricted weapons vault. Broken cameras still pivot like they remember faces.
 risk:high
 time:15
 energy:20
@@ -3087,84 +3087,84 @@ combatChance:0.5
 @mission
 id:facility-archives
 label:Cold archive recovery
-desc:Recover purge logs from the sealed archive stacks.
+desc:Recover purge logs from the sealed archive stacks. The skyline glows like a wound after dark.
 risk:medium
 time:12
 energy:15
 loot:3
 lootType:archival intel
-event:Frozen archive terminal | chance:0.6 | prompt:The terminal is iced over, but the purge logs are inside.
-eventOption:Warm the lines carefully => risk:medium | tag:tech | success:item:data cartridge,credits+10,log:The terminal thaws and you copy the logs. | fail:temp-2,credits-3,log:The circuits freeze solid.
-eventOption:Smash the panel and grab drives => risk:high | tag:combat | success:item:signal jammer,log:You crack the panel and yank a jammer. | fail:hp-7,log:The housing snaps back and cuts you.
+event:Frozen archive terminal | chance:0.6 | prompt:The terminal is iced over, but the purge logs are inside. Trust is currency, and everyone is short on it.
+eventOption:Warm the lines carefully => risk:medium | tag:tech | success:item:data cartridge,credits+10,log:The terminal thaws and you copy the logs. Even the quiet sounds engineered.| fail:temp-2,credits-3,log:The circuits freeze solid. Trust is currency, and everyone is short on it.
+eventOption:Smash the panel and grab drives => risk:high | tag:combat | success:item:signal jammer,log:You crack the panel and yank a jammer. Trust is currency, and everyone is short on it.| fail:hp-7,log:The housing snaps back and cuts you. Broken cameras still pivot like they remember faces.
 
 @mission
 id:facility-drone-bay
 label:Drone bay salvage
-desc:Strip disabled security drones for parts and tools.
+desc:Strip disabled security drones for parts and tools. Broken cameras still pivot like they remember faces.
 risk:high
 time:13
 energy:17
 loot:4
 lootType:drone parts
-event:Bay power surge | chance:0.55 | prompt:The drone racks whine to life in a power surge.
-eventOption:Jam the bay controls => risk:high | tag:tech | success:item:drone core,credits+12,log:The surge dies and you claim a core. | fail:hp-8,log:The bay locks you in with an active drone.
-eventOption:Trigger the fire suppression => risk:medium | tag:stealth | success:item:flashbang,log:The foam blinds the drones while you grab a flashbang. | fail:credits-5,log:The foam clogs your pack and slows you down.
+event:Bay power surge | chance:0.55 | prompt:The drone racks whine to life in a power surge. Trust is currency, and everyone is short on it.
+eventOption:Jam the bay controls => risk:high | tag:tech | success:item:drone core,credits+12,log:The surge dies and you claim a core. Nobody here mistakes kindness for weakness anymore.| fail:hp-8,log:The bay locks you in with an active drone. Trust is currency, and everyone is short on it.
+eventOption:Trigger the fire suppression => risk:medium | tag:stealth | success:item:flashbang,log:The foam blinds the drones while you grab a flashbang. Broken cameras still pivot like they remember faces.| fail:credits-5,log:The foam clogs your pack and slows you down. Static hums through every bad decision.
 
 @mission
 id:facility-briefing-room
 label:Briefing room sweep
-desc:Search the sealed briefing room for emergency caches and officer kits.
+desc:Search the sealed briefing room for emergency caches and officer kits. Even the quiet sounds engineered.
 risk:medium
 time:11
 energy:14
 loot:3
 lootType:officer kits
-event:Whistleblower tape | chance:1 | prompt:A taped confession implicates the RMG. What do you do?
-eventOption:Send it to the resistance => risk:medium | tag:mercy | success:credits+8,item:wire spool,log:The resistance pays for the evidence. | fail:credits-4,log:The signal gets traced and you bail.
-eventOption:Sell it back to the RMG => risk:high | tag:betrayal | success:credits+16,item:painkillers,log:The RMG pays for silence. | fail:hp-6,credits-5,log:A handler tries to double-cross you.
+event:Whistleblower tape | chance:1 | prompt:A taped confession implicates the RMG. What do you do? Static hums through every bad decision.
+eventOption:Send it to the resistance => risk:medium | tag:mercy | success:credits+8,item:wire spool,log:The resistance pays for the evidence. Trust is currency, and everyone is short on it.| fail:credits-4,log:The signal gets traced and you bail. Even the quiet sounds engineered.
+eventOption:Sell it back to the RMG => risk:high | tag:betrayal | success:credits+16,item:painkillers,log:The RMG pays for silence. Even the quiet sounds engineered.| fail:hp-6,credits-5,log:A handler tries to double-cross you. Nobody here mistakes kindness for weakness anymore.
 
 @quest
 id:facility-telecom
-title:Reconnect the facility telecom grid
-desc:Bring the facility telecom backbone online to accelerate idle dispatches.
+title:Reconnect the facility telecom grid. The skyline glows like a wound after dark.
+desc:Bring the facility telecom backbone online to accelerate idle dispatches. Trust is currency, and everyone is short on it.
 risk:high
 time:13
 energy:18
 loot:3
 lootType:signal crates
 reward:dispatch acceleration
-success:item:secure datapad,credits+20,flag:facility-telecom,log:The telecom grid stabilizes. Idle dispatches now complete faster.
+success:item:secure datapad,credits+20,flag:facility-telecom,log:The telecom grid stabilizes. Idle dispatches now complete faster. The skyline glows like a wound after dark.
 fail:hp-8,credits-5
 flag:facility-telecom
 once:true`,
       medical_center:`@expansion
 id:medical_center
-name:Medical Center
-summary:A clinic wing stripped of most supplies, but still hiding low-tier medical stock. Mid-risk patrols linger in the halls.
+name:Grey Mercy Clinic
+summary:A stripped medical wing where underlit triage rooms still hold life-saving stock beside records of impossible triage calls.
 temp:cold
-arrivalDialog:Nurse Kett: This wing treated the Spore Fever surge; masks are still stacked by the doors.
-missionStartDialog:Dr. Osei: Check the cold rooms first—after the collapse, vaccines were bartered like gold.
-missionEndDialog:Orderly Finch: Those supplies will keep the triage stories alive a while longer.
+arrivalDialog:Nurse Kett: We learned to count hope in bandages, not speeches. Trust is currency, and everyone is short on it.
+missionStartDialog:Dr. Osei: Prioritize antiseptics, antivirals, and whoever can still be saved. Even the quiet sounds engineered.
+missionEndDialog:Orderly Finch: These supplies mean fewer names on tomorrow's memorial board. Static hums through every bad decision.
 shop:true
 
 @door
 label:Clinic Access Bay
 hint:medical salvage, cold wards, mid-risk patrols, telecom job
 risk:medium
-note:Sterile lights flicker as you enter the medical wing.
+note:Sterile lights flicker as you enter the medical wing. Nobody here mistakes kindness for weakness anymore.
 target:triage
 
 @scene triage
-title:Triage Bay
-desc:Empty gurneys line the bay, and the ward stays cold as cabinets rattle with leftover kits.
+title:Triage Bay. The skyline glows like a wound after dark.
+desc:Empty gurneys line the bay, and the ward stays cold as cabinets rattle with leftover kits. Even the quiet sounds engineered.
 tags:Medical / Hazard
-option:Check the triage lockers => triage | risk:low | time:6 | reward:basic medical | success:item:antiseptic wipes,item:painkillers,log:You gather intact wraps and meds. | fail:hp-3,log:A drawer slams on your fingers.
-option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:electro bandage,item:compact medkit,log:You recover a sealed med case. | fail:hp-5,credits-2,log:A patrol forces a hasty exit.
+option:Check the triage lockers => triage | risk:low | time:6 | reward:basic medical | success:item:antiseptic wipes,item:painkillers,log:You gather intact wraps and meds. Even the quiet sounds engineered.| fail:hp-3,log:A drawer slams on your fingers. Even the quiet sounds engineered.
+option:Search the supply cage => triage | risk:medium | time:7 | reward:medical cache | success:item:electro bandage,item:compact medkit,log:You recover a sealed med case. Trust is currency, and everyone is short on it.| fail:hp-5,credits-2,log:A patrol forces a hasty exit. Static hums through every bad decision.
 
 @mission
 id:clinic-errands
 label:Doctor's errand run
-desc:Help the local doctor ferry patient kits through cleared corridors. No fail risk, no combat risk, and rewards 2 medical items.
+desc:Help the local doctor ferry patient kits through cleared corridors. No fail risk, no combat risk, and rewards 2 medical items. Static hums through every bad decision.
 risk:low
 time:6
 energy:6
@@ -3172,39 +3172,39 @@ loot:0
 reward:2 medical items
 combatChance:0
 failChance:0
-fixedRewards:item:antiseptic wipes,item:bandage,log:Dr. Osei thanks you for the calm delivery run.
+fixedRewards:item:antiseptic wipes,item:bandage,log:Dr. Osei thanks you for the calm delivery run. Even the quiet sounds engineered.
 fixedRewardsOnly:true
 
 @mission
 id:clinic-supply
 label:Supply closet sweep
-desc:Low-risk sweep for basic medical items.
+desc:Low-risk sweep for basic medical items. The skyline glows like a wound after dark.
 risk:low
 time:9
 energy:10
 loot:2
 lootType:medical basics
-event:Injured survivor blocks the hall | chance:0.6 | prompt:A wounded survivor begs for antiseptic. Your call?
-eventOption:Patch them up => risk:low | tag:mercy | success:credits+5,item:sterile gloves,log:The survivor hands over spare gloves in thanks. | fail:credits-3,log:The survivor panics and slows you down.
-eventOption:Strip their kit => risk:medium | tag:betrayal | success:item:antiviral vial,credits+6,log:You pocket their kit and move on. | fail:credits-4,log:The survivor's cries draw a patrol.
+event:Injured survivor blocks the hall | chance:0.6 | prompt:A wounded survivor begs for antiseptic. Your call? Even the quiet sounds engineered.
+eventOption:Patch them up => risk:low | tag:mercy | success:credits+5,item:sterile gloves,log:The survivor hands over spare gloves in thanks. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The survivor panics and slows you down. Static hums through every bad decision.
+eventOption:Strip their kit => risk:medium | tag:betrayal | success:item:antiviral vial,credits+6,log:You pocket their kit and move on. The skyline glows like a wound after dark.| fail:credits-4,log:The survivor's cries draw a patrol. The skyline glows like a wound after dark.
 
 @mission
 id:clinic-ward
 label:Ward salvage run
-desc:Push deeper for mid-tier medical packs.
+desc:Push deeper for mid-tier medical packs. Static hums through every bad decision.
 risk:medium
 time:12
 energy:14
 loot:3
 lootType:medical packs
-event:Silent drone sweep | chance:1 | prompt:A drone sweep glides through the ward. Pick a response.
-eventOption:Ghost through the shadowed ward => risk:medium | tag:stealth | success:item:clinic IV pack,log:You slip through and grab a sealed IV pack. | fail:hp-6,log:A scanner tags you on the way out.
-eventOption:Stand and fight => risk:high | tag:combat | success:item:portable scanner,credits+8,log:You knock the drone down and salvage its scanner. | fail:hp-9,log:The drone's shock pulse sends you reeling.
+event:Silent drone sweep | chance:1 | prompt:A drone sweep glides through the ward. Pick a response. The skyline glows like a wound after dark.
+eventOption:Ghost through the shadowed ward => risk:medium | tag:stealth | success:item:clinic IV pack,log:You slip through and grab a sealed IV pack. Static hums through every bad decision.| fail:hp-6,log:A scanner tags you on the way out. The skyline glows like a wound after dark.
+eventOption:Stand and fight => risk:high | tag:combat | success:item:portable scanner,credits+8,log:You knock the drone down and salvage its scanner. Trust is currency, and everyone is short on it.| fail:hp-9,log:The drone's shock pulse sends you reeling. Static hums through every bad decision.
 
 @mission
 id:clinic-storage
 label:Storage room breach
-desc:Use the storage room key to crack the locked supply vault for premium medical stock.
+desc:Use the storage room key to crack the locked supply vault for premium medical stock. Trust is currency, and everyone is short on it.
 risk:high
 time:14
 energy:18
@@ -3212,117 +3212,117 @@ loot:5
 lootType:advanced medical stock
 key:1
 combatChance:0.5
-event:Orderly begs for a crate | chance:0.6 | prompt:An orderly pleads for one crate to keep their ward running.
-eventOption:Leave a crate behind => risk:medium | tag:mercy | success:item:burn salve,credits+6,log:The orderly thanks you with burn salve. | fail:credits-4,log:The orderly panics and the alarm escalates.
-eventOption:Take everything => risk:high | tag:betrayal | success:item:clinic IV pack,credits+12,log:You clear the vault and pocket an IV pack. | fail:hp-6,credits-5,log:The orderly fights back and slows you down.
+event:Orderly begs for a crate | chance:0.6 | prompt:An orderly pleads for one crate to keep their ward running. Trust is currency, and everyone is short on it.
+eventOption:Leave a crate behind => risk:medium | tag:mercy | success:item:burn salve,credits+6,log:The orderly thanks you with burn salve. Even the quiet sounds engineered.| fail:credits-4,log:The orderly panics and the alarm escalates. The skyline glows like a wound after dark.
+eventOption:Take everything => risk:high | tag:betrayal | success:item:clinic IV pack,credits+12,log:You clear the vault and pocket an IV pack. Even the quiet sounds engineered.| fail:hp-6,credits-5,log:The orderly fights back and slows you down. Broken cameras still pivot like they remember faces.
 
 @mission
 id:clinic-lab-coldcase
 label:Cold lab specimen run
-desc:Collect sealed specimens from the chilled research lab.
+desc:Collect sealed specimens from the chilled research lab. Trust is currency, and everyone is short on it.
 risk:medium
 time:12
 energy:15
 loot:3
 lootType:lab specimens
-event:Lab freezer alarm | chance:0.6 | prompt:The freezer alarm wails and draws attention.
-eventOption:Shut off the breaker => risk:medium | tag:tech | success:item:filtered water pack,credits+8,log:You silence the alarm and grab clean packs. | fail:temp-2,log:The breaker sparks and the lab chills fast.
-eventOption:Grab and bolt => risk:high | tag:combat | success:item:compact medkit,log:You snatch a medkit and sprint out. | fail:hp-6,log:You take a hit fleeing the ward.
+event:Lab freezer alarm | chance:0.6 | prompt:The freezer alarm wails and draws attention. Static hums through every bad decision.
+eventOption:Shut off the breaker => risk:medium | tag:tech | success:item:filtered water pack,credits+8,log:You silence the alarm and grab clean packs. Static hums through every bad decision.| fail:temp-2,log:The breaker sparks and the lab chills fast. Broken cameras still pivot like they remember faces.
+eventOption:Grab and bolt => risk:high | tag:combat | success:item:compact medkit,log:You snatch a medkit and sprint out. The skyline glows like a wound after dark.| fail:hp-6,log:You take a hit fleeing the ward. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:clinic-inpatient-ward
 label:Inpatient ward sweep
-desc:Search patient rooms for emergency care kits and rations.
+desc:Search patient rooms for emergency care kits and rations. Static hums through every bad decision.
 risk:medium
 time:11
 energy:14
 loot:3
 lootType:care kits
-event:Family refuses evacuation | chance:1 | prompt:A family refuses to leave without their missing sibling.
-eventOption:Help search the ward => risk:medium | tag:mercy | success:credits+6,item:bandage,log:You find them and earn a bandage stash. | fail:credits-4,log:The search wastes time and draws patrols.
-eventOption:Take the kits and leave => risk:high | tag:betrayal | success:item:shock gel,credits+10,log:You take the kits and grab shock gel. | fail:hp-6,log:The family lashes out as you leave.
+event:Family refuses evacuation | chance:1 | prompt:A family refuses to leave without their missing sibling. Broken cameras still pivot like they remember faces.
+eventOption:Help search the ward => risk:medium | tag:mercy | success:credits+6,item:bandage,log:You find them and earn a bandage stash. Nobody here mistakes kindness for weakness anymore.| fail:credits-4,log:The search wastes time and draws patrols. The skyline glows like a wound after dark.
+eventOption:Take the kits and leave => risk:high | tag:betrayal | success:item:shock gel,credits+10,log:You take the kits and grab shock gel. Static hums through every bad decision.| fail:hp-6,log:The family lashes out as you leave. Trust is currency, and everyone is short on it.
 
 @mission
 id:clinic-oxygen-line
 label:Oxygen line repair
-desc:Stabilize the oxygen line to reach sealed cabinets.
+desc:Stabilize the oxygen line to reach sealed cabinets. Trust is currency, and everyone is short on it.
 risk:high
 time:13
 energy:17
 loot:4
 lootType:respiratory supplies
-event:Oxygen flare burst | chance:0.55 | prompt:A flare ignites near the oxygen line.
-eventOption:Vent the corridor => risk:high | tag:tech | success:item:anti-rad serum,credits+10,log:You vent the line and recover a serum case. | fail:hp-7,log:The flare scorches your gear.
-eventOption:Duck into a side room => risk:medium | tag:stealth | success:item:hardened canteen,log:You avoid the blast and grab a canteen. | fail:credits-5,log:The blast rattles your pack.
+event:Oxygen flare burst | chance:0.55 | prompt:A flare ignites near the oxygen line. Broken cameras still pivot like they remember faces.
+eventOption:Vent the corridor => risk:high | tag:tech | success:item:anti-rad serum,credits+10,log:You vent the line and recover a serum case. Broken cameras still pivot like they remember faces.| fail:hp-7,log:The flare scorches your gear. Even the quiet sounds engineered.
+eventOption:Duck into a side room => risk:medium | tag:stealth | success:item:hardened canteen,log:You avoid the blast and grab a canteen. The skyline glows like a wound after dark.| fail:credits-5,log:The blast rattles your pack. Nobody here mistakes kindness for weakness anymore.
 
 @quest
 id:medical-telecom
-title:Reconnect the clinic telecoms
-desc:Restore the clinic relay so vendors can source better medical stock.
+title:Reconnect the clinic telecoms. Static hums through every bad decision.
+desc:Restore the clinic relay so vendors can source better medical stock. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:11
 energy:15
 loot:2
 lootType:signal crates
 reward:expanded medical stock
-success:item:portable scanner,credits+14,flag:medical-telecom,log:The relay comes online. More medical supplies reach the shop.
+success:item:portable scanner,credits+14,flag:medical-telecom,log:The relay comes online. More medical supplies reach the shop. Nobody here mistakes kindness for weakness anymore.
 fail:hp-6,credits-3
 flag:medical-telecom
 once:true`,
       abandoned_mall:`@expansion
 id:abandoned_mall
-name:Abandoned Mall
-summary:A hollow mall with shuttered storefronts and a quiet food court. Mid-risk runs for low-tier food and supply crates.
+name:Hollowmarket Sprawl
+summary:A dead retail shell reborn as a scavenger maze where barter stalls, ghost lights, and rooftop gangs fight over food and batteries.
 temp:cold
-arrivalDialog:Custodian Rue: This mall went dark on the Winter Blackout; the fountain never came back.
-missionStartDialog:Vendor Lio: The food court ghosts sell to anyone—move fast before they vanish.
-missionEndDialog:Courier Pax: Nice haul—kids in the lower stacks still trade mall sweets as currency.
+arrivalDialog:Custodian Rue: The fountain died, but the hustlers never did. Trust is currency, and everyone is short on it.
+missionStartDialog:Vendor Lio: Buy clean, steal clean, or bleed messy. Trust is currency, and everyone is short on it.
+missionEndDialog:Courier Pax: Nice haul. Kids still trade sugar packs like royal coin. Trust is currency, and everyone is short on it.
 shop:false
 
 @door
 label:Mall Service Entrance
 hint:food runs, cold corridors, power restart
 risk:medium
-note:Neon reflections dance on polished tiles as you step inside.
+note:Neon reflections dance on polished tiles as you step inside. The skyline glows like a wound after dark.
 target:food-court
 
 @scene food-court
-title:Food Court
-desc:Tables are stacked into makeshift barriers. The air is cold and smells of old grease.
+title:Food Court. Broken cameras still pivot like they remember faces.
+desc:Tables are stacked into makeshift barriers. The air is cold and smells of old grease. Broken cameras still pivot like they remember faces.
 tags:Mall / Hazard
-option:Check the kiosk storage => food-court | risk:medium | time:7 | reward:food stash | success:item:mall snack pack,item:field rations,log:You pull sealed meals from a storage bin. | fail:hunger+8,log:The stash is picked clean.
-option:Search the loading dock => food-court | risk:medium | time:8 | reward:food crates | success:item:water canister,item:citrus soda,log:You drag out a pallet of usable supplies. | fail:hp-5,log:A falling shutter clips your shoulder.
+option:Check the kiosk storage => food-court | risk:medium | time:7 | reward:food stash | success:item:mall snack pack,item:field rations,log:You pull sealed meals from a storage bin. The skyline glows like a wound after dark.| fail:hunger+8,log:The stash is picked clean. Nobody here mistakes kindness for weakness anymore.
+option:Search the loading dock => food-court | risk:medium | time:8 | reward:food crates | success:item:water canister,item:citrus soda,log:You drag out a pallet of usable supplies. Nobody here mistakes kindness for weakness anymore.| fail:hp-5,log:A falling shutter clips your shoulder. Static hums through every bad decision.
 
 @mission
 id:mall-snack
 label:Food court sweep
-desc:Low-risk sweep for low-tier food items.
+desc:Low-risk sweep for low-tier food items. The skyline glows like a wound after dark.
 risk:medium
 time:9
 energy:10
 loot:2
 lootType:low-tier food
-event:Food court vendor offers a deal | chance:0.6 | prompt:A scav vendor offers to trade a stash for safe passage.
-eventOption:Trade fairly and escort them => risk:medium | tag:mercy | success:item:brine crackers,credits+6,log:The vendor hands over crackers and waves you through. | fail:credits-3,log:The vendor backs out at the last moment.
-eventOption:Take the stash and bolt => risk:high | tag:betrayal | success:item:mall snack pack,credits+12,log:You grab the stash and disappear into the kiosks. | fail:hp-5,credits-4,log:The vendor's crew clips you on the way out.
+event:Food court vendor offers a deal | chance:0.6 | prompt:A scav vendor offers to trade a stash for safe passage. Static hums through every bad decision.
+eventOption:Trade fairly and escort them => risk:medium | tag:mercy | success:item:brine crackers,credits+6,log:The vendor hands over crackers and waves you through. The skyline glows like a wound after dark.| fail:credits-3,log:The vendor backs out at the last moment. The skyline glows like a wound after dark.
+eventOption:Take the stash and bolt => risk:high | tag:betrayal | success:item:mall snack pack,credits+12,log:You grab the stash and disappear into the kiosks. The skyline glows like a wound after dark.| fail:hp-5,credits-4,log:The vendor's crew clips you on the way out. Broken cameras still pivot like they remember faces.
 
 @mission
 id:mall-stockroom
 label:Backroom stock run
-desc:Push deeper for better food crates.
+desc:Push deeper for better food crates. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:12
 energy:14
 loot:3
 lootType:food crates
-event:Security drone in the backroom | chance:0.55 | prompt:A dormant drone flickers online between the shelves.
-eventOption:Slip past with the shadows => risk:medium | tag:stealth | success:item:mall snack pack,credits+6,log:You ghost by and scoop extra snacks. | fail:hp-5,log:The drone tags you on the exit.
-eventOption:Smash it head-on => risk:high | tag:combat | success:item:loading hook,log:You topple the drone and claim a loading hook. | fail:hp-8,log:The drone's shock rods drive you back.
+event:Security drone in the backroom | chance:0.55 | prompt:A dormant drone flickers online between the shelves. Even the quiet sounds engineered.
+eventOption:Slip past with the shadows => risk:medium | tag:stealth | success:item:mall snack pack,credits+6,log:You ghost by and scoop extra snacks. Trust is currency, and everyone is short on it.| fail:hp-5,log:The drone tags you on the exit. Trust is currency, and everyone is short on it.
+eventOption:Smash it head-on => risk:high | tag:combat | success:item:loading hook,log:You topple the drone and claim a loading hook. Even the quiet sounds engineered.| fail:hp-8,log:The drone's shock rods drive you back. Static hums through every bad decision.
 
 @mission
 id:mall-manager-cache
 label:Manager suite cache
-desc:Use the manager room key to breach the locked office and cold storage stash.
+desc:Use the manager room key to breach the locked office and cold storage stash. Static hums through every bad decision.
 risk:high
 time:14
 energy:18
@@ -3330,75 +3330,75 @@ loot:5
 lootType:premium food & supplies
 key:1
 combatChance:0.5
-event:Lost shopper hides in the office | chance:1 | prompt:A frightened scav begs to share the cache. What do you do?
-eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:credits+6,item:queue jacket,log:They share a warm jacket in gratitude. | fail:credits-4,log:The scav panics and draws attention.
-eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. | fail:hp-6,credits-5,log:The scav slams the door and sets off a chase.
+event:Lost shopper hides in the office | chance:1 | prompt:A frightened scav begs to share the cache. What do you do? The skyline glows like a wound after dark.
+eventOption:Split the cache and guide them out => risk:medium | tag:mercy | success:credits+6,item:queue jacket,log:They share a warm jacket in gratitude. Nobody here mistakes kindness for weakness anymore.| fail:credits-4,log:The scav panics and draws attention. The skyline glows like a wound after dark.
+eventOption:Lock them out and take it all => risk:high | tag:betrayal | success:credits+16,item:instant noodles,log:You secure the cache and pocket extra rations. The skyline glows like a wound after dark.| fail:hp-6,credits-5,log:The scav slams the door and sets off a chase. Trust is currency, and everyone is short on it.
 
 @mission
 id:mall-arcade-hunt
 label:Arcade prize hunt
-desc:Scour the arcade cabinets and prize vaults for stashed food and tech.
+desc:Scour the arcade cabinets and prize vaults for stashed food and tech. Trust is currency, and everyone is short on it.
 risk:medium
 time:11
 energy:13
 loot:3
 lootType:mall odds & ends
-event:Prize vault lockout | chance:0.6 | prompt:The prize vault shutters shut with your hand inside. How do you handle it?
-eventOption:Bypass the lock with a thin tool => risk:medium | tag:tech | success:item:flare paint,credits+6,log:You pop the latch and pocket spare flare paint. | fail:hp-4,log:The shutter snaps down on your wrist.
-eventOption:Rip the door open => risk:high | tag:combat | success:item:store runner shoes,log:The door buckles and you grab light shoes. | fail:hp-7,log:The metal edge tears your sleeve and skin.
+event:Prize vault lockout | chance:0.6 | prompt:The prize vault shutters shut with your hand inside. How do you handle it? Static hums through every bad decision.
+eventOption:Bypass the lock with a thin tool => risk:medium | tag:tech | success:item:flare paint,credits+6,log:You pop the latch and pocket spare flare paint. Static hums through every bad decision.| fail:hp-4,log:The shutter snaps down on your wrist. The skyline glows like a wound after dark.
+eventOption:Rip the door open => risk:high | tag:combat | success:item:store runner shoes,log:The door buckles and you grab light shoes. Static hums through every bad decision.| fail:hp-7,log:The metal edge tears your sleeve and skin. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:mall-parking-garage
 label:Parking garage sweep
-desc:Search the dim parking decks for overlooked supply bins.
+desc:Search the dim parking decks for overlooked supply bins. Broken cameras still pivot like they remember faces.
 risk:medium
 time:12
 energy:15
 loot:3
 lootType:parking salvage
-event:Family locks themselves in a van | chance:1 | prompt:A frightened family calls for escort out of the garage.
-eventOption:Escort them to the exit => risk:medium | tag:mercy | success:credits+8,item:sale-day hoodie,log:They thank you with a clean hoodie. | fail:credits-4,log:The detour draws unwanted attention.
-eventOption:Take their fuel and move on => risk:high | tag:betrayal | success:item:water canister,credits+10,log:You siphon fuel and grab their canister. | fail:hp-6,log:The van door slams and clips your knee.
+event:Family locks themselves in a van | chance:1 | prompt:A frightened family calls for escort out of the garage. Nobody here mistakes kindness for weakness anymore.
+eventOption:Escort them to the exit => risk:medium | tag:mercy | success:credits+8,item:sale-day hoodie,log:They thank you with a clean hoodie. Trust is currency, and everyone is short on it.| fail:credits-4,log:The detour draws unwanted attention. The skyline glows like a wound after dark.
+eventOption:Take their fuel and move on => risk:high | tag:betrayal | success:item:water canister,credits+10,log:You siphon fuel and grab their canister. Even the quiet sounds engineered.| fail:hp-6,log:The van door slams and clips your knee. Broken cameras still pivot like they remember faces.
 
 @mission
 id:mall-utility-tunnels
 label:Utility tunnel cache
-desc:Drop into the service tunnels for power parts and locked lockers.
+desc:Drop into the service tunnels for power parts and locked lockers. Static hums through every bad decision.
 risk:high
 time:13
 energy:17
 loot:4
 lootType:power parts
-event:Coolant pipe burst | chance:0.55 | prompt:A coolant line ruptures, flooding the tunnel in freezing mist.
-eventOption:Patch the line and keep moving => risk:high | tag:tech | success:item:spare filter,credits+8,log:You seal the leak and salvage a spare filter. | fail:hp-6,temp-2,log:The chill bites through your gear.
-eventOption:Retreat and reroute => risk:medium | tag:stealth | success:item:coil battery,log:You slip away and find a battery stash. | fail:credits-5,log:The detour costs you supplies.
+event:Coolant pipe burst | chance:0.55 | prompt:A coolant line ruptures, flooding the tunnel in freezing mist. Nobody here mistakes kindness for weakness anymore.
+eventOption:Patch the line and keep moving => risk:high | tag:tech | success:item:spare filter,credits+8,log:You seal the leak and salvage a spare filter. Broken cameras still pivot like they remember faces.| fail:hp-6,temp-2,log:The chill bites through your gear. The skyline glows like a wound after dark.
+eventOption:Retreat and reroute => risk:medium | tag:stealth | success:item:coil battery,log:You slip away and find a battery stash. Even the quiet sounds engineered.| fail:credits-5,log:The detour costs you supplies. The skyline glows like a wound after dark.
 
 @quest
 id:mall-power-1
-title:Trace the power breakers
-desc:Map the breaker panels and identify the dead zones.
+title:Trace the power breakers. Nobody here mistakes kindness for weakness anymore.
+desc:Map the breaker panels and identify the dead zones. Broken cameras still pivot like they remember faces.
 risk:medium
 time:9
 energy:12
 loot:1
 lootType:power parts
 reward:power diagnostics
-success:item:power coupler,credits+8,flag:mall-power-1,log:The breaker layout is mapped. You can reach the main switch.
+success:item:power coupler,credits+8,flag:mall-power-1,log:The breaker layout is mapped. You can reach the main switch. Even the quiet sounds engineered.
 fail:temp-2,credits-3
 flag:mall-power-1
 once:true
 
 @quest
 id:mall-power-2
-title:Bring the mall power online
-desc:Restart the main power feeds. This will lower the mall's risk and improve food finds.
+title:Bring the mall power online. The skyline glows like a wound after dark.
+desc:Restart the main power feeds. This will lower the mall's risk and improve food finds. Static hums through every bad decision.
 risk:medium
 time:12
 energy:16
 loot:2
 lootType:power salvage
 reward:mall power restored
-success:item:spark kiosk battery,credits+12,flag:mall-power,log:The lights blaze back on. Mall risk drops and food supplies are easier to locate.
+success:item:spark kiosk battery,credits+12,flag:mall-power,log:The lights blaze back on. Mall risk drops and food supplies are easier to locate. Broken cameras still pivot like they remember faces.
 fail:hp-6,credits-4
 flag:mall-power
 requires:mall-power-1
@@ -3406,12 +3406,12 @@ once:true`
 ,
       sunken_refinery:`@expansion
 id:sunken_refinery
-name:Sunken Refinery
-summary:A submerged industrial refinery with unstable pressure valves and hostile scav crews. Deadly-risk runs with elite tools, weapons, and sealed food packs.
+name:Drowned Furnace Works
+summary:A half-submerged fuel complex where toxic runoff, salvage crews, and machine cultists all hunt the same burning core.
 temp:hot
-arrivalDialog:Dockhand Mael: The brine tax sank this place; don't breathe near the sludge stacks.
-missionStartDialog:Boiler Chief Ana: Watch the pressure gauges—one spark wakes the old fire storms.
-missionEndDialog:Salvager Juno: Those parts might restart the tide pumps the coast depends on.
+arrivalDialog:Foreman Dree: Step wrong and the water strips skin before you can scream. Even the quiet sounds engineered.
+missionStartDialog:Tech Nara: Filter first, loot second, ego never. Nobody here mistakes kindness for weakness anymore.
+missionEndDialog:Rigger Sol: Fuel secured. Maybe the generators keep singing tonight. Even the quiet sounds engineered.
 minLevel:12
 shop:false
 bar:true
@@ -3421,46 +3421,46 @@ barHireCost:80
 label:Refinery Floodgate
 hint:deadly salvage, hot pressure halls, telecom job
 risk:deadly
-note:Brine drips from corroded bulkheads as the floodgate yawns open.
+note:Brine drips from corroded bulkheads as the floodgate yawns open. The skyline glows like a wound after dark.
 target:pressure-dock
 
 @scene pressure-dock
-title:Pressure Dock
-desc:Steam hisses through cracked pipes, and the floor trembles in the hot pressure dock.
+title:Pressure Dock. Broken cameras still pivot like they remember faces.
+desc:Steam hisses through cracked pipes, and the floor trembles in the hot pressure dock. Nobody here mistakes kindness for weakness anymore.
 tags:Industrial / Deadly
-option:Stabilize the intake valves => pressure-dock | risk:high | time:8 | reward:pressure salvage | success:item:pressure gauge kit,item:brine crackers,log:You throttle the valves and reclaim a sealed kit. | fail:hp-6,temp+2,log:A pressure burst scorches your hands.
-option:Strip the pump rig => pressure-dock | risk:deadly | time:9 | reward:weapon salvage | success:item:torque cleaver,item:slag shard,log:You wrench a brutal tool free before the rig collapses. | fail:hp-8,credits-4,log:A pump chain snaps and forces a retreat.
+option:Stabilize the intake valves => pressure-dock | risk:high | time:8 | reward:pressure salvage | success:item:pressure gauge kit,item:brine crackers,log:You throttle the valves and reclaim a sealed kit. Even the quiet sounds engineered.| fail:hp-6,temp+2,log:A pressure burst scorches your hands. Static hums through every bad decision.
+option:Strip the pump rig => pressure-dock | risk:deadly | time:9 | reward:weapon salvage | success:item:torque cleaver,item:slag shard,log:You wrench a brutal tool free before the rig collapses. Static hums through every bad decision.| fail:hp-8,credits-4,log:A pump chain snaps and forces a retreat. Even the quiet sounds engineered.
 
 @mission
 id:refinery-sweep
 label:Boiler hall sweep
-desc:Hard push through the boiler stacks for refinery gear and food.
+desc:Hard push through the boiler stacks for refinery gear and food. Trust is currency, and everyone is short on it.
 risk:high
 time:14
 energy:18
 loot:4
 lootType:refinery gear & rations
-event:Valve line failure | chance:0.5 | prompt:A pressure line buckles mid-run. Decide how to respond.
-eventOption:Patch it with quick diagnostics => risk:high | tag:tech | success:item:pressure gauge kit,credits+10,log:You stabilize the line and recover a gauge kit. | fail:hp-6,temp+2,log:The line bursts and scalds you.
-eventOption:Muscle through the steam => risk:deadly | tag:combat | success:item:hydraulic spike,log:You force through and claim a hydraulic spike. | fail:hp-10,log:The steam blast drives you back.
+event:Valve line failure | chance:0.5 | prompt:A pressure line buckles mid-run. Decide how to respond. Static hums through every bad decision.
+eventOption:Patch it with quick diagnostics => risk:high | tag:tech | success:item:pressure gauge kit,credits+10,log:You stabilize the line and recover a gauge kit. The skyline glows like a wound after dark.| fail:hp-6,temp+2,log:The line bursts and scalds you. Static hums through every bad decision.
+eventOption:Muscle through the steam => risk:deadly | tag:combat | success:item:hydraulic spike,log:You force through and claim a hydraulic spike. Broken cameras still pivot like they remember faces.| fail:hp-10,log:The steam blast drives you back. The skyline glows like a wound after dark.
 
 @mission
 id:refinery-core
 label:Cracking the core line
-desc:Traverse the deepest stacks for rare tools and weapon caches.
+desc:Traverse the deepest stacks for rare tools and weapon caches. Even the quiet sounds engineered.
 risk:deadly
 time:16
 energy:20
 loot:5
 lootType:refinery tools & weapons
-event:Scav crew at the core walkway | chance:1 | prompt:A scav crew offers to split the core cache. Do you trust them?
-eventOption:Hold the alliance => risk:high | tag:mercy | success:item:sealed citrus tonic,credits+8,log:The crew splits the cache and leaves you a tonic. | fail:credits-4,log:The crew panics and ruins the split.
-eventOption:Betray the crew => risk:deadly | tag:betrayal | success:item:torque cleaver,credits+18,log:You seize the cache in the chaos. | fail:hp-9,credits-5,log:The crew turns on you.
+event:Scav crew at the core walkway | chance:1 | prompt:A scav crew offers to split the core cache. Do you trust them? Trust is currency, and everyone is short on it.
+eventOption:Hold the alliance => risk:high | tag:mercy | success:item:sealed citrus tonic,credits+8,log:The crew splits the cache and leaves you a tonic. Even the quiet sounds engineered.| fail:credits-4,log:The crew panics and ruins the split. Broken cameras still pivot like they remember faces.
+eventOption:Betray the crew => risk:deadly | tag:betrayal | success:item:torque cleaver,credits+18,log:You seize the cache in the chaos. Broken cameras still pivot like they remember faces.| fail:hp-9,credits-5,log:The crew turns on you. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:refinery-vault
 label:Pressure vault breach
-desc:Use the refinery vault key to access the sealed pressure bay.
+desc:Use the refinery vault key to access the sealed pressure bay. Broken cameras still pivot like they remember faces.
 risk:deadly
 time:18
 energy:22
@@ -3472,7 +3472,7 @@ combatChance:0.6
 @mission
 id:refinery-hush
 label:Ghost pressure ping
-desc:Investigate a pressure ping from the drowned refinery subfloor.
+desc:Investigate a pressure ping from the drowned refinery subfloor. The skyline glows like a wound after dark.
 risk:high
 time:15
 energy:19
@@ -3480,87 +3480,87 @@ loot:4
 lootType:pressure salvage
 unlockFlag:secret-refinery-mission
 consumeFlag:secret-refinery-mission
-event:Subfloor diver signals | chance:0.6 | prompt:A diver signals from a flooded catwalk, asking for a tow line.
-eventOption:Pull them to safety => risk:high | tag:mercy | success:item:coolant canister,credits+10,log:The diver shares a coolant canister before slipping away. | fail:credits-4,log:The line snaps and you lose time.
-eventOption:Cut the line and take the cache => risk:deadly | tag:betrayal | success:item:refinery alloy ingot,credits+16,log:You cut the line and pocket a rare ingot. | fail:hp-9,credits-6,log:The line whips back and injures you.
+event:Subfloor diver signals | chance:0.6 | prompt:A diver signals from a flooded catwalk, asking for a tow line. Broken cameras still pivot like they remember faces.
+eventOption:Pull them to safety => risk:high | tag:mercy | success:item:coolant canister,credits+10,log:The diver shares a coolant canister before slipping away. Broken cameras still pivot like they remember faces.| fail:credits-4,log:The line snaps and you lose time. The skyline glows like a wound after dark.
+eventOption:Cut the line and take the cache => risk:deadly | tag:betrayal | success:item:refinery alloy ingot,credits+16,log:You cut the line and pocket a rare ingot. Trust is currency, and everyone is short on it.| fail:hp-9,credits-6,log:The line whips back and injures you. Static hums through every bad decision.
 
 @mission
 id:refinery-slag-run
 label:Slag chute run
-desc:Descend the slag chutes for heavy salvage and sealed rations.
+desc:Descend the slag chutes for heavy salvage and sealed rations. Broken cameras still pivot like they remember faces.
 risk:high
 time:14
 energy:18
 loot:4
 lootType:slag salvage
-event:Chute chain slip | chance:0.6 | prompt:A chain slips on the chute rig, threatening to drop you.
-eventOption:Re-seat the chain => risk:high | tag:tech | success:item:slag shard,credits+10,log:You fix the chain and claim a slag shard. | fail:hp-7,log:The rig lurches and bruises you.
-eventOption:Jump to a side ladder => risk:deadly | tag:stealth | success:item:ember ration,credits+12,log:You leap clear and snag a hot ration. | fail:hp-9,log:The jump goes wide and you crash hard.
+event:Chute chain slip | chance:0.6 | prompt:A chain slips on the chute rig, threatening to drop you. The skyline glows like a wound after dark.
+eventOption:Re-seat the chain => risk:high | tag:tech | success:item:slag shard,credits+10,log:You fix the chain and claim a slag shard. Static hums through every bad decision.| fail:hp-7,log:The rig lurches and bruises you. The skyline glows like a wound after dark.
+eventOption:Jump to a side ladder => risk:deadly | tag:stealth | success:item:ember ration,credits+12,log:You leap clear and snag a hot ration. Nobody here mistakes kindness for weakness anymore.| fail:hp-9,log:The jump goes wide and you crash hard. Broken cameras still pivot like they remember faces.
 
 @mission
 id:refinery-duct-scout
 label:Vent duct scout
-desc:Follow the hot vent duct to find tool crates and coolant packs.
+desc:Follow the hot vent duct to find tool crates and coolant packs. Static hums through every bad decision.
 risk:high
 time:13
 energy:17
 loot:4
 lootType:coolant kits
-event:Vent flare-up | chance:0.55 | prompt:A vent flare-up roars toward you.
-eventOption:Seal the duct and wait => risk:high | tag:tech | success:item:foam canister,credits+8,log:You seal the duct and grab a foam canister. | fail:hp-6,temp+2,log:The flare scorches your sleeves.
-eventOption:Dash through the heat => risk:deadly | tag:combat | success:item:payload crate,log:You push through and pull a crate. | fail:hp-10,log:The heat overwhelms you.
+event:Vent flare-up | chance:0.55 | prompt:A vent flare-up roars toward you. Nobody here mistakes kindness for weakness anymore.
+eventOption:Seal the duct and wait => risk:high | tag:tech | success:item:foam canister,credits+8,log:You seal the duct and grab a foam canister. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,temp+2,log:The flare scorches your sleeves. The skyline glows like a wound after dark.
+eventOption:Dash through the heat => risk:deadly | tag:combat | success:item:payload crate,log:You push through and pull a crate. The skyline glows like a wound after dark.| fail:hp-10,log:The heat overwhelms you. Trust is currency, and everyone is short on it.
 
 @mission
 id:refinery-brine-locker
 label:Brine locker breach
-desc:Crack a brine locker with sealed water and parts.
+desc:Crack a brine locker with sealed water and parts. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:12
 energy:16
 loot:3
 lootType:brine supplies
-event:Locker guardian offers a deal | chance:1 | prompt:A lone guardian offers access for a cut. Decide.
-eventOption:Pay the cut and share => risk:high | tag:mercy | success:item:hardened canteen,credits+6,log:They unlock the locker and share a canteen. | fail:credits-4,log:They take your cut and vanish.
-eventOption:Force the locker open => risk:deadly | tag:betrayal | success:item:reactor shard,credits+14,log:You force it open and snag a shard. | fail:hp-9,credits-6,log:The guardian fights you off.
+event:Locker guardian offers a deal | chance:1 | prompt:A lone guardian offers access for a cut. Decide. Even the quiet sounds engineered.
+eventOption:Pay the cut and share => risk:high | tag:mercy | success:item:hardened canteen,credits+6,log:They unlock the locker and share a canteen. Static hums through every bad decision.| fail:credits-4,log:They take your cut and vanish. Even the quiet sounds engineered.
+eventOption:Force the locker open => risk:deadly | tag:betrayal | success:item:reactor shard,credits+14,log:You force it open and snag a shard. Trust is currency, and everyone is short on it.| fail:hp-9,credits-6,log:The guardian fights you off. Even the quiet sounds engineered.
 
 @quest
 id:refinery-telecom-1
-title:Connect refinery telecoms (part 1/2)
-desc:Find the missing relay components and map the broken conduit path.
+title:Connect refinery telecoms (part 1/2). Even the quiet sounds engineered.
+desc:Find the missing relay components and map the broken conduit path. The skyline glows like a wound after dark.
 risk:high
 time:12
 energy:18
 loot:2
 lootType:signal parts
 reward:relay components
-success:item:compressed coil,credits+16,flag:refinery-telecom-1,log:You recover the missing relays and mark the conduit run.
+success:item:compressed coil,credits+16,flag:refinery-telecom-1,log:You recover the missing relays and mark the conduit run. Even the quiet sounds engineered.
 fail:hp-8,credits-5
 flag:refinery-telecom-1
 once:true
 
 @quest
 id:refinery-telecom-2
-title:Connect refinery telecoms (part 2/2)
-desc:Install the replacement components and re-seat the flooded uplink.
+title:Connect refinery telecoms (part 2/2). Static hums through every bad decision.
+desc:Install the replacement components and re-seat the flooded uplink. The skyline glows like a wound after dark.
 risk:deadly
 time:14
 energy:20
 loot:3
 lootType:signal crates
 reward:idle dispatch uplink
-success:item:idle relay tuner,credits+24,flag:refinery-telecom-2,log:The uplink sparks alive. A new idle dispatch channel opens.
+success:item:idle relay tuner,credits+24,flag:refinery-telecom-2,log:The uplink sparks alive. A new idle dispatch channel opens. Trust is currency, and everyone is short on it.
 fail:hp-10,credits-6
 flag:refinery-telecom-2
 requires:refinery-telecom-1
 once:true`,
       stormglass_citadel:`@expansion
 id:stormglass_citadel
-name:Stormglass Citadel
-summary:A shattered tower of stormglass crystal and humming conduits. Deadly-risk raids demand advanced gear and reward high-grade weapons.
+name:Stormglass Bastion
+summary:A lightning-scarred fortress city where elite warbands refine doctrine through ritual violence and engineered fear.
 temp:hot
-arrivalDialog:Storm Warden Kira: The citadel rose after the Glassfall—each pane is a storm memory.
-missionStartDialog:Keeper Sable: The storm cult keeps relics in the spires; don't touch the etched glass.
-missionEndDialog:Sentinel Roan: The council will honor this—every shard keeps the barrier bright.
+arrivalDialog:Observer Kael: They call this order. It feels like polished madness. Broken cameras still pivot like they remember faces.
+missionStartDialog:Warden Tris: Stay disciplined; panic is what they harvest. Even the quiet sounds engineered.
+missionEndDialog:Signaler Vex: You survived their theatre of war. That matters. Nobody here mistakes kindness for weakness anymore.
 unlockCost:65
 shop:false
 bar:true
@@ -3570,46 +3570,46 @@ barHireCost:100
 label:Citadel Stormgate
 hint:deadly combatants, hot stormglass halls, telecom job
 risk:deadly
-note:Lightning crawls along crystal spires as the stormgate unlocks.
+note:Lightning crawls along crystal spires as the stormgate unlocks. Even the quiet sounds engineered.
 target:stormhall
 
 @scene stormhall
-title:Stormhall
-desc:Cracked crystal tiles thrum underfoot as static arcs heat the hot halls.
+title:Stormhall. The skyline glows like a wound after dark.
+desc:Cracked crystal tiles thrum underfoot as static arcs heat the hot halls. The skyline glows like a wound after dark.
 tags:Citadel / Deadly
-option:Harvest the crystal ribs => stormhall | risk:high | time:9 | reward:stormglass salvage | success:item:stormglass shard,item:static fruit bar,log:You pry loose glimmering ribs packed with nutrients. | fail:hp-7,temp+2,log:Static backlash scorches your arms.
-option:Check the armory racks => stormhall | risk:deadly | time:10 | reward:weapon cache | success:item:stormglass rapier,item:storm seal gaskets,log:You lift a pristine blade before the racks spark. | fail:hp-9,credits-4,log:The racks discharge and drive you back.
+option:Harvest the crystal ribs => stormhall | risk:high | time:9 | reward:stormglass salvage | success:item:stormglass shard,item:static fruit bar,log:You pry loose glimmering ribs packed with nutrients. Trust is currency, and everyone is short on it.| fail:hp-7,temp+2,log:Static backlash scorches your arms. The skyline glows like a wound after dark.
+option:Check the armory racks => stormhall | risk:deadly | time:10 | reward:weapon cache | success:item:stormglass rapier,item:storm seal gaskets,log:You lift a pristine blade before the racks spark. Broken cameras still pivot like they remember faces.| fail:hp-9,credits-4,log:The racks discharge and drive you back. The skyline glows like a wound after dark.
 
 @mission
 id:citadel-sweep
 label:Crystal stair sweep
-desc:Clear hostile sentries for stormglass supplies and tools.
+desc:Clear hostile sentries for stormglass supplies and tools. Broken cameras still pivot like they remember faces.
 risk:high
 time:15
 energy:20
 loot:4
 lootType:stormglass supplies
-event:Stormglass sentries patrol | chance:0.5 | prompt:Sentries sweep the crystal stair. Choose your response.
-eventOption:Slip behind the glass columns => risk:high | tag:stealth | success:item:stormglass shard,credits+10,log:You ghost past and lift a shard. | fail:hp-7,credits-3,log:The sentries catch your movement.
-eventOption:Strike through the patrol => risk:deadly | tag:combat | success:item:stormglass rapier,log:You cut through the patrol and seize a rapier. | fail:hp-11,log:The sentries overwhelm you.
+event:Stormglass sentries patrol | chance:0.5 | prompt:Sentries sweep the crystal stair. Choose your response. Nobody here mistakes kindness for weakness anymore.
+eventOption:Slip behind the glass columns => risk:high | tag:stealth | success:item:stormglass shard,credits+10,log:You ghost past and lift a shard. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-3,log:The sentries catch your movement. Static hums through every bad decision.
+eventOption:Strike through the patrol => risk:deadly | tag:combat | success:item:stormglass rapier,log:You cut through the patrol and seize a rapier. Nobody here mistakes kindness for weakness anymore.| fail:hp-11,log:The sentries overwhelm you. Static hums through every bad decision.
 
 @mission
 id:citadel-spire
 label:Upper spire extraction
-desc:Ascend the spire for high-grade armor and rare weaponry.
+desc:Ascend the spire for high-grade armor and rare weaponry. Broken cameras still pivot like they remember faces.
 risk:deadly
 time:17
 energy:22
 loot:5
 lootType:stormglass armory
-event:Storm cult acolyte confronts you | chance:1 | prompt:An acolyte offers to trade relics for safe passage. Decide quickly.
-eventOption:Honor the trade => risk:high | tag:mercy | success:item:ionized brew,credits+12,log:The acolyte shares a relic drink and lets you pass. | fail:credits-4,log:The acolyte retreats, insulted.
-eventOption:Take the relics by force => risk:deadly | tag:betrayal | success:item:stormglass shard,item:storm seal gaskets,credits+16,log:You seize the relics and push onward. | fail:hp-10,credits-5,log:The acolyte triggers a shock wave.
+event:Storm cult acolyte confronts you | chance:1 | prompt:An acolyte offers to trade relics for safe passage. Decide quickly. Nobody here mistakes kindness for weakness anymore.
+eventOption:Honor the trade => risk:high | tag:mercy | success:item:ionized brew,credits+12,log:The acolyte shares a relic drink and lets you pass. Nobody here mistakes kindness for weakness anymore.| fail:credits-4,log:The acolyte retreats, insulted. Nobody here mistakes kindness for weakness anymore.
+eventOption:Take the relics by force => risk:deadly | tag:betrayal | success:item:stormglass shard,item:storm seal gaskets,credits+16,log:You seize the relics and push onward. Static hums through every bad decision.| fail:hp-10,credits-5,log:The acolyte triggers a shock wave. Static hums through every bad decision.
 
 @mission
 id:citadel-vault
 label:Stormglass vault breach
-desc:Use the citadel vault key to access the sealed core arsenal.
+desc:Use the citadel vault key to access the sealed core arsenal. Even the quiet sounds engineered.
 risk:deadly
 time:20
 energy:24
@@ -3621,7 +3621,7 @@ combatChance:0.65
 @mission
 id:citadel-hush
 label:Stormglass echo trace
-desc:Track an echoing signal through the stormglass spires.
+desc:Track an echoing signal through the stormglass spires. Even the quiet sounds engineered.
 risk:high
 time:16
 energy:20
@@ -3629,87 +3629,87 @@ loot:4
 lootType:stormglass salvage
 unlockFlag:secret-citadel-mission
 consumeFlag:secret-citadel-mission
-event:Echo keeper demands a vow | chance:0.6 | prompt:A keeper demands you vow to leave the relics untouched.
-eventOption:Swear the vow and pass => risk:high | tag:mercy | success:item:stormglass shard,credits+8,log:The keeper grants passage and you take a shard. | fail:credits-4,log:The keeper doubts you and delays the route.
-eventOption:Break the vow and seize relics => risk:deadly | tag:betrayal | success:item:stormglass shard,item:ion circuit puck,credits+14,log:You take the relics and press on. | fail:hp-9,credits-6,log:The keeper calls in stormguard sentries.
+event:Echo keeper demands a vow | chance:0.6 | prompt:A keeper demands you vow to leave the relics untouched. The skyline glows like a wound after dark.
+eventOption:Swear the vow and pass => risk:high | tag:mercy | success:item:stormglass shard,credits+8,log:The keeper grants passage and you take a shard. Nobody here mistakes kindness for weakness anymore.| fail:credits-4,log:The keeper doubts you and delays the route. Broken cameras still pivot like they remember faces.
+eventOption:Break the vow and seize relics => risk:deadly | tag:betrayal | success:item:stormglass shard,item:ion circuit puck,credits+14,log:You take the relics and press on. Nobody here mistakes kindness for weakness anymore.| fail:hp-9,credits-6,log:The keeper calls in stormguard sentries. Trust is currency, and everyone is short on it.
 
 @mission
 id:citadel-resonance-run
 label:Resonance conduit run
-desc:Stabilize the humming conduits to reach sealed caches.
+desc:Stabilize the humming conduits to reach sealed caches. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:14
 energy:19
 loot:4
 lootType:resonance caches
-event:Resonance spike | chance:0.6 | prompt:A resonance spike rattles the conduits around you.
-eventOption:Balance the conduits => risk:high | tag:tech | success:item:capacitor lattice,credits+10,log:You steady the spike and claim a lattice. | fail:hp-7,temp+2,log:The spike jolts your gear.
-eventOption:Ride the spike to the cache => risk:deadly | tag:stealth | success:item:stormglass shard,credits+12,log:The surge carries you to a shard stash. | fail:hp-10,log:The surge throws you off the path.
+event:Resonance spike | chance:0.6 | prompt:A resonance spike rattles the conduits around you. Static hums through every bad decision.
+eventOption:Balance the conduits => risk:high | tag:tech | success:item:capacitor lattice,credits+10,log:You steady the spike and claim a lattice. Static hums through every bad decision.| fail:hp-7,temp+2,log:The spike jolts your gear. Static hums through every bad decision.
+eventOption:Ride the spike to the cache => risk:deadly | tag:stealth | success:item:stormglass shard,credits+12,log:The surge carries you to a shard stash. Nobody here mistakes kindness for weakness anymore.| fail:hp-10,log:The surge throws you off the path. Broken cameras still pivot like they remember faces.
 
 @mission
 id:citadel-glass-gardens
 label:Glass garden patrol
-desc:Cross the glass gardens for relic fruit and crystal tools.
+desc:Cross the glass gardens for relic fruit and crystal tools. Trust is currency, and everyone is short on it.
 risk:high
 time:13
 energy:18
 loot:4
 lootType:stormglass provisions
-event:Garden keeper pleads | chance:1 | prompt:A keeper asks you to leave the relic fruit untouched.
-eventOption:Respect the request => risk:high | tag:mercy | success:item:static fruit bar,credits+6,log:The keeper shares a fruit bar with you. | fail:credits-4,log:The keeper refuses to guide you further.
-eventOption:Take the relic fruit => risk:deadly | tag:betrayal | success:item:ionized brew,credits+14,log:You take the fruit and snag an ionized brew. | fail:hp-8,credits-5,log:The keeper calls in sentries.
+event:Garden keeper pleads | chance:1 | prompt:A keeper asks you to leave the relic fruit untouched. The skyline glows like a wound after dark.
+eventOption:Respect the request => risk:high | tag:mercy | success:item:static fruit bar,credits+6,log:The keeper shares a fruit bar with you. Trust is currency, and everyone is short on it.| fail:credits-4,log:The keeper refuses to guide you further. The skyline glows like a wound after dark.
+eventOption:Take the relic fruit => risk:deadly | tag:betrayal | success:item:ionized brew,credits+14,log:You take the fruit and snag an ionized brew. Trust is currency, and everyone is short on it.| fail:hp-8,credits-5,log:The keeper calls in sentries. Broken cameras still pivot like they remember faces.
 
 @mission
 id:citadel-ward-sweep
 label:Storm ward sweep
-desc:Clear storm wards for shielded caches and weapon parts.
+desc:Clear storm wards for shielded caches and weapon parts. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:15
 energy:21
 loot:5
 lootType:warded weapons
-event:Ward shield fluctuation | chance:0.55 | prompt:The ward shield flickers, threatening to lock you in.
-eventOption:Reset the ward anchors => risk:deadly | tag:tech | success:item:phase relay kit,credits+12,log:You reset the anchors and salvage a relay kit. | fail:hp-9,log:The shield snaps closed and shocks you.
-eventOption:Force the door before it seals => risk:high | tag:combat | success:item:stormglass rapier,log:You force your way through and take a rapier. | fail:hp-11,log:The door slams and you take a hit.
+event:Ward shield fluctuation | chance:0.55 | prompt:The ward shield flickers, threatening to lock you in. Broken cameras still pivot like they remember faces.
+eventOption:Reset the ward anchors => risk:deadly | tag:tech | success:item:phase relay kit,credits+12,log:You reset the anchors and salvage a relay kit. Even the quiet sounds engineered.| fail:hp-9,log:The shield snaps closed and shocks you. Even the quiet sounds engineered.
+eventOption:Force the door before it seals => risk:high | tag:combat | success:item:stormglass rapier,log:You force your way through and take a rapier. Trust is currency, and everyone is short on it.| fail:hp-11,log:The door slams and you take a hit. Trust is currency, and everyone is short on it.
 
 @quest
 id:citadel-telecom-1
-title:Connect citadel telecoms (part 1/2)
-desc:Find the missing conduits and map the ruptured signal spine.
+title:Connect citadel telecoms (part 1/2). Broken cameras still pivot like they remember faces.
+desc:Find the missing conduits and map the ruptured signal spine. Broken cameras still pivot like they remember faces.
 risk:high
 time:13
 energy:19
 loot:2
 lootType:signal parts
 reward:signal spine map
-success:item:capacitor lattice,credits+18,flag:citadel-telecom-1,log:The conduit lattice is restored and the spine is mapped.
+success:item:capacitor lattice,credits+18,flag:citadel-telecom-1,log:The conduit lattice is restored and the spine is mapped. Nobody here mistakes kindness for weakness anymore.
 fail:hp-9,credits-5
 flag:citadel-telecom-1
 once:true
 
 @quest
 id:citadel-telecom-2
-title:Connect citadel telecoms (part 2/2)
-desc:Install the replacement components and align the stormglass relays.
+title:Connect citadel telecoms (part 2/2). Even the quiet sounds engineered.
+desc:Install the replacement components and align the stormglass relays. Trust is currency, and everyone is short on it.
 risk:deadly
 time:15
 energy:21
 loot:3
 lootType:signal crates
 reward:idle dispatch uplink
-success:item:phase relay kit,credits+26,flag:citadel-telecom-2,log:The stormglass relays sync. A new idle dispatch channel opens.
+success:item:phase relay kit,credits+26,flag:citadel-telecom-2,log:The stormglass relays sync. A new idle dispatch channel opens. Static hums through every bad decision.
 fail:hp-11,credits-6
 flag:citadel-telecom-2
 requires:citadel-telecom-1
 once:true`,
       rift_complex:`@expansion
 id:rift_complex
-name:Rift Complex
-summary:A warped research facility wrapped in spatial rifts and time shear. The deadliest site yet, demanding top-tier tools for staggering rewards.
+name:The Riftworks
+summary:A fractured research complex wrapped in conspiracy, rogue robotics, and sealed labs that still whisper to anyone listening.
 temp:cold
-arrivalDialog:Rift Tech Yori: The breach event still hums under the floor; stay inside the marked lanes.
-missionStartDialog:Researcher Vale: Bring back any anomaly tags—the Rift Choir pays in clean water.
-missionEndDialog:Operator Linn: Good pull—these readings keep the council ahead of the next tear.
+arrivalDialog:Watcher Nine: The walls hear commands from voices that died years ago. The skyline glows like a wound after dark.
+missionStartDialog:Engineer Mott: Pull clean components and never trust a friendly terminal. Trust is currency, and everyone is short on it.
+missionEndDialog:Scout Isha: Useful haul. Disturbing logs. Same as always. Static hums through every bad decision.
 requiresTelecoms:3
 shop:false
 
@@ -3717,46 +3717,46 @@ shop:false
 label:Rift Transit Aperture
 hint:deadly anomalies, cold rift air, elite gear, telecom job
 risk:deadly
-note:The aperture ripples, distorting sound and light as you step through.
+note:The aperture ripples, distorting sound and light as you step through. The skyline glows like a wound after dark.
 target:rift-hub
 
 @scene rift-hub
-title:Rift Hub
-desc:Floating consoles orbit a fractured core, pulsing with unstable light in the cold rift air.
+title:Rift Hub. Trust is currency, and everyone is short on it.
+desc:Floating consoles orbit a fractured core, pulsing with unstable light in the cold rift air. The skyline glows like a wound after dark.
 tags:Rift / Deadly
-option:Stabilize the core nodes => rift-hub | risk:high | time:10 | reward:rift provisions | success:item:riftwater flask,item:synth-berry pack,log:You steady the nodes and bottle chilled riftwater. | fail:hp-8,rads+6,log:A surge lashes across the hub.
-option:Strip the grav lockers => rift-hub | risk:deadly | time:11 | reward:weapon cache | success:item:graviton glaive,item:gravity lens,log:You yank a gleaming glaive from a weightless rack. | fail:hp-10,credits-5,log:The lockers buckle and force a retreat.
+option:Stabilize the core nodes => rift-hub | risk:high | time:10 | reward:rift provisions | success:item:riftwater flask,item:synth-berry pack,log:You steady the nodes and bottle chilled riftwater. Nobody here mistakes kindness for weakness anymore.| fail:hp-8,rads+6,log:A surge lashes across the hub. Broken cameras still pivot like they remember faces.
+option:Strip the grav lockers => rift-hub | risk:deadly | time:11 | reward:weapon cache | success:item:graviton glaive,item:gravity lens,log:You yank a gleaming glaive from a weightless rack. Trust is currency, and everyone is short on it.| fail:hp-10,credits-5,log:The lockers buckle and force a retreat. Broken cameras still pivot like they remember faces.
 
 @mission
 id:rift-sweep
 label:Anomaly sweep
-desc:Thread the rift corridors for advanced tools and supplies.
+desc:Thread the rift corridors for advanced tools and supplies. Broken cameras still pivot like they remember faces.
 risk:high
 time:16
 energy:22
 loot:5
 lootType:rift supplies
-event:Rift anomaly shear | chance:0.5 | prompt:A shear opens in the corridor. Choose your path.
-eventOption:Calibrate the shear with instruments => risk:high | tag:tech | success:item:anomaly scanner,credits+12,log:You stabilize the shear and recover a scanner. | fail:hp-8,rads+4,log:The shear lashes back at you.
-eventOption:Slip through the distorted shadow => risk:deadly | tag:stealth | success:item:drift moss tea,log:You glide through and pocket a tea pack. | fail:hp-10,credits-5,log:The shear tags you as you pass.
+event:Rift anomaly shear | chance:0.5 | prompt:A shear opens in the corridor. Choose your path. Nobody here mistakes kindness for weakness anymore.
+eventOption:Calibrate the shear with instruments => risk:high | tag:tech | success:item:anomaly scanner,credits+12,log:You stabilize the shear and recover a scanner. Trust is currency, and everyone is short on it.| fail:hp-8,rads+4,log:The shear lashes back at you. Nobody here mistakes kindness for weakness anymore.
+eventOption:Slip through the distorted shadow => risk:deadly | tag:stealth | success:item:drift moss tea,log:You glide through and pocket a tea pack. Trust is currency, and everyone is short on it.| fail:hp-10,credits-5,log:The shear tags you as you pass. Broken cameras still pivot like they remember faces.
 
 @mission
 id:rift-lab
 label:Temporal lab breach
-desc:Break into the time labs for elite gear and weapons.
+desc:Break into the time labs for elite gear and weapons. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:18
 energy:24
 loot:6
 lootType:rift armory
-event:Temporal researcher offers a deal | chance:1 | prompt:A researcher offers their stash for safe passage. What's your move?
-eventOption:Escort them out => risk:high | tag:mercy | success:item:riftwater flask,credits+14,log:The researcher shares rare water and leaves peacefully. | fail:credits-4,log:The researcher freezes, overwhelmed.
-eventOption:Take the stash and run => risk:deadly | tag:betrayal | success:item:rift crystal splinter,credits+20,log:You snatch the stash and disappear into the haze. | fail:hp-11,credits-6,log:The researcher triggers a defensive pulse.
+event:Temporal researcher offers a deal | chance:1 | prompt:A researcher offers their stash for safe passage. What's your move? Trust is currency, and everyone is short on it.
+eventOption:Escort them out => risk:high | tag:mercy | success:item:riftwater flask,credits+14,log:The researcher shares rare water and leaves peacefully. Trust is currency, and everyone is short on it.| fail:credits-4,log:The researcher freezes, overwhelmed. Trust is currency, and everyone is short on it.
+eventOption:Take the stash and run => risk:deadly | tag:betrayal | success:item:rift crystal splinter,credits+20,log:You snatch the stash and disappear into the haze. The skyline glows like a wound after dark.| fail:hp-11,credits-6,log:The researcher triggers a defensive pulse. The skyline glows like a wound after dark.
 
 @mission
 id:rift-core
 label:Singularity vault
-desc:Use the rift vault key to access the sealed singularity cache.
+desc:Use the rift vault key to access the sealed singularity cache. Broken cameras still pivot like they remember faces.
 risk:deadly
 time:21
 energy:26
@@ -3768,7 +3768,7 @@ combatChance:0.7
 @mission
 id:rift-hush
 label:Anomaly whisper survey
-desc:Chase a faint whisper across the rift lattice for hidden caches.
+desc:Chase a faint whisper across the rift lattice for hidden caches. Static hums through every bad decision.
 risk:deadly
 time:17
 energy:23
@@ -3776,75 +3776,75 @@ loot:5
 lootType:rift salvage
 unlockFlag:secret-rift-mission
 consumeFlag:secret-rift-mission
-event:Echoed scientist pleads | chance:0.6 | prompt:A displaced scientist begs you to stabilize their beacon before looters arrive.
-eventOption:Stabilize the beacon => risk:high | tag:mercy | success:item:riftwater flask,credits+12,log:The scientist repays you with chilled riftwater. | fail:credits-4,log:The beacon fizzles before it locks.
-eventOption:Strip the beacon for parts => risk:deadly | tag:betrayal | success:item:gravity lens,credits+18,log:You strip the beacon and pocket a lens. | fail:hp-10,credits-6,log:The beacon flashes and burns you.
+event:Echoed scientist pleads | chance:0.6 | prompt:A displaced scientist begs you to stabilize their beacon before looters arrive. Nobody here mistakes kindness for weakness anymore.
+eventOption:Stabilize the beacon => risk:high | tag:mercy | success:item:riftwater flask,credits+12,log:The scientist repays you with chilled riftwater. The skyline glows like a wound after dark.| fail:credits-4,log:The beacon fizzles before it locks. Broken cameras still pivot like they remember faces.
+eventOption:Strip the beacon for parts => risk:deadly | tag:betrayal | success:item:gravity lens,credits+18,log:You strip the beacon and pocket a lens. Static hums through every bad decision.| fail:hp-10,credits-6,log:The beacon flashes and burns you. The skyline glows like a wound after dark.
 
 @mission
 id:rift-observatory
 label:Orbiting observatory raid
-desc:Climb the floating observatory for anomaly data and rare tools.
+desc:Climb the floating observatory for anomaly data and rare tools. Trust is currency, and everyone is short on it.
 risk:deadly
 time:18
 energy:24
 loot:6
 lootType:rift research cache
-event:Observation lens misaligns | chance:0.6 | prompt:The observation lens spins out of alignment mid-run.
-eventOption:Stabilize the lens array => risk:deadly | tag:tech | success:item:gravity lens,credits+16,log:You lock the array and salvage a gravity lens. | fail:hp-10,rads+6,log:The lens flares and scorches you.
-eventOption:Move in the lens shadow => risk:high | tag:stealth | success:item:drift moss tea,credits+10,log:You slip through and take the tea. | fail:hp-8,credits-5,log:The lens flare tags you.
+event:Observation lens misaligns | chance:0.6 | prompt:The observation lens spins out of alignment mid-run. Trust is currency, and everyone is short on it.
+eventOption:Stabilize the lens array => risk:deadly | tag:tech | success:item:gravity lens,credits+16,log:You lock the array and salvage a gravity lens. The skyline glows like a wound after dark.| fail:hp-10,rads+6,log:The lens flares and scorches you. Static hums through every bad decision.
+eventOption:Move in the lens shadow => risk:high | tag:stealth | success:item:drift moss tea,credits+10,log:You slip through and take the tea. Static hums through every bad decision.| fail:hp-8,credits-5,log:The lens flare tags you. Static hums through every bad decision.
 
 @mission
 id:rift-lattice-run
 label:Lattice relay run
-desc:Run the rift lattice to recover signal nodes and sealed water.
+desc:Run the rift lattice to recover signal nodes and sealed water. Broken cameras still pivot like they remember faces.
 risk:high
 time:16
 energy:22
 loot:5
 lootType:rift signal nodes
-event:Lattice echo offers a trade | chance:1 | prompt:A lattice echo offers coordinates in exchange for a sample.
-eventOption:Share a sample => risk:high | tag:mercy | success:item:riftwater flask,credits+12,log:The echo yields clean water coordinates. | fail:credits-4,log:The echo fades before you confirm.
-eventOption:Capture the echo => risk:deadly | tag:betrayal | success:item:rift crystal splinter,credits+18,log:You trap the echo and seize a crystal. | fail:hp-11,credits-6,log:The echo lashes out.
+event:Lattice echo offers a trade | chance:1 | prompt:A lattice echo offers coordinates in exchange for a sample. Nobody here mistakes kindness for weakness anymore.
+eventOption:Share a sample => risk:high | tag:mercy | success:item:riftwater flask,credits+12,log:The echo yields clean water coordinates. Static hums through every bad decision.| fail:credits-4,log:The echo fades before you confirm. Nobody here mistakes kindness for weakness anymore.
+eventOption:Capture the echo => risk:deadly | tag:betrayal | success:item:rift crystal splinter,credits+18,log:You trap the echo and seize a crystal. Static hums through every bad decision.| fail:hp-11,credits-6,log:The echo lashes out. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:rift-anomaly-garden
 label:Anomaly garden sweep
-desc:Harvest anomaly growths and rare provisions from the rift garden.
+desc:Harvest anomaly growths and rare provisions from the rift garden. Even the quiet sounds engineered.
 risk:high
 time:15
 energy:21
 loot:5
 lootType:rift provisions
-event:Garden guardian blocks the path | chance:0.55 | prompt:A guardian entity blocks the growths you need.
-eventOption:Appease it with signals => risk:high | tag:tech | success:item:anomaly scanner,credits+12,log:You appease the guardian and recover a scanner. | fail:hp-8,rads+4,log:The guardian lashes out.
-eventOption:Force your way through => risk:deadly | tag:combat | success:item:riftwater flask,log:You push through and claim riftwater. | fail:hp-12,credits-5,log:The guardian strikes you down.
+event:Garden guardian blocks the path | chance:0.55 | prompt:A guardian entity blocks the growths you need. Nobody here mistakes kindness for weakness anymore.
+eventOption:Appease it with signals => risk:high | tag:tech | success:item:anomaly scanner,credits+12,log:You appease the guardian and recover a scanner. Static hums through every bad decision.| fail:hp-8,rads+4,log:The guardian lashes out. Broken cameras still pivot like they remember faces.
+eventOption:Force your way through => risk:deadly | tag:combat | success:item:riftwater flask,log:You push through and claim riftwater. Even the quiet sounds engineered.| fail:hp-12,credits-5,log:The guardian strikes you down. The skyline glows like a wound after dark.
 
 @quest
 id:rift-telecom-1
-title:Connect rift telecoms (part 1/2)
-desc:Find the missing stabilizers and trace the broken signal lattice.
+title:Connect rift telecoms (part 1/2). Nobody here mistakes kindness for weakness anymore.
+desc:Find the missing stabilizers and trace the broken signal lattice. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:14
 energy:22
 loot:2
 lootType:signal parts
 reward:signal stabilizers
-success:item:nullfield filament,credits+22,flag:rift-telecom-1,log:The stabilizers are recovered and the signal lattice is traced.
+success:item:nullfield filament,credits+22,flag:rift-telecom-1,log:The stabilizers are recovered and the signal lattice is traced. Static hums through every bad decision.
 fail:hp-10,credits-6
 flag:rift-telecom-1
 once:true
 
 @quest
 id:rift-telecom-2
-title:Connect rift telecoms (part 2/2)
-desc:Install the stabilizers and lock the uplink into the rift core.
+title:Connect rift telecoms (part 2/2). Trust is currency, and everyone is short on it.
+desc:Install the stabilizers and lock the uplink into the rift core. Trust is currency, and everyone is short on it.
 risk:deadly
 time:16
 energy:24
 loot:3
 lootType:signal crates
 reward:idle dispatch uplink
-success:item:dispatch accelerator,credits+30,flag:rift-telecom-2,log:The uplink locks in place. A new idle dispatch channel opens.
+success:item:dispatch accelerator,credits+30,flag:rift-telecom-2,log:The uplink locks in place. A new idle dispatch channel opens. The skyline glows like a wound after dark.
 fail:hp-12,credits-7
 flag:rift-telecom-2
 requires:rift-telecom-1
