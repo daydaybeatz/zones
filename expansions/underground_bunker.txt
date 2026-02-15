@@ -1,57 +1,57 @@
 @expansion
 id:underground_bunker
-name:Abandoned Underground Bunker System
-summary:A low-risk labyrinth of concrete corridors and shuttered barracks. Easy opponents, low-tier food, and worn clothing line the halls.
+name:Vaultline Catacombs
+summary:Collapsed defense tunnels now serve as a proving ground for drifters, raiders, and desperate crews chasing canned food and dry shelter.
 temp:cold
-arrivalDialog:Tunnel Warden Brag: These corridors were sealed after the Iron Ward mutiny—watch for the old warning marks.
-missionStartDialog:Scout Rhea: The water table rose after the quakes; stay above the rust tide.
-missionEndDialog:Mechanic Oru: The bunker council will hear of this—gear like this keeps the pumps alive.
+arrivalDialog:Tunnel Marshal Brag: The old war maps lie, the walls listen, and the quiet usually means a trap. Trust is currency, and everyone is short on it.
+missionStartDialog:Runner Kade: Hit fast, travel light, and never assume a locked hatch is empty. Trust is currency, and everyone is short on it.
+missionEndDialog:Cook Mira: Good pull. The ward kitchen might stay warm tonight. Nobody here mistakes kindness for weakness anymore.
 shop:false
 
 @door
 label:Bunker Access Hatch
 hint:low-risk combat, cold corridors, food runs, clothing caches, telecom job
 risk:low
-note:Condensation beads on the hatch as you descend into the bunker system.
+note:Condensation beads on the hatch as you descend into the bunker system. The skyline glows like a wound after dark.
 target:mess-hall
 
 @scene mess-hall
-title:Mess Hall
-desc:Metal tables and dented lockers sit beneath flickering emergency lights in the cold, drafty hall.
+title:Mess Hall. Even the quiet sounds engineered.
+desc:Metal tables and dented lockers sit beneath flickering emergency lights in the cold, drafty hall. Static hums through every bad decision.
 tags:Bunker / Low risk
-option:Search the ration cages => mess-hall | risk:low | time:6 | reward:low-tier food | success:item:ration bar,item:bunker stew pouch,log:You salvage sealed rations from a rusted cage. | fail:hunger+6,log:Only spoiled tins remain.
-option:Strip the barracks lockers => mess-hall | risk:low | time:7 | reward:clothing scraps | success:item:bunker fatigues,item:moth-eaten scarf,log:You gather worn but usable uniforms. | fail:hp-3,log:A locker door clips your shoulder.
+option:Search the ration cages => mess-hall | risk:low | time:6 | reward:low-tier food | success:item:ration bar,item:bunker stew pouch,log:You salvage sealed rations from a rusted cage. Broken cameras still pivot like they remember faces.| fail:hunger+6,log:Only spoiled tins remain. Nobody here mistakes kindness for weakness anymore.
+option:Strip the barracks lockers => mess-hall | risk:low | time:7 | reward:clothing scraps | success:item:bunker fatigues,item:moth-eaten scarf,log:You gather worn but usable uniforms. Nobody here mistakes kindness for weakness anymore.| fail:hp-3,log:A locker door clips your shoulder. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:bunker-quick
 label:Mess hall sweep
-desc:Low-risk sweep for food packs and basic clothing.
+desc:Low-risk sweep for food packs and basic clothing. Static hums through every bad decision.
 risk:low
 time:9
 energy:10
 loot:2
 lootType:low-tier food & clothing
-event:Service hatch patrol | chance:0.55 | prompt:A patrol blocks the service hatch that hides extra rations.
-eventOption:Crawl through the ventwork => risk:low | tag:stealth | success:item:tinned beans,credits+4,log:You slip past and scoop up sealed tins. | fail:hp-3,credits-2,log:A vent grate clangs and draws attention.
-eventOption:Force the hatch open => risk:medium | tag:combat | success:item:locker prybar,item:ration bar,log:You muscle through and claim the stash. | fail:hp-6,log:The patrol batters you back.
+event:Service hatch patrol | chance:0.55 | prompt:A patrol blocks the service hatch that hides extra rations. Trust is currency, and everyone is short on it.
+eventOption:Crawl through the ventwork => risk:low | tag:stealth | success:item:tinned beans,credits+4,log:You slip past and scoop up sealed tins. Trust is currency, and everyone is short on it.| fail:hp-3,credits-2,log:A vent grate clangs and draws attention. Static hums through every bad decision.
+eventOption:Force the hatch open => risk:medium | tag:combat | success:item:locker prybar,item:ration bar,log:You muscle through and claim the stash. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:The patrol batters you back. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:bunker-deep
 label:Lower tunnel scavenge
-desc:Push deeper for better rations and intact gear.
+desc:Push deeper for better rations and intact gear. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:12
 energy:14
 loot:3
 lootType:sealed kits
-event:Lost tunnel scav | chance:1 | prompt:A starving scav begs to join your run. Decide how to respond.
-eventOption:Share supplies and guide them out => risk:low | tag:mercy | success:credits+5,item:stale biscuits,log:The scav repays you with a hidden snack cache. | fail:credits-3,log:The scav panics and slows you down.
-eventOption:Shake them down for intel => risk:medium | tag:betrayal | success:credits+10,item:old coin,log:You take the intel and a coin for your trouble. | fail:credits-4,log:The scav bolts, cursing your name.
+event:Lost tunnel scav | chance:1 | prompt:A starving scav begs to join your run. Decide how to respond. Broken cameras still pivot like they remember faces.
+eventOption:Share supplies and guide them out => risk:low | tag:mercy | success:credits+5,item:stale biscuits,log:The scav repays you with a hidden snack cache. Even the quiet sounds engineered.| fail:credits-3,log:The scav panics and slows you down. Even the quiet sounds engineered.
+eventOption:Shake them down for intel => risk:medium | tag:betrayal | success:credits+10,item:old coin,log:You take the intel and a coin for your trouble. Nobody here mistakes kindness for weakness anymore.| fail:credits-4,log:The scav bolts, cursing your name. The skyline glows like a wound after dark.
 
 @mission
 id:bunker-armory
 label:Armory annex breach
-desc:Use the bunker armory key to crack the sealed weapons annex for richer loot.
+desc:Use the bunker armory key to crack the sealed weapons annex for richer loot. The skyline glows like a wound after dark.
 risk:medium
 time:13
 energy:16
@@ -59,14 +59,14 @@ loot:4
 lootType:armory kits & rations
 key:1
 combatChance:0.5
-event:Sealed ration locker | chance:0.2 | prompt:A sealed ration locker hums behind the armory cages. Try for it?
-eventOption:Bypass the old lock => risk:high | tag:tech | success:item:spice locker,credits+10,log:You bypass the lock and haul out a spice locker upgrade. | fail:hp-6,log:The lock bites back and sparks.
-eventOption:Rip it off the hinges => risk:deadly | tag:combat | success:credits+12,item:spice locker,log:You rip the locker free and drag the spice locker upgrade out. | fail:hp-9,log:The hinges snap and slam you.
+event:Sealed ration locker | chance:0.2 | prompt:A sealed ration locker hums behind the armory cages. Try for it? Nobody here mistakes kindness for weakness anymore.
+eventOption:Bypass the old lock => risk:high | tag:tech | success:item:spice locker,credits+10,log:You bypass the lock and haul out a spice locker upgrade. Even the quiet sounds engineered.| fail:hp-6,log:The lock bites back and sparks. Trust is currency, and everyone is short on it.
+eventOption:Rip it off the hinges => risk:deadly | tag:combat | success:credits+12,item:spice locker,log:You rip the locker free and drag the spice locker upgrade out. Even the quiet sounds engineered.| fail:hp-9,log:The hinges snap and slam you. Trust is currency, and everyone is short on it.
 
 @mission
 id:bunker-hush
 label:Whispered tunnel cache
-desc:Respond to a faint relay ping tucked in the lower tunnels.
+desc:Respond to a faint relay ping tucked in the lower tunnels. Broken cameras still pivot like they remember faces.
 risk:medium
 time:11
 energy:13
@@ -74,75 +74,75 @@ loot:3
 lootType:sealed caches
 unlockFlag:secret-bunker-mission
 consumeFlag:secret-bunker-mission
-event:Relay whisperer calls out | chance:0.6 | prompt:A lost tech whispers from behind a sealed hatch, offering a cache for safe passage.
-eventOption:Help them reach the ladder => risk:low | tag:mercy | success:item:filtered water pack,credits+6,log:The tech slips you a water pack in gratitude. | fail:credits-3,log:The tech freezes and the moment passes.
-eventOption:Take the cache and leave => risk:medium | tag:betrayal | success:item:locker prybar,credits+10,log:You take the cache and vanish into the dark. | fail:hp-5,credits-4,log:The hatch swings open and clips you.
+event:Relay whisperer calls out | chance:0.6 | prompt:A lost tech whispers from behind a sealed hatch, offering a cache for safe passage. Broken cameras still pivot like they remember faces.
+eventOption:Help them reach the ladder => risk:low | tag:mercy | success:item:filtered water pack,credits+6,log:The tech slips you a water pack in gratitude. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The tech freezes and the moment passes. Static hums through every bad decision.
+eventOption:Take the cache and leave => risk:medium | tag:betrayal | success:item:locker prybar,credits+10,log:You take the cache and vanish into the dark. Trust is currency, and everyone is short on it.| fail:hp-5,credits-4,log:The hatch swings open and clips you. The skyline glows like a wound after dark.
 
 @mission
 id:bunker-waterline
 label:Waterline check
-desc:Inspect the flooded maintenance line for filters and clean water.
+desc:Inspect the flooded maintenance line for filters and clean water. Static hums through every bad decision.
 risk:low
 time:10
 energy:12
 loot:2
 lootType:water supplies
-event:Waterline rupture | chance:0.6 | prompt:A pressure line cracks and water floods the corridor.
-eventOption:Clamp the rupture => risk:low | tag:tech | success:item:canteen tablets,credits+5,log:You stop the leak and find tablets. | fail:temp-2,log:Cold water soaks your gear.
-eventOption:Ride the surge to the cache => risk:medium | tag:stealth | success:item:water canister,credits+6,log:The surge carries you to a canister stash. | fail:hp-5,log:The surge slams you into a bulkhead.
+event:Waterline rupture | chance:0.6 | prompt:A pressure line cracks and water floods the corridor. Even the quiet sounds engineered.
+eventOption:Clamp the rupture => risk:low | tag:tech | success:item:canteen tablets,credits+5,log:You stop the leak and find tablets. Nobody here mistakes kindness for weakness anymore.| fail:temp-2,log:Cold water soaks your gear. Nobody here mistakes kindness for weakness anymore.
+eventOption:Ride the surge to the cache => risk:medium | tag:stealth | success:item:water canister,credits+6,log:The surge carries you to a canister stash. Static hums through every bad decision.| fail:hp-5,log:The surge slams you into a bulkhead. Static hums through every bad decision.
 
 @mission
 id:bunker-barracks
 label:Barracks cleanup
-desc:Clear the old barracks for extra clothing bundles and spare tools.
+desc:Clear the old barracks for extra clothing bundles and spare tools. Broken cameras still pivot like they remember faces.
 risk:low
 time:9
 energy:11
 loot:2
 lootType:clothing bundles
-event:Squatter refuses to leave | chance:1 | prompt:A squatter refuses to leave the barracks without a cut.
-eventOption:Offer a ration and move them on => risk:low | tag:mercy | success:credits+4,item:mess hall apron,log:The squatter hands over a spare apron. | fail:credits-3,log:The squatter wastes time with demands.
-eventOption:Drive them out => risk:medium | tag:combat | success:item:reinforced gloves,credits+6,log:You clear the room and find gloves. | fail:hp-4,log:The squatter swings a pipe and tags you.
+event:Squatter refuses to leave | chance:1 | prompt:A squatter refuses to leave the barracks without a cut. Static hums through every bad decision.
+eventOption:Offer a ration and move them on => risk:low | tag:mercy | success:credits+4,item:mess hall apron,log:The squatter hands over a spare apron. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The squatter wastes time with demands. Nobody here mistakes kindness for weakness anymore.
+eventOption:Drive them out => risk:medium | tag:combat | success:item:reinforced gloves,credits+6,log:You clear the room and find gloves. Static hums through every bad decision.| fail:hp-4,log:The squatter swings a pipe and tags you. The skyline glows like a wound after dark.
 
 @mission
 id:bunker-generator
 label:Generator room haul
-desc:Salvage tools and parts from the silent generator room.
+desc:Salvage tools and parts from the silent generator room. Static hums through every bad decision.
 risk:medium
 time:12
 energy:15
 loot:3
 lootType:power parts
-event:Generator sparkback | chance:0.55 | prompt:A sparkback arcs across the generator coils.
-eventOption:Ground the coils with scrap => risk:medium | tag:tech | success:item:wire spool,credits+8,log:You ground the coils and salvage a spool. | fail:hp-6,log:The arc singes your gear.
-eventOption:Grab what you can and run => risk:high | tag:stealth | success:item:scrap wiring,credits+10,log:You snatch wiring and escape. | fail:credits-5,log:The rush costs you supplies.
+event:Generator sparkback | chance:0.55 | prompt:A sparkback arcs across the generator coils. Broken cameras still pivot like they remember faces.
+eventOption:Ground the coils with scrap => risk:medium | tag:tech | success:item:wire spool,credits+8,log:You ground the coils and salvage a spool. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:The arc singes your gear. The skyline glows like a wound after dark.
+eventOption:Grab what you can and run => risk:high | tag:stealth | success:item:scrap wiring,credits+10,log:You snatch wiring and escape. Static hums through every bad decision.| fail:credits-5,log:The rush costs you supplies. Nobody here mistakes kindness for weakness anymore.
 
 @quest
 id:bunker-telecom-1
-title:Trace the telecom line
-desc:Follow the severed line through the service corridors and map the damage.
+title:Trace the telecom line. Even the quiet sounds engineered.
+desc:Follow the severed line through the service corridors and map the damage. The skyline glows like a wound after dark.
 risk:low
 time:8
 energy:10
 loot:1
 lootType:signal trace
 reward:telecom trace
-success:credits+8,flag:bunker-telecom-1,log:You map the cut and mark a clear path to the relay core.
+success:credits+8,flag:bunker-telecom-1,log:You map the cut and mark a clear path to the relay core. Even the quiet sounds engineered.
 fail:credits-3
 flag:bunker-telecom-1
 once:true
 
 @quest
 id:bunker-telecom-2
-title:Restart the relay core
-desc:Power the relay core back on—expect a guaranteed fight with a pair of bunker hostiles.
+title:Restart the relay core. Nobody here mistakes kindness for weakness anymore.
+desc:Power the relay core back on—expect a guaranteed fight with a pair of bunker hostiles. Broken cameras still pivot like they remember faces.
 risk:medium
 time:12
 energy:16
 loot:2
 lootType:relay salvage
 reward:relay restored
-success:item:coil battery,item:flashline map,credits+12,flag:bunker-telecom-2,log:The relay crackles to life. New idle dispatch options unlock.
+success:item:coil battery,item:flashline map,credits+12,flag:bunker-telecom-2,log:The relay crackles to life. New idle dispatch options unlock. The skyline glows like a wound after dark.
 fail:hp-6,credits-4
 flag:bunker-telecom-2
 requires:bunker-telecom-1
@@ -152,59 +152,59 @@ once:true
 @mission
 id:underground_bunker-ops-scoutline
 label:Scoutline warm-up
-desc:Low-risk recon through the underground bunker fringe to chart safe lanes for rookies.
+desc:Low-risk recon through the underground bunker fringe to chart safe lanes for rookies. Broken cameras still pivot like they remember faces.
 risk:low
 time:8
 energy:10
 loot:2
 lootType:route scraps
-event:Elder mapkeeper shares old chalk routes | chance:1 | prompt:The elder warns that loud routes wake dormant threats. Which route do you follow?
-eventOption:Follow the elder's silent route => risk:low | tag:mercy | success:item:trail compass,item:folding binoculars,credits+5,log:You follow old marks and recover navigation tools. | fail:credits-3,log:A dead-end slows the team.
-eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | success:item:impact baton,credits+7,log:You force a shorter route and grab a baton cache. | fail:hp-5,log:An ambush bruises your squad.
+event:Elder mapkeeper shares old chalk routes | chance:1 | prompt:The elder warns that loud routes wake dormant threats. Which route do you follow? Even the quiet sounds engineered.
+eventOption:Follow the elder's silent route => risk:low | tag:mercy | success:item:trail compass,item:folding binoculars,credits+5,log:You follow old marks and recover navigation tools. Static hums through every bad decision.| fail:credits-3,log:A dead-end slows the team. Nobody here mistakes kindness for weakness anymore.
+eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | success:item:impact baton,credits+7,log:You force a shorter route and grab a baton cache. Even the quiet sounds engineered.| fail:hp-5,log:An ambush bruises your squad. The skyline glows like a wound after dark.
 
 @mission
 id:underground_bunker-ops-supply-barter
 label:Supply barter circuit
-desc:Negotiate with fringe traders for utility gear and survival items.
+desc:Negotiate with fringe traders for utility gear and survival items. Trust is currency, and everyone is short on it.
 risk:low
 time:9
 energy:11
 loot:3
 lootType:barter goods
-event:Blackout market opens for one hour | chance:0.9 | prompt:A trader offers rare tools if you settle a dispute.
-eventOption:Mediate the dispute and keep order => risk:low | tag:mercy | success:item:field compass,item:insulated gloves,credits+6,log:The market stays calm and you leave with tools. | fail:credits-3,log:The deal collapses.
-eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | success:item:metal detector,item:sealed ration tin,credits+9,log:You intimidate the traders and seize premium stock. | fail:hp-4,credits-3,log:Hidden guards push you out.
+event:Blackout market opens for one hour | chance:0.9 | prompt:A trader offers rare tools if you settle a dispute. Nobody here mistakes kindness for weakness anymore.
+eventOption:Mediate the dispute and keep order => risk:low | tag:mercy | success:item:field compass,item:insulated gloves,credits+6,log:The market stays calm and you leave with tools. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The deal collapses. Static hums through every bad decision.
+eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | success:item:metal detector,item:sealed ration tin,credits+9,log:You intimidate the traders and seize premium stock. The skyline glows like a wound after dark.| fail:hp-4,credits-3,log:Hidden guards push you out. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground_bunker-ops-shadow-lift
 label:Shadow-lift extraction
-desc:Pull crates from a contested block where stealth gear matters more than firepower.
+desc:Pull crates from a contested block where stealth gear matters more than firepower. Broken cameras still pivot like they remember faces.
 risk:medium
 time:10
 energy:13
 loot:3
 lootType:stealth salvage
-event:Floodlights sweep the loading lane | chance:0.75 | prompt:You can move slowly under cover or rush the lift.
-eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:stealth | success:item:stealth-wear,item:smoke capsule,credits+8,log:Careful pacing gets the full crate out. | fail:hp-5,log:A spotlight catches you.
-eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. | fail:hp-7,log:Backup lights trigger mid-run.
+event:Floodlights sweep the loading lane | chance:0.75 | prompt:You can move slowly under cover or rush the lift. Nobody here mistakes kindness for weakness anymore.
+eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:stealth | success:item:stealth-wear,item:smoke capsule,credits+8,log:Careful pacing gets the full crate out. Nobody here mistakes kindness for weakness anymore.| fail:hp-5,log:A spotlight catches you. The skyline glows like a wound after dark.
+eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. Broken cameras still pivot like they remember faces.| fail:hp-7,log:Backup lights trigger mid-run. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground_bunker-ops-deep-vault
 label:Deep vault breach
-desc:High-risk push into a sealed vault loaded with specialized mission tools.
+desc:High-risk push into a sealed vault loaded with specialized mission tools. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:13
 energy:17
 loot:5
 lootType:specialized gear
-event:Old vault AI demands a pledge to local survivors | chance:1 | prompt:The AI asks whether you will share findings with the settlement elders.
-eventOption:Promise a fair split and honor it => risk:high | tag:mercy | success:item:long-range binoculars,item:terrain scanner,item:reinforced stealth cloak,credits+12,log:The AI opens side lockers after your pledge. | fail:credits-5,log:The AI distrusts your oath and throttles access.
-eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betrayal | success:item:precision metal detector,item:shock weave armor,credits+17,log:You crack every locker before alarms cycle. | fail:hp-10,credits-6,log:The countermeasure grid fires.
+event:Old vault AI demands a pledge to local survivors | chance:1 | prompt:The AI asks whether you will share findings with the settlement elders. The skyline glows like a wound after dark.
+eventOption:Promise a fair split and honor it => risk:high | tag:mercy | success:item:long-range binoculars,item:terrain scanner,item:reinforced stealth cloak,credits+12,log:The AI opens side lockers after your pledge. Broken cameras still pivot like they remember faces.| fail:credits-5,log:The AI distrusts your oath and throttles access. The skyline glows like a wound after dark.
+eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betrayal | success:item:precision metal detector,item:shock weave armor,credits+17,log:You crack every locker before alarms cycle. Trust is currency, and everyone is short on it.| fail:hp-10,credits-6,log:The countermeasure grid fires. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground_bunker-legend-merc-contract
 label:Legend contract: One-shot rescue
-desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean.
+desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:16
 energy:20
@@ -212,14 +212,14 @@ loot:6
 lootType:legend contract cache
 reward:mercenary recruitment
 once:true
-event:Downed veteran calls for extraction near collapsing cover | chance:1 | prompt:You only get one run at this. Commit to the rescue?
-eventOption:Commit and hold the line for the veteran => risk:deadly | tag:mercy | success:merc+1,item:veteran contract badge,item:command whistle,credits+20,log:The veteran joins your roster after extraction. | fail:hp-12,credits-8,log:The rescue fails under heavy pressure.
-eventOption:Abandon the call and loot the perimeter => risk:high | tag:betrayal | success:item:salvage satchel,credits+11,log:You skip the rescue and strip the perimeter. | fail:credits-6,log:Word spreads that you broke contract.
+event:Downed veteran calls for extraction near collapsing cover | chance:1 | prompt:You only get one run at this. Commit to the rescue? Trust is currency, and everyone is short on it.
+eventOption:Commit and hold the line for the veteran => risk:deadly | tag:mercy | success:merc+1,item:veteran contract badge,item:command whistle,credits+20,log:The veteran joins your roster after extraction. Trust is currency, and everyone is short on it.| fail:hp-12,credits-8,log:The rescue fails under heavy pressure. The skyline glows like a wound after dark.
+eventOption:Abandon the call and loot the perimeter => risk:high | tag:betrayal | success:item:salvage satchel,credits+11,log:You skip the rescue and strip the perimeter. Trust is currency, and everyone is short on it.| fail:credits-6,log:Word spreads that you broke contract. Broken cameras still pivot like they remember faces.
 
 @mission
 id:underground_bunker-idle-unlock-1
 label:Idle network contract 1
-desc:Secure route node 1 so handlers can launch automated idle missions in this region.
+desc:Secure route node 1 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:7
 energy:9
@@ -227,15 +227,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:underground_bunker-idle-route-1
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 1 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 1,item:field compass mk1,credits+5,log:The broker certifies node 1 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 1,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 1,item:survey binoculars 1,credits+10,log:You lock node 1 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 1 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 1,item:field compass mk1,credits+5,log:The broker certifies node 1 for reliable idle runs. Static hums through every bad decision.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 1,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 1,item:survey binoculars 1,credits+10,log:You lock node 1 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:underground_bunker-idle-unlock-2
 label:Idle network contract 2
-desc:Secure route node 2 so handlers can launch automated idle missions in this region.
+desc:Secure route node 2 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:8
 energy:10
@@ -243,15 +243,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:underground_bunker-idle-route-2
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 2 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 2,item:field compass mk2,credits+5,log:The broker certifies node 2 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 2,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 2,item:survey binoculars 2,credits+10,log:You lock node 2 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 2 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 2,item:field compass mk2,credits+5,log:The broker certifies node 2 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 2,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 2,item:survey binoculars 2,credits+10,log:You lock node 2 with premium payoff data. Even the quiet sounds engineered.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:underground_bunker-idle-unlock-3
 label:Idle network contract 3
-desc:Secure route node 3 so handlers can launch automated idle missions in this region.
+desc:Secure route node 3 so handlers can launch automated idle missions in this region. Even the quiet sounds engineered.
 risk:medium
 time:9
 energy:11
@@ -259,15 +259,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:underground_bunker-idle-route-3
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 3 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 3,item:field compass mk3,credits+5,log:The broker certifies node 3 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 3,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 3,item:survey binoculars 3,credits+10,log:You lock node 3 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 3 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 3,item:field compass mk3,credits+5,log:The broker certifies node 3 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 3,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 3,item:survey binoculars 3,credits+10,log:You lock node 3 with premium payoff data. Static hums through every bad decision.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:underground_bunker-idle-unlock-4
 label:Idle network contract 4
-desc:Secure route node 4 so handlers can launch automated idle missions in this region.
+desc:Secure route node 4 so handlers can launch automated idle missions in this region. The skyline glows like a wound after dark.
 risk:medium
 time:10
 energy:12
@@ -275,15 +275,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:underground_bunker-idle-route-4
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 4 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 4,item:field compass mk4,credits+5,log:The broker certifies node 4 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 4,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 4,item:survey binoculars 4,credits+10,log:You lock node 4 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 4 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 4,item:field compass mk4,credits+5,log:The broker certifies node 4 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 4,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 4,item:survey binoculars 4,credits+10,log:You lock node 4 with premium payoff data. The skyline glows like a wound after dark.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:underground_bunker-idle-unlock-5
 label:Idle network contract 5
-desc:Secure route node 5 so handlers can launch automated idle missions in this region.
+desc:Secure route node 5 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:medium
 time:11
 energy:13
@@ -291,15 +291,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:underground_bunker-idle-route-5
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 5 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 5,item:field compass mk5,credits+5,log:The broker certifies node 5 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 5,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 5,item:survey binoculars 5,credits+10,log:You lock node 5 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 5 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
+eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 5,item:field compass mk5,credits+5,log:The broker certifies node 5 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 5,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 5,item:survey binoculars 5,credits+10,log:You lock node 5 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:underground_bunker-idle-unlock-6
 label:Idle network contract 6
-desc:Secure route node 6 so handlers can launch automated idle missions in this region.
+desc:Secure route node 6 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
 time:12
 energy:15
@@ -307,15 +307,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:underground_bunker-idle-route-6
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 6 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 6,item:field compass mk6,credits+5,log:The broker certifies node 6 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 6,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 6,item:survey binoculars 6,credits+10,log:You lock node 6 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 6 forks into three lanes: safe, fast, and lucrative. Choose your call. The skyline glows like a wound after dark.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 6,item:field compass mk6,credits+5,log:The broker certifies node 6 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 6,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 6,item:survey binoculars 6,credits+10,log:You lock node 6 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:underground_bunker-idle-unlock-7
 label:Idle network contract 7
-desc:Secure route node 7 so handlers can launch automated idle missions in this region.
+desc:Secure route node 7 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:high
 time:13
 energy:16
@@ -323,15 +323,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:underground_bunker-idle-route-7
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 7 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 7,item:field compass mk7,credits+5,log:The broker certifies node 7 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 7,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 7,item:survey binoculars 7,credits+10,log:You lock node 7 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 7 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 7,item:field compass mk7,credits+5,log:The broker certifies node 7 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 7,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 7,item:survey binoculars 7,credits+10,log:You lock node 7 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:underground_bunker-idle-unlock-8
 label:Idle network contract 8
-desc:Secure route node 8 so handlers can launch automated idle missions in this region.
+desc:Secure route node 8 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
 time:14
 energy:17
@@ -339,15 +339,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:underground_bunker-idle-route-8
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 8 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 8,item:field compass mk8,credits+5,log:The broker certifies node 8 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 8,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 8,item:survey binoculars 8,credits+10,log:You lock node 8 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 8 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 8,item:field compass mk8,credits+5,log:The broker certifies node 8 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 8,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 8,item:survey binoculars 8,credits+10,log:You lock node 8 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:underground_bunker-idle-unlock-9
 label:Idle network contract 9
-desc:Secure route node 9 so handlers can launch automated idle missions in this region.
+desc:Secure route node 9 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
 time:15
 energy:18
@@ -355,15 +355,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:underground_bunker-idle-route-9
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 9 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 9,item:field compass mk9,credits+5,log:The broker certifies node 9 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 9,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 9,item:survey binoculars 9,credits+10,log:You lock node 9 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 9 forks into three lanes: safe, fast, and lucrative. Choose your call. Nobody here mistakes kindness for weakness anymore.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 9,item:field compass mk9,credits+5,log:The broker certifies node 9 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 9,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 9,item:survey binoculars 9,credits+10,log:You lock node 9 with premium payoff data. Trust is currency, and everyone is short on it.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:underground_bunker-idle-unlock-10
 label:Idle network contract 10
-desc:Secure route node 10 so handlers can launch automated idle missions in this region.
+desc:Secure route node 10 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
 time:16
 energy:20
@@ -371,15 +371,15 @@ loot:2
 lootType:dispatch intel
 reward:idle mission unlock
 unlockFlag:underground_bunker-idle-route-10
-event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 10 forks into three lanes: safe, fast, and lucrative. Choose your call.
-eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 10,item:field compass mk10,credits+5,log:The broker certifies node 10 for reliable idle runs. | fail:credits-3,log:The safe lane still collapses this shift.
-eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. | fail:hp-4,log:Rivals clip your retreat.
-eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. | fail:hp-7,credits-4,log:The lucrative lane was trapped.
+event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 10 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
+eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 10,item:field compass mk10,credits+5,log:The broker certifies node 10 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
+eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
+eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
 id:underground-bunker-faction-sweep-1
-title:RMG Liaison Sweep 1
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:RMG Liaison Sweep 1. Even the quiet sounds engineered.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:low
 time:6
 energy:7
@@ -388,13 +388,13 @@ reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
-success:credits+7,log:Your report lands cleanly and RMG trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+7,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground-bunker-faction-sweep-2
-title:AM Liaison Sweep 2
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:AM Liaison Sweep 2. Trust is currency, and everyone is short on it.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:7
 energy:8
@@ -403,13 +403,13 @@ reward:+1 AM relation
 faction:gang
 relationSuccess:1
 relationFail:0
-success:credits+8,log:Your report lands cleanly and AM trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+8,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground-bunker-faction-sweep-3
-title:RMG Liaison Sweep 3
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:RMG Liaison Sweep 3. Static hums through every bad decision.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:8
 energy:9
@@ -418,13 +418,13 @@ reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
-success:credits+9,log:Your report lands cleanly and RMG trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+9,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground-bunker-faction-sweep-4
-title:AM Liaison Sweep 4
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:AM Liaison Sweep 4. The skyline glows like a wound after dark.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:9
 energy:10
@@ -433,13 +433,13 @@ reward:+1 AM relation
 faction:gang
 relationSuccess:1
 relationFail:0
-success:credits+10,log:Your report lands cleanly and AM trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+10,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground-bunker-faction-sweep-5
-title:RMG Liaison Sweep 5
-desc:Deliver route updates and keep corridor watch teams aligned with local survivors.
+title:RMG Liaison Sweep 5. Broken cameras still pivot like they remember faces.
+desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:10
 energy:11
@@ -448,150 +448,150 @@ reward:+1 RMG relation
 faction:military
 relationSuccess:1
 relationFail:0
-success:credits+11,log:Your report lands cleanly and RMG trust ticks up.
-fail:energy-2,log:The contact chain breaks and the crews stay uneasy.
+success:credits+11,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
+fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 # autogenerated expansion missions pack
 @mission
 id:underground_bunker-new-01
 label:Frontline contract 1
-desc:Take on contract 1 to secure routes, salvage intel, and keep the underground bunker network operating.
+desc:Take on contract 1 to secure routes, salvage intel, and keep the underground bunker network operating. The skyline glows like a wound after dark.
 risk:low
 time:7
 energy:8
 loot:1
 reward:sector stabilization
 combatChance:0.15
-success:credits+8,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-2,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+8,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground_bunker-new-02
 label:Frontline contract 2
-desc:Take on contract 2 to secure routes, salvage intel, and keep the underground bunker network operating.
+desc:Take on contract 2 to secure routes, salvage intel, and keep the underground bunker network operating. Broken cameras still pivot like they remember faces.
 risk:medium
 time:8
 energy:9
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals to safety.
-fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal.
+success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground_bunker-new-03
 label:Frontline contract 3
-desc:Take on contract 3 to secure routes, salvage intel, and keep the underground bunker network operating.
+desc:Take on contract 3 to secure routes, salvage intel, and keep the underground bunker network operating. Static hums through every bad decision.
 risk:medium
 time:9
 energy:10
 loot:1
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and a safer lane map.
-fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered.
+success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
 id:underground_bunker-new-04
 label:Frontline contract 4
-desc:Take on contract 4 to secure routes, salvage intel, and keep the underground bunker network operating.
+desc:Take on contract 4 to secure routes, salvage intel, and keep the underground bunker network operating. Even the quiet sounds engineered.
 risk:high
 time:10
 energy:11
 loot:2
 reward:sector stabilization
 combatChance:0.15
-success:credits+14,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-2,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+14,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground_bunker-new-05
 label:Frontline contract 5
-desc:Take on contract 5 to secure routes, salvage intel, and keep the underground bunker network operating.
+desc:Take on contract 5 to secure routes, salvage intel, and keep the underground bunker network operating. Broken cameras still pivot like they remember faces.
 risk:low
 time:11
 energy:12
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+15,hp+3,energy+4,log:You complete the objective and escort locals to safety.
-fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal.
+success:credits+15,hp+3,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground_bunker-new-06
 label:Frontline contract 6
-desc:Take on contract 6 to secure routes, salvage intel, and keep the underground bunker network operating.
+desc:Take on contract 6 to secure routes, salvage intel, and keep the underground bunker network operating. Trust is currency, and everyone is short on it.
 risk:high
 time:12
 energy:13
 loot:2
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and a safer lane map.
-fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered.
+success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
 id:underground_bunker-new-07
 label:Frontline contract 7
-desc:Take on contract 7 to secure routes, salvage intel, and keep the underground bunker network operating.
+desc:Take on contract 7 to secure routes, salvage intel, and keep the underground bunker network operating. Static hums through every bad decision.
 risk:deadly
 time:13
 energy:14
 loot:3
 reward:sector stabilization
 combatChance:0.15
-success:credits+20,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-3,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+20,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-3,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground_bunker-new-08
 label:Frontline contract 8
-desc:Take on contract 8 to secure routes, salvage intel, and keep the underground bunker network operating.
+desc:Take on contract 8 to secure routes, salvage intel, and keep the underground bunker network operating. Static hums through every bad decision.
 risk:medium
 time:14
 energy:15
 loot:1
 reward:escort contract payout
 combatChance:0.15
-success:credits+21,hp+2,energy+4,log:You complete the objective and escort locals to safety.
-fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal.
+success:credits+21,hp+2,energy+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
+fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:underground_bunker-new-09
 label:Frontline contract 9
-desc:Take on contract 9 to secure routes, salvage intel, and keep the underground bunker network operating.
+desc:Take on contract 9 to secure routes, salvage intel, and keep the underground bunker network operating. Nobody here mistakes kindness for weakness anymore.
 risk:low
 time:15
 energy:16
 loot:1
 reward:ops report and survivor favors
 combatChance:0.15
-success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and a safer lane map.
-fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered.
+success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
+fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
 id:underground_bunker-new-10
 label:Frontline contract 10
-desc:Take on contract 10 to secure routes, salvage intel, and keep the underground bunker network operating.
+desc:Take on contract 10 to secure routes, salvage intel, and keep the underground bunker network operating. Broken cameras still pivot like they remember faces.
 risk:high
 time:16
 energy:17
 loot:2
 reward:sector stabilization
 combatChance:0.15
-success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials.
-fail:credits-5,rads+3,log:The route is hotter than expected and you retreat.
+success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
+fail:credits-5,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
 id:loot-underground_bunker-retro-salvage
 label:Retro salvage stockpile
-desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones.
+desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones. The skyline glows like a wound after dark.
 risk:high
 time:15
 energy:18
 loot:8
 lootType:retro cache trove
-event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run?
-eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:underground-bunker cram tin,item:underground-bunker blamco mac can,item:underground-bunker sunset fizz bottle,item:underground-bunker dusty nuka cola,item:underground-bunker instamash pouch,item:underground-bunker preserved pie slice,item:underground-bunker sugar bombs box,item:underground-bunker fancy lad snack cake,item:underground-bunker old world coffee tin,item:underground-bunker molded iguana bits,item:underground-bunker military ration slab,item:underground-bunker dehydrated mutfruit brick,item:underground-bunker vault jerky strip,item:underground-bunker stale gum drops,item:underground-bunker salisbury steak tray,item:underground-bunker cold pork n beans can,item:underground-bunker combat helmet liner,item:underground-bunker flak web harness,item:underground-bunker service rifle stock,item:underground-bunker pipe rifle receiver,item:underground-bunker riot control visor,item:underground-bunker trench shovel blade,item:underground-bunker bayonet training sheath,item:underground-bunker war map tube,item:underground-bunker fatigue field jacket,item:underground-bunker army canteen shell,item:underground-bunker dog tag bundle,item:underground-bunker entrenching tool head,item:underground-bunker laser musket coil,item:underground-bunker handmade shotgun frame,item:underground-bunker atom-age pulse pistol,item:underground-bunker retro raygun grip,item:underground-bunker vacuum tube scope,item:underground-bunker mr handy actuator,item:underground-bunker fusion battery shell,item:underground-bunker plasma torch nozzle,item:underground-bunker geiger wristwatch,item:underground-bunker pip-dial circuit board,item:underground-bunker rocket car lunchbox,item:underground-bunker chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. | fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers.
-eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:underground-bunker cram tin,item:underground-bunker blamco mac can,item:underground-bunker sunset fizz bottle,item:underground-bunker dusty nuka cola,item:underground-bunker instamash pouch,item:underground-bunker preserved pie slice,item:underground-bunker sugar bombs box,item:underground-bunker fancy lad snack cake,item:underground-bunker old world coffee tin,item:underground-bunker molded iguana bits,item:underground-bunker military ration slab,item:underground-bunker dehydrated mutfruit brick,item:underground-bunker vault jerky strip,item:underground-bunker stale gum drops,item:underground-bunker salisbury steak tray,item:underground-bunker cold pork n beans can,item:underground-bunker combat helmet liner,item:underground-bunker flak web harness,item:underground-bunker service rifle stock,item:underground-bunker pipe rifle receiver,item:underground-bunker riot control visor,item:underground-bunker trench shovel blade,item:underground-bunker bayonet training sheath,item:underground-bunker war map tube,item:underground-bunker fatigue field jacket,item:underground-bunker army canteen shell,item:underground-bunker dog tag bundle,item:underground-bunker entrenching tool head,item:underground-bunker laser musket coil,item:underground-bunker handmade shotgun frame,item:underground-bunker atom-age pulse pistol,item:underground-bunker retro raygun grip,item:underground-bunker vacuum tube scope,item:underground-bunker mr handy actuator,item:underground-bunker fusion battery shell,item:underground-bunker plasma torch nozzle,item:underground-bunker geiger wristwatch,item:underground-bunker pip-dial circuit board,item:underground-bunker rocket car lunchbox,item:underground-bunker chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. | fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat.
+event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run? Nobody here mistakes kindness for weakness anymore.
+eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:underground-bunker cram tin,item:underground-bunker blamco mac can,item:underground-bunker sunset fizz bottle,item:underground-bunker dusty nuka cola,item:underground-bunker instamash pouch,item:underground-bunker preserved pie slice,item:underground-bunker sugar bombs box,item:underground-bunker fancy lad snack cake,item:underground-bunker old world coffee tin,item:underground-bunker molded iguana bits,item:underground-bunker military ration slab,item:underground-bunker dehydrated mutfruit brick,item:underground-bunker vault jerky strip,item:underground-bunker stale gum drops,item:underground-bunker salisbury steak tray,item:underground-bunker cold pork n beans can,item:underground-bunker combat helmet liner,item:underground-bunker flak web harness,item:underground-bunker service rifle stock,item:underground-bunker pipe rifle receiver,item:underground-bunker riot control visor,item:underground-bunker trench shovel blade,item:underground-bunker bayonet training sheath,item:underground-bunker war map tube,item:underground-bunker fatigue field jacket,item:underground-bunker army canteen shell,item:underground-bunker dog tag bundle,item:underground-bunker entrenching tool head,item:underground-bunker laser musket coil,item:underground-bunker handmade shotgun frame,item:underground-bunker atom-age pulse pistol,item:underground-bunker retro raygun grip,item:underground-bunker vacuum tube scope,item:underground-bunker mr handy actuator,item:underground-bunker fusion battery shell,item:underground-bunker plasma torch nozzle,item:underground-bunker geiger wristwatch,item:underground-bunker pip-dial circuit board,item:underground-bunker rocket car lunchbox,item:underground-bunker chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
+eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:underground-bunker cram tin,item:underground-bunker blamco mac can,item:underground-bunker sunset fizz bottle,item:underground-bunker dusty nuka cola,item:underground-bunker instamash pouch,item:underground-bunker preserved pie slice,item:underground-bunker sugar bombs box,item:underground-bunker fancy lad snack cake,item:underground-bunker old world coffee tin,item:underground-bunker molded iguana bits,item:underground-bunker military ration slab,item:underground-bunker dehydrated mutfruit brick,item:underground-bunker vault jerky strip,item:underground-bunker stale gum drops,item:underground-bunker salisbury steak tray,item:underground-bunker cold pork n beans can,item:underground-bunker combat helmet liner,item:underground-bunker flak web harness,item:underground-bunker service rifle stock,item:underground-bunker pipe rifle receiver,item:underground-bunker riot control visor,item:underground-bunker trench shovel blade,item:underground-bunker bayonet training sheath,item:underground-bunker war map tube,item:underground-bunker fatigue field jacket,item:underground-bunker army canteen shell,item:underground-bunker dog tag bundle,item:underground-bunker entrenching tool head,item:underground-bunker laser musket coil,item:underground-bunker handmade shotgun frame,item:underground-bunker atom-age pulse pistol,item:underground-bunker retro raygun grip,item:underground-bunker vacuum tube scope,item:underground-bunker mr handy actuator,item:underground-bunker fusion battery shell,item:underground-bunker plasma torch nozzle,item:underground-bunker geiger wristwatch,item:underground-bunker pip-dial circuit board,item:underground-bunker rocket car lunchbox,item:underground-bunker chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
 
