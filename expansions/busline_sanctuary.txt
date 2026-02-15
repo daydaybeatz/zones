@@ -1,6 +1,6 @@
 @expansion
 id:abandoned_school_bus_safehouse
-name:Busline Sanctuary
+name:Busline Sanctuary - Safe House
 summary:An armored bus-yard settlement held together by teachers, mechanics, and kids who learned survival before childhood.
 unlockCost:30
 unlockResource:scrap

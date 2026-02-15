@@ -2,7 +2,7 @@
   "expansions": [
     {
       "id": "safehouse",
-      "name": "Wastelander: The Last Lantern",
+      "name": "Bunker Town - Safe House",
       "file": "expansions/last_lantern.txt"
     },
     {
@@ -57,12 +57,12 @@
     },
     {
       "id": "refurbished_cave_hideaway",
-      "name": "Ember Cavern Enclave",
+      "name": "Ember Cavern Enclave - Safe House",
       "file": "expansions/ember_cavern_enclave.txt"
     },
     {
       "id": "abandoned_school_bus_safehouse",
-      "name": "Busline Sanctuary",
+      "name": "Busline Sanctuary - Safe House",
       "file": "expansions/busline_sanctuary.txt"
     }
   ]

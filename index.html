@@ -2071,9 +2071,14 @@
       'handgun ammo':{type:'ammo',rarity:'common',value:6,stackable:true},
       'rifle ammo':{type:'ammo',rarity:'common',value:7,stackable:true},
       'shotgun ammo':{type:'ammo',rarity:'uncommon',value:9,stackable:true},
+      'smg ammo':{type:'ammo',rarity:'uncommon',value:8,stackable:true},
+      'magnum rounds':{type:'ammo',rarity:'rare',value:11,stackable:true},
       'field handgun':{type:'weapon',slot:'weapon',rarity:'rare',value:52,mods:{combatBonus:11},ammoType:'handgun ammo'},
       'frontier rifle':{type:'weapon',slot:'weapon',rarity:'rare',value:60,mods:{combatBonus:12},ammoType:'rifle ammo'},
       'breach shotgun':{type:'weapon',slot:'weapon',rarity:'epic',value:74,mods:{combatBonus:13},ammoType:'shotgun ammo'},
+      'tunnel SMG':{type:'weapon',slot:'weapon',rarity:'rare',value:58,mods:{combatBonus:11,stealthBonus:0.04},ammoType:'smg ammo'},
+      'marshal carbine':{type:'weapon',slot:'weapon',rarity:'epic',value:78,mods:{combatBonus:14,riskMod:-0.03},ammoType:'rifle ammo'},
+      'hand cannon':{type:'weapon',slot:'weapon',rarity:'epic',value:84,mods:{combatBonus:15},ammoType:'magnum rounds'},
       'surplus crate (basic)':{type:'crate',rarity:'common',value:15,crateTier:1,crateMin:3,crateMax:5,crateRisk:'low',crateBonus:0.01},
       'surplus crate (standard)':{type:'crate',rarity:'uncommon',value:30,crateTier:2,crateMin:4,crateMax:6,crateRisk:'medium',crateBonus:0.05},
       'surplus crate (premium)':{type:'crate',rarity:'rare',value:50,crateTier:3,crateMin:5,crateMax:7,crateRisk:'high',crateBonus:0.1},
@@ -2266,6 +2271,14 @@
       'restful mask':{type:'armor',slot:'helmet',rarity:'uncommon',value:15,mods:{energyBonus:2,insulation:0.2}},
       'training weights':{type:'tool',slot:'tool',rarity:'rare',value:28,mods:{energyBonus:3}},
 
+      'filtration membrane core':{type:'tool',slot:'tool',rarity:'epic',value:64,mods:{raidSpeed:0.05,techBonus:0.04}},
+      'ion pump governor':{type:'tool',slot:'tool',rarity:'epic',value:66,mods:{raidSpeed:0.06,energyRegen:1}},
+      'silver catalyst mesh':{type:'tool',slot:'tool',rarity:'epic',value:68,mods:{raidSpeed:0.07,lootBonus:0.03}},
+      'uv purifier tube':{type:'tool',slot:'tool',rarity:'epic',value:62,mods:{raidSpeed:0.05,riskMod:-0.02}},
+      'ceramic prefilter stack':{type:'tool',slot:'tool',rarity:'epic',value:60,mods:{raidSpeed:0.05,techBonus:0.03}},
+      'rapid rig harness':{type:'armor',slot:'backpack',rarity:'epic',value:72,mods:{carryBonus:10,raidSpeed:0.14,stealthBonus:0.03}},
+      'field tempo injectors':{type:'tool',slot:'tool',rarity:'epic',value:70,mods:{raidSpeed:0.16,energyBonus:2}},
+
       /* specialist mission gear */
       'folding binoculars':{type:'tool',slot:'eyewear',rarity:'uncommon',value:20,mods:{stealthBonus:0.03,riskMod:-0.02}},
       'long-range binoculars':{type:'tool',slot:'eyewear',rarity:'rare',value:36,mods:{stealthBonus:0.06,riskMod:-0.03}},
@@ -2312,8 +2325,8 @@
     };
 
     const LOOT_BY_RARITY={
-      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','pocket pack','jury-rigged blade','handgun ammo','rifle ammo','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape','bunker stew pouch','tinned beans','stale biscuits','moth-eaten scarf','bunker fatigues','mess hall apron','locker prybar','mall snack pack','instant noodles','citrus soda','sale-day hoodie','glass shard shiv','gang patchwork pants','antiseptic wipes','cooling compress','scrub jacket','bunk blanket','safehouse slippers','galley kit','homebrew stew','clean canteen','brine crackers','salted stew pouch','slag shard','static fruit bar','storm seal gaskets','synth-berry pack','grapnel spool','camo tarp','route chalk'],
-      uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack','canteen tablets','barracks coffee','reinforced gloves','service wrench','flashline map','security poncho','store runner shoes','queue jacket','loading hook','kiosk toolkit','spark kiosk battery','rail spike mace','trackside vest','metro runner boots','torchlight lantern','coin string','rail map rig','scrapper mask','barter satchel','response harness','facility boots','clearance gloves','access scanner','containment seal kit','sterile gloves','triage boots','medic satchel','triage lamp','pain suppressant','hydration drip','workshop apron','tool roll','quiet radio','spare belt rig','comfort liner','restful mask','smokehouse ration','sealed citrus tonic','burn salve','pressure-seal gloves','slagline boots','pressure gauge kit','reclaimer hook','refinery alloy ingot','coolant canister','stormglass canteen','ozone jerky','ionized brew','shockwrap bandage','shotgun ammo','arcthread gloves','signal anchor','stormglass shard','ion circuit puck','riftwater flask','chrono ration','drift moss tea','nullfield filament','vacuum seal ring','folding binoculars','survey binoculars','climbing hook','rangefinder monocle','ghillie wrap','silent boots','wire-cutter kit','rope ladder','suppressed ammo','signal mirror'],
+      common:['bandage','ration bar','water flask','scrap wiring','scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','rusty flashlight','cargo pants','field rations','water canister','copper wire','ember ration','pocket pack','jury-rigged blade','handgun ammo','rifle ammo','smg ammo','iron ward seals','tarpaulin roll','lantern oil','thermal wrap','riot-line tape','bunker stew pouch','tinned beans','stale biscuits','moth-eaten scarf','bunker fatigues','mess hall apron','locker prybar','mall snack pack','instant noodles','citrus soda','sale-day hoodie','glass shard shiv','gang patchwork pants','antiseptic wipes','cooling compress','scrub jacket','bunk blanket','safehouse slippers','galley kit','homebrew stew','clean canteen','brine crackers','salted stew pouch','slag shard','static fruit bar','storm seal gaskets','synth-berry pack','grapnel spool','camo tarp','route chalk'],
+      uncommon:['flare','patch kit','patch-kit','old coin','spark tonic','utility coat','field backpack','coil battery','spare filter','scavenger boots','underground map','signal wristband','flare paint','foam canister','scavenger harness','hardened canteen','shock gel','salvage tote','scout daypack','scrap spear','compact medkit','filtered water pack','ledger-etched compass','clocktower chime','bunker schematics','stabilizer brace','cache latch','spore lantern','rad moss poultice','hardened bark plate','signal flare rack','bridge-runner pack','canteen tablets','barracks coffee','reinforced gloves','service wrench','flashline map','security poncho','store runner shoes','queue jacket','loading hook','kiosk toolkit','spark kiosk battery','rail spike mace','trackside vest','metro runner boots','torchlight lantern','coin string','rail map rig','scrapper mask','barter satchel','response harness','facility boots','clearance gloves','access scanner','containment seal kit','sterile gloves','triage boots','medic satchel','triage lamp','pain suppressant','hydration drip','workshop apron','tool roll','quiet radio','spare belt rig','comfort liner','restful mask','smokehouse ration','sealed citrus tonic','burn salve','pressure-seal gloves','slagline boots','pressure gauge kit','reclaimer hook','refinery alloy ingot','coolant canister','stormglass canteen','ozone jerky','ionized brew','shockwrap bandage','shotgun ammo','smg ammo','magnum rounds','arcthread gloves','signal anchor','stormglass shard','ion circuit puck','riftwater flask','chrono ration','drift moss tea','nullfield filament','vacuum seal ring','folding binoculars','survey binoculars','climbing hook','rangefinder monocle','ghillie wrap','silent boots','wire-cutter kit','rope ladder','suppressed ammo','signal mirror'],
       rare:['microcell','lockbox key','manager room key','storage room key','security supply room key','director armory key','bunker armory key','relay crystal','rigged backpack','exo brace','reactor shard','data cartridge','riot shield','flashbang','limited hoodie','stun baton','mystery supply','salvaged tech','overclock chip','insulated cloak','signal jammer','viral clip drive','expedition frame pack','pipe rifle','field handgun','frontier rifle','market shock knife','monsoon canteen','feral talon','floodgate keycard','arc pistol','anti-rad serum','power coupler','shanty revolver','signal jammer coil','turnstile shield','graffiti cloak','black market battery','security visor','tactical comms rig','hazmat undersuit','pulse baton','secure datapad','command bracer','nutri-gel pack','clinic IV pack','antiviral vial','portable scanner','biofilter mask','recovery tonic','generator capacitor','training weights','antitoxin vial','refinery slickcoat','ventmaster hood','torque cleaver','hydraulic spike','scavenge beacon','idle relay tuner','compressed coil','stormglass rapier','citadel pauldrons','stormguard greaves','visor of echoes','phase relay kit','breach timer','lightning ward charm','capacitor lattice','focus serum','nano-restore kit','rift stabilizer shot','phase-woven boots','singularity gauntlets','horizon visor','inertial dampener','anomaly scanner','rift crystal splinter','gravity lens','long-range binoculars','reinforced climbing hook','stealth suit','sniper rifle','camo veil','tripod stabilizer','thermal scope','decoy projector','infiltrator gloves','night optics','sensor jammer','latch bypass key','elevated harness'],
       epic:['drone core','shock carbine','thundercoil rifle','breach shotgun','quantum mesh cloak','graviton glaive','particle repeater','temporal compass','dispatch accelerator','stealth suit mk2','suppressed sniper rifle'],
       legendary:['fusion core shard','scrapboss helm','warlord helm','safehouse warden coat','facility command badge','riot jacket','warden longcoat']
@@ -2650,7 +2663,7 @@
     };
     const expansions={};
     const EXPANSION_MANIFEST=[
-      {id:'safehouse',name:'Wastelander: The Last Lantern',file:'expansions/last_lantern.txt'},
+      {id:'safehouse',name:'Bunker Town - Safe House',file:'expansions/last_lantern.txt'},
       {id:'underground_bunker',name:'Vaultline Catacombs',file:'expansions/vaultline_catacombs.txt'},
       {id:'metro_ganglands',name:'Neon Gutline',file:'expansions/neon_gutline.txt'},
       {id:'abernathy_holdout',name:'Abernathy Redoubt',file:'expansions/abernathy_redoubt.txt'},
@@ -2661,8 +2674,8 @@
       {id:'sunken_refinery',name:'Drowned Furnace Works',file:'expansions/drowned_furnace_works.txt'},
       {id:'stormglass_citadel',name:'Stormglass Bastion',file:'expansions/stormglass_bastion.txt'},
       {id:'rift_complex',name:'The Riftworks',file:'expansions/riftworks.txt'},
-      {id:'refurbished_cave_hideaway',name:'Ember Cavern Enclave',file:'expansions/ember_cavern_enclave.txt'},
-      {id:'abandoned_school_bus_safehouse',name:'Busline Sanctuary',file:'expansions/busline_sanctuary.txt'}
+      {id:'refurbished_cave_hideaway',name:'Ember Cavern Enclave - Safe House',file:'expansions/ember_cavern_enclave.txt'},
+      {id:'abandoned_school_bus_safehouse',name:'Busline Sanctuary - Safe House',file:'expansions/busline_sanctuary.txt'}
     ];
     let travelDistanceMap=new Map();
     const initializeTravelDistances=(manifest=EXPANSION_MANIFEST)=>{
@@ -3993,7 +4006,8 @@ once:true`
       {id:'tunnel-relay',label:'Relay salvage sweep',desc:'Bunker scouts recover salvage and food from the old tunnels.',duration:4,cost:{credits:10,scrap:1},reward:'item:ration bar,item:cloth scraps,credits+6',unlockFlag:'bunker-telecom-2',xp:10,secretUnlockFlag:'secret-bunker-mission',secretZoneId:'underground_bunker'},
       {id:'refinery-pressure-run',label:'Refinery pressure run',desc:'Refinery crews escort pressurized salvage and sealed rations.',duration:5,cost:{credits:18,scrap:2},reward:'item:smokehouse ration,item:refinery alloy ingot,credits+10',unlockFlag:'refinery-telecom-2',xp:14,secretUnlockFlag:'secret-refinery-mission',secretZoneId:'sunken_refinery'},
       {id:'citadel-resonance',label:'Citadel resonance patrol',desc:'Citadel operatives recover stormglass stock and arc-powered supplies.',duration:5,cost:{credits:22,scrap:2},reward:'item:stormglass shard,item:ionized brew,credits+14',unlockFlag:'citadel-telecom-2',xp:16,secretUnlockFlag:'secret-citadel-mission',secretZoneId:'stormglass_citadel'},
-      {id:'rift-calibration',label:'Rift calibration sweep',desc:'Rift technicians secure anomaly samples and rare provisions.',duration:6,cost:{credits:26,scrap:3},reward:'item:riftwater flask,item:rift crystal splinter,credits+18',unlockFlag:'rift-telecom-2',xp:18,secretUnlockFlag:'secret-rift-mission',secretZoneId:'rift_complex'}
+      {id:'rift-calibration',label:'Rift calibration sweep',desc:'Rift technicians secure anomaly samples and rare provisions.',duration:6,cost:{credits:26,scrap:3},reward:'item:riftwater flask,item:rift crystal splinter,credits+18',unlockFlag:'rift-telecom-2',xp:18,secretUnlockFlag:'secret-rift-mission',secretZoneId:'rift_complex'},
+      {id:'water-filtration-cycles',label:'Water filtration cycle run',desc:'Now that the bunker purifier is repaired, teams bottle clean reserves on a repeating route.',duration:5,cost:{credits:14,scrap:1},reward:'item:filtered water pack,item:water canister,item:water canister,item:water canister,credits+12',unlockFlag:'safehouse-water-filter-fixed',xp:20}
     ];
 
     const IDLE_DURATION_MULTIPLIER=1;
@@ -4034,6 +4048,8 @@ once:true`
         {id:'handgun ammo',cost:8,tag:'Ammo'},
         {id:'rifle ammo',cost:9,tag:'Ammo'},
         {id:'shotgun ammo',cost:11,tag:'Ammo'},
+        {id:'smg ammo',cost:10,tag:'Ammo'},
+        {id:'magnum rounds',cost:13,tag:'Ammo'},
         {id:'surplus crate (basic)',cost:15,tag:'Crate'},
         {id:'surplus crate (standard)',cost:30,tag:'Crate'},
         {id:'surplus crate (premium)',cost:50,tag:'Crate'},
@@ -4088,6 +4104,7 @@ once:true`
         {id:'bandage',cost:12,tag:'Medical'},
         {id:'handgun ammo',cost:10,tag:'Ammo'},
         {id:'rifle ammo',cost:12,tag:'Ammo'},
+        {id:'smg ammo',cost:11,tag:'Ammo'},
         {id:'utility coat',cost:38,tag:'Uniform'},
         {id:'riot-line tape',cost:18,tag:'Gear'},
         {id:'thermal wrap',cost:24,tag:'Warmth'},
@@ -4112,6 +4129,8 @@ once:true`
       {id:'handgun ammo',cost:8,tag:'Ammo'},
       {id:'rifle ammo',cost:9,tag:'Ammo'},
       {id:'shotgun ammo',cost:11,tag:'Ammo'},
+      {id:'smg ammo',cost:10,tag:'Ammo'},
+      {id:'magnum rounds',cost:13,tag:'Ammo'},
       {id:'surplus crate (basic)',cost:15,tag:'Crate'},
       {id:'surplus crate (standard)',cost:30,tag:'Crate'},
       {id:'surplus crate (premium)',cost:50,tag:'Crate'},
@@ -4547,7 +4566,7 @@ once:true`
     const GRID_PAGE_SIZE=18;
     const STACK_LIMIT=25;
     const STACKABLE_CHUNK_RANGE={min:5,max:20};
-    const STACKABLE_ITEMS=new Set(['scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','scrap wiring','copper wire','handgun ammo','rifle ammo','shotgun ammo']);
+    const STACKABLE_ITEMS=new Set(['scrap bundle','wire spool','cloth scraps','plastic shards','electronics bits','scrap wiring','copper wire','handgun ammo','rifle ammo','shotgun ammo','smg ammo','magnum rounds']);
     const isStackable=(id)=>STACKABLE_ITEMS.has(id);
     const getItemCount=(arr,id)=>arr.reduce((acc,item)=>acc+(item===id?1:0),0);
     const slotUsageFor=(id,count)=>isStackable(id)?Math.ceil(count/STACK_LIMIT):count;
@@ -7476,8 +7495,8 @@ once:true`
         eventBox.appendChild(prompt);
         const options=document.createElement('div');
         options.className='event-options';
-        const visibleOptions=(event?.options || []).filter(option=>!option.requiresSkill || hasLearnedSkill(option.requiresSkill));
-        visibleOptions.forEach(option=>{
+        const allOptions=(event?.options || []);
+        allOptions.forEach(option=>{
           const optionWrap=document.createElement('div');
           optionWrap.className='event-option';
           const btn=document.createElement('button');
@@ -7485,6 +7504,10 @@ once:true`
           const successPct=Math.round(chance*100);
           const modPct=Math.round((tagMod+bonus)*100);
           const routeTag=option.routeLabel ? ` · ${option.routeLabel}` : '';
+          const missing=getMissingEventItems(option);
+          const skillLocked=Boolean(option.requiresSkill && !hasLearnedSkill(option.requiresSkill));
+          const hardLocked=skillLocked || missing.length>0;
+          btn.disabled=hardLocked;
           btn.innerHTML=`<span>${option.label}${routeTag}</span><span>${successPct}%</span>`;
           btn.onclick=()=>resolveMissionEventOption(option);
           optionWrap.appendChild(btn);
@@ -7495,11 +7518,13 @@ once:true`
           const modText=modPct>0 ? `Gear boost +${modPct}%` : 'No gear boost';
           const requiresText=option.requires?.length ? ` Requires: ${option.requires.join(', ')}.` : '';
           const missingText=missing.length ? ` Missing: ${missing.join(', ')}.` : '';
-          details.textContent=`${modText}.${requiresText}${missingText} Success: ${successText || 'no extra effects'}. Fail: ${failText || 'no extra effects'}.`;
+          const skillText=skillLocked ? ` Requires skill: ${getSkillDef(option.requiresSkill).label}.` : '';
+          const lockText=hardLocked ? ' This option currently soft-locks mission progress until requirements are met.' : '';
+          details.textContent=`${modText}.${requiresText}${missingText}${skillText}${lockText} Success: ${successText || 'no extra effects'}. Fail: ${failText || 'no extra effects'}.`;
           optionWrap.appendChild(details);
           options.appendChild(optionWrap);
         });
-        if(!visibleOptions.length){
+        if(!allOptions.length){
           const locked=document.createElement('div');
           locked.className='small';
           locked.textContent='No available routes for this event. Learn more abilities in training missions.';
@@ -9157,6 +9182,7 @@ once:true`
         expansion.meta.id=meta.id || expansion.meta.id;
         expansion.meta.name=meta.name || expansion.meta.name || meta.id;
         addProceduralMissions(expansion);
+        stylizeMissionText(expansion);
         expansions[expansion.meta.id]=expansion;
         addDoor(expansion);
         expansionsLoaded+=1;
@@ -9168,6 +9194,7 @@ once:true`
           expansion.meta.id=meta.id || expansion.meta.id;
           expansion.meta.name=meta.name || expansion.meta.name || meta.id;
           addProceduralMissions(expansion);
+          stylizeMissionText(expansion);
           expansions[expansion.meta.id]=expansion;
           addDoor(expansion);
           expansionsLoaded+=1;
@@ -9442,7 +9469,7 @@ once:true`
       const segments=str.split('|').map(s=>s.trim()).filter(Boolean);
       const [labelPart,...rest]=segments;
       const [label]=labelPart.split('=>').map(s=>s&&s.trim());
-      const opt={label:label||'Take action',risk:'medium',tag:'',success:'',fail:'',reward:'',bonus:0,requiresSkill:'',routeLabel:''};
+      const opt={label:label||'Take action',risk:'medium',tag:'',success:'',fail:'',reward:'',bonus:0,requiresSkill:'',routeLabel:'',requires:[],consumeRequired:false,route:'',ending:''};
       rest.forEach(seg=>{
         const [k,vRaw]=seg.split(':');
         const v=vRaw?.trim();
@@ -9455,7 +9482,14 @@ once:true`
         else if(key==='reward') opt.reward=v;
         else if(key==='bonus') opt.bonus=Number(v||0);
         else if(key==='requiresskill' || key==='skill') opt.requiresSkill=v;
-        else if(key==='route' || key==='routelabel') opt.routeLabel=v;
+        else if(key==='requires') opt.requires=v ? v.split(',').map(item=>item.trim()).filter(Boolean) : [];
+        else if(key==='consumerequired') opt.consumeRequired=v === 'true';
+        else if(key==='route'){
+          opt.route=v;
+          if(!opt.routeLabel) opt.routeLabel=v;
+        }
+        else if(key==='routelabel') opt.routeLabel=v;
+        else if(key==='ending') opt.ending=v;
       });
       return opt;
     }
@@ -9586,6 +9620,39 @@ once:true`
       return exp;
     }
 
+
+    const CONTRACT_CALLSIGNS=['Ashfall','Nightglass','Mercy Line','Salt Vein','Iron Echo','Static Dawn','Cinder Trace','Lumen Debt','Pale Signal','Blackwater'];
+    const CONTRACT_THEMES=[
+      'escort a witness tied to old regime crimes',
+      'recover a family heirloom before raiders torch it',
+      'smuggle medicine past checkpoint extortionists',
+      'choose between paying a gang truce or backing a worker strike',
+      'decide whether to expose a corrupt quartermaster',
+      'extract a mechanic who knows telecom override codes',
+      'secure ammunition for civilian defenders',
+      'trace missing water caravans and their saboteur',
+      'broker peace between rival scav crews',
+      'hunt a blackout killer stalking night shifts'
+    ];
+    function stylizeMissionText(exp){
+      if(!exp || !Array.isArray(exp.missions)) return;
+      const zoneName=exp.meta?.name || exp.meta?.id || 'the zone';
+      exp.missions.forEach((mission,idx)=>{
+        const label=String(mission.label || '').trim();
+        const desc=String(mission.desc || '').trim();
+        const explicitMatch=label.match(/^(Idle network contract|Frontline contract)\s*(\d+)$/i);
+        const looseMatch=label.match(/contract\s*(\d+)$/i);
+        const genericDesc=/^Take on contract\s+\d+/i.test(desc) || /Run the route for precise rewards/i.test(desc);
+        if(explicitMatch || looseMatch || genericDesc){
+          const n=Number(explicitMatch?.[2] || looseMatch?.[1] || (idx+1));
+          const callsign=CONTRACT_CALLSIGNS[(n-1)%CONTRACT_CALLSIGNS.length];
+          const theme=CONTRACT_THEMES[(n-1)%CONTRACT_THEMES.length];
+          const isIdle=/idle network contract/i.test(label);
+          mission.label=isIdle ? `Dispatch ${callsign}: ${zoneName}` : `Operation ${callsign}: ${zoneName}`;
+          mission.desc=`Handlers in ${zoneName} assign this run to ${theme}. Your call shapes who survives and who remembers.`;
+        }
+      });
+    }
 
     const PROCEDURAL_SKILL_MISSIONS=[
       'lockpicking','pickpocketing','hacking','knot_tying','swimming','fist_fighting','medicine','negotiation','infiltration','scavenging','marksmanship','engineering','tracking','climbing','persuasion'

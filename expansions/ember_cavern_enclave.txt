@@ -1,6 +1,6 @@
 @expansion
 id:refurbished_cave_hideaway
-name:Ember Cavern Enclave
+name:Ember Cavern Enclave - Safe House
 summary:A hidden cave refuge rebuilt by outcasts who trade silence, shelter, and specialized craftwork to trusted crews only.
 unlockCost:15
 unlockResource:scrap
