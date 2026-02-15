@@ -907,6 +907,10 @@
   .character-tone-positive{color:#7dff96;}
   .character-tone-warning{color:#ffd274;}
   .character-tone-danger{color:#ff8ca1;}
+  .character-skill-section{margin-top:12px; border-top:1px dashed var(--border); padding-top:10px;}
+  .character-skill-title{font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:rgba(184,255,207,0.78); margin-bottom:8px;}
+  .character-skill-list{display:flex; flex-wrap:wrap; gap:6px;}
+  .skill-chip{display:inline-flex; align-items:center; gap:6px; font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid currentColor; background:rgba(0,0,0,0.35);}
 
   /* LOG/TERMINAL BOX */
   .log{
@@ -1516,6 +1520,12 @@
     ];
     const ELDER_ADVICE=[
       'Keep one energy bar in reserve; emergency actions cost more than you think.',
+      'Hollowmarket Sprawl pays extra for wire spool, plastic shards, and electronics bits; buy low in Safe House, sell high in the mall bazaar.',
+      'Grey Mercy Clinic traders overpay for bandage, antiseptic wipes, and filtered water pack during outbreak weeks.',
+      'Neon Gutline kiosks burn through copper wire and scrap wiring—arrive with bundles and leave with credits.',
+      'Stormglass Bastion pays top coin for coolant canister and pressure gauge kit after ion storms.',
+      'Drowned Furnace Works buys thermal wrap and burn salve at a premium when vents run hot.',
+      'Crown Authority Blacksite quartermasters quietly purchase handgun ammo and wire spool for patrol kits.',
       'Scrap weighs less than credits, but credits open gates.',
       'After a rough run, rest before the next push; fatigue stacks faster than you think.',
       'Energy recovery is quicker when you stop in safe zones.',
@@ -1651,6 +1661,7 @@
       statusBoardExpanded:true,
       idleOpsScreen:'dispatch',
       mapView:{zoom:1,panX:0,panY:0},
+      learnedSkills:[],
       characterStats:{missionsCompleted:0,missionsFailed:0,moraleGood:0,moraleBad:0,timesKnockedOut:0,peopleKilled:0},
       pausedAt:null,
       lastHungerDamageAt:null,
@@ -1824,8 +1835,9 @@
       merged.idleOpsScreen=merged.idleOpsScreen==='character' ? 'character' : 'dispatch';
       merged.mapView={...base.mapView,...(saved.mapView||{})};
       merged.mapView.zoom=clamp(Number(merged.mapView.zoom)||1,1,1.5);
-      merged.mapView.panX=clamp(Number(merged.mapView.panX)||0,-110,110);
-      merged.mapView.panY=clamp(Number(merged.mapView.panY)||0,-70,70);
+      merged.mapView.panX=clamp(Number(merged.mapView.panX)||0,-260,260);
+      merged.mapView.panY=clamp(Number(merged.mapView.panY)||0,-180,180);
+      merged.learnedSkills=Array.isArray(merged.learnedSkills) ? merged.learnedSkills.filter(Boolean) : [];
       merged.characterStats={...base.characterStats,...(saved.characterStats||{})};
       if(!merged.flags.has('safehouse-funds-offer') && !merged.flags.has('safehouse-funds-complete')){
         merged.flags.add('safehouse-funds-offer');
@@ -2336,7 +2348,7 @@
     const riskClassList=['risk-low','risk-medium','risk-high','risk-deadly'];
     const riskColorMap={low:'#39ff14',medium:'#ffb000',high:'#ff6a00',deadly:'#ff0033'};
     const MISSION_OFFER_VISIBLE=5;
-    const MISSION_OFFER_RESERVE=5;
+    const MISSION_OFFER_RESERVE=95;
     const lowerRisk=(risk)=>{
       const idx=riskLevels.indexOf(risk);
       if(idx<=0) return riskLevels[0];
@@ -2385,6 +2397,35 @@
       return faction?.fullName || faction?.label || factionId || 'Unknown faction';
     };
     const getFactionRelation=(factionId)=>Number(state.factions?.[factionId] ?? 0);
+    const SKILL_DEFS={
+      lockpicking:{id:'lockpicking',label:'Lockpicking',color:'#7dd3fc'},
+      pickpocketing:{id:'pickpocketing',label:'Pickpocketing',color:'#fde68a'},
+      hacking:{id:'hacking',label:'Hacking',color:'#a7f3d0'},
+      knot_tying:{id:'knot_tying',label:'Knot tying',color:'#fdba74'},
+      swimming:{id:'swimming',label:'Swimming',color:'#93c5fd'},
+      fist_fighting:{id:'fist_fighting',label:'Fist fighting',color:'#fca5a5'},
+      medicine:{id:'medicine',label:'Field medicine',color:'#86efac'},
+      negotiation:{id:'negotiation',label:'Negotiation',color:'#f9a8d4'},
+      infiltration:{id:'infiltration',label:'Infiltration',color:'#c4b5fd'},
+      scavenging:{id:'scavenging',label:'Advanced scavenging',color:'#bef264'},
+      marksmanship:{id:'marksmanship',label:'Marksmanship',color:'#fcd34d'},
+      engineering:{id:'engineering',label:'Engineering',color:'#67e8f9'},
+      tracking:{id:'tracking',label:'Tracking',color:'#d9f99d'},
+      climbing:{id:'climbing',label:'Climbing',color:'#f5d0fe'},
+      persuasion:{id:'persuasion',label:'Persuasion',color:'#fbcfe8'}
+    };
+    const getSkillDef=(id)=>SKILL_DEFS[id] || {id,label:id,color:'#9dd7ff'};
+    const hasLearnedSkill=(id)=>Boolean(id) && Array.isArray(state.learnedSkills) && state.learnedSkills.includes(id);
+    function learnSkill(skillId,sourceLabel){
+      if(!skillId) return false;
+      if(!Array.isArray(state.learnedSkills)) state.learnedSkills=[];
+      if(state.learnedSkills.includes(skillId)) return false;
+      state.learnedSkills.push(skillId);
+      const skill=getSkillDef(skillId);
+      logMsg(`Skill learned: ${skill.label}${sourceLabel ? ` (${sourceLabel})` : ''}.`);
+      setCodex(`New skill unlocked: ${skill.label}.`);
+      return true;
+    }
     const clampFactionRelation=(value)=>clamp(value,FACTION_RELATION_MIN,FACTION_RELATION_MAX);
     function updateFactionRelation(factionId,delta){
       if(!factionId || !Number.isFinite(delta)) return;
@@ -2450,7 +2491,12 @@
       if(!dom.idleCharacter) return;
       const snippets=getCharacterSnippets();
       const selected=snippets.slice(0,3);
-      dom.idleCharacter.innerHTML=selected.map(snippet=>`<span class="character-report-snippet character-tone-${snippet.tone}">${snippet.text}</span>`).join(' ');
+      const summaryHtml=selected.map(snippet=>`<span class="character-report-snippet character-tone-${snippet.tone}">${snippet.text}</span>`).join(' ');
+      const skills=Array.isArray(state.learnedSkills) ? state.learnedSkills : [];
+      const skillHtml=skills.length
+        ? `<div class="character-skill-list">${skills.map(id=>{const skill=getSkillDef(id); return `<span class="skill-chip" style="color:${skill.color}">${skill.label}</span>`;}).join('')}</div>`
+        : '<div class="small">No learned abilities yet. Complete training contracts to unlock skills.</div>';
+      dom.idleCharacter.innerHTML=`${summaryHtml}<div class="character-skill-section"><div class="character-skill-title">Learned abilities</div>${skillHtml}</div>`;
     }
     const getFactionCombatModifier=(relation)=>{
       if(relation>=FACTION_RELATION_HIGH) return -0.15;
@@ -2579,9 +2625,7 @@
       if(!zoneId || !missionId || !state.missionOffers?.[zoneId]) return;
       const offerState=state.missionOffers[zoneId];
       offerState.ids=(offerState.ids || []).filter(id=>id!==missionId);
-      if(offerState.poolIds?.includes(missionId) && !offerState.reserve?.includes(missionId)){
-        offerState.reserve=[...(offerState.reserve || []),missionId];
-      }
+      offerState.poolIds=(offerState.poolIds || []).filter(id=>id!==missionId);
       offerState.lastCompleted=missionId;
     }
     const getDoorLootScore=(exp)=>{
@@ -7426,16 +7470,16 @@ once:true`
         eventBox.appendChild(prompt);
         const options=document.createElement('div');
         options.className='event-options';
-        (event?.options || []).forEach(option=>{
+        const visibleOptions=(event?.options || []).filter(option=>!option.requiresSkill || hasLearnedSkill(option.requiresSkill));
+        visibleOptions.forEach(option=>{
           const optionWrap=document.createElement('div');
           optionWrap.className='event-option';
           const btn=document.createElement('button');
           const {chance,tagMod,bonus}=getEventOptionSuccessChance(option,raid.risk);
           const successPct=Math.round(chance*100);
           const modPct=Math.round((tagMod+bonus)*100);
-          const missing=getMissingEventItems(option);
-          btn.innerHTML=`<span>${option.label}</span><span>${successPct}%</span>`;
-          btn.disabled=missing.length>0;
+          const routeTag=option.routeLabel ? ` · ${option.routeLabel}` : '';
+          btn.innerHTML=`<span>${option.label}${routeTag}</span><span>${successPct}%</span>`;
           btn.onclick=()=>resolveMissionEventOption(option);
           optionWrap.appendChild(btn);
           const details=document.createElement('div');
@@ -7449,7 +7493,14 @@ once:true`
           optionWrap.appendChild(details);
           options.appendChild(optionWrap);
         });
-        eventBox.appendChild(options);
+        if(!visibleOptions.length){
+          const locked=document.createElement('div');
+          locked.className='small';
+          locked.textContent='No available routes for this event. Learn more abilities in training missions.';
+          eventBox.appendChild(locked);
+        }else{
+          eventBox.appendChild(options);
+        }
         dom.missionActions.appendChild(eventBox);
         return;
       }
@@ -8116,6 +8167,7 @@ once:true`
     const resolveMissionEventOption=(option)=>{
       const mission=state.mission;
       if(!mission?.event?.active || mission.completed) return;
+      if(option.requiresSkill && !hasLearnedSkill(option.requiresSkill)) return;
       const event=mission.event.data || {label:'Raid event'};
       const missing=getMissingEventItems(option);
       if(missing.length){
@@ -8234,6 +8286,13 @@ once:true`
         if(outcome==='success') applyEffects(effects,outcome,{deferItemsTo:rewards});
         else applyEffects(effects,outcome);
         nonItemRewards.push(...parseNonItemRewardLines(effects));
+      }
+      if(outcome==='success' && pending.learnSkill){
+        const learned=learnSkill(pending.learnSkill,pending.label);
+        if(learned){
+          const skill=getSkillDef(pending.learnSkill);
+          nonItemRewards.push({tone:'positive',text:`Skill unlocked: ${skill.label}`});
+        }
       }
       if(outcome==='success' && pending.xpReward){
         awardXp(pending.xpReward,pending.label);
@@ -8926,8 +8985,7 @@ once:true`
         oppositionFactionId:raid.oppositionFaction || null,
         oppositionRelationSuccess:Number.isFinite(raid.oppositionRelationSuccess) ? raid.oppositionRelationSuccess : null,
         oppositionRelationFail:Number.isFinite(raid.oppositionRelationFail) ? raid.oppositionRelationFail : null,
-        route:state.mission.route || '',
-        altEnding:state.mission.altEnding || ''
+        learnSkill:raid.learnSkill || null
       };
       preparePendingResolution(pending,rewards);
       const combatChanceOverride=missionType==='contract'
@@ -9075,6 +9133,7 @@ once:true`
       expansionsExpected=manifest.length;
       expansionsLoaded=0;
       expansionsAttempted=0;
+      skillMissionsInjected=false;
       if(dom.doors) dom.doors.innerHTML='';
       dom.doorsHint.textContent=manifest.length ? 'Loading expansions…' : 'No expansions configured.';
       manifest.forEach(meta=>loadExpansion(meta));
@@ -9091,6 +9150,7 @@ once:true`
         const expansion=parseExpansion(raw);
         expansion.meta.id=meta.id || expansion.meta.id;
         expansion.meta.name=meta.name || expansion.meta.name || meta.id;
+        addProceduralMissions(expansion);
         expansions[expansion.meta.id]=expansion;
         addDoor(expansion);
         expansionsLoaded+=1;
@@ -9101,6 +9161,7 @@ once:true`
           const expansion=parseExpansion(embedded);
           expansion.meta.id=meta.id || expansion.meta.id;
           expansion.meta.name=meta.name || expansion.meta.name || meta.id;
+          addProceduralMissions(expansion);
           expansions[expansion.meta.id]=expansion;
           addDoor(expansion);
           expansionsLoaded+=1;
@@ -9112,6 +9173,10 @@ once:true`
         }
       }finally{
         expansionsAttempted+=1;
+        if(!skillMissionsInjected && expansionsAttempted>=expansionsExpected && expansionsLoaded>0){
+          injectSkillTrainingMissions();
+          skillMissionsInjected=true;
+        }
         if(expansionsLoaded===0 && expansionsAttempted>=expansionsExpected){
           dom.doorsHint.textContent='Unable to load expansions.';
         }
@@ -9263,9 +9328,13 @@ once:true`
       controls.innerHTML=`<button type="button" data-cycle="left">← Previous</button><div class="zone-cycle-status">Location ${selectedIndex+1} / ${doors.length}</div><button type="button" data-cycle="right">Next →</button>`;
       controls.querySelectorAll('button[data-cycle]').forEach(btn=>{
         btn.addEventListener('click',()=>{
-          const offset=btn.dataset.cycle==='left' ? -1 : 1;
-          const nextIndex=(selectedIndex+offset+doors.length)%doors.length;
-          state.mapSelectedZoneId=doors[nextIndex].meta.id;
+          const action=btn.dataset.mapAction;
+          if(action==='zoom-in') state.mapView.zoom=clamp((state.mapView.zoom||1)+0.08,1,1.5);
+          if(action==='zoom-out') state.mapView.zoom=clamp((state.mapView.zoom||1)-0.08,1,1.5);
+          if(action==='pan-left') state.mapView.panX=clamp((state.mapView.panX||0)-18,-260,260);
+          if(action==='pan-right') state.mapView.panX=clamp((state.mapView.panX||0)+18,-260,260);
+          if(action==='pan-up') state.mapView.panY=clamp((state.mapView.panY||0)-12,-180,180);
+          if(action==='pan-down') state.mapView.panY=clamp((state.mapView.panY||0)+12,-180,180);
           renderDoors();
         });
       });
@@ -9370,7 +9439,7 @@ once:true`
       const segments=str.split('|').map(s=>s.trim()).filter(Boolean);
       const [labelPart,...rest]=segments;
       const [label]=labelPart.split('=>').map(s=>s&&s.trim());
-      const opt={label:label||'Take action',risk:'medium',tag:'',success:'',fail:'',reward:'',bonus:0,requires:[],consumeRequired:false,route:'',ending:''};
+      const opt={label:label||'Take action',risk:'medium',tag:'',success:'',fail:'',reward:'',bonus:0,requiresSkill:'',routeLabel:''};
       rest.forEach(seg=>{
         const [k,vRaw]=seg.split(':');
         const v=vRaw?.trim();
@@ -9382,10 +9451,8 @@ once:true`
         else if(key==='fail') opt.fail=v;
         else if(key==='reward') opt.reward=v;
         else if(key==='bonus') opt.bonus=Number(v||0);
-        else if(key==='requires' || key==='require') opt.requires=(v||'').split(',').map(item=>item.trim()).filter(Boolean);
-        else if(key==='consume') opt.consumeRequired=v !== 'false';
-        else if(key==='route') opt.route=v || '';
-        else if(key==='ending') opt.ending=v || '';
+        else if(key==='requiresskill' || key==='skill') opt.requiresSkill=v;
+        else if(key==='route' || key==='routelabel') opt.routeLabel=v;
       });
       return opt;
     }
@@ -9424,6 +9491,7 @@ once:true`
             key:0,
             lootType:'',
             reward:'',
+            learnSkill:'',
             events:[]
           };
           exp.missions.push(currentMission);
@@ -9501,6 +9569,8 @@ once:true`
               currentMission.events=[parseMissionEvent('Raid event')];
             }
             currentMission.events[currentMission.events.length-1].options.push(parseMissionEventOption(value));
+          }else if(normalizedKey==='learnskill' || normalizedKey==='skillreward'){
+            currentMission.learnSkill=value;
           }else if(normalizedKey==='success'){
             currentMission.successEffects=value;
           }else if(normalizedKey==='fail'){
@@ -9513,6 +9583,103 @@ once:true`
       return exp;
     }
 
+
+    const PROCEDURAL_SKILL_MISSIONS=[
+      'lockpicking','pickpocketing','hacking','knot_tying','swimming','fist_fighting','medicine','negotiation','infiltration','scavenging','marksmanship','engineering','tracking','climbing','persuasion'
+    ];
+    const PROCEDURAL_ROUTE_SKILLS=['lockpicking','pickpocketing','hacking','knot_tying','swimming','fist_fighting','medicine','negotiation','infiltration','scavenging','marksmanship','engineering'];
+    function addProceduralMissions(exp){
+      if(!exp?.meta?.id || !Array.isArray(exp.missions)) return;
+      const zoneName=exp.meta.name || exp.meta.id;
+      const baseCount=exp.missions.length;
+      const target=exp.meta.id==='safehouse' ? 50 : 60;
+      if(baseCount>=target) return;
+      const used=new Set(exp.missions.map(m=>m.id));
+      const rewards=['wire spool','filtered water pack','old coin','tool roll','barter satchel','quiet radio','shock gel','stormglass shard'];
+      const lore=[
+        `${zoneName} rumor nets whisper that old vault routes still pay in sealed crates.`,
+        `Handlers in ${zoneName} trade hard intel for clean extractions and intact manifests.`,
+        `Every block in ${zoneName} remembers who left with cargo and who left with debt.`
+      ];
+      for(let i=baseCount;i<target;i++){
+        const risk=['low','medium','high','deadly'][i%4];
+        const skillRouteA=PROCEDURAL_ROUTE_SKILLS[i%PROCEDURAL_ROUTE_SKILLS.length];
+        const skillRouteB=PROCEDURAL_ROUTE_SKILLS[(i+5)%PROCEDURAL_ROUTE_SKILLS.length];
+        const rewardA=rewards[i%rewards.length];
+        const rewardB=rewards[(i+3)%rewards.length];
+        const id=`${exp.meta.id}-contract-${i+1}`;
+        if(used.has(id)) continue;
+        const mission={
+          id,
+          label:`${zoneName} contract ${i+1}`,
+          desc:`${lore[i%lore.length]} Run the route for precise rewards in ${zoneName}.`,
+          risk,
+          time:8+(i%9),
+          energy:10+(i%8),
+          loot:2+(i%3),
+          lootType:'route caches',
+          reward:`item:${rewardA},credits+${6+(i%8)}`,
+          events:[
+            {
+              label:'Route split: direct or covert',
+              prompt:`A handler in ${zoneName} offers multiple endings: clean delivery, sabotage, or rescue extraction.`,
+              chance:1,
+              options:[
+                {label:'Take the guarded main gate',risk:'medium',tag:'combat',routeLabel:'Loud route',success:`item:${rewardA},credits+8`,fail:'hp-6,credits-3'},
+                {label:`Use ${getSkillDef(skillRouteA).label} for service access`,risk:'low',tag:'stealth',requiresSkill:skillRouteA,routeLabel:'Ability route',success:`item:${rewardB},credits+12`,fail:'credits-4'},
+                {label:'Negotiate a neutral handoff',risk:'low',tag:'mercy',routeLabel:'Moral option',success:'credits+7',fail:'credits-2'}
+              ]
+            },
+            {
+              label:'Final exchange outcome',
+              prompt:'Choose your ending: protect civilians, cash out quietly, or use advanced skills for bonus loot.',
+              chance:0.9,
+              options:[
+                {label:'Escort civilians through back lanes',risk:'medium',tag:'mercy',routeLabel:'Safer ending',success:'credits+9,item:bandage',fail:'hp-4'},
+                {label:`Deploy ${getSkillDef(skillRouteB).label}`,risk:'low',tag:'tech',requiresSkill:skillRouteB,routeLabel:'Specialist ending',success:`item:${rewardA},credits+14`,fail:'credits-5'},
+                {label:'Betray the broker for extra stash',risk:'high',tag:'betrayal',routeLabel:'Ruthless ending',success:`item:${rewardB},credits+16`,fail:'hp-7,credits-5'}
+              ]
+            }
+          ]
+        };
+        exp.missions.push(mission);
+      }
+    }
+    function injectSkillTrainingMissions(){
+      const zoneIds=Object.keys(expansions).filter(id=>id!=='safehouse');
+      if(!zoneIds.length) return;
+      PROCEDURAL_SKILL_MISSIONS.forEach((skillId,index)=>{
+        const zoneId=zoneIds[index%zoneIds.length];
+        const exp=expansions[zoneId];
+        if(!exp || !Array.isArray(exp.missions)) return;
+        const missionId=`${zoneId}-skill-${skillId}`;
+        if(exp.missions.some(m=>m.id===missionId)) return;
+        const skill=getSkillDef(skillId);
+        exp.missions.push({
+          id:missionId,
+          label:`Training contract: ${skill.label}`,
+          desc:`Complete this specialist contract in ${exp.meta.name || zoneId} to learn ${skill.label}. Reward includes an ability unlock and premium payout.`,
+          risk:index%3===0 ? 'high' : 'medium',
+          time:12,
+          energy:14,
+          loot:3,
+          lootType:'training cache',
+          learnSkill:skillId,
+          fixedRewards:`item:old coin,credits+${14+(index%6)}`,
+          events:[
+            {
+              label:`${skill.label} exam`,
+              prompt:`Mentors demand proof of ${skill.label} under live pressure in ${exp.meta.name || zoneId}.`,
+              chance:1,
+              options:[
+                {label:`Attempt ${skill.label} drill`,risk:'medium',tag:'tech',routeLabel:'Certification route',success:'credits+12,item:tool roll',fail:'hp-5,credits-4'},
+                {label:'Brute-force the objective',risk:'high',tag:'combat',routeLabel:'Unsafe route',success:'credits+8',fail:'hp-8,credits-5'}
+              ]
+            }
+          ]
+        });
+      });
+    }
     function renderAll(){
       renderPauseToggle();
       renderBars();
