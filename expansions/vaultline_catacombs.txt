@@ -16,7 +16,7 @@ note:Condensation beads on the hatch as you descend into the bunker system. The 
 target:mess-hall
 
 @scene mess-hall
-title:Mess Hall. Even the quiet sounds engineered.
+title:Mess Hall
 desc:Metal tables and dented lockers sit beneath flickering emergency lights in the cold, drafty hall. Static hums through every bad decision.
 tags:Bunker / Low risk
 option:Search the ration cages => mess-hall | risk:low | time:6 | reward:low-tier food | success:item:ration bar,item:bunker stew pouch,log:You salvage sealed rations from a rusted cage. Broken cameras still pivot like they remember faces.| fail:hunger+6,log:Only spoiled tins remain. Nobody here mistakes kindness for weakness anymore.
@@ -119,7 +119,7 @@ eventOption:Grab what you can and run => risk:high | tag:stealth | success:item:
 
 @quest
 id:bunker-telecom-1
-title:Trace the telecom line. Even the quiet sounds engineered.
+title:Trace the telecom line
 desc:Follow the severed line through the service corridors and map the damage. The skyline glows like a wound after dark.
 risk:low
 time:8
@@ -134,7 +134,7 @@ once:true
 
 @quest
 id:bunker-telecom-2
-title:Restart the relay core. Nobody here mistakes kindness for weakness anymore.
+title:Restart the relay core
 desc:Power the relay core back on—expect a guaranteed fight with a pair of bunker hostiles. Broken cameras still pivot like they remember faces.
 risk:medium
 time:12
@@ -151,7 +151,7 @@ once:true
 
 @mission
 id:underground_bunker-ops-scoutline
-label:Scoutline warm-up
+label:Vaultline Scoutline
 desc:Low-risk recon through the underground bunker fringe to chart safe lanes for rookies. Broken cameras still pivot like they remember faces.
 risk:low
 time:8
@@ -164,7 +164,7 @@ eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | s
 
 @mission
 id:underground_bunker-ops-supply-barter
-label:Supply barter circuit
+label:Vaultline Barter Circuit
 desc:Negotiate with fringe traders for utility gear and survival items. Trust is currency, and everyone is short on it.
 risk:low
 time:9
@@ -177,7 +177,7 @@ eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | 
 
 @mission
 id:underground_bunker-ops-shadow-lift
-label:Shadow-lift extraction
+label:Vaultline Shadow Lift
 desc:Pull crates from a contested block where stealth gear matters more than firepower. Broken cameras still pivot like they remember faces.
 risk:medium
 time:10
@@ -190,7 +190,7 @@ eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success
 
 @mission
 id:underground_bunker-ops-deep-vault
-label:Deep vault breach
+label:Vaultline Vault Breach
 desc:High-risk push into a sealed vault loaded with specialized mission tools. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:13
@@ -203,7 +203,7 @@ eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betray
 
 @mission
 id:underground_bunker-legend-merc-contract
-label:Legend contract: One-shot rescue
+label:Vaultline Legend Contract
 desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:16
@@ -378,7 +378,7 @@ eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat |
 
 @mission
 id:underground-bunker-faction-sweep-1
-title:RMG Liaison Sweep 1. Even the quiet sounds engineered.
+title:Vaultline RMG Sweep 1
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:low
 time:6
@@ -393,7 +393,7 @@ fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody her
 
 @mission
 id:underground-bunker-faction-sweep-2
-title:AM Liaison Sweep 2. Trust is currency, and everyone is short on it.
+title:Vaultline Abernathy Sweep 2
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:7
@@ -408,7 +408,7 @@ fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody her
 
 @mission
 id:underground-bunker-faction-sweep-3
-title:RMG Liaison Sweep 3. Static hums through every bad decision.
+title:Vaultline RMG Sweep 3
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:8
@@ -423,7 +423,7 @@ fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody her
 
 @mission
 id:underground-bunker-faction-sweep-4
-title:AM Liaison Sweep 4. The skyline glows like a wound after dark.
+title:Vaultline Abernathy Sweep 4
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:9
@@ -438,7 +438,7 @@ fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody her
 
 @mission
 id:underground-bunker-faction-sweep-5
-title:RMG Liaison Sweep 5. Broken cameras still pivot like they remember faces.
+title:Vaultline RMG Sweep 5
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:10

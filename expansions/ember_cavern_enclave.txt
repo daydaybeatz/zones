@@ -14,7 +14,7 @@ note:You squeeze through the reinforced cave entrance and catch your breath at a
 target:cave-bunks
 
 @scene cave-bunks
-title:Cave Bunks. Broken cameras still pivot like they remember faces.
+title:Cave Bunks
 desc:Canvas cots, scrap-braced walls, and a condensation collector make this hideaway a practical rest stop. Trust is currency, and everyone is short on it.
 tags:Safe / Checkpoint
 option:Rest near the ember drums => cave-bunks | risk:low | time:6 | reward:rest | success:hp+10,energy+12,log:The cave warmth settles your pulse before the next push. Nobody here mistakes kindness for weakness anymore.| fail:energy-2,log:Dripping water keeps sleep light. Trust is currency, and everyone is short on it.

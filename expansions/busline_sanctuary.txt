@@ -14,7 +14,7 @@ note:The chained bus corridor rattles in the wind, but it gives you a secure sto
 target:bus-camp
 
 @scene bus-camp
-title:Bus Camp. Nobody here mistakes kindness for weakness anymore.
+title:Bus Camp
 desc:Seats have been stripped into bedrolls, windows are plated, and a watchlight sweeps the lot all night. Nobody here mistakes kindness for weakness anymore.
 tags:Safe / Forward checkpoint
 option:Rest in the lead bus => bus-camp | risk:low | time:7 | reward:recovery | success:hp+11,energy+13,log:The convoy hum masks distant gunfire while you recover. Even the quiet sounds engineered.| fail:energy-3,log:Engines creak all night and cut your rest short. The skyline glows like a wound after dark.

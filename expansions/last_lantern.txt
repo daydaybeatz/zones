@@ -1,104 +1,139 @@
 @expansion
-id:abernathy_holdout
-name:Abernathy Redoubt
-summary:A militant fortress district ruled by ration law, siege discipline, and officers who call cruelty "efficiency."
-temp:temperate
-arrivalDialog:Defector Iven: Abernathy rewards obedience until it runs out of bodies. Even the quiet sounds engineered.
-missionStartDialog:Scout Renn: Watch rooftops, watch alleys, then watch your own crew. Trust is currency, and everyone is short on it.
-missionEndDialog:Archivist Ro: Their stockpiles shrink, and fear does the rest. Broken cameras still pivot like they remember faces.
+id:safehouse
+name:Wastelander: The Last Lantern
+summary:The Last Lantern is a welded refuge where scouts trade rumors, patch armor, and decide which danger is worth tomorrow. No loot runs begin here—only hard choices and harder recoveries.
+arrivalDialog:Steward Lyra: Lantern walls hold because everyone pays in labor, not promises. Even the quiet sounds engineered.
+missionStartDialog:Quartermaster Nix: Bring back what keeps people alive—water seals, meds, and proof we can still trust each other. Even the quiet sounds engineered.
+missionEndDialog:Medic Hale: Every crate you drag home buys one more sunrise for someone who almost gave up. Broken cameras still pivot like they remember faces.
 shop:true
-relationFaction:gang
-relationMin:3
 
 @door
-label:Militia Signal Hatch
-hint:odd jobs, militia lore, shop, rest
+label:Safe House Airlock
+hint:rest, shop, recovery
 risk:low
-note:A chalked militia sigil guides you to a disguised hatch below the rails. Broken cameras still pivot like they remember faces.
+note:The airlock seals and the bunker hum steadies your breathing. Static hums through every bad decision.
 target:commons
 
 @scene commons
-title:Holdout Commons. The skyline glows like a wound after dark.
-desc:A low-lit commons with salvaged bunks, a heater barrel, and a militia supply counter. Trust is currency, and everyone is short on it.
-tags:Abernathy / Friendly
-option:Rest near the heater barrel => commons | risk:low | time:6 | reward:rested | success:hp+10,energy+12,energy+8,temp=normal,log:The heat seeps into your joints and the alarms quiet down. Broken cameras still pivot like they remember faces.| fail:credits-2,log:Too many voices in the vents keep you awake. Even the quiet sounds engineered.
+title:Safe House Commons
+desc:Warm lights, clean water, and the trade counter keep the crew steady between runs. Trust is currency, and everyone is short on it.
+tags:Safe / Hub
+option:Rest in the bunks => commons | risk:low | time:6 | reward:rested | success:hp+12,energy+14,credits+6,temp=normal,log:The bunk warmth sinks into your bones. Trust is currency, and everyone is short on it.| fail:credits-2,log:Sleep won't come tonight. Nobody here mistakes kindness for weakness anymore.
+option:Repack the supply crates => commons | risk:low | time:5 | reward:prep | success:energy+6,credits+4,log:You sort fresh crates and restock the outbound packs. Trust is currency, and everyone is short on it.| fail:energy-2,log:The crate seals jam and slow you down. Even the quiet sounds engineered.
 
 @mission
-id:holdout-courier-relay
-label:Painted courier relay
-desc:Carry a marked crate through the smuggler’s ductwork and bring back encoded banners. Broken cameras still pivot like they remember faces.
+id:safehouse-elders
+label:Talk to the bunker elders for advice
+desc:Sit with the bunker elders to trade stories and learn hard-won survival wisdom. Nobody here mistakes kindness for weakness anymore.
+risk:low
+time:6
+energy:6
+loot:0
+reward:elder advice
+combatChance:0
+hub:true
+event:Elders share vault upgrade lore | chance:0.6 | prompt:The elders whisper about stash equipment upgrades hidden behind locked doors. What do you ask about? Broken cameras still pivot like they remember faces.
+eventOption:Ask about food upgrades => risk:low | tag:mercy | success:log:They mention a microwave, spice locker, and ration heater array that make rations stretch further. Even the quiet sounds engineered.| fail:log:The elder waves you off with a tired sigh. The skyline glows like a wound after dark.
+eventOption:Ask about medical upgrades => risk:low | tag:mercy | success:log:They recall sterile lights, autoclaves, and medbay analyzers that make medicine hit harder. Broken cameras still pivot like they remember faces.| fail:log:They tell you to come back with fresh tea. Nobody here mistakes kindness for weakness anymore.
+eventOption:Ask about rest upgrades => risk:low | tag:mercy | success:log:They describe expensive bedding and recovery recliners that cut rest time and restore more. Trust is currency, and everyone is short on it.| fail:log:They fall silent, lost in memory. Trust is currency, and everyone is short on it.
+event:Displaced runner seeks counsel | chance:1 | prompt:A runner begs for advice about dodging RMG patrols and Abernathy Militia recruiters. How do you respond? Nobody here mistakes kindness for weakness anymore.
+eventOption:Share the elders' guidance => risk:low | tag:mercy | success:credits+6,credits+4,log:You steady the runner and earn a quiet favor. Trust is currency, and everyone is short on it.| fail:credits-3,log:The runner panics and bolts. Broken cameras still pivot like they remember faces.
+eventOption:Sell the rumor trail => risk:medium | tag:betrayal | success:credits+12,item:old coin,log:You trade the intel for hard currency. The skyline glows like a wound after dark.| fail:credits-5,log:The elders hear about the rumor sale. Static hums through every bad decision.
+
+@mission
+id:safehouse-ledger
+label:Audit the ration ledger
+desc:Cross-check the ration ledger with the vault shelves to catch any gaps in supply. Nobody here mistakes kindness for weakness anymore.
+risk:low
+time:6
+energy:6
+loot:0
+reward:ration audit
+combatChance:0
+hub:true
+success:credits+6,log:You reconcile the ledger and recover a few forgotten credits. Broken cameras still pivot like they remember faces.
+fail:credits-3,log:Numbers blur together and the audit stalls out. Even the quiet sounds engineered.
+
+@mission
+id:safehouse-watch
+label:Walk the outer watch
+desc:Circle the perimeter checkpoints and confirm the signal lamps still burn. The skyline glows like a wound after dark.
+risk:low
+time:7
+energy:7
+loot:0
+reward:perimeter check
+combatChance:0
+hub:true
+success:energy+4,credits+4,log:The lamps are steady and the watch captain slips you a token. Static hums through every bad decision.
+fail:hp-2,log:A slick rung sends you down a few steps. Broken cameras still pivot like they remember faces.
+
+@mission
+id:safehouse-welds
+label:Reinforce the generator welds
+desc:Help the engineers keep the generator wall stable with a quick weld pass. Broken cameras still pivot like they remember faces.
+risk:low
+time:6
+energy:8
+loot:0
+reward:generator stability
+combatChance:0
+hub:true
+success:energy+6,log:The welds hold and the humming wall steadies. Even the quiet sounds engineered.
+fail:hp-2,log:A spark bites your glove and ends the shift early. Nobody here mistakes kindness for weakness anymore.
+
+@mission
+id:safehouse-hush
+label:Trace the quiet signal
+desc:Follow a faint relay ping to recover whispered intel for the elders. Even the quiet sounds engineered.
+risk:low
+time:7
+energy:8
+loot:1
+lootType:signal scraps
+reward:quiet intel
+hub:true
+unlockFlag:secret-safehouse-ops
+consumeFlag:secret-safehouse-ops
+event:Relay shadow crossing | chance:0.6 | prompt:A patrol cuts across the whispering line. Choose your approach. Trust is currency, and everyone is short on it.
+eventOption:Slip through vents => risk:low | tag:stealth | success:item:signal wristband,credits+4,log:You ghost through and pocket a wristband. Trust is currency, and everyone is short on it.| fail:hp-3,credits-2,log:A clang gives you away. Trust is currency, and everyone is short on it.
+eventOption:Confront the patrol => risk:medium | tag:combat | success:item:coil battery,log:You overpower the patrol and seize their battery. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:A scuffle leaves you bruised. The skyline glows like a wound after dark.
+
+@quest
+id:safehouse-firing-range
+title:Go to the firing range
+desc:A bunker elder walks you through the firing range and drills you on recoil control. Static hums through every bad decision.
+risk:low
+time:8
+energy:8
+loot:0
+reward:training session
+minLevel:3
+once:true
+flag:safehouse-firing-range
+hideWhenComplete:true
+success:item:field handgun,item:handgun ammo,item:handgun ammo,log:The elder approves your stance and hands you a field handgun with two rounds. Even the quiet sounds engineered.
+fail:log:Your grouping is off today. The elder sends you back to rest. Even the quiet sounds engineered.
+
+@quest
+id:safehouse-vents
+title:Fix the ventilation system
+desc:Patch the corroded vent intake so the bunker can cycle clean air again. Static hums through every bad decision.
 risk:medium
-time:10
+time:9
 energy:12
-loot:3
-lootType:militia caches
-faction:gang
-relationMin:3
-oppositionFaction:military
-oppositionRelationSuccess:-1
-fixedRewards:credits+4
-event:RMG scout spots the markings | chance:0.6 | prompt:A Redtech scout marks your painted crate. How do you respond? Nobody here mistakes kindness for weakness anymore.
-eventOption:Mask the paint with soot => risk:low | tag:stealth | success:item:gang patchwork pants,credits+4,log:The soot hides the signal and you slip through. Nobody here mistakes kindness for weakness anymore.| fail:hp-4,credits-2,log:The scout catches the trail and chases you. Trust is currency, and everyone is short on it.
-eventOption:Run the scout off => risk:high | tag:combat | success:item:rail spike mace,log:You drive the scout back and claim a brute mace. Trust is currency, and everyone is short on it.| fail:hp-7,log:The scout’s shot grazes you. Even the quiet sounds engineered.
+loot:1
+lootType:maintenance cache
+reward:ventilation restored
+success:item:spare filter,item:tool roll,credits+8,credits+6,flag:safehouse-vents,log:The fans spin up and the air clears. Maintenance dispatches are back online. The skyline glows like a wound after dark.
+fail:temp-3,credits-4
+flag:safehouse-vents
+once:true
 
 @mission
-id:holdout-creed-chapel
-label:Creed chapel pickup
-desc:Recover militia relics from a flooded chapel the elders refuse to enter. Even the quiet sounds engineered.
-risk:medium
-time:11
-energy:13
-loot:4
-lootType:relic crates
-faction:gang
-relationMin:3
-oppositionFaction:military
-oppositionRelationSuccess:-1
-fixedRewards:credits+5
-event:Old militia oath scroll found | chance:0.55 | prompt:You find an oath scroll tied to a fallen militia captain. Even the quiet sounds engineered.
-eventOption:Return it to the holdout => risk:low | tag:mercy | success:item:ledger-etched compass,credits+4,log:The elders reward the reverence with a compass. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The scroll crumbles as you withdraw. Trust is currency, and everyone is short on it.
-eventOption:Sell the relic contact => risk:high | tag:betrayal | success:credits+12,item:old coin,log:You sell the contact and pocket extra coin. Nobody here mistakes kindness for weakness anymore.| fail:hp-6,log:The buyer double-crosses you. Even the quiet sounds engineered.
-
-@mission
-id:holdout-waterline
-label:Stolen waterline audit
-desc:Audit a stolen waterline that keeps the holdout running. Nobody here mistakes kindness for weakness anymore.
-risk:medium
-time:12
-energy:14
-loot:4
-lootType:water crates
-faction:gang
-relationMin:3
-oppositionFaction:military
-oppositionRelationSuccess:-1
-fixedRewards:credits+6
-event:Pipeline sentry demands a cut | chance:0.6 | prompt:A sentry wants payment to keep the water flowing. Static hums through every bad decision.
-eventOption:Pay the sentry in rations => risk:low | tag:mercy | success:item:water canister,credits+3,log:The sentry keeps quiet and shares a canister. The skyline glows like a wound after dark.| fail:credits-4,log:The sentry pockets the ration and still alerts patrols. Static hums through every bad decision.
-eventOption:Threaten the sentry => risk:high | tag:combat | success:item:service wrench,credits+6,log:The sentry backs down and you take their wrench. Static hums through every bad decision.| fail:hp-7,log:The sentry pulls a blade and the fight goes loud. Broken cameras still pivot like they remember faces.
-
-@mission
-id:holdout-signal-scramble
-label:Scrambler line run
-desc:Run the old signal scrambler so the militia can move unnoticed tonight. Nobody here mistakes kindness for weakness anymore.
-risk:high
-time:13
-energy:16
-loot:4
-lootType:signal crates
-faction:gang
-relationMin:3
-oppositionFaction:military
-oppositionRelationSuccess:-1
-fixedRewards:credits+6
-event:Scrambler coil overload | chance:0.55 | prompt:The coil overheats and threatens to burn out. Static hums through every bad decision.
-eventOption:Cool the coil with scavenged coolant => risk:medium | tag:tech | success:item:coolant canister,credits+4,log:The coil steadies and you pocket a coolant can. Broken cameras still pivot like they remember faces.| fail:hp-6,log:The coil bursts and burns your gloves. The skyline glows like a wound after dark.
-eventOption:Run the scramble anyway => risk:high | tag:combat | success:item:signal jammer,log:You brute-force the scramble and seize a jammer. Even the quiet sounds engineered.| fail:hp-8,credits-4,log:The scramble detonates and sends you stumbling. Even the quiet sounds engineered.
-
-@mission
-id:abernathy_holdout-ops-scoutline
-label:Scoutline warm-up
-desc:Low-risk recon through the abernathy holdout fringe to chart safe lanes for rookies. Static hums through every bad decision.
+id:safehouse-ops-scoutline
+label:Lantern Scoutline
+desc:Low-risk recon through the safehouse fringe to chart safe lanes for rookies. Trust is currency, and everyone is short on it.
 risk:low
 time:8
 energy:10
@@ -109,8 +144,8 @@ eventOption:Follow the elder's silent route => risk:low | tag:mercy | success:it
 eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | success:item:impact baton,credits+7,log:You force a shorter route and grab a baton cache. Even the quiet sounds engineered.| fail:hp-5,log:An ambush bruises your squad. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy_holdout-ops-supply-barter
-label:Supply barter circuit
+id:safehouse-ops-supply-barter
+label:Lantern Barter Circuit
 desc:Negotiate with fringe traders for utility gear and survival items. Trust is currency, and everyone is short on it.
 risk:low
 time:9
@@ -122,8 +157,8 @@ eventOption:Mediate the dispute and keep order => risk:low | tag:mercy | success
 eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | success:item:metal detector,item:sealed ration tin,credits+9,log:You intimidate the traders and seize premium stock. The skyline glows like a wound after dark.| fail:hp-4,credits-3,log:Hidden guards push you out. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy_holdout-ops-shadow-lift
-label:Shadow-lift extraction
+id:safehouse-ops-shadow-lift
+label:Lantern Shadow Lift
 desc:Pull crates from a contested block where stealth gear matters more than firepower. Broken cameras still pivot like they remember faces.
 risk:medium
 time:10
@@ -135,8 +170,8 @@ eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:s
 eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. Broken cameras still pivot like they remember faces.| fail:hp-7,log:Backup lights trigger mid-run. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy_holdout-ops-deep-vault
-label:Deep vault breach
+id:safehouse-ops-deep-vault
+label:Lantern Vault Breach
 desc:High-risk push into a sealed vault loaded with specialized mission tools. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:13
@@ -148,8 +183,8 @@ eventOption:Promise a fair split and honor it => risk:high | tag:mercy | success
 eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betrayal | success:item:precision metal detector,item:shock weave armor,credits+17,log:You crack every locker before alarms cycle. Trust is currency, and everyone is short on it.| fail:hp-10,credits-6,log:The countermeasure grid fires. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy_holdout-legend-merc-contract
-label:Legend contract: One-shot rescue
+id:safehouse-legend-merc-contract
+label:Lantern Legend Contract
 desc:A once-only deadly rescue that can recruit a veteran mercenary if you finish clean. Nobody here mistakes kindness for weakness anymore.
 risk:deadly
 time:16
@@ -163,7 +198,7 @@ eventOption:Commit and hold the line for the veteran => risk:deadly | tag:mercy 
 eventOption:Abandon the call and loot the perimeter => risk:high | tag:betrayal | success:item:salvage satchel,credits+11,log:You skip the rescue and strip the perimeter. Trust is currency, and everyone is short on it.| fail:credits-6,log:Word spreads that you broke contract. Broken cameras still pivot like they remember faces.
 
 @mission
-id:abernathy_holdout-idle-unlock-1
+id:safehouse-idle-unlock-1
 label:Idle network contract 1
 desc:Secure route node 1 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
@@ -172,14 +207,14 @@ energy:9
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:abernathy_holdout-idle-route-1
+unlockFlag:safehouse-idle-route-1
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 1 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 1,item:field compass mk1,credits+5,log:The broker certifies node 1 for reliable idle runs. Static hums through every bad decision.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 1,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 1,item:survey binoculars 1,credits+10,log:You lock node 1 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy_holdout-idle-unlock-2
+id:safehouse-idle-unlock-2
 label:Idle network contract 2
 desc:Secure route node 2 so handlers can launch automated idle missions in this region. Nobody here mistakes kindness for weakness anymore.
 risk:low
@@ -188,14 +223,14 @@ energy:10
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:abernathy_holdout-idle-route-2
+unlockFlag:safehouse-idle-route-2
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 2 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 2,item:field compass mk2,credits+5,log:The broker certifies node 2 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 2,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 2,item:survey binoculars 2,credits+10,log:You lock node 2 with premium payoff data. Even the quiet sounds engineered.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy_holdout-idle-unlock-3
+id:safehouse-idle-unlock-3
 label:Idle network contract 3
 desc:Secure route node 3 so handlers can launch automated idle missions in this region. Even the quiet sounds engineered.
 risk:medium
@@ -204,14 +239,14 @@ energy:11
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:abernathy_holdout-idle-route-3
+unlockFlag:safehouse-idle-route-3
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 3 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 3,item:field compass mk3,credits+5,log:The broker certifies node 3 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 3,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 3,item:survey binoculars 3,credits+10,log:You lock node 3 with premium payoff data. Static hums through every bad decision.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy_holdout-idle-unlock-4
+id:safehouse-idle-unlock-4
 label:Idle network contract 4
 desc:Secure route node 4 so handlers can launch automated idle missions in this region. The skyline glows like a wound after dark.
 risk:medium
@@ -220,14 +255,14 @@ energy:12
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:abernathy_holdout-idle-route-4
+unlockFlag:safehouse-idle-route-4
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 4 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 4,item:field compass mk4,credits+5,log:The broker certifies node 4 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 4,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 4,item:survey binoculars 4,credits+10,log:You lock node 4 with premium payoff data. The skyline glows like a wound after dark.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy_holdout-idle-unlock-5
+id:safehouse-idle-unlock-5
 label:Idle network contract 5
 desc:Secure route node 5 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:medium
@@ -236,14 +271,14 @@ energy:13
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:abernathy_holdout-idle-route-5
+unlockFlag:safehouse-idle-route-5
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 5 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 5,item:field compass mk5,credits+5,log:The broker certifies node 5 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 5,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 5,item:survey binoculars 5,credits+10,log:You lock node 5 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy_holdout-idle-unlock-6
+id:safehouse-idle-unlock-6
 label:Idle network contract 6
 desc:Secure route node 6 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
@@ -252,14 +287,14 @@ energy:15
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:abernathy_holdout-idle-route-6
+unlockFlag:safehouse-idle-route-6
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 6 forks into three lanes: safe, fast, and lucrative. Choose your call. The skyline glows like a wound after dark.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 6,item:field compass mk6,credits+5,log:The broker certifies node 6 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 6,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 6,item:survey binoculars 6,credits+10,log:You lock node 6 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy_holdout-idle-unlock-7
+id:safehouse-idle-unlock-7
 label:Idle network contract 7
 desc:Secure route node 7 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:high
@@ -268,14 +303,14 @@ energy:16
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:abernathy_holdout-idle-route-7
+unlockFlag:safehouse-idle-route-7
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 7 forks into three lanes: safe, fast, and lucrative. Choose your call. Static hums through every bad decision.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 7,item:field compass mk7,credits+5,log:The broker certifies node 7 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 7,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 7,item:survey binoculars 7,credits+10,log:You lock node 7 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy_holdout-idle-unlock-8
+id:safehouse-idle-unlock-8
 label:Idle network contract 8
 desc:Secure route node 8 so handlers can launch automated idle missions in this region. Broken cameras still pivot like they remember faces.
 risk:high
@@ -284,14 +319,14 @@ energy:17
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:abernathy_holdout-idle-route-8
+unlockFlag:safehouse-idle-route-8
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 8 forks into three lanes: safe, fast, and lucrative. Choose your call. Broken cameras still pivot like they remember faces.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 8,item:field compass mk8,credits+5,log:The broker certifies node 8 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 8,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 8,item:survey binoculars 8,credits+10,log:You lock node 8 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy_holdout-idle-unlock-9
+id:safehouse-idle-unlock-9
 label:Idle network contract 9
 desc:Secure route node 9 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
@@ -300,14 +335,14 @@ energy:18
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:abernathy_holdout-idle-route-9
+unlockFlag:safehouse-idle-route-9
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 9 forks into three lanes: safe, fast, and lucrative. Choose your call. Nobody here mistakes kindness for weakness anymore.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 9,item:field compass mk9,credits+5,log:The broker certifies node 9 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 9,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 9,item:survey binoculars 9,credits+10,log:You lock node 9 with premium payoff data. Trust is currency, and everyone is short on it.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy_holdout-idle-unlock-10
+id:safehouse-idle-unlock-10
 label:Idle network contract 10
 desc:Secure route node 10 so handlers can launch automated idle missions in this region. Trust is currency, and everyone is short on it.
 risk:deadly
@@ -316,15 +351,15 @@ energy:20
 loot:2
 lootType:dispatch intel
 reward:idle mission unlock
-unlockFlag:abernathy_holdout-idle-route-10
+unlockFlag:safehouse-idle-route-10
 event:Dispatch broker demands proof you can make command decisions | chance:1 | prompt:Node 10 forks into three lanes: safe, fast, and lucrative. Choose your call. Even the quiet sounds engineered.
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 10,item:field compass mk10,credits+5,log:The broker certifies node 10 for reliable idle runs. Nobody here mistakes kindness for weakness anymore.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
 @mission
-id:abernathy-holdout-faction-sweep-1
-title:RMG Liaison Sweep 1. Even the quiet sounds engineered.
+id:safehouse-faction-sweep-1
+title:Lantern RMG Sweep 1
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:low
 time:6
@@ -338,8 +373,8 @@ success:credits+7,log:Your report lands cleanly and RMG trust ticks up. Static h
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy-holdout-faction-sweep-2
-title:AM Liaison Sweep 2. Trust is currency, and everyone is short on it.
+id:safehouse-faction-sweep-2
+title:Lantern Abernathy Sweep 2
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:7
@@ -353,8 +388,8 @@ success:credits+8,log:Your report lands cleanly and AM trust ticks up. The skyli
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy-holdout-faction-sweep-3
-title:RMG Liaison Sweep 3. Static hums through every bad decision.
+id:safehouse-faction-sweep-3
+title:Lantern RMG Sweep 3
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:medium
 time:8
@@ -368,8 +403,8 @@ success:credits+9,log:Your report lands cleanly and RMG trust ticks up. Static h
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy-holdout-faction-sweep-4
-title:AM Liaison Sweep 4. The skyline glows like a wound after dark.
+id:safehouse-faction-sweep-4
+title:Lantern Abernathy Sweep 4
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:9
@@ -383,8 +418,8 @@ success:credits+10,log:Your report lands cleanly and AM trust ticks up. The skyl
 fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy-holdout-faction-sweep-5
-title:RMG Liaison Sweep 5. Broken cameras still pivot like they remember faces.
+id:safehouse-faction-sweep-5
+title:Lantern RMG Sweep 5
 desc:Deliver route updates and keep corridor watch teams aligned with local survivors. Static hums through every bad decision.
 risk:high
 time:10
@@ -399,9 +434,9 @@ fail:energy-2,log:The contact chain breaks and the crews stay uneasy. Nobody her
 
 # autogenerated expansion missions pack
 @mission
-id:abernathy_holdout-new-01
+id:safehouse-new-01
 label:Frontline contract 1
-desc:Take on contract 1 to secure routes, salvage intel, and keep the abernathy holdout network operating. Broken cameras still pivot like they remember faces.
+desc:Take on contract 1 to secure routes, salvage intel, and keep the safehouse network operating. The skyline glows like a wound after dark.
 risk:low
 time:7
 energy:8
@@ -412,9 +447,9 @@ success:credits+8,scrap+2,temp=normal,log:You stabilize the sector and recover t
 fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy_holdout-new-02
+id:safehouse-new-02
 label:Frontline contract 2
-desc:Take on contract 2 to secure routes, salvage intel, and keep the abernathy holdout network operating. Static hums through every bad decision.
+desc:Take on contract 2 to secure routes, salvage intel, and keep the safehouse network operating. Trust is currency, and everyone is short on it.
 risk:medium
 time:8
 energy:9
@@ -425,9 +460,9 @@ success:credits+9,hp+4,energy+4,log:You complete the objective and escort locals
 fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy_holdout-new-03
+id:safehouse-new-03
 label:Frontline contract 3
-desc:Take on contract 3 to secure routes, salvage intel, and keep the abernathy holdout network operating. Trust is currency, and everyone is short on it.
+desc:Take on contract 3 to secure routes, salvage intel, and keep the safehouse network operating. Broken cameras still pivot like they remember faces.
 risk:medium
 time:9
 energy:10
@@ -438,9 +473,9 @@ success:credits+10,energy+5,xp+6,log:Your sweep route ends with clean gains and 
 fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
-id:abernathy_holdout-new-04
+id:safehouse-new-04
 label:Frontline contract 4
-desc:Take on contract 4 to secure routes, salvage intel, and keep the abernathy holdout network operating. Static hums through every bad decision.
+desc:Take on contract 4 to secure routes, salvage intel, and keep the safehouse network operating. Trust is currency, and everyone is short on it.
 risk:high
 time:10
 energy:11
@@ -451,9 +486,9 @@ success:credits+14,scrap+2,temp=normal,log:You stabilize the sector and recover 
 fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy_holdout-new-05
+id:safehouse-new-05
 label:Frontline contract 5
-desc:Take on contract 5 to secure routes, salvage intel, and keep the abernathy holdout network operating. Static hums through every bad decision.
+desc:Take on contract 5 to secure routes, salvage intel, and keep the safehouse network operating. The skyline glows like a wound after dark.
 risk:low
 time:11
 energy:12
@@ -464,9 +499,9 @@ success:credits+15,hp+3,energy+4,log:You complete the objective and escort local
 fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy_holdout-new-06
+id:safehouse-new-06
 label:Frontline contract 6
-desc:Take on contract 6 to secure routes, salvage intel, and keep the abernathy holdout network operating. Static hums through every bad decision.
+desc:Take on contract 6 to secure routes, salvage intel, and keep the safehouse network operating. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:12
 energy:13
@@ -477,9 +512,9 @@ success:credits+16,energy+4,xp+9,log:Your sweep route ends with clean gains and 
 fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
-id:abernathy_holdout-new-07
+id:safehouse-new-07
 label:Frontline contract 7
-desc:Take on contract 7 to secure routes, salvage intel, and keep the abernathy holdout network operating. The skyline glows like a wound after dark.
+desc:Take on contract 7 to secure routes, salvage intel, and keep the safehouse network operating. The skyline glows like a wound after dark.
 risk:deadly
 time:13
 energy:14
@@ -490,9 +525,9 @@ success:credits+20,scrap+2,temp=normal,log:You stabilize the sector and recover 
 fail:credits-3,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy_holdout-new-08
+id:safehouse-new-08
 label:Frontline contract 8
-desc:Take on contract 8 to secure routes, salvage intel, and keep the abernathy holdout network operating. Broken cameras still pivot like they remember faces.
+desc:Take on contract 8 to secure routes, salvage intel, and keep the safehouse network operating. Nobody here mistakes kindness for weakness anymore.
 risk:medium
 time:14
 energy:15
@@ -503,9 +538,9 @@ success:credits+21,hp+2,energy+4,log:You complete the objective and escort local
 fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:abernathy_holdout-new-09
+id:safehouse-new-09
 label:Frontline contract 9
-desc:Take on contract 9 to secure routes, salvage intel, and keep the abernathy holdout network operating. Nobody here mistakes kindness for weakness anymore.
+desc:Take on contract 9 to secure routes, salvage intel, and keep the safehouse network operating. Trust is currency, and everyone is short on it.
 risk:low
 time:15
 energy:16
@@ -516,9 +551,9 @@ success:credits+22,energy+3,xp+12,log:Your sweep route ends with clean gains and
 fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
 @mission
-id:abernathy_holdout-new-10
+id:safehouse-new-10
 label:Frontline contract 10
-desc:Take on contract 10 to secure routes, salvage intel, and keep the abernathy holdout network operating. Even the quiet sounds engineered.
+desc:Take on contract 10 to secure routes, salvage intel, and keep the safehouse network operating. Nobody here mistakes kindness for weakness anymore.
 risk:high
 time:16
 energy:17
@@ -529,7 +564,7 @@ success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover 
 fail:credits-5,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
-id:loot-abernathy_holdout-retro-salvage
+id:loot-safehouse-retro-salvage
 label:Retro salvage stockpile
 desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones. The skyline glows like a wound after dark.
 risk:high
@@ -538,6 +573,6 @@ energy:18
 loot:8
 lootType:retro cache trove
 event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 | prompt:Take your time cataloging the cache, or rip it all and run? Nobody here mistakes kindness for weakness anymore.
-eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:abernathy-holdout cram tin,item:abernathy-holdout blamco mac can,item:abernathy-holdout sunset fizz bottle,item:abernathy-holdout dusty nuka cola,item:abernathy-holdout instamash pouch,item:abernathy-holdout preserved pie slice,item:abernathy-holdout sugar bombs box,item:abernathy-holdout fancy lad snack cake,item:abernathy-holdout old world coffee tin,item:abernathy-holdout molded iguana bits,item:abernathy-holdout military ration slab,item:abernathy-holdout dehydrated mutfruit brick,item:abernathy-holdout vault jerky strip,item:abernathy-holdout stale gum drops,item:abernathy-holdout salisbury steak tray,item:abernathy-holdout cold pork n beans can,item:abernathy-holdout combat helmet liner,item:abernathy-holdout flak web harness,item:abernathy-holdout service rifle stock,item:abernathy-holdout pipe rifle receiver,item:abernathy-holdout riot control visor,item:abernathy-holdout trench shovel blade,item:abernathy-holdout bayonet training sheath,item:abernathy-holdout war map tube,item:abernathy-holdout fatigue field jacket,item:abernathy-holdout army canteen shell,item:abernathy-holdout dog tag bundle,item:abernathy-holdout entrenching tool head,item:abernathy-holdout laser musket coil,item:abernathy-holdout handmade shotgun frame,item:abernathy-holdout atom-age pulse pistol,item:abernathy-holdout retro raygun grip,item:abernathy-holdout vacuum tube scope,item:abernathy-holdout mr handy actuator,item:abernathy-holdout fusion battery shell,item:abernathy-holdout plasma torch nozzle,item:abernathy-holdout geiger wristwatch,item:abernathy-holdout pip-dial circuit board,item:abernathy-holdout rocket car lunchbox,item:abernathy-holdout chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
-eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:abernathy-holdout cram tin,item:abernathy-holdout blamco mac can,item:abernathy-holdout sunset fizz bottle,item:abernathy-holdout dusty nuka cola,item:abernathy-holdout instamash pouch,item:abernathy-holdout preserved pie slice,item:abernathy-holdout sugar bombs box,item:abernathy-holdout fancy lad snack cake,item:abernathy-holdout old world coffee tin,item:abernathy-holdout molded iguana bits,item:abernathy-holdout military ration slab,item:abernathy-holdout dehydrated mutfruit brick,item:abernathy-holdout vault jerky strip,item:abernathy-holdout stale gum drops,item:abernathy-holdout salisbury steak tray,item:abernathy-holdout cold pork n beans can,item:abernathy-holdout combat helmet liner,item:abernathy-holdout flak web harness,item:abernathy-holdout service rifle stock,item:abernathy-holdout pipe rifle receiver,item:abernathy-holdout riot control visor,item:abernathy-holdout trench shovel blade,item:abernathy-holdout bayonet training sheath,item:abernathy-holdout war map tube,item:abernathy-holdout fatigue field jacket,item:abernathy-holdout army canteen shell,item:abernathy-holdout dog tag bundle,item:abernathy-holdout entrenching tool head,item:abernathy-holdout laser musket coil,item:abernathy-holdout handmade shotgun frame,item:abernathy-holdout atom-age pulse pistol,item:abernathy-holdout retro raygun grip,item:abernathy-holdout vacuum tube scope,item:abernathy-holdout mr handy actuator,item:abernathy-holdout fusion battery shell,item:abernathy-holdout plasma torch nozzle,item:abernathy-holdout geiger wristwatch,item:abernathy-holdout pip-dial circuit board,item:abernathy-holdout rocket car lunchbox,item:abernathy-holdout chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
+eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:safehouse cram tin,item:safehouse blamco mac can,item:safehouse sunset fizz bottle,item:safehouse dusty nuka cola,item:safehouse instamash pouch,item:safehouse preserved pie slice,item:safehouse sugar bombs box,item:safehouse fancy lad snack cake,item:safehouse old world coffee tin,item:safehouse molded iguana bits,item:safehouse military ration slab,item:safehouse dehydrated mutfruit brick,item:safehouse vault jerky strip,item:safehouse stale gum drops,item:safehouse salisbury steak tray,item:safehouse cold pork n beans can,item:safehouse combat helmet liner,item:safehouse flak web harness,item:safehouse service rifle stock,item:safehouse pipe rifle receiver,item:safehouse riot control visor,item:safehouse trench shovel blade,item:safehouse bayonet training sheath,item:safehouse war map tube,item:safehouse fatigue field jacket,item:safehouse army canteen shell,item:safehouse dog tag bundle,item:safehouse entrenching tool head,item:safehouse laser musket coil,item:safehouse handmade shotgun frame,item:safehouse atom-age pulse pistol,item:safehouse retro raygun grip,item:safehouse vacuum tube scope,item:safehouse mr handy actuator,item:safehouse fusion battery shell,item:safehouse plasma torch nozzle,item:safehouse geiger wristwatch,item:safehouse pip-dial circuit board,item:safehouse rocket car lunchbox,item:safehouse chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
+eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:safehouse cram tin,item:safehouse blamco mac can,item:safehouse sunset fizz bottle,item:safehouse dusty nuka cola,item:safehouse instamash pouch,item:safehouse preserved pie slice,item:safehouse sugar bombs box,item:safehouse fancy lad snack cake,item:safehouse old world coffee tin,item:safehouse molded iguana bits,item:safehouse military ration slab,item:safehouse dehydrated mutfruit brick,item:safehouse vault jerky strip,item:safehouse stale gum drops,item:safehouse salisbury steak tray,item:safehouse cold pork n beans can,item:safehouse combat helmet liner,item:safehouse flak web harness,item:safehouse service rifle stock,item:safehouse pipe rifle receiver,item:safehouse riot control visor,item:safehouse trench shovel blade,item:safehouse bayonet training sheath,item:safehouse war map tube,item:safehouse fatigue field jacket,item:safehouse army canteen shell,item:safehouse dog tag bundle,item:safehouse entrenching tool head,item:safehouse laser musket coil,item:safehouse handmade shotgun frame,item:safehouse atom-age pulse pistol,item:safehouse retro raygun grip,item:safehouse vacuum tube scope,item:safehouse mr handy actuator,item:safehouse fusion battery shell,item:safehouse plasma torch nozzle,item:safehouse geiger wristwatch,item:safehouse pip-dial circuit board,item:safehouse rocket car lunchbox,item:safehouse chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
 
