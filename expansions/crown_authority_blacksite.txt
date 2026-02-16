@@ -502,6 +502,346 @@ success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover 
 fail:credits-5,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
 @mission
+id:rmg_base-new-11
+label:Reserve operation 11
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:medium
+time:19
+loot:4
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Open negotiations with local wardens => risk:medium | tag:mercy | route:Civic trust route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+10,item:peacebond token,log:Your route call keeps the operation moving. | fail:credits-4,log:The first move backfires and drains momentum.
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy | route:Community relief outcome | ending:Your ethical choice changes future support in this zone. | success:item:field triage stamp,credits+8,log:The community remembers who you protected. | fail:credits-3,log:Good intentions trigger a costly complication.
+eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-12
+label:Reserve operation 12
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:high
+time:20
+loot:2
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Slip through maintenance shafts => risk:medium | tag:stealth | route:Maintenance bypass route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+12,item:vent map spool,log:Your route call keeps the operation moving. | fail:hp-5,log:The first move backfires and drains momentum. | requires:lockpick kit
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:Black-market payout outcome | ending:Your ethical choice changes future support in this zone. | success:item:sealed invoice chip,credits+13,log:The community remembers who you protected. | fail:hp-4,credits-4,log:Good intentions trigger a costly complication.
+eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-13
+label:Reserve operation 13
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:deadly
+time:21
+loot:3
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Breach with heavy support => risk:medium | tag:combat | route:Shock assault route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+14,item:breach charge casing,log:Your route call keeps the operation moving. | fail:hp-8,credits-5,log:The first move backfires and drains momentum. | requires:shock baton
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:Operational reserve outcome | ending:Your ethical choice changes future support in this zone. | success:item:reserve ration crate,credits+10,log:The community remembers who you protected. | fail:credits-2,temp=hot,log:Good intentions trigger a costly complication.
+eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-14
+label:Reserve operation 14
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:high
+time:22
+loot:4
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Open negotiations with local wardens => risk:medium | tag:mercy | route:Civic trust route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+10,item:peacebond token,log:Your route call keeps the operation moving. | fail:credits-4,log:The first move backfires and drains momentum.
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy | route:Community relief outcome | ending:Your ethical choice changes future support in this zone. | success:item:field triage stamp,credits+8,log:The community remembers who you protected. | fail:credits-3,log:Good intentions trigger a costly complication.
+eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-15
+label:Reserve operation 15
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:medium
+time:23
+loot:2
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Slip through maintenance shafts => risk:medium | tag:stealth | route:Maintenance bypass route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+12,item:vent map spool,log:Your route call keeps the operation moving. | fail:hp-5,log:The first move backfires and drains momentum. | requires:lockpick kit
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:Black-market payout outcome | ending:Your ethical choice changes future support in this zone. | success:item:sealed invoice chip,credits+13,log:The community remembers who you protected. | fail:hp-4,credits-4,log:Good intentions trigger a costly complication.
+eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-16
+label:Reserve operation 16
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:medium
+time:24
+loot:3
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Breach with heavy support => risk:medium | tag:combat | route:Shock assault route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+14,item:breach charge casing,log:Your route call keeps the operation moving. | fail:hp-8,credits-5,log:The first move backfires and drains momentum. | requires:shock baton
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:Operational reserve outcome | ending:Your ethical choice changes future support in this zone. | success:item:reserve ration crate,credits+10,log:The community remembers who you protected. | fail:credits-2,temp=hot,log:Good intentions trigger a costly complication.
+eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-17
+label:Reserve operation 17
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:high
+time:25
+loot:4
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Open negotiations with local wardens => risk:medium | tag:mercy | route:Civic trust route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+10,item:peacebond token,log:Your route call keeps the operation moving. | fail:credits-4,log:The first move backfires and drains momentum.
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy | route:Community relief outcome | ending:Your ethical choice changes future support in this zone. | success:item:field triage stamp,credits+8,log:The community remembers who you protected. | fail:credits-3,log:Good intentions trigger a costly complication.
+eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-18
+label:Reserve operation 18
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:deadly
+time:26
+loot:2
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Slip through maintenance shafts => risk:medium | tag:stealth | route:Maintenance bypass route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+12,item:vent map spool,log:Your route call keeps the operation moving. | fail:hp-5,log:The first move backfires and drains momentum. | requires:lockpick kit
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:Black-market payout outcome | ending:Your ethical choice changes future support in this zone. | success:item:sealed invoice chip,credits+13,log:The community remembers who you protected. | fail:hp-4,credits-4,log:Good intentions trigger a costly complication.
+eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-19
+label:Reserve operation 19
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:high
+time:27
+loot:3
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Breach with heavy support => risk:medium | tag:combat | route:Shock assault route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+14,item:breach charge casing,log:Your route call keeps the operation moving. | fail:hp-8,credits-5,log:The first move backfires and drains momentum. | requires:shock baton
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:Operational reserve outcome | ending:Your ethical choice changes future support in this zone. | success:item:reserve ration crate,credits+10,log:The community remembers who you protected. | fail:credits-2,temp=hot,log:Good intentions trigger a costly complication.
+eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-20
+label:Reserve operation 20
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:medium
+time:28
+loot:4
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Open negotiations with local wardens => risk:medium | tag:mercy | route:Civic trust route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+10,item:peacebond token,log:Your route call keeps the operation moving. | fail:credits-4,log:The first move backfires and drains momentum.
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy | route:Community relief outcome | ending:Your ethical choice changes future support in this zone. | success:item:field triage stamp,credits+8,log:The community remembers who you protected. | fail:credits-3,log:Good intentions trigger a costly complication.
+eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-21
+label:Reserve operation 21
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:medium
+time:29
+loot:2
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Slip through maintenance shafts => risk:medium | tag:stealth | route:Maintenance bypass route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+12,item:vent map spool,log:Your route call keeps the operation moving. | fail:hp-5,log:The first move backfires and drains momentum. | requires:lockpick kit
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:Black-market payout outcome | ending:Your ethical choice changes future support in this zone. | success:item:sealed invoice chip,credits+13,log:The community remembers who you protected. | fail:hp-4,credits-4,log:Good intentions trigger a costly complication.
+eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-22
+label:Reserve operation 22
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:high
+time:30
+loot:3
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Breach with heavy support => risk:medium | tag:combat | route:Shock assault route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+14,item:breach charge casing,log:Your route call keeps the operation moving. | fail:hp-8,credits-5,log:The first move backfires and drains momentum. | requires:shock baton
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:Operational reserve outcome | ending:Your ethical choice changes future support in this zone. | success:item:reserve ration crate,credits+10,log:The community remembers who you protected. | fail:credits-2,temp=hot,log:Good intentions trigger a costly complication.
+eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-23
+label:Reserve operation 23
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:deadly
+time:31
+loot:4
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Open negotiations with local wardens => risk:medium | tag:mercy | route:Civic trust route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+10,item:peacebond token,log:Your route call keeps the operation moving. | fail:credits-4,log:The first move backfires and drains momentum.
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy | route:Community relief outcome | ending:Your ethical choice changes future support in this zone. | success:item:field triage stamp,credits+8,log:The community remembers who you protected. | fail:credits-3,log:Good intentions trigger a costly complication.
+eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-24
+label:Reserve operation 24
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:high
+time:32
+loot:2
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Slip through maintenance shafts => risk:medium | tag:stealth | route:Maintenance bypass route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+12,item:vent map spool,log:Your route call keeps the operation moving. | fail:hp-5,log:The first move backfires and drains momentum. | requires:lockpick kit
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:Black-market payout outcome | ending:Your ethical choice changes future support in this zone. | success:item:sealed invoice chip,credits+13,log:The community remembers who you protected. | fail:hp-4,credits-4,log:Good intentions trigger a costly complication.
+eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-25
+label:Reserve operation 25
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:medium
+time:33
+loot:3
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Breach with heavy support => risk:medium | tag:combat | route:Shock assault route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+14,item:breach charge casing,log:Your route call keeps the operation moving. | fail:hp-8,credits-5,log:The first move backfires and drains momentum. | requires:shock baton
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:Operational reserve outcome | ending:Your ethical choice changes future support in this zone. | success:item:reserve ration crate,credits+10,log:The community remembers who you protected. | fail:credits-2,temp=hot,log:Good intentions trigger a costly complication.
+eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-26
+label:Reserve operation 26
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:medium
+time:34
+loot:4
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Open negotiations with local wardens => risk:medium | tag:mercy | route:Civic trust route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+10,item:peacebond token,log:Your route call keeps the operation moving. | fail:credits-4,log:The first move backfires and drains momentum.
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy | route:Community relief outcome | ending:Your ethical choice changes future support in this zone. | success:item:field triage stamp,credits+8,log:The community remembers who you protected. | fail:credits-3,log:Good intentions trigger a costly complication.
+eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-27
+label:Reserve operation 27
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:high
+time:35
+loot:2
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Slip through maintenance shafts => risk:medium | tag:stealth | route:Maintenance bypass route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+12,item:vent map spool,log:Your route call keeps the operation moving. | fail:hp-5,log:The first move backfires and drains momentum. | requires:lockpick kit
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:Black-market payout outcome | ending:Your ethical choice changes future support in this zone. | success:item:sealed invoice chip,credits+13,log:The community remembers who you protected. | fail:hp-4,credits-4,log:Good intentions trigger a costly complication.
+eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-28
+label:Reserve operation 28
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:deadly
+time:36
+loot:3
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Breach with heavy support => risk:medium | tag:combat | route:Shock assault route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+14,item:breach charge casing,log:Your route call keeps the operation moving. | fail:hp-8,credits-5,log:The first move backfires and drains momentum. | requires:shock baton
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:Operational reserve outcome | ending:Your ethical choice changes future support in this zone. | success:item:reserve ration crate,credits+10,log:The community remembers who you protected. | fail:credits-2,temp=hot,log:Good intentions trigger a costly complication.
+eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-29
+label:Reserve operation 29
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:high
+time:37
+loot:4
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Open negotiations with local wardens => risk:medium | tag:mercy | route:Civic trust route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+10,item:peacebond token,log:Your route call keeps the operation moving. | fail:credits-4,log:The first move backfires and drains momentum.
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy | route:Community relief outcome | ending:Your ethical choice changes future support in this zone. | success:item:field triage stamp,credits+8,log:The community remembers who you protected. | fail:credits-3,log:Good intentions trigger a costly complication.
+eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
+id:rmg_base-new-30
+label:Reserve operation 30
+desc:Run a multi-part reserve assignment with branching routes, specialist options, and hard trade-offs that shape local stability.
+risk:medium
+time:38
+loot:2
+reward:reserve mission payout
+combatChance:0.2
+event:Part 1 - Recon teams report three entry routes with different costs | chance:1 | prompt:Pick how your crew gets inside before the window closes.
+eventOption:Slip through maintenance shafts => risk:medium | tag:stealth | route:Maintenance bypass route | ending:Your first-stage route defines who trusts you when the dust settles. | success:credits+12,item:vent map spool,log:Your route call keeps the operation moving. | fail:hp-5,log:The first move backfires and drains momentum. | requires:lockpick kit
+eventOption:Use a special ability to force an adaptive path => risk:high | tag:tech | route:Ability-assisted route | ending:A specialist rewrites the breach plan mid-operation. | success:item:ability focus coil,credits+11,log:Your team's unique skill opens a hidden corridor. | fail:hp-6,log:The ability route overloads under stress. | requires:focus injector
+event:Part 2 - Civilians and rivals collide at the objective cache | chance:1 | prompt:Choose the moral outcome for who receives the recovered assets.
+eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:Black-market payout outcome | ending:Your ethical choice changes future support in this zone. | success:item:sealed invoice chip,credits+13,log:The community remembers who you protected. | fail:hp-4,credits-4,log:Good intentions trigger a costly complication.
+eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
+success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
+fail:hp-4,log:The mission fragments before final extraction.
+@mission
 id:loot-rmg_base-retro-salvage
 label:Retro salvage stockpile
 desc:Hit a hidden cache packed with pre-war food tins, old war gear, and retro-future salvage from the dead zones. The skyline glows like a wound after dark.
