@@ -9723,6 +9723,7 @@ once:true`
     function addProceduralMissions(exp){
       if(!exp?.meta?.id || !Array.isArray(exp.missions)) return;
       const zoneName=exp.meta.name || exp.meta.id;
+      const generatedAsHubMission=isHubZone({id:exp.meta.id,name:zoneName});
       const baseCount=exp.missions.length;
       const target=exp.meta.id==='safehouse' ? 50 : 60;
       if(baseCount>=target) return;
@@ -9745,6 +9746,7 @@ once:true`
           id,
           label:`${zoneName} contract ${i+1}`,
           desc:`${lore[i%lore.length]} Run the route for precise rewards in ${zoneName}.`,
+          hub:generatedAsHubMission,
           risk,
           time:8+(i%9),
           energy:10+(i%8),
