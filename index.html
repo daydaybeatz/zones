@@ -2701,15 +2701,17 @@
     }
     function startOddJobsMission({zoneId,missionPool,onStart,zoneName='this zone'}){
       if(!zoneId || !Array.isArray(missionPool) || !missionPool.length || typeof onStart!=='function'){
-        setCodex('No reserve contracts available right now.');
+        setCodex('No contracts available right now.');
         return;
       }
       const reserveMissions=getMissionOfferReserve(zoneId,missionPool);
-      if(!reserveMissions.length){
-        setCodex('No reserve contracts available right now.');
+      const fallbackMissions=missionPool.filter(isMissionRelationAllowed);
+      const selectable=reserveMissions.length ? reserveMissions : fallbackMissions;
+      if(!selectable.length){
+        setCodex('No contracts available right now.');
         return;
       }
-      const selected=reserveMissions[Math.floor(Math.random()*reserveMissions.length)];
+      const selected=selectable[Math.floor(Math.random()*selectable.length)];
       setCodex(`Odd jobs lead found in ${zoneName}: ${selected.label}.`);
       onStart(selected);
     }
@@ -6808,10 +6810,10 @@ once:true`
       const offers=sortMissionsByRisk(getMissionOffers(zoneId,missionPool));
       const reserve=getMissionOfferReserve(zoneId,missionPool);
       const oddJobs=document.createElement('button');
-      oddJobs.innerHTML='<span>Look for odd jobs</span><span class="small">launch random reserve mission</span>';
+      oddJobs.innerHTML='<span>Look for odd jobs</span><span class="small">launch random mission</span>';
       oddJobs.onclick=()=>startOddJobsMission({zoneId,missionPool,onStart,zoneName});
       if(state.mission.active || state.travel.active) oddJobs.disabled=true;
-      if(!reserve.length) oddJobs.title='Reserve jobs refresh once you rotate listed contracts.';
+      if(!reserve.length) oddJobs.title='No reserve contracts right now, but you can still roll a random local mission.';
       container.appendChild(oddJobs);
       if(offers.length){
         const {page}=getMissionOfferPage(zoneId,offers.length);
