@@ -2371,7 +2371,8 @@
     const riskClassList=['risk-low','risk-medium','risk-high','risk-deadly'];
     const riskColorMap={low:'#39ff14',medium:'#ffb000',high:'#ff6a00',deadly:'#ff0033'};
     const MISSION_PAGE_SIZE=5;
-    const MISSION_OFFER_VISIBLE=10;
+    const MISSION_OFFER_MIN_VISIBLE=10;
+    const MISSION_OFFER_MAX_VISIBLE=15;
     const MISSION_OFFER_RESERVE=95;
     const lowerRisk=(risk)=>{
       const idx=riskLevels.indexOf(risk);
@@ -2567,9 +2568,22 @@
       });
       return selected.slice(0,poolSize);
     };
+    const sortMissionsByRisk=(missions=[])=>{
+      if(!Array.isArray(missions)) return [];
+      return [...missions].sort((a,b)=>{
+        const riskCompare=(riskRank[a?.risk] || riskRank.low) - (riskRank[b?.risk] || riskRank.low);
+        if(riskCompare) return riskCompare;
+        const timeCompare=(Number(a?.time) || 0) - (Number(b?.time) || 0);
+        if(timeCompare) return timeCompare;
+        return String(a?.label || a?.id || '').localeCompare(String(b?.label || b?.id || ''));
+      });
+    };
     const getMissionOfferCount=(missions=[])=>{
       if(!missions.length) return {visible:0,pool:0};
-      const visible=Math.min(MISSION_OFFER_VISIBLE,missions.length);
+      const visible=Math.min(
+        MISSION_OFFER_MAX_VISIBLE,
+        Math.max(MISSION_OFFER_MIN_VISIBLE,missions.length)
+      );
       const pool=Math.min(missions.length,visible+MISSION_OFFER_RESERVE);
       return {visible,pool};
     };
@@ -6791,13 +6805,13 @@ once:true`
     }
 
     function renderZoneMissionOffers({container,zoneId,zoneName,missionPool,onStart}){
-      const offers=getMissionOffers(zoneId,missionPool).slice(0,MISSION_OFFER_VISIBLE);
+      const offers=sortMissionsByRisk(getMissionOffers(zoneId,missionPool));
       const reserve=getMissionOfferReserve(zoneId,missionPool);
       const oddJobs=document.createElement('button');
       oddJobs.innerHTML='<span>Look for odd jobs</span><span class="small">launch random reserve mission</span>';
       oddJobs.onclick=()=>startOddJobsMission({zoneId,missionPool,onStart,zoneName});
-      if(state.mission.active || state.travel.active || !reserve.length) oddJobs.disabled=true;
-      if(!reserve.length) oddJobs.title='No reserve jobs available yet.';
+      if(state.mission.active || state.travel.active) oddJobs.disabled=true;
+      if(!reserve.length) oddJobs.title='Reserve jobs refresh once you rotate listed contracts.';
       container.appendChild(oddJobs);
       if(offers.length){
         const {page}=getMissionOfferPage(zoneId,offers.length);
@@ -6897,7 +6911,7 @@ once:true`
         shopBtn.innerHTML=`<span>Visit shop</span><span class="small">trade · vendors</span>`;
         shopBtn.onclick=()=>openMarketAccess();
         if(state.mission.active || state.travel.active) shopBtn.disabled=true;
-        dom.raidActions.appendChild(shopBtn);
+        dom.raidActions.prepend(shopBtn);
       }
       if(hubZone && !dom.raidActions.children.length){
         const blocked=document.createElement('div');
@@ -7005,6 +7019,13 @@ once:true`
         });
       }
       const hubMissionPool=getUnlockedMissions(exp.missions || []).filter(isHubMission);
+      if(zoneHasShop(hubZone)){
+        const shopBtn=document.createElement('button');
+        shopBtn.innerHTML=`<span>Visit shop</span><span class="small">trade · vendors</span>`;
+        shopBtn.onclick=()=>openMarketAccess();
+        if(state.mission.active || state.travel.active) shopBtn.disabled=true;
+        dom.safehouseActions.appendChild(shopBtn);
+      }
       renderZoneMissionOffers({
         container:dom.safehouseActions,
         zoneId:hubZone.id,
