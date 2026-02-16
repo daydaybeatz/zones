@@ -1680,6 +1680,7 @@
       inventoryScreen:'backpack',
       stashScreen:'vault',
       selected:{source:null,item:null}
+      ,oddJobs:{pending:null,cooldownUntil:0}
     });
     const getIdleSlotLimitFor=(flags,mercs=0)=>{
       const mercCount=Number(mercs || 0);
@@ -1798,6 +1799,7 @@
       merged.mission={...base.mission,...(saved.mission||{})};
       merged.pandemic={...base.pandemic,...(saved.pandemic||{})};
       merged.selected={...base.selected,...(saved.selected||{})};
+      merged.oddJobs={...base.oddJobs,...(saved.oddJobs||{})};
       const travelEndsAt=Number(merged.travel.endsAt);
       merged.travel.endsAt=Number.isFinite(travelEndsAt) ? travelEndsAt : null;
       const travelDistance=Number(merged.travel.distance);
@@ -1849,6 +1851,9 @@
       merged.mapView.panY=clamp(Number(merged.mapView.panY)||0,-180,180);
       merged.learnedSkills=Array.isArray(merged.learnedSkills) ? merged.learnedSkills.filter(Boolean) : [];
       merged.characterStats={...base.characterStats,...(saved.characterStats||{})};
+      merged.oddJobs.pending=(merged.oddJobs && typeof merged.oddJobs.pending==='object') ? merged.oddJobs.pending : null;
+      const oddJobsCooldown=Number(merged.oddJobs?.cooldownUntil);
+      merged.oddJobs.cooldownUntil=Number.isFinite(oddJobsCooldown) ? oddJobsCooldown : 0;
       if(!merged.flags.has('safehouse-funds-offer') && !merged.flags.has('safehouse-funds-complete')){
         merged.flags.add('safehouse-funds-offer');
       }
@@ -2084,6 +2089,7 @@
       'smg ammo':{type:'ammo',rarity:'uncommon',value:8,stackable:true},
       'magnum rounds':{type:'ammo',rarity:'rare',value:11,stackable:true},
       'field handgun':{type:'weapon',slot:'weapon',rarity:'rare',value:52,mods:{combatBonus:11},ammoType:'handgun ammo'},
+      'kevlar vest':{type:'armor',slot:'chest',rarity:'rare',value:64,mods:{riskMod:-0.08,insulation:0.6,combatBonus:4}},
       'frontier rifle':{type:'weapon',slot:'weapon',rarity:'rare',value:60,mods:{combatBonus:12},ammoType:'rifle ammo'},
       'breach shotgun':{type:'weapon',slot:'weapon',rarity:'epic',value:74,mods:{combatBonus:13},ammoType:'shotgun ammo'},
       'tunnel SMG':{type:'weapon',slot:'weapon',rarity:'rare',value:58,mods:{combatBonus:11,stealthBonus:0.04},ammoType:'smg ammo'},
@@ -2704,15 +2710,46 @@
         setCodex('No contracts available right now.');
         return;
       }
+      const now=Date.now();
+      const cooldownUntil=Number(state.oddJobs?.cooldownUntil || 0);
+      if(cooldownUntil>now){
+        const waitSeconds=Math.max(1,Math.ceil((cooldownUntil-now)/1000));
+        setCodex(`Odd job lines are cooling down. Try again in ${waitSeconds}s.`);
+        return;
+      }
       const reserveMissions=getMissionOfferReserve(zoneId,missionPool);
-      const fallbackMissions=missionPool.filter(isMissionRelationAllowed);
+      const offeredMissions=getMissionOffers(zoneId,missionPool);
+      const shownMissionIds=new Set(offeredMissions.map(m=>m.id));
+      const fallbackMissions=missionPool.filter(m=>isMissionRelationAllowed(m) && !shownMissionIds.has(m.id));
       const selectable=reserveMissions.length ? reserveMissions : fallbackMissions;
       if(!selectable.length){
-        setCodex('No contracts available right now.');
+        setCodex('No hidden odd jobs found. Clear listed contracts or move zones for fresh leads.');
         return;
       }
       const selected=selectable[Math.floor(Math.random()*selectable.length)];
-      setCodex(`Odd jobs lead found in ${zoneName}: ${selected.label}.`);
+      state.oddJobs.pending={zoneId,missionId:selected.id};
+      setCodex(`Odd jobs lead found in ${zoneName}: ${selected.label}. Confirm to launch or decline for a 10 second cooldown.`);
+      renderAll();
+    }
+    function respondOddJobsMission({zoneId,missionPool,onStart,zoneName='this zone',accept=false}){
+      const pending=state.oddJobs?.pending;
+      if(!pending || pending.zoneId!==zoneId){
+        setCodex('Odd job lead expired. Search again.');
+        return;
+      }
+      const selected=missionPool.find(m=>m.id===pending.missionId);
+      state.oddJobs.pending=null;
+      if(!accept){
+        state.oddJobs.cooldownUntil=Date.now()+10000;
+        setCodex(`You decline the ${zoneName} odd job. Fixers go radio-silent for 10 seconds.`);
+        renderAll();
+        return;
+      }
+      if(!selected){
+        setCodex('That odd job is no longer available.');
+        renderAll();
+        return;
+      }
       onStart(selected);
     }
     const getDoorLootScore=(exp)=>{
@@ -4074,6 +4111,8 @@ once:true`
     let expansionsExpected=0;
     let expansionsLoaded=0;
     let expansionsAttempted=0;
+    let skillMissionsInjected=false;
+    let hardMissionsInjected=false;
     const idleOperations=[
       {id:'bunker-maintenance',label:'Bunker maintenance run',desc:'Maintenance crews stabilize systems and earn a few credits.',duration:3,cost:{credits:6},reward:'credits+7,item:old coin',unlockFlag:'safehouse-vents',xp:8,secretUnlockFlag:'secret-safehouse-ops',secretZoneId:'safehouse'},
       {id:'bunker-ledger-watch',label:'Ledger watch rotation',desc:'Keep the bunker ledger clean while diverting funds to water stocks.',duration:3,cost:{credits:8},reward:'item:water flask,credits+4',unlockFlag:'safehouse-funds-conspiracy',xp:8},
@@ -4109,7 +4148,12 @@ once:true`
       {id:'salvage tote',label:'Salvage tote',desc:'Reinforce a tote for hauling extra salvage.',cost:{'cloth scraps':8,'plastic shards':5,'wire spool':4}},
       {id:'scout daypack',label:'Scout daypack',desc:'Build a balanced daypack for longer routes.',cost:{'salvage tote':1,'wire spool':4,'cloth scraps':6}},
       {id:'bridge-runner pack',label:'Bridge-runner pack',desc:'Tethered pack tuned for wet transit lanes.',cost:{'salvage tote':1,'riot-line tape':4,'wire spool':4}},
-      {id:'ledger-etched compass',label:'Ledger-etched compass',desc:'Etch trade routes into a compass that never lies.',cost:{'old coin':2,'electronics bits':4,'wire spool':3}}
+      {id:'ledger-etched compass',label:'Ledger-etched compass',desc:'Etch trade routes into a compass that never lies.',cost:{'old coin':2,'electronics bits':4,'wire spool':3}},
+      {id:'field handgun',label:'Field handgun',desc:'Rebuild a reliable sidearm from recovered components.',cost:{'wire spool':6,'electronics bits':8,'old coin':2},unlockFlag:'legendary-craft-handgun'},
+      {id:'kevlar vest',label:'Kevlar vest',desc:'Stitch hardened plates into a lightweight ballistic vest.',cost:{'cloth scraps':10,'riot-line tape':6,'wire spool':4},unlockFlag:'legendary-craft-kevlar'},
+      {id:'long-range binoculars',label:'Long-range binoculars',desc:'Tune precision optics for route scouting and stealth.',cost:{'survey binoculars':1,'electronics bits':6,'wire spool':5},unlockFlag:'legendary-craft-binoculars'},
+      {id:'stealth suit',label:'Stealth suit',desc:'Layer muted fiber panels to reduce profile in hostile zones.',cost:{'ghillie wrap':1,'cloth scraps':12,'camo tarp':3},unlockFlag:'legendary-craft-stealth-suit'},
+      {id:'sniper rifle',label:'Sniper rifle',desc:'Assemble a long rifle tuned for decisive opening shots.',cost:{'pipe rifle':1,'electronics bits':10,'wire spool':8},unlockFlag:'legendary-craft-sniper'}
     ];
 
     const MARKET_STOCK_BY_ZONE={
@@ -5657,10 +5701,12 @@ once:true`
       renderAll();
     }
 
+    const isRecipeUnlocked=(recipe)=>!recipe?.unlockFlag || state.flags.has(recipe.unlockFlag);
+    const getVisibleCraftingRecipes=()=>CRAFTING_RECIPES.filter(isRecipeUnlocked);
     const hasCraftingMaterials=(recipe)=>Object.entries(recipe.cost).every(([id,count])=>getItemCount(state.inventory,id)>=count);
     const craftingCostLabel=(recipe)=>Object.entries(recipe.cost).map(([id,count])=>`${count} ${id}`).join(' · ');
     function craftRecipe(recipeId){
-      const recipe=CRAFTING_RECIPES.find(entry=>entry.id===recipeId);
+      const recipe=getVisibleCraftingRecipes().find(entry=>entry.id===recipeId);
       if(!recipe) return;
       if(!hasCraftingMaterials(recipe)) {
         setCodex('Missing crafting materials.');
@@ -6051,7 +6097,8 @@ once:true`
     }
 
     function changeCraftingPage(delta){
-      const totalPages=Math.max(1,Math.ceil(CRAFTING_RECIPES.length/CRAFTING_PAGE_SIZE));
+      const visibleRecipes=getVisibleCraftingRecipes();
+      const totalPages=Math.max(1,Math.ceil(visibleRecipes.length/CRAFTING_PAGE_SIZE));
       state.craftingPage=clamp(state.craftingPage+delta,0,totalPages-1);
       renderCrafting();
     }
@@ -6066,17 +6113,18 @@ once:true`
     function renderCrafting(){
       if(!dom.crafting) return;
       dom.crafting.innerHTML='';
-      if(!CRAFTING_RECIPES.length){
+      const visibleRecipeList=getVisibleCraftingRecipes();
+      if(!visibleRecipeList.length){
         const empty=document.createElement('div');
         empty.className='muted-box';
         empty.textContent='No recipes available yet.';
         dom.crafting.appendChild(empty);
         return;
       }
-      const totalPages=Math.max(1,Math.ceil(CRAFTING_RECIPES.length/CRAFTING_PAGE_SIZE));
+      const totalPages=Math.max(1,Math.ceil(visibleRecipeList.length/CRAFTING_PAGE_SIZE));
       state.craftingPage=clamp(state.craftingPage,0,totalPages-1);
       const start=state.craftingPage*CRAFTING_PAGE_SIZE;
-      const visibleRecipes=CRAFTING_RECIPES.slice(start,start+CRAFTING_PAGE_SIZE);
+      const visibleRecipes=visibleRecipeList.slice(start,start+CRAFTING_PAGE_SIZE);
       const grid=document.createElement('div');
       grid.className='recipe-grid';
       visibleRecipes.forEach(recipe=>{
@@ -6119,8 +6167,8 @@ once:true`
         prev.onclick=()=>changeCraftingPage(-1);
         const info=document.createElement('div');
         info.className='page-info';
-        const end=Math.min(CRAFTING_RECIPES.length,start+visibleRecipes.length);
-        info.textContent=`Showing recipes ${start+1}-${end} of ${CRAFTING_RECIPES.length}`;
+        const end=Math.min(visibleRecipeList.length,start+visibleRecipes.length);
+        info.textContent=`Showing recipes ${start+1}-${end} of ${visibleRecipeList.length}`;
         const next=document.createElement('button');
         next.textContent='More recipes';
         next.disabled=state.craftingPage>=totalPages-1;
@@ -6806,15 +6854,32 @@ once:true`
       container.appendChild(btn);
     }
 
-    function renderZoneMissionOffers({container,zoneId,zoneName,missionPool,onStart}){
+    function renderZoneMissionOffers({container,zoneId,zoneName,missionPool,onStart,showUtilityActions=true}){
       const offers=sortMissionsByRisk(getMissionOffers(zoneId,missionPool));
       const reserve=getMissionOfferReserve(zoneId,missionPool);
-      const oddJobs=document.createElement('button');
-      oddJobs.innerHTML='<span>Look for odd jobs</span><span class="small">launch random mission</span>';
-      oddJobs.onclick=()=>startOddJobsMission({zoneId,missionPool,onStart,zoneName});
-      if(state.mission.active || state.travel.active) oddJobs.disabled=true;
-      if(!reserve.length) oddJobs.title='No extra contracts right now, but you can still roll a random local mission.';
-      container.appendChild(oddJobs);
+      if(showUtilityActions){
+        const oddJobs=document.createElement('button');
+        oddJobs.innerHTML='<span>Look for odd jobs</span><span class="small">find hidden contract</span>';
+        oddJobs.onclick=()=>startOddJobsMission({zoneId,missionPool,onStart,zoneName});
+        if(state.mission.active || state.travel.active) oddJobs.disabled=true;
+        if(!reserve.length) oddJobs.title='No reserve list right now; odd jobs will only roll hidden local leads.';
+        container.appendChild(oddJobs);
+        const pending=state.oddJobs?.pending;
+        if(pending && pending.zoneId===zoneId){
+          const pendingMission=missionPool.find(m=>m.id===pending.missionId);
+          const confirmBtn=document.createElement('button');
+          confirmBtn.innerHTML=`<span>Confirm odd job: ${pendingMission?.label || 'Unknown contract'}</span><span class="small">accept lead</span>`;
+          confirmBtn.onclick=()=>respondOddJobsMission({zoneId,missionPool,onStart,zoneName,accept:true});
+          if(state.mission.active || state.travel.active) confirmBtn.disabled=true;
+          container.appendChild(confirmBtn);
+          const declineBtn=document.createElement('button');
+          declineBtn.innerHTML='<span>Decline odd job</span><span class="small">10 second search cooldown</span>';
+          declineBtn.classList.add('danger');
+          declineBtn.onclick=()=>respondOddJobsMission({zoneId,missionPool,onStart,zoneName,accept:false});
+          if(state.mission.active || state.travel.active) declineBtn.disabled=true;
+          container.appendChild(declineBtn);
+        }
+      }
       if(offers.length){
         const {page}=getMissionOfferPage(zoneId,offers.length);
         const start=page*MISSION_PAGE_SIZE;
@@ -6831,7 +6896,14 @@ once:true`
       dom.raidActions.innerHTML='';
       const exp=expansions[state.zone.id];
       const scene=ensureZoneScene(state.zone);
-      if(scene && scene.options && scene.options.length){
+      const hubZone=isHubZone();
+      const missionPool=hubZone
+        ? getUnlockedMissions(exp?.missions || []).filter(isHubMission)
+        : ((exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES);
+      const zoneOffers=sortMissionsByRisk(getMissionOffers(state.zone.id,missionPool));
+      const missionPageInfo=getMissionOfferPage(state.zone.id,zoneOffers.length);
+      const isFirstMissionPage=missionPageInfo.page===0;
+      if(isFirstMissionPage && scene && scene.options && scene.options.length){
         scene.options.forEach(option=>{
           const optionFlag=option.flag;
           if(option.once && optionFlag && state.flags.has(optionFlag)) return;
@@ -6853,14 +6925,14 @@ once:true`
         });
       }
       const barConfig=getBarConfig(state.zone.id);
-      if(barConfig){
+      if(isFirstMissionPage && barConfig){
         const barBtn=document.createElement('button');
         barBtn.innerHTML=`<span>The Bar</span><span class="small">hire mercs · +1 idle slot</span>`;
         barBtn.onclick=openBarModal;
         if(state.mission.active || state.travel.active) barBtn.disabled=true;
         dom.raidActions.appendChild(barBtn);
       }
-      if(exp && exp.quests && exp.quests.length){
+      if(isFirstMissionPage && exp && exp.quests && exp.quests.length){
         exp.quests.forEach(quest=>{
           const btn=document.createElement('button');
           const questFlag=quest.flag || quest.id;
@@ -6897,11 +6969,7 @@ once:true`
           dom.raidActions.appendChild(btn);
         });
       }
-      const hubZone=isHubZone();
-      const missionPool=hubZone
-        ? getUnlockedMissions(exp?.missions || []).filter(isHubMission)
-        : ((exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES);
-      if(!hubZone){
+      if(!hubZone && isFirstMissionPage){
         const combatBtn=document.createElement('button');
         const combatProfile=getCombatProfile(state.zone.risk);
         const combatMeta=buildMissionMeta({
@@ -6924,9 +6992,10 @@ once:true`
         zoneId:state.zone.id,
         zoneName:state.zone.name,
         missionPool,
-        onStart:startMission
+        onStart:startMission,
+        showUtilityActions:isFirstMissionPage
       });
-      if(hubZone && state.zone.id==='safehouse' && zoneHasShop()){
+      if(hubZone && isFirstMissionPage && state.zone.id==='safehouse' && zoneHasShop()){
         const shopBtn=document.createElement('button');
         shopBtn.innerHTML=`<span>Visit shop</span><span class="small">trade · vendors</span>`;
         shopBtn.onclick=()=>openMarketAccess();
@@ -6960,8 +7029,12 @@ once:true`
         return;
       }
       const hubZone=getMainHubZone();
+      const hubMissionPool=getUnlockedMissions(exp.missions || []).filter(isHubMission);
+      const hubOffers=sortMissionsByRisk(getMissionOffers(hubZone.id,hubMissionPool));
+      const hubPageInfo=getMissionOfferPage(hubZone.id,hubOffers.length);
+      const isFirstMissionPage=hubPageInfo.page===0;
       const scene=ensureZoneScene(hubZone);
-      if(scene?.options?.length){
+      if(isFirstMissionPage && scene?.options?.length){
         scene.options.forEach(option=>{
           const btn=document.createElement('button');
           const label=option.label || 'Local action';
@@ -6980,7 +7053,7 @@ once:true`
           dom.safehouseActions.appendChild(btn);
         });
       }
-      if(exp.quests?.length){
+      if(isFirstMissionPage && exp.quests?.length){
         exp.quests.forEach(quest=>{
           const minLevel=Number(quest.minLevel || quest.minlevel || 0);
           if(minLevel && state.level<minLevel) return;
@@ -7020,8 +7093,7 @@ once:true`
           dom.safehouseActions.appendChild(btn);
         });
       }
-      const hubMissionPool=getUnlockedMissions(exp.missions || []).filter(isHubMission);
-      if(zoneHasShop(hubZone)){
+      if(isFirstMissionPage && zoneHasShop(hubZone)){
         const shopBtn=document.createElement('button');
         shopBtn.innerHTML=`<span>Visit shop</span><span class="small">trade · vendors</span>`;
         shopBtn.onclick=()=>openMarketAccess();
@@ -7033,7 +7105,8 @@ once:true`
         zoneId:hubZone.id,
         zoneName:hubZone.name,
         missionPool:hubMissionPool,
-        onStart:(raid)=>startMissionAtZone(raid,hubZone)
+        onStart:(raid)=>startMissionAtZone(raid,hubZone),
+        showUtilityActions:isFirstMissionPage
       });
       if(!dom.safehouseActions.children.length){
         const empty=document.createElement('div');
@@ -8866,6 +8939,7 @@ once:true`
         setCodex('Not enough resources for that raid.');
         return;
       }
+      if(state.oddJobs) state.oddJobs.pending=null;
       startLoops();
       applyCost(cost);
       const now=Date.now();
@@ -8929,6 +9003,7 @@ once:true`
         setCodex('Not enough resources for that raid.');
         return;
       }
+      if(state.oddJobs) state.oddJobs.pending=null;
       startLoops();
       applyCost(cost);
       const now=Date.now();
@@ -9229,6 +9304,7 @@ once:true`
       expansionsLoaded=0;
       expansionsAttempted=0;
       skillMissionsInjected=false;
+      hardMissionsInjected=false;
       if(dom.doors) dom.doors.innerHTML='';
       dom.doorsHint.textContent=manifest.length ? 'Loading expansions…' : 'No expansions configured.';
       manifest.forEach(meta=>loadExpansion(meta));
@@ -9277,6 +9353,10 @@ once:true`
         if(!skillMissionsInjected && expansionsAttempted>=expansionsExpected && expansionsLoaded>0){
           injectSkillTrainingMissions();
           skillMissionsInjected=true;
+        }
+        if(!hardMissionsInjected && expansionsAttempted>=expansionsExpected && expansionsLoaded>0){
+          injectLegendaryCraftMissions();
+          hardMissionsInjected=true;
         }
         if(expansionsLoaded===0 && expansionsAttempted>=expansionsExpected){
           dom.doorsHint.textContent='Unable to load expansions.';
@@ -9746,32 +9826,94 @@ once:true`
         });
       }
     }
+    const GENERIC_MISSION_LABEL_PATTERN=/(^|\s)(operation|frontline contract|reserve operation|idle network contract|field operation|contract)\s*#?\d*$/i;
+    const ROUTE_REQUIREMENT_ITEMS={
+      stealth:['camo tarp','wire-cutter kit','silent boots'],
+      tech:['electronics bits','wire spool','access scanner'],
+      combat:['handgun ammo','riot-line tape','scrap spear'],
+      mercy:['bandage','water flask','ration bar'],
+      betrayal:['old coin','signal jammer','lockbox key']
+    };
+    const ROUTE_SKILL_BY_TAG={
+      stealth:'infiltration',
+      tech:'engineering',
+      combat:'marksmanship',
+      mercy:'medicine',
+      betrayal:'negotiation'
+    };
+    function diversifyEventOption(option,mission,{eventIdx=0,optIdx=0}={}){
+      if(!option || typeof option!=='object') return;
+      const cleanTag=String(option.tag || '').toLowerCase();
+      const fallbackTag=['stealth','tech','combat','mercy','betrayal'][(eventIdx+optIdx)%5];
+      const tag=cleanTag || fallbackTag;
+      option.tag=tag;
+      const laneRisk=['low','medium','high','deadly'][Math.min(3,optIdx)];
+      if(!option.risk) option.risk=laneRisk;
+      const riskMod=(riskRank[option.risk] || riskRank.medium)-2;
+      const baseBonus=(optIdx===0?0.06:optIdx===1?0.02:optIdx===2?-0.04:-0.08);
+      option.bonus=clamp((Number(option.bonus)||0)+baseBonus-(riskMod*0.02),-0.18,0.22);
+      if(!option.requiresSkill && optIdx>0){
+        option.requiresSkill=ROUTE_SKILL_BY_TAG[tag] || '';
+      }
+      if((!Array.isArray(option.requires) || !option.requires.length) && optIdx>0){
+        const items=ROUTE_REQUIREMENT_ITEMS[tag] || ROUTE_REQUIREMENT_ITEMS.stealth;
+        option.requires=[items[(eventIdx+optIdx)%items.length]];
+        option.consumeRequired=optIdx>=2;
+      }
+      if(!option.routeLabel){
+        option.routeLabel=`${tag.charAt(0).toUpperCase()}${tag.slice(1)} route`;
+      }
+      if(!option.success){
+        const rewardCredit=8+(optIdx*4)+(Math.max(0,riskMod)*2);
+        option.success=`credits+${rewardCredit},item:${STORY_REWARDS[(eventIdx+optIdx)%STORY_REWARDS.length]}`;
+      }
+      if(!/credits\+|item:|merc\+|xp\+/i.test(option.success)){
+        option.success=`${option.success},credits+${8+(optIdx*3)}`;
+      }
+      if(!option.fail){
+        option.fail=`hp-${4+(optIdx*2)},credits-${2+Math.max(0,optIdx-1)}`;
+      }else if(!/hp-|credits-|rads\+|temp-/i.test(option.fail)){
+        option.fail=`${option.fail},hp-${4+(optIdx*2)}`;
+      }
+    }
     function normalizeMissionNarrative(exp){
       if(!exp || !Array.isArray(exp.missions)) return;
       const zoneName=exp.meta?.name || exp.meta?.id || 'this zone';
+      const usedLabels=new Set();
       exp.missions.forEach((mission,idx)=>{
-        mission.label=sanitizeNarrativeText(mission.label || `Help ${zoneName}`) || `Help ${zoneName}`;
+        const fallbackLabel=`${zoneName} // ${STORY_HOOKS[idx%STORY_HOOKS.length].replace(/\.$/,'')}`;
+        mission.label=sanitizeNarrativeText(mission.label || fallbackLabel) || fallbackLabel;
+        if(GENERIC_MISSION_LABEL_PATTERN.test(mission.label) || /operation\s+\d+/i.test(mission.label)){
+          mission.label=`${zoneName}: ${STORY_HOOKS[idx%STORY_HOOKS.length]}`;
+        }
+        if(usedLabels.has(mission.label)) mission.label=`${mission.label} (${idx+1})`;
+        usedLabels.add(mission.label);
         const char=STORY_CHARACTERS[(idx+zoneName.length)%STORY_CHARACTERS.length];
         const hook=STORY_HOOKS[(idx*3+zoneName.length)%STORY_HOOKS.length];
-        if(!mission.desc || /contract\s*\d+|route for precise rewards|field operation/i.test(mission.desc)){
+        if(!mission.desc || /contract\s*\d+|route for precise rewards|field operation|frontline contract|reserve operation/i.test(mission.desc)){
           mission.desc=`${char} asks you to ${hook} in ${zoneName}.`;
         }
         mission.desc=sanitizeNarrativeText(mission.desc);
         if(Array.isArray(mission.events)){
-          mission.events.forEach((event,eventIdx)=>{
-            event.label=sanitizeNarrativeText(event.label || 'Local situation');
-            event.prompt=sanitizeNarrativeText(event.prompt || `${char} asks what choice you will make for ${zoneName}.`);
-            if(Array.isArray(event.options)){
-              event.options.forEach(opt=>{
-                opt.label=sanitizeNarrativeText(opt.label || 'Take the safer route') || 'Take the safer route';
-                if(opt.success) opt.success=sanitizeNarrativeText(opt.success);
-                if(opt.fail) opt.fail=sanitizeNarrativeText(opt.fail);
-              });
-            }
-            if(!Array.isArray(event.options) || !event.options.length){
+          const seenEvents=new Set();
+          mission.events=mission.events.filter((event,eventIdx)=>{
+            const eventKey=`${sanitizeNarrativeText(event?.label || '')}::${sanitizeNarrativeText(event?.prompt || '')}`;
+            if(seenEvents.has(eventKey)) return false;
+            seenEvents.add(eventKey);
+            const e=event || {};
+            e.label=sanitizeNarrativeText(e.label || 'Local situation');
+            e.prompt=sanitizeNarrativeText(e.prompt || `${char} asks what choice you will make for ${zoneName}.`);
+            if(!Array.isArray(e.options) || !e.options.length){
               const rewardItem=STORY_REWARDS[(idx+eventIdx)%STORY_REWARDS.length];
-              event.options=[{label:'Help the locals',risk:'low',success:`item:${rewardItem},credits+8`},{label:'Move fast and keep watch',risk:'medium',success:'xp+10'}];
+              e.options=[{label:'Help the locals',risk:'low',tag:'mercy',success:`item:${rewardItem},credits+8`},{label:'Move fast and keep watch',risk:'high',tag:'stealth',success:'xp+10,credits+6',fail:'hp-5,credits-3'}];
             }
+            e.options.forEach((opt,optIdx)=>{
+              opt.label=sanitizeNarrativeText(opt.label || 'Take the safer route') || 'Take the safer route';
+              diversifyEventOption(opt,mission,{eventIdx,optIdx});
+              if(opt.success) opt.success=sanitizeNarrativeText(opt.success);
+              if(opt.fail) opt.fail=sanitizeNarrativeText(opt.fail);
+            });
+            return true;
           });
         }
       });
@@ -9796,6 +9938,7 @@ once:true`
         }
       });
     }
+
     const CONTRACT_CALLSIGNS=['Ashfall','Nightglass','Mercy Line','Salt Vein','Iron Echo','Static Dawn','Cinder Trace','Lumen Debt','Pale Signal','Blackwater'];
     const CONTRACT_THEMES=[
       'escort a witness tied to old regime crimes',
@@ -9927,6 +10070,56 @@ once:true`
         });
       });
     }
+
+    const LEGENDARY_CRAFT_UNLOCKS=[
+      {id:'handgun',flag:'legendary-craft-handgun',item:'field handgun',label:'Field handgun schematics'},
+      {id:'kevlar',flag:'legendary-craft-kevlar',item:'kevlar vest',label:'Kevlar vest weave pattern'},
+      {id:'binoculars',flag:'legendary-craft-binoculars',item:'long-range binoculars',label:'Long-range binocular calibration'},
+      {id:'stealth-suit',flag:'legendary-craft-stealth-suit',item:'stealth suit',label:'Stealth suit pattern'},
+      {id:'sniper',flag:'legendary-craft-sniper',item:'sniper rifle',label:'Sniper rifle blueprint'}
+    ];
+    function injectLegendaryCraftMissions(){
+      const zoneIds=Object.keys(expansions).filter(id=>id!=='safehouse');
+      if(!zoneIds.length) return;
+      for(let i=0;i<20;i++){
+        const zoneId=zoneIds[i%zoneIds.length];
+        const exp=expansions[zoneId];
+        if(!exp || !Array.isArray(exp.missions)) continue;
+        const unlock=LEGENDARY_CRAFT_UNLOCKS[i%LEGENDARY_CRAFT_UNLOCKS.length];
+        const missionId=`${zoneId}-legendary-craft-${String(i+1).padStart(2,'0')}`;
+        if(exp.missions.some(m=>m.id===missionId)) continue;
+        const risk=i%2===0 ? 'deadly' : 'high';
+        const lore=STORY_HOOKS[(i*2)%STORY_HOOKS.length];
+        exp.missions.push({
+          id:missionId,
+          label:`${exp.meta?.name || zoneId} black protocol ${i+1}`,
+          desc:`A high-risk strike to ${lore}. Success unlocks ${unlock.label} so you can craft ${unlock.item}.`,
+          risk,
+          time:15+(i%4),
+          energy:19+(i%5),
+          loot:4,
+          lootType:'sealed blacksite cache',
+          reward:`item:${unlock.item},credits+${22+(i%6)},flag:${unlock.flag}`,
+          failChance:clamp(0.44+(i%3)*0.05,0.35,0.58),
+          combatChance:clamp(0.58+(i%4)*0.06,0.5,0.82),
+          events:[
+            {
+              label:'Infiltration split',
+              prompt:'Pick a route: silent breach, technical override, or direct assault.',
+              chance:1,
+              options:[
+                {label:'Silent breach with scouting optics',risk:'high',tag:'stealth',requiresSkill:'infiltration',requires:['long-range binoculars'],success:`item:${unlock.item},credits+18,flag:${unlock.flag}`,fail:'hp-9,credits-5'},
+                {label:'Technical override via unstable conduit',risk:'deadly',tag:'tech',requiresSkill:'engineering',requires:['wire-cutter kit'],consumeRequired:true,success:`item:${unlock.item},credits+22,flag:${unlock.flag}`,fail:'hp-11,rads+6,credits-7'},
+                {label:'Assault the control deck head-on',risk:'deadly',tag:'combat',requiresSkill:'marksmanship',requires:['handgun ammo'],consumeRequired:true,success:`item:${unlock.item},credits+26,flag:${unlock.flag}`,fail:'hp-13,credits-9'}
+              ]
+            }
+          ]
+        });
+      }
+      Object.values(expansions).forEach(exp=>normalizeMissionNarrative(exp));
+      renderAll();
+    }
+
     function renderAll(){
       renderPauseToggle();
       renderBars();
