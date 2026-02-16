@@ -10,6 +10,7 @@ shop:true
 relationFaction:military
 relationMin:3
 
+
 @door
 label:RMG Fortified Checkpoint
 hint:intense odd jobs, high pay, low-tier loot, shop, rest
@@ -17,11 +18,13 @@ risk:medium
 note:Searchlights rake the barricade as an RMG officer checks your clearance. The skyline glows like a wound after dark.
 target:command-deck
 
+
 @scene command-deck
 title:Command Deck Barracks
 desc:Steel bunks and briefing boards line the command deck with a strict quiet order. The skyline glows like a wound after dark.
 tags:RMG / Military
 option:Rest in the spare bunk => command-deck | risk:low | time:6 | reward:rested | success:hp+8,temp=normal,log:The regimented quiet lets you recover. Static hums through every bad decision.| fail:credits-2,log:An alarm drill cuts your rest short. Static hums through every bad decision.
+
 
 @mission
 id:rmg-perimeter-sweep
@@ -40,6 +43,11 @@ fixedRewards:credits+18,item:bandage,item:handgun ammo
 event:Militia graffiti found | chance:0.6 | prompt:Graffiti from Abernathy scouts lines the wall. Do you erase it? Nobody here mistakes kindness for weakness anymore.
 eventOption:Scrub it clean => risk:medium | tag:tech | success:credits+6,item:riot-line tape,log:You clean the wall and get issued extra tape. Broken cameras still pivot like they remember faces.| fail:credits-4,log:The solvents foul the sensors and you lose time. Broken cameras still pivot like they remember faces.
 eventOption:Leave it as bait => risk:high | tag:betrayal | success:credits+8,item:rusty flashlight,log:You set a trap and snag a spare light. Static hums through every bad decision.| fail:hp-6,log:A scout slips in and clips you. The skyline glows like a wound after dark.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg-briefing-escort
@@ -60,6 +68,11 @@ event:Officer issues a harsh order | chance:0.55 | prompt:The officer orders you
 eventOption:Slow the pace and shield them => risk:medium | tag:mercy | success:credits+6,item:thermal wrap,log:You keep civilians safe and earn a wrap. Trust is currency, and everyone is short on it.| fail:credits-6,log:The officer notes the delay in your file. Trust is currency, and everyone is short on it.
 eventOption:Follow the order exactly => risk:high | tag:combat | success:credits+10,item:riot-line tape,log:The escort stays on time. Trust is currency, and everyone is short on it.| fail:hp-8,credits-4,log:The block erupts into a fight. Broken cameras still pivot like they remember faces.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg-signal-intercept
 label:Signal intercept lockdown
@@ -78,6 +91,11 @@ combatChance:0.5
 event:Intercept points to a civilian safehouse | chance:0.5 | prompt:The intercept flags a civilian safehouse on the route. Trust is currency, and everyone is short on it.
 eventOption:Mark it as off-limits => risk:medium | tag:mercy | success:credits+6,item:comfort liner,log:You protect the safehouse and get a comfort liner. Static hums through every bad decision.| fail:credits-5,log:Command challenges your report. Even the quiet sounds engineered.
 eventOption:Flag it for inspection => risk:high | tag:betrayal | success:credits+10,item:utility coat,log:Command praises your compliance. Broken cameras still pivot like they remember faces.| fail:hp-7,log:The inspection team gets ambushed. Static hums through every bad decision.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg-salvage-extract
@@ -98,6 +116,11 @@ event:Supply drone goes down early | chance:0.6 | prompt:The supply drone crashe
 eventOption:Reboot the drone => risk:medium | tag:tech | success:credits+6,item:electronics bits,log:The drone reboots and drops spare parts. Broken cameras still pivot like they remember faces.| fail:credits-6,log:The reboot fails and you lose time. Trust is currency, and everyone is short on it.
 eventOption:Strip it and move fast => risk:high | tag:combat | success:credits+8,item:scrap bundle,log:You strip the drone and sprint out. Trust is currency, and everyone is short on it.| fail:hp-9,log:A scout ambush catches you. Even the quiet sounds engineered.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-ops-scoutline
 label:Blacksite Scoutline
@@ -109,6 +132,11 @@ lootType:route scraps
 event:Elder mapkeeper shares old chalk routes | chance:1 | prompt:The elder warns that loud routes wake dormant threats. Which route do you follow? Even the quiet sounds engineered.
 eventOption:Follow the elder's silent route => risk:low | tag:mercy | success:item:trail compass,item:folding binoculars,credits+5,log:You follow old marks and recover navigation tools. Static hums through every bad decision.| fail:credits-3,log:A dead-end slows the team. Nobody here mistakes kindness for weakness anymore.
 eventOption:Cut directly through unsecured lanes => risk:medium | tag:combat | success:item:impact baton,credits+7,log:You force a shorter route and grab a baton cache. Even the quiet sounds engineered.| fail:hp-5,log:An ambush bruises your squad. The skyline glows like a wound after dark.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-ops-supply-barter
@@ -122,6 +150,11 @@ event:Blackout market opens for one hour | chance:0.9 | prompt:A trader offers r
 eventOption:Mediate the dispute and keep order => risk:low | tag:mercy | success:item:field compass,item:insulated gloves,credits+6,log:The market stays calm and you leave with tools. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The deal collapses. Static hums through every bad decision.
 eventOption:Threaten both sides and seize stock => risk:medium | tag:betrayal | success:item:metal detector,item:sealed ration tin,credits+9,log:You intimidate the traders and seize premium stock. The skyline glows like a wound after dark.| fail:hp-4,credits-3,log:Hidden guards push you out. Nobody here mistakes kindness for weakness anymore.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-ops-shadow-lift
 label:Blacksite Shadow Lift
@@ -134,6 +167,11 @@ event:Floodlights sweep the loading lane | chance:0.75 | prompt:You can move slo
 eventOption:Use stealth-wear and move with the sweep gaps => risk:medium | tag:stealth | success:item:stealth-wear,item:smoke capsule,credits+8,log:Careful pacing gets the full crate out. Nobody here mistakes kindness for weakness anymore.| fail:hp-5,log:A spotlight catches you. The skyline glows like a wound after dark.
 eventOption:Jam the lights and sprint the lift => risk:high | tag:tech | success:item:signal scrambler,item:quick-lace boots,credits+10,log:You blind the lane and extract heavy loot. Broken cameras still pivot like they remember faces.| fail:hp-7,log:Backup lights trigger mid-run. Nobody here mistakes kindness for weakness anymore.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-ops-deep-vault
 label:Blacksite Vault Breach
@@ -145,6 +183,11 @@ lootType:specialized gear
 event:Old vault AI demands a pledge to local survivors | chance:1 | prompt:The AI asks whether you will share findings with the settlement elders. The skyline glows like a wound after dark.
 eventOption:Promise a fair split and honor it => risk:high | tag:mercy | success:item:long-range binoculars,item:terrain scanner,item:reinforced stealth cloak,credits+12,log:The AI opens side lockers after your pledge. Broken cameras still pivot like they remember faces.| fail:credits-5,log:The AI distrusts your oath and throttles access. The skyline glows like a wound after dark.
 eventOption:Spoof credentials and drain every locker => risk:deadly | tag:betrayal | success:item:precision metal detector,item:shock weave armor,credits+17,log:You crack every locker before alarms cycle. Trust is currency, and everyone is short on it.| fail:hp-10,credits-6,log:The countermeasure grid fires. Nobody here mistakes kindness for weakness anymore.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-legend-merc-contract
@@ -159,6 +202,11 @@ once:true
 event:Downed veteran calls for extraction near collapsing cover | chance:1 | prompt:You only get one run at this. Commit to the rescue? Trust is currency, and everyone is short on it.
 eventOption:Commit and hold the line for the veteran => risk:deadly | tag:mercy | success:merc+1,item:veteran contract badge,item:command whistle,credits+20,log:The veteran joins your roster after extraction. Trust is currency, and everyone is short on it.| fail:hp-12,credits-8,log:The rescue fails under heavy pressure. The skyline glows like a wound after dark.
 eventOption:Abandon the call and loot the perimeter => risk:high | tag:betrayal | success:item:salvage satchel,credits+11,log:You skip the rescue and strip the perimeter. Trust is currency, and everyone is short on it.| fail:credits-6,log:Word spreads that you broke contract. Broken cameras still pivot like they remember faces.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-idle-unlock-1
@@ -175,6 +223,11 @@ eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | succes
 eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 1,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 1,item:survey binoculars 1,credits+10,log:You lock node 1 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-idle-unlock-2
 label:Idle network contract 2
@@ -189,6 +242,11 @@ event:Dispatch broker demands proof you can make command decisions | chance:1 | 
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 2,item:field compass mk2,credits+5,log:The broker certifies node 2 for reliable idle runs. Even the quiet sounds engineered.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:medium | tag:stealth | success:item:signal flare pack 2,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 2,item:survey binoculars 2,credits+10,log:You lock node 2 with premium payoff data. Even the quiet sounds engineered.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-idle-unlock-3
@@ -205,6 +263,11 @@ eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | succes
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 3,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 3,item:survey binoculars 3,credits+10,log:You lock node 3 with premium payoff data. Static hums through every bad decision.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-idle-unlock-4
 label:Idle network contract 4
@@ -219,6 +282,11 @@ event:Dispatch broker demands proof you can make command decisions | chance:1 | 
 eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | success:item:route ledger 4,item:field compass mk4,credits+5,log:The broker certifies node 4 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 4,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 4,item:survey binoculars 4,credits+10,log:You lock node 4 with premium payoff data. The skyline glows like a wound after dark.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-idle-unlock-5
@@ -235,6 +303,11 @@ eventOption:Prioritize safety and preserve crew => risk:low | tag:mercy | succes
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 5,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:high | tag:combat | success:item:stealth-wear patch 5,item:survey binoculars 5,credits+10,log:You lock node 5 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-idle-unlock-6
 label:Idle network contract 6
@@ -249,6 +322,11 @@ event:Dispatch broker demands proof you can make command decisions | chance:1 | 
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 6,item:field compass mk6,credits+5,log:The broker certifies node 6 for reliable idle runs. The skyline glows like a wound after dark.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 6,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 6,item:survey binoculars 6,credits+10,log:You lock node 6 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-idle-unlock-7
@@ -265,6 +343,11 @@ eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | suc
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 7,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 7,item:survey binoculars 7,credits+10,log:You lock node 7 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-idle-unlock-8
 label:Idle network contract 8
@@ -279,6 +362,11 @@ event:Dispatch broker demands proof you can make command decisions | chance:1 | 
 eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | success:item:route ledger 8,item:field compass mk8,credits+5,log:The broker certifies node 8 for reliable idle runs. Broken cameras still pivot like they remember faces.| fail:credits-3,log:The safe lane still collapses this shift. Broken cameras still pivot like they remember faces.
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 8,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 8,item:survey binoculars 8,credits+10,log:You lock node 8 with premium payoff data. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-idle-unlock-9
@@ -295,6 +383,11 @@ eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | suc
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 9,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 9,item:survey binoculars 9,credits+10,log:You lock node 9 with premium payoff data. Trust is currency, and everyone is short on it.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-idle-unlock-10
 label:Idle network contract 10
@@ -310,6 +403,11 @@ eventOption:Prioritize safety and preserve crew => risk:medium | tag:mercy | suc
 eventOption:Take the fast lane before rivals arrive => risk:high | tag:stealth | success:item:signal flare pack 10,credits+7,log:You beat rival crews and secure the relay. Static hums through every bad decision.| fail:hp-4,log:Rivals clip your retreat. Even the quiet sounds engineered.
 eventOption:Push the lucrative lane under pressure => risk:deadly | tag:combat | success:item:stealth-wear patch 10,item:survey binoculars 10,credits+10,log:You lock node 10 with premium payoff data. Broken cameras still pivot like they remember faces.| fail:hp-7,credits-4,log:The lucrative lane was trapped. The skyline glows like a wound after dark.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg-base-faction-sweep-1
 title:Blacksite RMG Sweep 1
@@ -323,6 +421,11 @@ relationSuccess:1
 relationFail:0
 success:credits+7,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
 fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg-base-faction-sweep-2
@@ -338,6 +441,11 @@ relationFail:0
 success:credits+8,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
 fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg-base-faction-sweep-3
 title:Blacksite RMG Sweep 3
@@ -352,6 +460,11 @@ relationFail:0
 success:credits+9,log:Your report lands cleanly and RMG trust ticks up. Static hums through every bad decision.
 fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg-base-faction-sweep-4
 title:Blacksite Abernathy Sweep 4
@@ -365,6 +478,11 @@ relationSuccess:1
 relationFail:0
 success:credits+10,log:Your report lands cleanly and AM trust ticks up. The skyline glows like a wound after dark.
 fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg-base-faction-sweep-5
@@ -381,6 +499,12 @@ success:credits+11,log:Your report lands cleanly and RMG trust ticks up. Static 
 fail:log:The contact chain breaks and the crews stay uneasy. Nobody here mistakes kindness for weakness anymore.
 
 # autogenerated expansion missions pack
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-01
 label:Frontline contract 1
@@ -392,6 +516,11 @@ reward:sector stabilization
 combatChance:0.15
 success:credits+8,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
 fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-new-02
@@ -405,6 +534,11 @@ combatChance:0.15
 success:credits+9,hp+4,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
 fail:hp-5,thirst+6,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-03
 label:Frontline contract 3
@@ -416,6 +550,11 @@ reward:ops report and survivor favors
 combatChance:0.15
 success:credits+10,xp+6,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
 fail:credits-2,hp-5,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-new-04
@@ -429,6 +568,11 @@ combatChance:0.15
 success:credits+14,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
 fail:credits-2,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-05
 label:Frontline contract 5
@@ -440,6 +584,11 @@ reward:escort contract payout
 combatChance:0.15
 success:credits+15,hp+3,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
 fail:hp-3,thirst+5,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-new-06
@@ -453,6 +602,11 @@ combatChance:0.15
 success:credits+16,xp+9,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
 fail:credits-3,hp-4,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-07
 label:Frontline contract 7
@@ -464,6 +618,11 @@ reward:sector stabilization
 combatChance:0.15
 success:credits+20,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
 fail:credits-3,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-new-08
@@ -477,6 +636,11 @@ combatChance:0.15
 success:credits+21,hp+2,log:You complete the objective and escort locals to safety. Trust is currency, and everyone is short on it.
 fail:hp-6,thirst+4,log:Crossfire and dust storms force a rough withdrawal. Nobody here mistakes kindness for weakness anymore.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-09
 label:Frontline contract 9
@@ -489,6 +653,11 @@ combatChance:0.15
 success:credits+22,xp+12,log:Your sweep route ends with clean gains and a safer lane map. Nobody here mistakes kindness for weakness anymore.
 fail:credits-4,hp-3,log:A false lead burns supplies and leaves you battered. Even the quiet sounds engineered.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-10
 label:Frontline contract 10
@@ -500,6 +669,11 @@ reward:sector stabilization
 combatChance:0.15
 success:credits+26,scrap+2,temp=normal,log:You stabilize the sector and recover tradable materials. The skyline glows like a wound after dark.
 fail:credits-5,rads+3,log:The route is hotter than expected and you retreat. Nobody here mistakes kindness for weakness anymore.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
 
 @mission
 id:rmg_base-new-11
@@ -518,6 +692,12 @@ eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy |
 eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-12
 label:Reserve operation 12
@@ -535,6 +715,12 @@ eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:
 eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-13
 label:Reserve operation 13
@@ -552,6 +738,12 @@ eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:
 eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-14
 label:Reserve operation 14
@@ -569,6 +761,12 @@ eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy |
 eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-15
 label:Reserve operation 15
@@ -586,6 +784,12 @@ eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:
 eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-16
 label:Reserve operation 16
@@ -603,6 +807,12 @@ eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:
 eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-17
 label:Reserve operation 17
@@ -620,6 +830,12 @@ eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy |
 eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-18
 label:Reserve operation 18
@@ -637,6 +853,12 @@ eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:
 eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-19
 label:Reserve operation 19
@@ -654,6 +876,12 @@ eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:
 eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-20
 label:Reserve operation 20
@@ -671,6 +899,12 @@ eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy |
 eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-21
 label:Reserve operation 21
@@ -688,6 +922,12 @@ eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:
 eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-22
 label:Reserve operation 22
@@ -705,6 +945,12 @@ eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:
 eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-23
 label:Reserve operation 23
@@ -722,6 +968,12 @@ eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy |
 eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-24
 label:Reserve operation 24
@@ -739,6 +991,12 @@ eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:
 eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-25
 label:Reserve operation 25
@@ -756,6 +1014,12 @@ eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:
 eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-26
 label:Reserve operation 26
@@ -773,6 +1037,12 @@ eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy |
 eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-27
 label:Reserve operation 27
@@ -790,6 +1060,12 @@ eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:
 eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-28
 label:Reserve operation 28
@@ -807,6 +1083,12 @@ eventOption:Reserve supply for your own crews => risk:medium | tag:tech | route:
 eventOption:Tech play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-29
 label:Reserve operation 29
@@ -824,6 +1106,12 @@ eventOption:Share recovered medicine with civilians => risk:medium | tag:mercy |
 eventOption:Mercy play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:rmg_base-new-30
 label:Reserve operation 30
@@ -841,6 +1129,12 @@ eventOption:Sell meds to a private broker => risk:medium | tag:betrayal | route:
 eventOption:Betrayal play for personal gain => risk:high | tag:betrayal | route:Profit-first route | ending:You prioritize immediate gains over long-term trust. | success:item:private voucher tag,credits+15,log:You cash out fast and leave others to recover. | fail:credits-6,log:The gamble burns bridges and budget.
 success:xp+10,log:The reserve operation closes with actionable intel for future odd jobs.
 fail:hp-4,log:The mission fragments before final extraction.
+
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
 @mission
 id:loot-rmg_base-retro-salvage
 label:Retro salvage stockpile
@@ -853,3 +1147,520 @@ event:An old-world lockbox pops open and exposes mixed survival gear | chance:1 
 eventOption:Catalog and haul with discipline => risk:high | tag:tech | success:item:rmg-base cram tin,item:rmg-base blamco mac can,item:rmg-base sunset fizz bottle,item:rmg-base dusty nuka cola,item:rmg-base instamash pouch,item:rmg-base preserved pie slice,item:rmg-base sugar bombs box,item:rmg-base fancy lad snack cake,item:rmg-base old world coffee tin,item:rmg-base molded iguana bits,item:rmg-base military ration slab,item:rmg-base dehydrated mutfruit brick,item:rmg-base vault jerky strip,item:rmg-base stale gum drops,item:rmg-base salisbury steak tray,item:rmg-base cold pork n beans can,item:rmg-base combat helmet liner,item:rmg-base flak web harness,item:rmg-base service rifle stock,item:rmg-base pipe rifle receiver,item:rmg-base riot control visor,item:rmg-base trench shovel blade,item:rmg-base bayonet training sheath,item:rmg-base war map tube,item:rmg-base fatigue field jacket,item:rmg-base army canteen shell,item:rmg-base dog tag bundle,item:rmg-base entrenching tool head,item:rmg-base laser musket coil,item:rmg-base handmade shotgun frame,item:rmg-base atom-age pulse pistol,item:rmg-base retro raygun grip,item:rmg-base vacuum tube scope,item:rmg-base mr handy actuator,item:rmg-base fusion battery shell,item:rmg-base plasma torch nozzle,item:rmg-base geiger wristwatch,item:rmg-base pip-dial circuit board,item:rmg-base rocket car lunchbox,item:rmg-base chrome vault jumpsuit,credits+14,log:You secure a massive retro cache without losing your route. Nobody here mistakes kindness for weakness anymore.| fail:hp-7,credits-5,log:The catalog run gets interrupted by hostile scavengers. The skyline glows like a wound after dark.
 eventOption:Rip and sprint before rivals arrive => risk:deadly | tag:combat | success:item:rmg-base cram tin,item:rmg-base blamco mac can,item:rmg-base sunset fizz bottle,item:rmg-base dusty nuka cola,item:rmg-base instamash pouch,item:rmg-base preserved pie slice,item:rmg-base sugar bombs box,item:rmg-base fancy lad snack cake,item:rmg-base old world coffee tin,item:rmg-base molded iguana bits,item:rmg-base military ration slab,item:rmg-base dehydrated mutfruit brick,item:rmg-base vault jerky strip,item:rmg-base stale gum drops,item:rmg-base salisbury steak tray,item:rmg-base cold pork n beans can,item:rmg-base combat helmet liner,item:rmg-base flak web harness,item:rmg-base service rifle stock,item:rmg-base pipe rifle receiver,item:rmg-base riot control visor,item:rmg-base trench shovel blade,item:rmg-base bayonet training sheath,item:rmg-base war map tube,item:rmg-base fatigue field jacket,item:rmg-base army canteen shell,item:rmg-base dog tag bundle,item:rmg-base entrenching tool head,item:rmg-base laser musket coil,item:rmg-base handmade shotgun frame,item:rmg-base atom-age pulse pistol,item:rmg-base retro raygun grip,item:rmg-base vacuum tube scope,item:rmg-base mr handy actuator,item:rmg-base fusion battery shell,item:rmg-base plasma torch nozzle,item:rmg-base geiger wristwatch,item:rmg-base pip-dial circuit board,item:rmg-base rocket car lunchbox,item:rmg-base chrome vault jumpsuit,credits+18,log:You blitz the cache and escape with armfuls of old-world loot. The skyline glows like a wound after dark.| fail:hp-10,credits-7,log:Rivals crash the lane and force a bloody retreat. Static hums through every bad decision.
 
+event:Derivative crossroad blooms mid-operation | chance:0.72 | prompt:Three derivative routes unfold at once—do you protect locals, outrun rivals, or weaponize chaos?
+eventOption:Stabilize locals and secure a mercy corridor => risk:medium | tag:mercy | route:Mercy corridor | ending:Your restraint creates allies who alter future patrol behavior. | success:credits+8,item:community oath seal,log:You triage fear before loot and gain durable trust.| fail:hp-4,credits-2,log:You hesitate and the corridor turns into a firefight.
+eventOption:Race rivals through a relay ghostline => risk:high | tag:stealth | route:Relay ghostline | ending:Rivals lose your trail and your crew controls the route map for a week. | success:credits+11,item:ghost relay spool,log:You sprint the ghostline and steal initiative.| fail:hp-6,log:Rivals flank your exfil and force a costly detour.
+eventOption:Exploit the chaos and seize command data => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You leave with leverage that can blackmail two factions at once. | success:credits+15,item:blackmail ledger shard,log:You weaponize disorder and walk out feared.| fail:hp-9,credits-5,log:Countermeasures lock down the sector before you can escape.
+
+@mission
+id:crown_authority_blacksite-derivative-056
+label:Derivative crisis 56: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:10
+loot:3
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Undercurrent route | ending:You exploit forgotten tunnels while rivals butcher each other above. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-057
+label:Derivative crisis 57: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:11
+loot:4
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Mercy corridor | ending:You evacuate civilians first and the zone stabilizes around your choice. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-058
+label:Derivative crisis 58: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:12
+loot:5
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Relay ghostline | ending:You move in radio silence and leave no thermal trail behind. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-059
+label:Derivative crisis 59: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:13
+loot:6
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Undercurrent route | ending:You exploit forgotten tunnels while rivals butcher each other above. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-060
+label:Derivative crisis 60: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:14
+loot:2
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Mercy corridor | ending:You evacuate civilians first and the zone stabilizes around your choice. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-061
+label:Derivative crisis 61: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:15
+loot:3
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Relay ghostline | ending:You move in radio silence and leave no thermal trail behind. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-062
+label:Derivative crisis 62: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:16
+loot:4
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Undercurrent route | ending:You exploit forgotten tunnels while rivals butcher each other above. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-063
+label:Derivative crisis 63: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:8
+loot:5
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Mercy corridor | ending:You evacuate civilians first and the zone stabilizes around your choice. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-064
+label:Derivative crisis 64: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:9
+loot:6
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Relay ghostline | ending:You move in radio silence and leave no thermal trail behind. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-065
+label:Derivative crisis 65: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:10
+loot:2
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Undercurrent route | ending:You exploit forgotten tunnels while rivals butcher each other above. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-066
+label:Derivative crisis 66: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:11
+loot:3
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Mercy corridor | ending:You evacuate civilians first and the zone stabilizes around your choice. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-067
+label:Derivative crisis 67: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:12
+loot:4
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Relay ghostline | ending:You move in radio silence and leave no thermal trail behind. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-068
+label:Derivative crisis 68: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:13
+loot:5
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Undercurrent route | ending:You exploit forgotten tunnels while rivals butcher each other above. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-069
+label:Derivative crisis 69: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:14
+loot:6
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Mercy corridor | ending:You evacuate civilians first and the zone stabilizes around your choice. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-070
+label:Derivative crisis 70: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:15
+loot:2
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Relay ghostline | ending:You move in radio silence and leave no thermal trail behind. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-071
+label:Derivative crisis 71: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:16
+loot:3
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Undercurrent route | ending:You exploit forgotten tunnels while rivals butcher each other above. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-072
+label:Derivative crisis 72: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:8
+loot:4
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Mercy corridor | ending:You evacuate civilians first and the zone stabilizes around your choice. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-073
+label:Derivative crisis 73: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:9
+loot:5
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Relay ghostline | ending:You move in radio silence and leave no thermal trail behind. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-074
+label:Derivative crisis 74: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:10
+loot:6
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Undercurrent route | ending:You exploit forgotten tunnels while rivals butcher each other above. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-075
+label:Derivative crisis 75: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:11
+loot:2
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Mercy corridor | ending:You evacuate civilians first and the zone stabilizes around your choice. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-076
+label:Derivative crisis 76: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:12
+loot:3
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Relay ghostline | ending:You move in radio silence and leave no thermal trail behind. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-077
+label:Derivative crisis 77: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:13
+loot:4
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Undercurrent route | ending:You exploit forgotten tunnels while rivals butcher each other above. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-078
+label:Derivative crisis 78: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:14
+loot:5
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Mercy corridor | ending:You evacuate civilians first and the zone stabilizes around your choice. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-079
+label:Derivative crisis 79: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:15
+loot:6
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Relay ghostline | ending:You move in radio silence and leave no thermal trail behind. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-080
+label:Derivative crisis 80: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:16
+loot:2
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Undercurrent route | ending:You exploit forgotten tunnels while rivals butcher each other above. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-081
+label:Derivative crisis 81: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:deadly
+time:8
+loot:3
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Smokescreen route | ending:You seed false signals and extract through a maintenance throat. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Mercy corridor | ending:You evacuate civilians first and the zone stabilizes around your choice. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
+
+@mission
+id:crown_authority_blacksite-derivative-082
+label:Derivative crisis 82: Crown Authority Blacksite
+desc:A volatile operation shaped by state black-bag operatives, memory labs, and sealed warrants; every decision splinters into rival outcomes and long-tail consequences.
+risk:medium
+time:9
+loot:4
+lootType:contested caches
+reward:branching operation intel
+combatChance:0.52
+event:Command dispute erupts before insertion | chance:1 | prompt:Two allies disagree on doctrine while a third offers sabotage-for-profit. Which plan do you endorse in this unstable theater?
+eventOption:Back the humanitarian planner and escort witnesses => risk:medium | tag:mercy | route:Hostile takeover | ending:You hijack command loops and finish richer but hated. | success:credits+9,item:witness bracelet,log:You prioritize testimony and lock in local support.| fail:hp-5,credits-2,log:Witnesses scatter under suppressive fire and trust erodes.
+eventOption:Support the tactician and outmaneuver rivals => risk:high | tag:stealth | route:Relay ghostline | ending:You move in radio silence and leave no thermal trail behind. | success:credits+12,item:route cipher slate,log:You execute a sharp flanking pattern and seize tempo.| fail:hp-7,log:The flank collapses into a brutal street brawl.
+eventOption:Cut a private deal with saboteurs for leverage => risk:deadly | tag:betrayal | route:Red verdict route | ending:You gamble on direct force and decide who keeps authority. | success:credits+16,item:coercion dossier,log:Your secret bargain yields power and new enemies.| fail:hp-10,credits-6,log:The saboteurs sell your location to every faction nearby.
+event:Aftershock tribunal convenes over your choices | chance:0.86 | prompt:Survivors demand reparations, rivals demand tribute, and your crew demands clarity. How do you close the mission?
+eventOption:Pay reparations and codify ceasefire routes => risk:medium | tag:mercy | success:credits+6,item:ceasefire seal,log:You buy breathing room and reduce future ambushes.| fail:credits-4,log:Your payment looks weak and invites extortion.
+eventOption:Impose tribute terms with armed escorts => risk:high | tag:combat | success:credits+10,item:tribute docket,log:Your hardline terms secure immediate resources.| fail:hp-6,log:Escort casualties force a chaotic retreat.
+eventOption:Disappear before judgment and leak selective evidence => risk:high | tag:stealth | success:credits+8,item:leaked testimony reel,log:You vanish, then shape the narrative from the shadows.| fail:hp-4,credits-3,log:A courier betrays your drop and burns your cover.
