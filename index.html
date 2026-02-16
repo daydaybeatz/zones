@@ -1656,6 +1656,7 @@
       flags:new Set(['safehouse-funds-offer']),
       factions:{military:0,gang:0},
       missionOffers:{},
+      missionOfferPages:{},
       elderAdviceIndex:0,
       paused:false,
       statusBoardExpanded:true,
@@ -1788,6 +1789,7 @@
       merged.idleRewards=Array.isArray(saved.idleRewards) ? [...saved.idleRewards] : [];
       merged.factions={...base.factions,...(saved.factions||{})};
       merged.missionOffers={...(base.missionOffers||{}),...(saved.missionOffers||{})};
+      merged.missionOfferPages={...(base.missionOfferPages||{}),...(saved.missionOfferPages||{})};
       merged.zone={...base.zone,...(saved.zone||{})};
       if(!merged.zone?.id || merged.zone.id==='drift-yard' || (merged.zone.name||'').toLowerCase().includes('drift yard')){
         merged.zone={...getMainHubZone()};
@@ -1832,6 +1834,14 @@
       merged.doorsPage=Number.isFinite(doorsPage) && doorsPage>=0 ? doorsPage : 0;
       merged.doorsCollapsed=Boolean(merged.doorsCollapsed);
       merged.mapSelectedZoneId=typeof merged.mapSelectedZoneId==='string' ? merged.mapSelectedZoneId : '';
+      if(!merged.missionOfferPages || typeof merged.missionOfferPages!=='object'){
+        merged.missionOfferPages={};
+      }else{
+        Object.keys(merged.missionOfferPages).forEach(zoneId=>{
+          const page=Number(merged.missionOfferPages[zoneId]);
+          merged.missionOfferPages[zoneId]=Number.isFinite(page) && page>=0 ? Math.floor(page) : 0;
+        });
+      }
       merged.idleOpsScreen=merged.idleOpsScreen==='character' ? 'character' : 'dispatch';
       merged.mapView={...base.mapView,...(saved.mapView||{})};
       merged.mapView.zoom=clamp(Number(merged.mapView.zoom)||1,1,1.5);
@@ -2360,7 +2370,8 @@
     const riskLevels=['low','medium','high','deadly'];
     const riskClassList=['risk-low','risk-medium','risk-high','risk-deadly'];
     const riskColorMap={low:'#39ff14',medium:'#ffb000',high:'#ff6a00',deadly:'#ff0033'};
-    const MISSION_OFFER_VISIBLE=5;
+    const MISSION_PAGE_SIZE=5;
+    const MISSION_OFFER_VISIBLE=10;
     const MISSION_OFFER_RESERVE=95;
     const lowerRisk=(risk)=>{
       const idx=riskLevels.indexOf(risk);
@@ -2640,6 +2651,53 @@
       offerState.ids=(offerState.ids || []).filter(id=>id!==missionId);
       offerState.poolIds=(offerState.poolIds || []).filter(id=>id!==missionId);
       offerState.lastCompleted=missionId;
+    }
+
+    function getMissionOfferReserve(zoneId,missions){
+      if(!zoneId || !Array.isArray(missions) || !missions.length) return [];
+      getMissionOffers(zoneId,missions);
+      const offerState=state.missionOffers?.[zoneId];
+      if(!offerState) return [];
+      return (offerState.reserve || [])
+        .map(id=>missions.find(m=>m.id===id))
+        .filter(Boolean);
+    }
+    function getMissionOfferPage(zoneId,totalMissions){
+      if(!state.missionOfferPages || typeof state.missionOfferPages!=='object'){
+        state.missionOfferPages={};
+      }
+      const totalPages=Math.max(1,Math.ceil(Math.max(0,totalMissions)/MISSION_PAGE_SIZE));
+      const current=Number(state.missionOfferPages[zoneId]);
+      const safePage=Number.isFinite(current) ? clamp(Math.floor(current),0,totalPages-1) : 0;
+      state.missionOfferPages[zoneId]=safePage;
+      return {page:safePage,totalPages};
+    }
+    function renderMissionOfferPager(container,zoneId,totalMissions,onPageChange){
+      const {page,totalPages}=getMissionOfferPage(zoneId,totalMissions);
+      const pager=renderPager({
+        page,
+        totalPages,
+        label:'missions',
+        onPrev:()=>onPageChange(Math.max(0,page-1)),
+        onNext:()=>onPageChange(Math.min(totalPages-1,page+1))
+      });
+      if(!pager) return;
+      pager.classList.add('door-pagination');
+      container.appendChild(pager);
+    }
+    function startOddJobsMission({zoneId,missionPool,onStart,zoneName='this zone'}){
+      if(!zoneId || !Array.isArray(missionPool) || !missionPool.length || typeof onStart!=='function'){
+        setCodex('No reserve contracts available right now.');
+        return;
+      }
+      const reserveMissions=getMissionOfferReserve(zoneId,missionPool);
+      if(!reserveMissions.length){
+        setCodex('No reserve contracts available right now.');
+        return;
+      }
+      const selected=reserveMissions[Math.floor(Math.random()*reserveMissions.length)];
+      setCodex(`Odd jobs lead found in ${zoneName}: ${selected.label}.`);
+      onStart(selected);
     }
     const getDoorLootScore=(exp)=>{
       const missionLoot=Array.isArray(exp?.missions) ? exp.missions.map(m=>Number(m.loot || 0)) : [];
@@ -6704,6 +6762,55 @@ once:true`
       return parts.join(' · ');
     }
 
+
+    function appendMissionOfferButton(container,raid,{onStart}={}){
+      const btn=document.createElement('button');
+      const meta=buildMissionMeta({
+        risk:raid.risk,
+        time:raid.time,
+        energy:raid.energy,
+        key:raid.key,
+        loot:raid.loot,
+        lootType:raid.lootType,
+        reward:raid.reward,
+        xp:raid.xp,
+        combatChance:getMissionCombatChance(raid),
+        failChance:raid.failChance
+      });
+      btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
+      btn.onclick=()=>onStart(raid);
+      const adviceDepleted=isElderAdviceMission(raid) && isElderAdviceExhausted();
+      if(adviceDepleted){
+        btn.disabled=true;
+        btn.title="You're very wise, young one.";
+      }else if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})){
+        btn.disabled=true;
+      }
+      if(raid.risk==='high') btn.classList.add('danger');
+      container.appendChild(btn);
+    }
+
+    function renderZoneMissionOffers({container,zoneId,zoneName,missionPool,onStart}){
+      const offers=getMissionOffers(zoneId,missionPool).slice(0,MISSION_OFFER_VISIBLE);
+      const reserve=getMissionOfferReserve(zoneId,missionPool);
+      const oddJobs=document.createElement('button');
+      oddJobs.innerHTML='<span>Look for odd jobs</span><span class="small">launch random reserve mission</span>';
+      oddJobs.onclick=()=>startOddJobsMission({zoneId,missionPool,onStart,zoneName});
+      if(state.mission.active || state.travel.active || !reserve.length) oddJobs.disabled=true;
+      if(!reserve.length) oddJobs.title='No reserve jobs available yet.';
+      container.appendChild(oddJobs);
+      if(offers.length){
+        const {page}=getMissionOfferPage(zoneId,offers.length);
+        const start=page*MISSION_PAGE_SIZE;
+        offers.slice(start,start+MISSION_PAGE_SIZE).forEach(raid=>appendMissionOfferButton(container,raid,{onStart}));
+        renderMissionOfferPager(container,zoneId,offers.length,nextPage=>{
+          state.missionOfferPages[zoneId]=nextPage;
+          renderAll();
+        });
+      }
+      return offers.length;
+    }
+
     function renderRaidActions(){
       dom.raidActions.innerHTML='';
       const exp=expansions[state.zone.id];
@@ -6737,10 +6844,8 @@ once:true`
         if(state.mission.active || state.travel.active) barBtn.disabled=true;
         dom.raidActions.appendChild(barBtn);
       }
-      let renderedOffers=0;
       if(exp && exp.quests && exp.quests.length){
         exp.quests.forEach(quest=>{
-          if(renderedOffers>=MISSION_OFFER_VISIBLE) return;
           const btn=document.createElement('button');
           const questFlag=quest.flag || quest.id;
           const completed=quest.once && questFlag && state.flags.has(questFlag);
@@ -6774,50 +6879,25 @@ once:true`
           }
           if(risk==='high') btn.classList.add('danger');
           dom.raidActions.appendChild(btn);
-          renderedOffers+=1;
         });
       }
-      let missionSlotsRemaining=Math.max(0,MISSION_OFFER_VISIBLE-renderedOffers);
       const hubZone=isHubZone();
-      if(hubZone){
-        const hubMissionPool=getUnlockedMissions(exp?.missions || []).filter(isHubMission);
-        const hubMissions=getMissionOffers(state.zone.id,hubMissionPool).slice(0,missionSlotsRemaining);
-        if(hubMissions.length){
-          hubMissions.forEach(raid=>{
-            const btn=document.createElement('button');
-            const meta=buildMissionMeta({
-              risk:raid.risk,
-              time:raid.time,
-              energy:raid.energy,
-              key:raid.key,
-              loot:raid.loot,
-              lootType:raid.lootType,
-              reward:raid.reward,
-              xp:raid.xp,
-              combatChance:getMissionCombatChance(raid),
-              failChance:raid.failChance
-            });
-            btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
-            btn.onclick=()=>startMission(raid);
-            const adviceDepleted=isElderAdviceMission(raid) && isElderAdviceExhausted();
-            if(adviceDepleted){
-              btn.disabled=true;
-              btn.title="You're very wise, young one.";
-            }else if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})){
-              btn.disabled=true;
-            }
-            if(raid.risk==='high') btn.classList.add('danger');
-            dom.raidActions.appendChild(btn);
-            renderedOffers+=1;
-          });
-        }
-        if(state.zone.id==='safehouse' && zoneHasShop()){
-          const shopBtn=document.createElement('button');
-          shopBtn.innerHTML=`<span>Visit shop</span><span class="small">trade · vendors</span>`;
-          shopBtn.onclick=()=>openMarketAccess();
-          if(state.mission.active || state.travel.active) shopBtn.disabled=true;
-          dom.raidActions.appendChild(shopBtn);
-        }
+      const missionPool=hubZone
+        ? getUnlockedMissions(exp?.missions || []).filter(isHubMission)
+        : ((exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES);
+      const renderedMissionOffers=renderZoneMissionOffers({
+        container:dom.raidActions,
+        zoneId:state.zone.id,
+        zoneName:state.zone.name,
+        missionPool,
+        onStart:startMission
+      });
+      if(hubZone && state.zone.id==='safehouse' && zoneHasShop()){
+        const shopBtn=document.createElement('button');
+        shopBtn.innerHTML=`<span>Visit shop</span><span class="small">trade · vendors</span>`;
+        shopBtn.onclick=()=>openMarketAccess();
+        if(state.mission.active || state.travel.active) shopBtn.disabled=true;
+        dom.raidActions.appendChild(shopBtn);
       }
       if(hubZone && !dom.raidActions.children.length){
         const blocked=document.createElement('div');
@@ -6827,31 +6907,6 @@ once:true`
         return;
       }
       if(!hubZone){
-        missionSlotsRemaining=Math.max(0,MISSION_OFFER_VISIBLE-renderedOffers);
-        const missionPool=(exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES;
-        const missions=getMissionOffers(state.zone.id,missionPool).slice(0,missionSlotsRemaining);
-        missions.forEach(raid=>{
-          const btn=document.createElement('button');
-          const meta=buildMissionMeta({
-            risk:raid.risk,
-            time:raid.time,
-            energy:raid.energy,
-            key:raid.key,
-            loot:raid.loot,
-            lootType:raid.lootType,
-            reward:raid.reward,
-            xp:raid.xp,
-            combatChance:getMissionCombatChance(raid),
-            failChance:raid.failChance
-          });
-          btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
-          btn.onclick=()=>startMission(raid);
-          if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})) btn.disabled=true;
-          if(raid.risk==='high') btn.classList.add('danger');
-          dom.raidActions.appendChild(btn);
-          renderedOffers+=1;
-        });
-        if(renderedOffers>=MISSION_OFFER_VISIBLE) return;
         const combatBtn=document.createElement('button');
         const combatProfile=getCombatProfile(state.zone.risk);
         const combatMeta=buildMissionMeta({
@@ -6868,6 +6923,12 @@ once:true`
         if(state.mission.active || state.travel.active || !canAfford({energy:10})) combatBtn.disabled=true;
         combatBtn.classList.add('danger');
         dom.raidActions.appendChild(combatBtn);
+        if(!renderedMissionOffers && !exp?.quests?.length && !scene?.options?.length){
+          const intel=document.createElement('div');
+          intel.className='muted-box';
+          intel.textContent='No contracts posted right now. Sweep the zone for fresh intel.';
+          dom.raidActions.appendChild(intel);
+        }
       }
     }
 
@@ -6944,35 +7005,13 @@ once:true`
         });
       }
       const hubMissionPool=getUnlockedMissions(exp.missions || []).filter(isHubMission);
-      const hubMissions=getMissionOffers(hubZone.id,hubMissionPool).slice(0,MISSION_OFFER_VISIBLE);
-      if(hubMissions.length){
-        hubMissions.forEach(raid=>{
-          const btn=document.createElement('button');
-          const meta=buildMissionMeta({
-            risk:raid.risk,
-            time:raid.time,
-            energy:raid.energy,
-            key:raid.key,
-            loot:raid.loot,
-            lootType:raid.lootType,
-            reward:raid.reward,
-            xp:raid.xp,
-            combatChance:getMissionCombatChance(raid),
-            failChance:raid.failChance
-          });
-          btn.innerHTML=`<span>${raid.label}</span><span class="small">${meta}</span>`;
-          btn.onclick=()=>startMissionAtZone(raid,hubZone);
-          const adviceDepleted=isElderAdviceMission(raid) && isElderAdviceExhausted();
-          if(adviceDepleted){
-            btn.disabled=true;
-            btn.title="You're very wise, young one.";
-          }else if(state.mission.active || state.travel.active || !canAfford({energy:raid.energy,keys:raid.key||0})){
-            btn.disabled=true;
-          }
-          if(raid.risk==='high') btn.classList.add('danger');
-          dom.safehouseActions.appendChild(btn);
-        });
-      }
+      renderZoneMissionOffers({
+        container:dom.safehouseActions,
+        zoneId:hubZone.id,
+        zoneName:hubZone.name,
+        missionPool:hubMissionPool,
+        onStart:(raid)=>startMissionAtZone(raid,hubZone)
+      });
       if(!dom.safehouseActions.children.length){
         const empty=document.createElement('div');
         empty.className='muted-box';
