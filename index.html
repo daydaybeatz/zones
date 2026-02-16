@@ -1918,7 +1918,7 @@
     const savedState=loadSavedState();
     let state=savedState || createDefaultState();
     let allowAutosave=!savedState;
-    const isHubMission=(raid)=>raid?.hub===true || raid?.hub==='true';
+    const isHubMission=(raid)=>raid?.hub===true || raid?.hub==='true' || String(raid?.id || '').startsWith('safehouse-');
     const isMissionUnlocked=(raid)=>{
       if(raid?.unlockFlag && !state.flags.has(raid.unlockFlag)) return false;
       const minLevel=Number(raid?.minLevel || raid?.minlevel || 0);
@@ -6813,7 +6813,7 @@ once:true`
       oddJobs.innerHTML='<span>Look for odd jobs</span><span class="small">launch random mission</span>';
       oddJobs.onclick=()=>startOddJobsMission({zoneId,missionPool,onStart,zoneName});
       if(state.mission.active || state.travel.active) oddJobs.disabled=true;
-      if(!reserve.length) oddJobs.title='No reserve contracts right now, but you can still roll a random local mission.';
+      if(!reserve.length) oddJobs.title='No extra contracts right now, but you can still roll a random local mission.';
       container.appendChild(oddJobs);
       if(offers.length){
         const {page}=getMissionOfferPage(zoneId,offers.length);
@@ -6901,6 +6901,24 @@ once:true`
       const missionPool=hubZone
         ? getUnlockedMissions(exp?.missions || []).filter(isHubMission)
         : ((exp?.missions && exp.missions.length) ? getUnlockedMissions(exp.missions) : RAID_TEMPLATES);
+      if(!hubZone){
+        const combatBtn=document.createElement('button');
+        const combatProfile=getCombatProfile(state.zone.risk);
+        const combatMeta=buildMissionMeta({
+          risk:combatProfile.risk,
+          time:combatProfile.time,
+          energy:10,
+          loot:2+Math.floor(combatProfile.difficulty),
+          lootType:'combat salvage',
+          xp:computeMissionXp(combatProfile.risk,combatProfile.time),
+          combatChance:1
+        });
+        combatBtn.innerHTML=`<span>Engage hostiles</span><span class="small">${combatMeta}</span>`;
+        combatBtn.onclick=startCombatMission;
+        if(state.mission.active || state.travel.active || !canAfford({energy:10})) combatBtn.disabled=true;
+        combatBtn.classList.add('danger');
+        dom.raidActions.appendChild(combatBtn);
+      }
       const renderedMissionOffers=renderZoneMissionOffers({
         container:dom.raidActions,
         zoneId:state.zone.id,
@@ -6922,29 +6940,11 @@ once:true`
         dom.raidActions.appendChild(blocked);
         return;
       }
-      if(!hubZone){
-        const combatBtn=document.createElement('button');
-        const combatProfile=getCombatProfile(state.zone.risk);
-        const combatMeta=buildMissionMeta({
-          risk:combatProfile.risk,
-          time:combatProfile.time,
-          energy:10,
-          loot:2+Math.floor(combatProfile.difficulty),
-          lootType:'combat salvage',
-          xp:computeMissionXp(combatProfile.risk,combatProfile.time),
-          combatChance:1
-        });
-        combatBtn.innerHTML=`<span>Engage hostiles</span><span class="small">${combatMeta}</span>`;
-        combatBtn.onclick=startCombatMission;
-        if(state.mission.active || state.travel.active || !canAfford({energy:10})) combatBtn.disabled=true;
-        combatBtn.classList.add('danger');
-        dom.raidActions.appendChild(combatBtn);
-        if(!renderedMissionOffers && !exp?.quests?.length && !scene?.options?.length){
-          const intel=document.createElement('div');
-          intel.className='muted-box';
-          intel.textContent='No contracts posted right now. Sweep the zone for fresh intel.';
-          dom.raidActions.appendChild(intel);
-        }
+      if(!hubZone && !renderedMissionOffers && !exp?.quests?.length && !scene?.options?.length){
+        const intel=document.createElement('div');
+        intel.className='muted-box';
+        intel.textContent='No contracts posted right now. Sweep the zone for fresh intel.';
+        dom.raidActions.appendChild(intel);
       }
     }
 
@@ -9247,6 +9247,8 @@ once:true`
         expansion.meta.name=meta.name || expansion.meta.name || meta.id;
         addProceduralMissions(expansion);
         stylizeMissionText(expansion);
+        ensureZoneStoryMissions(expansion);
+        normalizeMissionNarrative(expansion);
         expansions[expansion.meta.id]=expansion;
         addDoor(expansion);
         expansionsLoaded+=1;
@@ -9259,6 +9261,8 @@ once:true`
           expansion.meta.name=meta.name || expansion.meta.name || meta.id;
           addProceduralMissions(expansion);
           stylizeMissionText(expansion);
+          ensureZoneStoryMissions(expansion);
+          normalizeMissionNarrative(expansion);
           expansions[expansion.meta.id]=expansion;
           addDoor(expansion);
           expansionsLoaded+=1;
@@ -9685,6 +9689,113 @@ once:true`
     }
 
 
+    const STORY_CHARACTERS=['Mara','Jett','Ona','Rook','Vera','Dax','Nell','Ivo','Sable','Kade'];
+    const STORY_HOOKS=[
+      'find missing supply runners before nightfall',
+      'escort a family across a dangerous block',
+      'recover medicine for an overcrowded shelter',
+      'settle a dispute before it turns violent',
+      'track stolen tools needed to keep lights on',
+      'deliver a peace offer between rival crews',
+      'rescue a mechanic trapped behind sealed gates',
+      'protect a caravan carrying clean water',
+      'help a local cook feed the shelter line',
+      'clear a route for school-age scavengers'
+    ];
+    const STORY_REWARDS=['old coin','wire spool','tool roll','barter satchel','water flask','filtered water pack','ration bar','patch kit','quiet radio','spare filter'];
+    const sanitizeNarrativeText=(value)=>String(value || '')
+      .replace(/\bderivative\b/gi,'')
+      .replace(/\breserve\b/gi,'')
+      .replace(/\s{2,}/g,' ')
+      .replace(/\s+([.,!?;:])/g,'$1')
+      .trim();
+    const hasValueReward=(reward='')=>/(item:|credits\+|scrap\+|merc\+)/i.test(String(reward || ''));
+    const hasAnyReward=(reward='')=>/(item:|credits\+|scrap\+|merc\+|xp\+)/i.test(String(reward || ''));
+    function ensureZoneStoryMissions(exp){
+      if(!exp?.meta?.id || !Array.isArray(exp.missions)) return;
+      const zoneId=exp.meta.id;
+      const zoneName=exp.meta.name || zoneId;
+      const elderId=`${zoneId}-elder-council`;
+      if(!exp.missions.some(m=>m.id===elderId)){
+        exp.missions.unshift({
+          id:elderId,
+          label:`Speak with the ${zoneName} elder`,
+          desc:`Elder Mara keeps notes on safe paths and who needs help first in ${zoneName}.`,
+          risk:'low',time:6,energy:8,loot:0,reward:'credits+8,item:quiet radio',hub:isHubZone({id:zoneId,name:zoneName}),
+          events:[{label:'Elder briefing',prompt:`You ask for practical advice that opens new jobs in ${zoneName}.`,chance:1,options:[{label:'Listen and share supplies',risk:'low',success:'credits+8,item:quiet radio,flag:'+`${zoneId}-elder-guidance`},{label:'Ask for route tips only',risk:'low',success:'xp+12'}]}]
+        });
+      }
+      const tradeBriefId=`${zoneId}-trade-brief`;
+      if(!exp.missions.some(m=>m.id===tradeBriefId)){
+        exp.missions.push({
+          id:tradeBriefId,
+          label:`Learn ${zoneName} trade rumors`,
+          desc:`Trader Jett explains which goods sell for extra value in ${zoneName} this week.`,
+          risk:'low',time:7,energy:9,loot:1,reward:'credits+10,item:barter satchel,flag:'+`${zoneId}-trade-route-open`,
+          events:[{label:'Market lesson',prompt:'You map local demand and write down what to send next.',chance:1,options:[{label:'Take detailed notes',risk:'low',success:'credits+10,item:barter satchel'},{label:'Keep it quick',risk:'low',success:'xp+10'}]}]
+        });
+      }
+      const tradeRunId=`${zoneId}-trade-run`;
+      if(!exp.missions.some(m=>m.id===tradeRunId)){
+        exp.missions.push({
+          id:tradeRunId,
+          label:`Run a ${zoneName} profit caravan`,
+          desc:`Dispatch mercs with extra trade goods to ${zoneName} and bring back profit.`,
+          risk:'medium',time:9,energy:12,loot:2,reward:'item:old coin,credits+16',unlockFlag:`${zoneId}-trade-route-open`,
+          events:[{label:'Caravan handoff',prompt:'Choose how much cargo to move and how hard to push your crew.',chance:1,options:[{label:'Ship a balanced load',risk:'medium',success:'item:old coin,credits+16'},{label:'Ship a heavy load',risk:'high',success:'item:old coin,item:wire spool,credits+24',fail:'hp-5,credits-4'}]}]
+        });
+      }
+    }
+    function normalizeMissionNarrative(exp){
+      if(!exp || !Array.isArray(exp.missions)) return;
+      const zoneName=exp.meta?.name || exp.meta?.id || 'this zone';
+      exp.missions.forEach((mission,idx)=>{
+        mission.label=sanitizeNarrativeText(mission.label || `Help ${zoneName}`) || `Help ${zoneName}`;
+        const char=STORY_CHARACTERS[(idx+zoneName.length)%STORY_CHARACTERS.length];
+        const hook=STORY_HOOKS[(idx*3+zoneName.length)%STORY_HOOKS.length];
+        if(!mission.desc || /contract\s*\d+|route for precise rewards|field operation/i.test(mission.desc)){
+          mission.desc=`${char} asks you to ${hook} in ${zoneName}.`;
+        }
+        mission.desc=sanitizeNarrativeText(mission.desc);
+        if(Array.isArray(mission.events)){
+          mission.events.forEach((event,eventIdx)=>{
+            event.label=sanitizeNarrativeText(event.label || 'Local situation');
+            event.prompt=sanitizeNarrativeText(event.prompt || `${char} asks what choice you will make for ${zoneName}.`);
+            if(Array.isArray(event.options)){
+              event.options.forEach(opt=>{
+                opt.label=sanitizeNarrativeText(opt.label || 'Take the safer route') || 'Take the safer route';
+                if(opt.success) opt.success=sanitizeNarrativeText(opt.success);
+                if(opt.fail) opt.fail=sanitizeNarrativeText(opt.fail);
+              });
+            }
+            if(!Array.isArray(event.options) || !event.options.length){
+              const rewardItem=STORY_REWARDS[(idx+eventIdx)%STORY_REWARDS.length];
+              event.options=[{label:'Help the locals',risk:'low',success:`item:${rewardItem},credits+8`},{label:'Move fast and keep watch',risk:'medium',success:'xp+10'}];
+            }
+          });
+        }
+      });
+      const total=exp.missions.length || 1;
+      const valueTarget=Math.ceil(total*0.8);
+      exp.missions.forEach((mission,idx)=>{
+        const valueReward=idx<valueTarget;
+        if(!hasAnyReward(mission.reward)){
+          if(valueReward){
+            const item=STORY_REWARDS[(idx+zoneName.length)%STORY_REWARDS.length];
+            mission.reward=`item:${item},credits+${8+(idx%8)}`;
+          }else{
+            mission.reward=`xp+${10+(idx%6)}`;
+          }
+        }else if(!valueReward && !/xp\+/i.test(mission.reward)){
+          mission.reward=`${mission.reward},xp+10`;
+        }
+        mission.reward=sanitizeNarrativeText(mission.reward);
+        if(valueReward && !hasValueReward(mission.reward)){
+          const item=STORY_REWARDS[(idx+2)%STORY_REWARDS.length];
+          mission.reward=`${mission.reward},item:${item},credits+6`;
+        }
+      });
+    }
     const CONTRACT_CALLSIGNS=['Ashfall','Nightglass','Mercy Line','Salt Vein','Iron Echo','Static Dawn','Cinder Trace','Lumen Debt','Pale Signal','Blackwater'];
     const CONTRACT_THEMES=[
       'escort a witness tied to old regime crimes',
