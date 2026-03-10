@@ -222,7 +222,7 @@
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>Contact Tray Missing List Grid</h1>
+      <h1>EYE WRITE</h1>
       <div class="small">
         Tap a cell to add or remove it from the missing list.  
         Export the selected list as a <b>.txt</b> file.
@@ -230,13 +230,13 @@
 
       <div class="toolbar">
         <div class="field">
-          <label for="sphereFilter">View</label>
-          <select id="sphereFilter">
-            <option value="all">All powers</option>
-            <option value="low">0.00 to -1.50</option>
-            <option value="mid">-2.00 to -4.00</option>
-            <option value="high">-4.50 to -6.00</option>
-          </select>
+          <label for="brandFilter">Brand</label>
+          <select id="brandFilter"></select>
+        </div>
+
+        <div class="field">
+          <label for="cylinderFilter">Cylinder</label>
+          <select id="cylinderFilter"></select>
         </div>
 
         <div class="field">
@@ -285,7 +285,11 @@
       "100", "110", "120", "130", "140", "150", "160", "170", "180"
     ];
 
-    const STORAGE_KEY = "contact_tray_missing_grid_v1";
+    const BRANDS = {
+      "Biofinity Toric": ["-0.75", "-1.25", "-1.75", "-2.25"]
+    };
+
+    const STORAGE_KEY = "contact_tray_missing_grid_v2";
 
     const gridTable = document.getElementById("gridTable");
     const output = document.getElementById("output");
@@ -293,7 +297,8 @@
     const countSelected = document.getElementById("countSelected");
     const countShown = document.getElementById("countShown");
     const statusEl = document.getElementById("status");
-    const sphereFilter = document.getElementById("sphereFilter");
+    const brandFilter = document.getElementById("brandFilter");
+    const cylinderFilter = document.getElementById("cylinderFilter");
     const searchBox = document.getElementById("searchBox");
     const copyBtn = document.getElementById("copyBtn");
     const downloadBtn = document.getElementById("downloadBtn");
@@ -306,20 +311,55 @@
       statusEl.textContent = msg;
     }
 
-    function sortLabels(a, b) {
-      const [sa, aa] = a.split(" ");
-      const [sb, ab] = b.split(" ");
-      const sphereDiff = parseFloat(sa) - parseFloat(sb);
-      if (sphereDiff !== 0) return sphereDiff;
-      return parseInt(aa, 10) - parseInt(ab, 10);
+    function parseLabel(label) {
+      const [brand, cylinder, sphere, axis] = label.split("|");
+      return {
+        brand: (brand || "").trim(),
+        cylinder: (cylinder || "").trim(),
+        sphere: (sphere || "").trim(),
+        axis: (axis || "").trim()
+      };
     }
 
-    function getVisibleSpheres() {
-      const mode = sphereFilter.value;
-      if (mode === "low") return ["0.00", "-0.50", "-1.00", "-1.50"];
-      if (mode === "mid") return ["-2.00", "-2.50", "-3.00", "-3.50", "-4.00"];
-      if (mode === "high") return ["-4.50", "-5.00", "-5.50", "-6.00"];
-      return SPHERES;
+    function sortLabels(a, b) {
+      const pa = parseLabel(a);
+      const pb = parseLabel(b);
+
+      const brandDiff = pa.brand.localeCompare(pb.brand);
+      if (brandDiff !== 0) return brandDiff;
+
+      const cylDiff = parseFloat(pa.cylinder) - parseFloat(pb.cylinder);
+      if (cylDiff !== 0) return cylDiff;
+
+      const sa = pa.sphere;
+      const sb = pb.sphere;
+      const sphereDiff = parseFloat(sa) - parseFloat(sb);
+      if (sphereDiff !== 0) return sphereDiff;
+      return parseInt(pa.axis, 10) - parseInt(pb.axis, 10);
+    }
+
+    function getActiveBrand() {
+      return brandFilter.value;
+    }
+
+    function getActiveCylinder() {
+      return cylinderFilter.value;
+    }
+
+    function makeLabel(sphere, axis) {
+      return `${getActiveBrand()} | ${getActiveCylinder()} | ${sphere} | ${axis}`;
+    }
+
+    function renderCylinderOptions() {
+      const cylinders = BRANDS[getActiveBrand()] || [];
+      cylinderFilter.innerHTML = "";
+
+      for (const cyl of cylinders) {
+        const option = document.createElement("option");
+        option.value = cyl;
+        option.textContent = cyl;
+        cylinderFilter.appendChild(option);
+      }
     }
 
     function saveSelected() {
@@ -364,8 +404,7 @@
     }
 
     function buildGrid() {
-      const visibleSpheres = getVisibleSpheres();
-      countShown.textContent = visibleSpheres.length * AXES.length;
+      countShown.textContent = SPHERES.length * AXES.length;
 
       gridTable.innerHTML = "";
 
@@ -377,7 +416,7 @@
       corner.className = "axisHead";
       headRow.appendChild(corner);
 
-      for (const sphere of visibleSpheres) {
+      for (const sphere of SPHERES) {
         const th = document.createElement("th");
         th.textContent = sphere;
         headRow.appendChild(th);
@@ -396,13 +435,13 @@
         axisTd.className = "axisLabel";
         tr.appendChild(axisTd);
 
-        for (const sphere of visibleSpheres) {
+        for (const sphere of SPHERES) {
           const td = document.createElement("td");
           const btn = document.createElement("button");
-          const label = sphere + " " + axis;
+          const label = makeLabel(sphere, axis);
 
           btn.className = "cellBtn";
-          btn.textContent = label;
+          btn.textContent = `${sphere} ${axis}`;
 
           if (selected.has(label)) {
             btn.classList.add("selected");
@@ -468,13 +507,30 @@
         );
         setStatus("Jumped to " + raw + ".", "good");
       } else {
-        setStatus("That label is not in the current view filter.", "warn");
+        setStatus("That label is not in the grid.", "warn");
       }
     }
 
-    sphereFilter.addEventListener("change", () => {
+    function initializeBrandAndCylinderFilters() {
+      for (const brand of Object.keys(BRANDS)) {
+        const option = document.createElement("option");
+        option.value = brand;
+        option.textContent = brand;
+        brandFilter.appendChild(option);
+      }
+
+      renderCylinderOptions();
+    }
+
+    brandFilter.addEventListener("change", () => {
+      renderCylinderOptions();
       buildGrid();
-      setStatus("View updated.");
+      setStatus("Brand updated.");
+    });
+
+    cylinderFilter.addEventListener("change", () => {
+      buildGrid();
+      setStatus("Cylinder updated.");
     });
 
     searchBox.addEventListener("keydown", (e) => {
@@ -488,6 +544,7 @@
     clearBtn.addEventListener("click", clearAll);
 
     loadSelected();
+    initializeBrandAndCylinderFilters();
     buildGrid();
     renderOutput();
   </script>
