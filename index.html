@@ -238,17 +238,6 @@
           <label for="cylinderFilter">Cylinder</label>
           <select id="cylinderFilter"></select>
         </div>
-
-        <div class="field">
-          <label for="searchBox">Jump to label</label>
-          <input id="searchBox" placeholder="Example: -0.50 180" />
-        </div>
-      </div>
-
-      <div class="row">
-        <button id="copyBtn">Copy List</button>
-        <button id="downloadBtn" class="secondary">Download TXT</button>
-        <button id="clearBtn" class="danger">Clear All</button>
       </div>
 
       <div class="counts">
@@ -270,6 +259,12 @@
       <h2>Selected missing contacts</h2>
       <div id="pillBox"></div>
       <textarea id="output" readonly></textarea>
+
+      <div class="row">
+        <button id="copyBtn">Copy List</button>
+        <button id="downloadBtn" class="secondary">Download TXT</button>
+        <button id="clearBtn" class="danger">Clear All</button>
+      </div>
     </div>
   </div>
 
@@ -299,7 +294,6 @@
     const statusEl = document.getElementById("status");
     const brandFilter = document.getElementById("brandFilter");
     const cylinderFilter = document.getElementById("cylinderFilter");
-    const searchBox = document.getElementById("searchBox");
     const copyBtn = document.getElementById("copyBtn");
     const downloadBtn = document.getElementById("downloadBtn");
     const clearBtn = document.getElementById("clearBtn");
@@ -377,16 +371,39 @@
 
     function renderOutput() {
       const arr = Array.from(selected).sort(sortLabels);
-      output.value = arr.join("\n");
       countSelected.textContent = arr.length;
 
-      pillBox.innerHTML = "";
+      const grouped = new Map();
       for (const item of arr) {
-        const span = document.createElement("span");
-        span.className = "pill";
-        span.textContent = item;
-        pillBox.appendChild(span);
+        const parsed = parseLabel(item);
+        const key = `${parsed.brand} - ${parsed.cylinder}`;
+        if (!grouped.has(key)) {
+          grouped.set(key, []);
+        }
+        grouped.get(key).push(`${parsed.sphere} ${parsed.axis}`);
       }
+
+      const outputBlocks = [];
+      grouped.forEach((items, key) => {
+        outputBlocks.push(`${key}\n${items.join("\n")}`);
+      });
+      output.value = outputBlocks.join("\n\n");
+
+      pillBox.innerHTML = "";
+      grouped.forEach((items, key) => {
+        const heading = document.createElement("div");
+        heading.style.marginTop = "8px";
+        heading.style.fontWeight = "bold";
+        heading.textContent = key;
+        pillBox.appendChild(heading);
+
+        for (const item of items) {
+          const span = document.createElement("span");
+          span.className = "pill";
+          span.textContent = item;
+          pillBox.appendChild(span);
+        }
+      });
     }
 
     function toggleCell(label, buttonEl) {
@@ -488,29 +505,6 @@
       setStatus("Cleared all selections.");
     }
 
-    function jumpToLabel() {
-      const raw = searchBox.value.trim().replace(/\s+/g, " ");
-      if (!raw) return;
-
-      const buttons = Array.from(document.querySelectorAll(".cellBtn"));
-      const match = buttons.find(btn => btn.textContent === raw);
-
-      if (match) {
-        match.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-        match.animate(
-          [
-            { transform: "scale(1)" },
-            { transform: "scale(1.06)" },
-            { transform: "scale(1)" }
-          ],
-          { duration: 450 }
-        );
-        setStatus("Jumped to " + raw + ".", "good");
-      } else {
-        setStatus("That label is not in the grid.", "warn");
-      }
-    }
-
     function initializeBrandAndCylinderFilters() {
       for (const brand of Object.keys(BRANDS)) {
         const option = document.createElement("option");
@@ -531,12 +525,6 @@
     cylinderFilter.addEventListener("change", () => {
       buildGrid();
       setStatus("Cylinder updated.");
-    });
-
-    searchBox.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        jumpToLabel();
-      }
     });
 
     copyBtn.addEventListener("click", copyList);
